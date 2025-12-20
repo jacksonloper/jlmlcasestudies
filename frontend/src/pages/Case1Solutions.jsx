@@ -49,7 +49,7 @@ export default function Case1Solutions() {
         for (let i = 0; i <= numPoints; i++) {
           const x = xMin + (i * 0.1);
           xRange.push(x);
-          trueExpectation.push(0.5 * x * x); // E[y|x] = 0.5 * x^2
+          trueExpectation.push(5 * Math.cos(x)); // E[y|x] = 5*cos(x)
         }
 
         // Prepare plot data
@@ -70,7 +70,7 @@ export default function Case1Solutions() {
             y: trueExpectation,
             mode: 'lines',
             type: 'scatter',
-            name: 'True E[y|x] = 0.5x²',
+            name: 'True E[y|x] = 5cos(x)',
             line: {
               color: 'rgba(220, 38, 38, 1)',
               width: 3,
@@ -125,11 +125,11 @@ export default function Case1Solutions() {
               <div className="my-2">
                 <InlineMath math="y \mid x" /> is an equal parts mixture:
               </div>
-              <BlockMath math="y \mid x \sim \frac{1}{2} N(x^2, 1) + \frac{1}{2} N(0, 1)" />
+              <BlockMath math="y \mid x \sim \frac{1}{2} N(10\cos(x), 1) + \frac{1}{2} N(0, 1)" />
               <div className="mt-4">
                 <p>This means the optimal prediction (minimizing MSE) is the conditional expectation:</p>
               </div>
-              <BlockMath math="E[y \mid x] = \frac{1}{2} \cdot x^2 + \frac{1}{2} \cdot 0 = \frac{1}{2}x^2" />
+              <BlockMath math="E[y \mid x] = \frac{1}{2} \cdot 10\cos(x) + \frac{1}{2} \cdot 0 = 5\cos(x)" />
             </div>
           </div>
         </section>
@@ -184,16 +184,15 @@ export default function Case1Solutions() {
                 <strong>Blue points</strong>: Training data showing the mixture distribution
               </li>
               <li>
-                <strong>Red curve</strong>: True conditional expectation E[y|x] = 0.5x² (optimal predictor)
+                <strong>Red curve</strong>: True conditional expectation E[y|x] = 5cos(x) (optimal predictor)
               </li>
               <li>
                 <strong>Green X markers</strong>: Predictions from tiny MLP on test set
               </li>
             </ul>
             <p className="mt-4">
-              The MLP model (16 hidden units) does an excellent job of learning the conditional expectation from the data,
-              despite the presence of noise from the N(0, 1) mixture component. The model achieves an RMSE
-              of ~9.28, which is very close to the theoretical best possible RMSE of ~9.25.
+              The MLP model (16 hidden units) does an excellent job of learning the conditional expectation from the data.
+              The mixture includes both a structured component (depending on x) and a component independent of x.
               {/* Note: These RMSE values are from the baseline model in case1/scripts/train_mlp.py */}
             </p>
           </div>
@@ -205,16 +204,16 @@ export default function Case1Solutions() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h3 className="font-medium text-gray-900 mb-2">Tiny MLP (16 hidden units)</h3>
-                <p className="text-3xl font-bold text-blue-700">RMSE ≈ 9.28</p>
+                <p className="text-3xl font-bold text-blue-700">RMSE ≈ 3.66</p>
                 <p className="text-sm text-gray-600 mt-2">
                   Trained on 900 samples, evaluated on 100 test samples
                 </p>
               </div>
               <div>
                 <h3 className="font-medium text-gray-900 mb-2">Optimal Predictor</h3>
-                <p className="text-3xl font-bold text-green-700">RMSE ≈ 9.25</p>
+                <p className="text-3xl font-bold text-green-700">RMSE ≈ 3.63</p>
                 <p className="text-sm text-gray-600 mt-2">
-                  Using E[y|x] = 0.5x² (theoretical best on test set)
+                  Using E[y|x] = 5cos(x) (theoretical best on test set)
                 </p>
               </div>
             </div>

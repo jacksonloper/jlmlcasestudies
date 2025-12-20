@@ -3,7 +3,7 @@ Generate data for Case Study 1: Conditional Distribution Prediction
 
 Generates:
 - x ~ N(4, 1)
-- y | x is an equal parts mixture of N(x^2, 1) and N(0, 1)
+- y | x is an equal parts mixture of N(10*cos(x), 1) and N(0, 1)
 
 Outputs:
 - train.npy: 900x2 matrix (x, y pairs)
@@ -30,8 +30,8 @@ y = np.zeros(n_total)
 for i in range(n_total):
     # Equal parts mixture: flip a coin
     if np.random.rand() < 0.5:
-        # From N(x^2, 1)
-        y[i] = np.random.normal(x[i]**2, 1)
+        # From N(10*cos(x), 1)
+        y[i] = np.random.normal(10 * np.cos(x[i]), 1)
     else:
         # From N(0, 1)
         y[i] = np.random.normal(0, 1)
