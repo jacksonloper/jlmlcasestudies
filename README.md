@@ -82,15 +82,22 @@ ES = E[||Y - X1||] + E[||Y - X2||] - 0.5 * E[||X1 - X2||]
 ```
 where Y is the true value, X1 and X2 are the two predicted samples.
 
-**Baselines:**
-Generate a naive baseline (adds noise to mean prediction):
-```bash
-python case2/scripts/generate_baseline.py
-```
-
-Generate an optimal baseline (samples from true mixture):
+**Reference Solution - Rectified Flow Matching:**
+The reference solution uses rectified flow matching to learn the conditional distribution:
 ```bash
 python case2/scripts/generate_optimal.py
+```
+
+This approach:
+1. Generates 10 t values per training datapoint
+2. For each t, generates random standard normal eps
+3. Trains MLP to predict y-eps from Fourier embeddings of (x, t, y*t+(1-t)*eps)
+4. Uses scipy odeint with N(0,1) initial conditions to generate samples
+
+**Naive Baseline:**
+For comparison, a naive baseline adds noise to mean predictions:
+```bash
+python case2/scripts/generate_baseline.py
 ```
 
 ## Deployment

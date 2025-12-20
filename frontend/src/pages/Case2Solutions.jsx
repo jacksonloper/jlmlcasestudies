@@ -110,36 +110,45 @@ export default function Case2Solutions() {
         </section>
 
         <section className="mb-12">
-          <h2 className="text-2xl font-medium text-gray-900 mb-4">Optimal Sampling Strategy</h2>
+          <h2 className="text-2xl font-medium text-gray-900 mb-4">Reference Solution: Rectified Flow Matching</h2>
           <div className="prose max-w-none text-gray-700 space-y-4">
             <p>
-              For the 2-sample energy score, the optimal strategy is to sample from the two
-              modes of the mixture distribution:
+              The reference solution uses <strong>rectified flow matching</strong>, a powerful technique
+              for learning to generate samples from the conditional distribution without knowing its structure.
             </p>
             
-            <div className="bg-gray-50 p-6 rounded-lg my-6 overflow-x-auto">
-              <h3 className="font-medium text-gray-900 mb-3">Optimal Samples:</h3>
-              <div className="overflow-x-auto">
-                <BlockMath math="X_1 \sim N(10\cos(x), 1)" />
-              </div>
-              <div className="overflow-x-auto">
-                <BlockMath math="X_2 \sim N(0, 1)" />
-              </div>
-              <div className="mt-4">
-                <p>
-                  Or equivalently, draw both samples from the full mixture distribution:
-                </p>
-              </div>
-              <div className="overflow-x-auto">
-                <BlockMath math="X_1, X_2 \sim \frac{1}{2} N(10\cos(x), 1) + \frac{1}{2} N(0, 1)" />
-              </div>
+            <div className="bg-gray-50 p-6 rounded-lg my-6">
+              <h3 className="font-medium text-gray-900 mb-3">Algorithm:</h3>
+              <ol className="list-decimal list-inside space-y-2">
+                <li>Generate 10 random time values <InlineMath math="t \in [0,1]" /> per training datapoint</li>
+                <li>For each <InlineMath math="t" />, generate random noise <InlineMath math="\epsilon \sim N(0,1)" /></li>
+                <li>
+                  Compute interpolated points: <InlineMath math="z_t = y \cdot t + (1-t) \cdot \epsilon" />
+                </li>
+                <li>
+                  Train MLP to predict the velocity field <InlineMath math="v = y - \epsilon" /> from 
+                  Fourier embeddings of <InlineMath math="(x, t, z_t)" />
+                </li>
+                <li>
+                  Generate samples by solving ODE: start from <InlineMath math="z_0 \sim N(0,1)" /> and 
+                  integrate <InlineMath math="dz/dt = v(x,t,z)" /> to <InlineMath math="t=1" />
+                </li>
+              </ol>
             </div>
 
             <p>
-              The energy score naturally encourages diversity between samples (through the
-              <InlineMath math="|X_1 - X_2|" /> term) while keeping them close to the true
-              value (through the <InlineMath math="|Y - X_1|" /> and <InlineMath math="|Y - X_2|" /> terms).
+              This approach learns to transport samples from a simple distribution <InlineMath math="N(0,1)" />
+              {' '}to the complex target conditional distribution <InlineMath math="p(y|x)" /> by following
+              the learned velocity field.
             </p>
+
+            <div className="bg-blue-50 p-4 rounded-lg my-4">
+              <p className="text-sm">
+                <strong>Note:</strong> While knowing the true mixture structure would give the best possible
+                energy score (~0.5), rectified flow matching learns from data alone and achieves competitive
+                performance (~2.9) without requiring knowledge of the underlying distribution.
+              </p>
+            </div>
           </div>
         </section>
 

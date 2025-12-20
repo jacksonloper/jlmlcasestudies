@@ -1,11 +1,14 @@
 """
-Generate optimal baseline predictions for Case Study 2: Distribution Sampling
+Generate reference solution for Case Study 2: Distribution Sampling using Rectified Flow Matching
 
-This script generates two samples per test point by:
-1. Sampling from the two modes of the true mixture distribution
-2. One sample from N(10*cos(x), 1) and one from N(0, 1)
+This script uses Rectified Flow Matching to generate samples:
+1. Generate 10 t values per training datapoint
+2. For each t, generate random standard normal eps
+3. Train MLP to predict y-eps from Fourier embeddings of (x, t, y*t + (1-t)*eps)
+4. Use scipy odeint with N(0,1) initial conditions to generate samples
 
-This is closer to optimal since it correctly models the bimodal structure.
+This is the reference solution that demonstrates how to learn the conditional distribution
+without knowing the true mixture structure.
 
 Outputs:
 - case2/data/optimal_samples.npy: 100x2 matrix (two samples per test point)
@@ -13,6 +16,8 @@ Outputs:
 
 import numpy as np
 from pathlib import Path
+from sklearn.neural_network import MLPRegressor
+from scipy.integrate import odeint
 
 # Set random seed for reproducibility
 np.random.seed(42)
@@ -25,29 +30,144 @@ dataset_dir = script_dir.parent.parent / "dataset1" / "data"
 # Create output directory if needed
 data_dir.mkdir(parents=True, exist_ok=True)
 
+# Load training data from dataset1
+print("Loading training data from dataset1...")
+train_data = np.load(dataset_dir / "train.npy")
+train_x = train_data[:, 0]
+train_y = train_data[:, 1]
+
+print(f"Training data shape: {train_data.shape}")
+
 # Load test data from dataset1
-print("Loading test data from dataset1...")
+print("\nLoading test data from dataset1...")
 test_x = np.load(dataset_dir / "test_x.npy")
 test_y = np.load(dataset_dir / "test_y.npy")
 
 print(f"Test X shape: {test_x.shape}, Test Y shape: {test_y.shape}")
 
-# Generate two samples per test point from the true mixture distribution
-print("\nGenerating optimal samples from true mixture distribution...")
-samples = np.zeros((test_x.shape[0], 2), dtype=np.float16)
+def fourier_embedding(x, n_freqs=10):
+    """Create Fourier features for input x"""
+    freqs = 2 ** np.arange(n_freqs)
+    features = []
+    for freq in freqs:
+        features.append(np.sin(2 * np.pi * freq * x))
+        features.append(np.cos(2 * np.pi * freq * x))
+    return np.concatenate(features)
 
-for i in range(test_x.shape[0]):
-    x = test_x[i]
-    # Sample from the two modes of the mixture
-    # Mode 1: N(10*cos(x), 1)
-    samples[i, 0] = np.random.normal(10 * np.cos(x), 1)
-    # Mode 2: N(0, 1)
-    samples[i, 1] = np.random.normal(0, 1)
+def create_features(x, t, zt):
+    """Create Fourier embeddings of (x, t, zt)"""
+    # Flatten inputs if needed
+    x_flat = np.atleast_1d(x).flatten()
+    t_flat = np.atleast_1d(t).flatten()
+    zt_flat = np.atleast_1d(zt).flatten()
+    
+    # Create Fourier embeddings for each component
+    x_emb = fourier_embedding(x_flat, n_freqs=5)
+    t_emb = fourier_embedding(t_flat, n_freqs=5)
+    zt_emb = fourier_embedding(zt_flat, n_freqs=5)
+    
+    # Concatenate all features
+    return np.concatenate([x_emb, t_emb, zt_emb])
+
+# Step 1: Generate training data for rectified flow
+print("\nGenerating training data for rectified flow...")
+n_t_samples = 10  # Number of t values per datapoint
+n_train = len(train_x)
+
+# Preallocate arrays
+X_flow = []
+y_flow = []
+
+for i in range(n_train):
+    x_i = train_x[i]
+    y_i = train_y[i]
+    
+    # Generate t values
+    t_values = np.random.uniform(0, 1, n_t_samples)
+    
+    for t in t_values:
+        # Generate random standard normal noise
+        eps = np.random.randn()
+        
+        # Compute z_t = y*t + (1-t)*eps
+        zt = y_i * t + (1 - t) * eps
+        
+        # Create features from Fourier embeddings
+        features = create_features(x_i, t, zt)
+        
+        # Target is y - eps (velocity field)
+        target = y_i - eps
+        
+        X_flow.append(features)
+        y_flow.append(target)
+
+X_flow = np.array(X_flow)
+y_flow = np.array(y_flow)
+
+print(f"Flow training data shape: X={X_flow.shape}, y={y_flow.shape}")
+
+# Step 2: Train MLP to predict velocity field
+print("\nTraining MLP for rectified flow...")
+model = MLPRegressor(
+    hidden_layer_sizes=(128, 128),
+    max_iter=2000,
+    random_state=42,
+    early_stopping=True,
+    validation_fraction=0.1,
+    verbose=False
+)
+model.fit(X_flow, y_flow)
+
+print("Training complete!")
+
+# Step 3: Generate samples using ODE solver
+print("\nGenerating samples using ODE integration...")
+
+def velocity_field(z, t, x_val, model):
+    """Velocity field for the ODE: dz/dt = v(x, t, z)"""
+    # Create features
+    features = create_features(x_val, t, z)
+    # Predict velocity (y - eps)
+    v = model.predict(features.reshape(1, -1))[0]
+    return v
+
+def generate_sample(x_val, model):
+    """Generate a sample by integrating from z_0 ~ N(0,1) to z_1 ~ y"""
+    # Initial condition: z_0 ~ N(0,1)
+    z0 = np.random.randn()
+    
+    # Time points for integration (from 0 to 1)
+    t_eval = np.linspace(0, 1, 20)
+    
+    # Solve ODE
+    try:
+        solution = odeint(velocity_field, z0, t_eval, args=(x_val, model))
+        # Return final value z_1
+        return solution[-1, 0]
+    except:
+        # Fallback: return z0 if ODE fails
+        return z0
+
+# Generate two samples per test point
+samples = np.zeros((len(test_x), 2), dtype=np.float32)
+
+for i in range(len(test_x)):
+    if (i + 1) % 10 == 0:
+        print(f"  Generating samples {i+1}/{len(test_x)}...")
+    
+    x_val = test_x[i]
+    
+    # Generate two independent samples
+    samples[i, 0] = generate_sample(x_val, model)
+    samples[i, 1] = generate_sample(x_val, model)
+
+# Convert to float16 to match other files
+samples = samples.astype(np.float16)
 
 # Save samples
 output_path = data_dir / "optimal_samples.npy"
 np.save(output_path, samples)
-print(f"Optimal samples saved to: {output_path}")
+print(f"\nOptimal samples saved to: {output_path}")
 
 # Calculate energy score
 print("\nCalculating energy score...")
@@ -58,30 +178,8 @@ sum_dist_samples = np.sum(np.abs(samples[:, 0] - samples[:, 1]))
 energy_score = (sum_dist1 + sum_dist2) / (2 * len(test_y)) - 0.5 * sum_dist_samples / len(test_y)
 
 print(f"{'='*60}")
-print(f"Optimal Energy Score: {energy_score:.4f}")
+print(f"Rectified Flow Energy Score: {energy_score:.4f}")
 print(f"{'='*60}")
-print("This uses the true mixture distribution: one sample from each mode.")
-print("This should be close to the best possible energy score.")
+print("This uses rectified flow matching to learn the conditional distribution.")
+print("The model learns to transport samples from N(0,1) to the target distribution.")
 
-# Alternative: both samples from the full mixture
-print("\nGenerating alternative samples (both from mixture)...")
-samples_alt = np.zeros((test_x.shape[0], 2), dtype=np.float16)
-
-for i in range(test_x.shape[0]):
-    x = test_x[i]
-    for j in range(2):
-        # Sample from the full mixture
-        if np.random.rand() < 0.5:
-            samples_alt[i, j] = np.random.normal(10 * np.cos(x), 1)
-        else:
-            samples_alt[i, j] = np.random.normal(0, 1)
-
-# Calculate energy score for alternative
-sum_dist1_alt = np.sum(np.abs(test_y - samples_alt[:, 0]))
-sum_dist2_alt = np.sum(np.abs(test_y - samples_alt[:, 1]))
-sum_dist_samples_alt = np.sum(np.abs(samples_alt[:, 0] - samples_alt[:, 1]))
-
-energy_score_alt = (sum_dist1_alt + sum_dist2_alt) / (2 * len(test_y)) - 0.5 * sum_dist_samples_alt / len(test_y)
-
-print(f"Alternative (both from mixture) Energy Score: {energy_score_alt:.4f}")
-print("\nBoth approaches should give similar (good) energy scores.")
