@@ -19,5 +19,6 @@ dev = [
     "pytest>=7.0.0",
 ]
 
-[tool.setuptools]
-packages = ["jlmlcasestudies", "jlmlcasestudies.cases", "jlmlcasestudies.cases.case1", "jlmlcasestudies.cases.case2", "jlmlcasestudies.dataset1"]
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["jlmlcasestudies*"]
