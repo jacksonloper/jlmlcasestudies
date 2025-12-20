@@ -5,9 +5,18 @@ A collection of machine learning case studies with interactive challenges.
 ## Project Structure
 
 - `frontend/` - React + Vite + Tailwind frontend application
-- `dataset1/` - Shared dataset for case studies
+  - `src/` - Frontend source code
+  - `public/` - Static assets (data files are copied here during build)
+- `cases/` - Case study implementations
+  - `case1/` - Case Study 1: Point Prediction
+    - `scripts/` - Python scripts for training baselines
+    - `data/` - Generated predictions and baseline results
+  - `case2/` - Case Study 2: Distribution Sampling
+    - `scripts/` - Python scripts for reference solutions
+    - `data/` - Generated samples and training history
+- `dataset1/` - Shared dataset used by multiple case studies
   - `data/` - Generated data files (train.npy, test_x.npy, test_y.npy)
-  - `scripts/` - Data generation and baseline training scripts
+  - `scripts/` - Dataset generation scripts
 - `pyproject.toml` - Python dependencies and project configuration
 - `netlify.toml` - Netlify deployment configuration
 
@@ -38,7 +47,7 @@ npm install
 npm run dev
 ```
 
-The data files will be automatically copied from `dataset1/data/` to `frontend/public/case1/data/` and `frontend/public/case2/data/` during the dev/build process.
+The data files will be automatically copied from `dataset1/data/` and `cases/case2/data/` to `frontend/public/case1/data/` and `frontend/public/case2/data/` during the dev/build process.
 
 3. Build for production:
 ```bash
@@ -60,7 +69,7 @@ In this challenge, you are given training data where you can observe both x and 
 **Baseline:**
 To generate a baseline using a tiny Multi-Layer Perceptron:
 ```bash
-python dataset1/scripts/train_mlp.py
+python cases/case1/scripts/train_mlp.py
 ```
 
 This script trains a model and reports both a baseline RMSE and the theoretically best-possible RMSE.
@@ -85,7 +94,7 @@ where Y is the true value, X1 and X2 are the two predicted samples.
 **Reference Solution - Rectified Flow Matching:**
 The reference solution uses rectified flow matching to learn the conditional distribution:
 ```bash
-python case2/scripts/generate_reference.py
+python cases/case2/scripts/generate_reference.py
 ```
 
 This approach (Energy Score: ~2.0):
@@ -99,7 +108,7 @@ This approach (Energy Score: ~2.0):
 **Ground Truth Oracle (for comparison):**
 For comparison, ground truth sampling from the true mixture distribution:
 ```bash
-python case2/scripts/generate_groundtruth.py
+python cases/case2/scripts/generate_groundtruth.py
 ```
 This achieves Energy Score: ~0.5 (best possible with oracle access to true distribution).
 

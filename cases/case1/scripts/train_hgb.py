@@ -20,7 +20,11 @@ np.random.seed(42)
 
 # Define paths
 script_dir = Path(__file__).parent
-data_dir = script_dir.parent / "data"
+# Data is in dataset1/data (shared dataset)
+data_dir = script_dir.parent.parent.parent / "dataset1" / "data"
+# Output goes to cases/case1/data
+output_dir = script_dir.parent / "data"
+output_dir.mkdir(exist_ok=True)
 
 # Load training data
 print("Loading training data...")
@@ -50,7 +54,7 @@ print("\nGenerating predictions on test set...")
 test_yhat = model.predict(test_x)
 
 # Save predictions as float16 to match the other data files
-output_path = data_dir / "hgb_test_yhat.npy"
+output_path = output_dir / "hgb_test_yhat.npy"
 np.save(output_path, test_yhat.astype(np.float16))
 print(f"Predictions saved to: {output_path}")
 

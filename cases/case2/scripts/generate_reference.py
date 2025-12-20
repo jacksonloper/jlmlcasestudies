@@ -30,7 +30,8 @@ np.random.seed(42)
 # Define paths
 script_dir = Path(__file__).parent
 data_dir = script_dir.parent / "data"
-dataset_dir = script_dir.parent.parent / "dataset1" / "data"
+# Dataset is at root level
+dataset_dir = script_dir.parent.parent.parent / "dataset1" / "data"
 
 # Create output directory if needed
 data_dir.mkdir(parents=True, exist_ok=True)
