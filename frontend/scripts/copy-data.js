@@ -38,7 +38,9 @@ if (existsSync(dataset1Dir)) {
 
 // Copy case2-specific files
 if (existsSync(case2Dir)) {
-  const case2Files = readdirSync(case2Dir).filter(file => file.endsWith('.npy'));
+  const case2Files = readdirSync(case2Dir).filter(file => 
+    file.endsWith('.npy') || file.endsWith('.json')
+  );
   
   console.log(`\nCopying ${case2Files.length} case2-specific files to frontend/public/case2/data`);
   

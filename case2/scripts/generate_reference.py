@@ -1,9 +1,9 @@
 """
 Generate reference solution for Case Study 2: Distribution Sampling using Rectified Flow Matching
 
-This script uses Rectified Flow Matching to generate samples:
-1. Generate 10 t values per training datapoint (with bias toward endpoints)
-2. For each t, generate random standard normal eps
+This script uses improved Rectified Flow Matching with iterative training:
+1. Uses partial_fit to train on fresh random t, eps samples each epoch
+2. For each sample, uses exactly 3 t values: t=0 (beginning), t=1 (ending), t=random (middle)
 3. Train MLP to predict y-eps from Fourier embeddings + raw features of (x, t, z_t)
    where z_t = y*t + (1-t)*eps
 4. Use scipy solve_ivp with N(0,1) initial conditions to generate samples
@@ -20,6 +20,9 @@ from pathlib import Path
 from sklearn.neural_network import MLPRegressor
 from sklearn.preprocessing import StandardScaler
 from scipy.integrate import solve_ivp
+import time
+import platform
+import json
 
 # Set random seed for reproducibility
 np.random.seed(42)
@@ -82,72 +85,134 @@ def create_features(x, t, zt):
     # Concatenate raw values + Fourier features
     return np.concatenate([[x, t, zt], x_emb, t_emb, zt_emb])
 
-def sample_t_with_endpoint_bias(n_samples):
-    """Sample t values with bias toward endpoints (0 and 1)"""
-    # Mix uniform and endpoint-biased samples
-    n_uniform = int(0.7 * n_samples)
-    n_endpoint = n_samples - n_uniform
-    
-    # Uniform samples
-    t_uniform = np.random.uniform(0, 1, n_uniform)
-    
-    # Endpoint-biased samples using Beta distribution
-    # Beta(0.5, 0.5) concentrates mass near 0 and 1
-    t_endpoint = np.random.beta(0.5, 0.5, n_endpoint)
-    
-    return np.concatenate([t_uniform, t_endpoint])
-
-# Step 1: Generate training data for rectified flow
-print("\nGenerating training data for rectified flow...")
-n_t_samples = 10  # Number of t values per datapoint
+# Step 1: Setup for iterative training with partial_fit
+print("\nSetting up rectified flow training with partial_fit...")
 n_train = len(train_x_scaled)
+n_epochs = 300  # Number of training epochs
+n_t_per_sample = 3  # Exactly 3 t values per sample (beginning, end, random middle)
 
-# Preallocate arrays
-X_flow = []
-y_flow = []
+# Hold out 10% for validation
+n_val = int(0.1 * n_train)
+val_indices = np.random.choice(n_train, n_val, replace=False)
+train_indices = np.array([i for i in range(n_train) if i not in val_indices])
 
-for i in range(n_train):
-    x_i = train_x_scaled[i]
-    y_i = train_y_scaled[i]
+val_x = train_x_scaled[val_indices]
+val_y = train_y_scaled[val_indices]
+train_x_sub = train_x_scaled[train_indices]
+train_y_sub = train_y_scaled[train_indices]
+
+print(f"Training samples: {len(train_indices)}, Validation samples: {len(val_indices)}")
+
+def generate_flow_batch(x_data, y_data, n_t_per_sample):
+    """Generate a fresh batch of flow training data with 3 t values per sample:
+    - t=0 (beginning)
+    - t=1 (ending)  
+    - t~random (middle)
+    """
+    X_batch = []
+    y_batch = []
     
-    # Generate t values with endpoint bias
-    t_values = sample_t_with_endpoint_bias(n_t_samples)
+    for i in range(len(x_data)):
+        x_i = x_data[i]
+        y_i = y_data[i]
+        
+        # Exactly 3 t values: beginning (0), ending (1), and random middle
+        t_values = [0.0, 1.0, np.random.uniform(0.0, 1.0)]
+        
+        for t in t_values:
+            # Generate random standard normal noise
+            eps = np.random.randn()
+            
+            # Compute z_t = y*t + (1-t)*eps
+            zt = y_i * t + (1 - t) * eps
+            
+            # Create features from Fourier embeddings + raw values
+            features = create_features(x_i, t, zt)
+            
+            # Target is y - eps (velocity field)
+            target = y_i - eps
+            
+            X_batch.append(features)
+            y_batch.append(target)
     
-    for t in t_values:
-        # Generate random standard normal noise
-        eps = np.random.randn()
-        
-        # Compute z_t = y*t + (1-t)*eps
-        zt = y_i * t + (1 - t) * eps
-        
-        # Create features from Fourier embeddings + raw values
-        features = create_features(x_i, t, zt)
-        
-        # Target is y - eps (velocity field)
-        target = y_i - eps
-        
-        X_flow.append(features)
-        y_flow.append(target)
+    return np.array(X_batch), np.array(y_batch)
 
-X_flow = np.array(X_flow)
-y_flow = np.array(y_flow)
+# Step 2: Train MLP using partial_fit with fresh t samples each epoch
+print("\nTraining MLP with partial_fit (fresh t samples each epoch)...")
+print("Using 3 t values per sample: t=0 (beginning), t=1 (ending), t=random (middle)")
+print(f"Hardware: {platform.processor() or platform.machine()} ({platform.system()})")
 
-print(f"Flow training data shape: X={X_flow.shape}, y={y_flow.shape}")
+training_start_time = time.time()
 
-# Step 2: Train MLP to predict velocity field
-print("\nTraining MLP for rectified flow...")
+# Initialize model
 model = MLPRegressor(
     hidden_layer_sizes=(128, 128, 64),
-    max_iter=3000,
     random_state=42,
-    early_stopping=True,
-    validation_fraction=0.1,
     learning_rate_init=0.001,
-    verbose=False
+    solver='adam',
+    max_iter=1  # Not used with partial_fit, but required
 )
-model.fit(X_flow, y_flow)
 
-print("Training complete!")
+# Generate initial batch to initialize model structure
+X_init, y_init = generate_flow_batch(train_x_sub[:100], train_y_sub[:100], n_t_per_sample)
+model.partial_fit(X_init, y_init)
+
+# Fixed validation batch for consistent scoring (use fixed seed)
+np.random.seed(999)
+X_val_fixed, y_val_fixed = generate_flow_batch(val_x, val_y, n_t_per_sample)
+np.random.seed(42)  # Reset to main seed
+
+best_val_score = -np.inf
+patience = 30
+no_improve_count = 0
+
+# Track errors for plotting
+train_errors = []
+val_errors = []
+epochs_recorded = []
+
+print(f"Epoch    Train Loss    Val Score")
+print("-" * 40)
+
+for epoch in range(n_epochs):
+    # Generate fresh batch with new random t, eps for each training sample
+    X_train, y_train = generate_flow_batch(train_x_sub, train_y_sub, n_t_per_sample)
+    
+    # Shuffle and train
+    shuffle_idx = np.random.permutation(len(X_train))
+    X_train = X_train[shuffle_idx]
+    y_train = y_train[shuffle_idx]
+    
+    # Update model with this epoch's batch
+    model.partial_fit(X_train, y_train)
+    
+    # Evaluate every 10 epochs
+    if (epoch + 1) % 10 == 0:
+        train_score = model.score(X_train, y_train)
+        val_score = model.score(X_val_fixed, y_val_fixed)
+        
+        # Store for plotting (convert R² to MSE-like loss)
+        train_errors.append(-train_score)
+        val_errors.append(-val_score)
+        epochs_recorded.append(epoch + 1)
+        
+        print(f"{epoch+1:5d}    {-train_score:10.4f}    {val_score:9.4f}")
+        
+        # Early stopping
+        if val_score > best_val_score:
+            best_val_score = val_score
+            no_improve_count = 0
+        else:
+            no_improve_count += 1
+            
+        if no_improve_count >= patience // 10:
+            print(f"Early stopping at epoch {epoch+1}")
+            break
+
+training_end_time = time.time()
+training_time = training_end_time - training_start_time
+
+print(f"Training complete! Time: {training_time:.2f} seconds")
 
 # Step 3: Generate samples using improved ODE solver
 print("\nGenerating samples using ODE integration...")
@@ -223,6 +288,8 @@ energy_score = (sum_dist1 + sum_dist2) / (2 * len(test_y)) - 0.5 * sum_dist_samp
 
 print(f"{'='*60}")
 print(f"Rectified Flow Energy Score: {energy_score:.4f}")
+print(f"Training Time: {training_time:.2f} seconds")
+print(f"Hardware: {platform.processor() or platform.machine()}")
 print(f"{'='*60}")
 print("This uses rectified flow matching to learn the conditional distribution.")
 print("The model learns to transport samples from N(0,1) to the target distribution.")
@@ -234,6 +301,20 @@ samples_float16 = samples.astype(np.float16)
 output_path = data_dir / "reference_samples.npy"
 np.save(output_path, samples_float16)
 print(f"\nReference samples saved to: {output_path}")
+
+# Save training history
+training_history = {
+    'epochs': epochs_recorded,
+    'train_errors': [float(x) for x in train_errors],
+    'val_errors': [float(x) for x in val_errors],
+    'training_time': float(training_time),
+    'hardware': platform.processor() or platform.machine(),
+    'energy_score': float(energy_score)
+}
+history_path = data_dir / "reference_training_history.json"
+with open(history_path, 'w') as f:
+    json.dump(training_history, f, indent=2)
+print(f"Training history saved to: {history_path}")
 
 # Also save as "optimal_samples.npy" for backwards compatibility with frontend
 output_path_compat = data_dir / "optimal_samples.npy"

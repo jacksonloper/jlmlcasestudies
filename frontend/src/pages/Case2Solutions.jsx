@@ -6,6 +6,7 @@ import npyjs from 'npyjs';
 
 export default function Case2Solutions() {
   const [plotData, setPlotData] = useState(null);
+  const [trainingHistory, setTrainingHistory] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -28,6 +29,15 @@ export default function Case2Solutions() {
         const optimalResponse = await fetch('/case2/data/optimal_samples.npy');
         const optimalArrayBuffer = await optimalResponse.arrayBuffer();
         const optimalData = await npy.load(optimalArrayBuffer);
+        
+        // Load training history
+        try {
+          const historyResponse = await fetch('/case2/data/reference_training_history.json');
+          const history = await historyResponse.json();
+          setTrainingHistory(history);
+        } catch (err) {
+          console.warn('Training history not available:', err);
+        }
 
         // Extract data
         const trainX = [];
@@ -151,18 +161,19 @@ export default function Case2Solutions() {
             <div className="bg-gray-50 p-6 rounded-lg my-6">
               <h3 className="font-medium text-gray-900 mb-3">Algorithm:</h3>
               <ol className="list-decimal list-inside space-y-2">
-                <li>Generate 10 random time values <InlineMath math="t \in [0,1]" /> per training datapoint</li>
+                <li>For each training epoch, generate fresh random time values and noise for each sample</li>
+                <li>Use exactly 3 t values per sample: t=0 (beginning), t=1 (ending), t=random (middle)</li>
                 <li>For each <InlineMath math="t" />, generate random noise <InlineMath math="\epsilon \sim N(0,1)" /></li>
                 <li>
                   Compute interpolated points: <InlineMath math="z_t = y \cdot t + (1-t) \cdot \epsilon" />
                 </li>
                 <li>
-                  Train MLP to predict the velocity field <InlineMath math="v = y - \epsilon" /> from 
-                  Fourier embeddings of <InlineMath math="(x, t, z_t)" />
+                  Train MLP using partial_fit to predict the velocity field <InlineMath math="v = y - \epsilon" /> from 
+                  Fourier embeddings + raw features of <InlineMath math="(x, t, z_t)" />
                 </li>
                 <li>
                   Generate samples by solving ODE: start from <InlineMath math="z_0 \sim N(0,1)" /> and 
-                  integrate <InlineMath math="dz/dt = v(x,t,z)" /> to <InlineMath math="t=1" />
+                  integrate <InlineMath math="dz/dt = v(x,t,z)" /> to <InlineMath math="t=1" /> using scipy solve_ivp
                 </li>
               </ol>
             </div>
@@ -176,12 +187,84 @@ export default function Case2Solutions() {
             <div className="bg-blue-50 p-4 rounded-lg my-4">
               <p className="text-sm">
                 <strong>Performance:</strong> The improved rectified flow implementation achieves
-                an energy score of ~2.0. For comparison, oracle access to the true mixture structure
+                an energy score of {trainingHistory ? `${trainingHistory.energy_score.toFixed(4)}` : '~2.0'}.
+                For comparison, oracle access to the true mixture structure
                 (ground truth) achieves ~0.5, representing the best possible performance.
+                {trainingHistory && (
+                  <>
+                    <br /><br />
+                    <strong>Training Time:</strong> {trainingHistory.training_time.toFixed(2)} seconds on {trainingHistory.hardware}
+                  </>
+                )}
               </p>
             </div>
           </div>
         </section>
+
+        {trainingHistory && (
+          <section className="mb-12">
+            <h2 className="text-2xl font-medium text-gray-900 mb-4">Training Progress</h2>
+            <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6">
+              <Plot
+                data={[
+                  {
+                    x: Array.from(trainingHistory.epochs),
+                    y: Array.from(trainingHistory.train_errors),
+                    mode: 'lines+markers',
+                    name: 'Train Loss',
+                    line: { color: 'rgba(59, 130, 246, 1)' },
+                    marker: { size: 6 },
+                  },
+                  {
+                    x: Array.from(trainingHistory.epochs),
+                    y: Array.from(trainingHistory.val_errors),
+                    mode: 'lines+markers',
+                    name: 'Validation Loss',
+                    line: { color: 'rgba(220, 38, 38, 1)' },
+                    marker: { size: 6 },
+                  },
+                ]}
+                layout={{
+                  title: {
+                    text: 'Training and Validation Loss per Epoch',
+                    font: { size: window.innerWidth < 640 ? 14 : 16 }
+                  },
+                  xaxis: { title: 'Epoch' },
+                  yaxis: { title: 'Loss (negative R²)' },
+                  hovermode: 'closest',
+                  showlegend: true,
+                  legend: {
+                    x: window.innerWidth < 640 ? 0 : 0.02,
+                    y: window.innerWidth < 640 ? -0.15 : 0.98,
+                    orientation: window.innerWidth < 640 ? 'h' : 'v',
+                    xanchor: 'left',
+                    yanchor: window.innerWidth < 640 ? 'top' : 'top',
+                    bgcolor: 'rgba(255, 255, 255, 0.8)',
+                    bordercolor: 'rgba(0, 0, 0, 0.2)',
+                    borderwidth: 1,
+                  },
+                  autosize: true,
+                  margin: { 
+                    l: window.innerWidth < 640 ? 40 : 50, 
+                    r: window.innerWidth < 640 ? 10 : 20, 
+                    t: window.innerWidth < 640 ? 40 : 50, 
+                    b: window.innerWidth < 640 ? 80 : 50 
+                  },
+                }}
+                style={{ width: '100%', height: window.innerWidth < 640 ? '300px' : '400px' }}
+                config={{ responsive: true }}
+                useResizeHandler={true}
+              />
+              <div className="mt-4 prose max-w-none text-gray-700 text-sm">
+                <p>
+                  <strong>Training Details:</strong> Uses partial_fit with fresh random t and ε samples each epoch.
+                  Each training sample generates 3 t values: t=0 (beginning), t=1 (ending), and t=random (middle).
+                  Model trained with early stopping based on validation performance.
+                </p>
+              </div>
+            </div>
+          </section>
+        )}
 
         <section className="mb-12">
           <h2 className="text-2xl font-medium text-gray-900 mb-4">Visualization</h2>
