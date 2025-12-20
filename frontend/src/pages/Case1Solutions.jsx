@@ -191,7 +191,14 @@ export default function Case1Solutions() {
               </li>
             </ul>
             <p className="mt-4">
-              The MLP model (16 hidden units) does an excellent job of learning the conditional expectation from the data.
+              The <a 
+                href="https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-800 underline"
+              >
+                MLP model
+              </a> (16 hidden units) does an excellent job of learning the conditional expectation from the data.
               The mixture includes both a structured component (depending on x) and a component independent of x.
               {/* Note: These RMSE values are from the baseline model in case1/scripts/train_mlp.py */}
             </p>
@@ -203,7 +210,16 @@ export default function Case1Solutions() {
           <div className="bg-blue-50 p-6 rounded-lg">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h3 className="font-medium text-gray-900 mb-2">Tiny MLP (16 hidden units)</h3>
+                <h3 className="font-medium text-gray-900 mb-2">
+                  Tiny <a 
+                    href="https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:text-blue-800 underline"
+                  >
+                    MLP
+                  </a> (16 hidden units)
+                </h3>
                 <p className="text-3xl font-bold text-blue-700">RMSE ≈ 3.66</p>
                 <p className="text-sm text-gray-600 mt-2">
                   Trained on 900 samples, evaluated on 100 test samples
