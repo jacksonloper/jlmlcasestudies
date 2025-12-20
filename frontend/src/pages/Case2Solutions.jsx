@@ -187,9 +187,9 @@ export default function Case2Solutions() {
 
             <div className="bg-blue-50 p-4 rounded-lg my-4">
               <p className="text-sm">
-                <strong>Note:</strong> While knowing the true mixture structure would give the best possible
-                energy score (~0.5), rectified flow matching learns from data alone and achieves competitive
-                performance (~2.9) without requiring knowledge of the underlying distribution.
+                <strong>Performance:</strong> The improved rectified flow implementation achieves
+                an energy score of ~2.0. For comparison, oracle access to the true mixture structure
+                (ground truth) achieves ~0.5, representing the best possible performance.
               </p>
             </div>
           </div>

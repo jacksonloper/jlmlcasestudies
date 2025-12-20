@@ -85,20 +85,23 @@ where Y is the true value, X1 and X2 are the two predicted samples.
 **Reference Solution - Rectified Flow Matching:**
 The reference solution uses rectified flow matching to learn the conditional distribution:
 ```bash
-python case2/scripts/generate_optimal.py
+python case2/scripts/generate_reference.py
 ```
 
-This approach:
-1. Generates 10 t values per training datapoint
-2. For each t, generates random standard normal eps
-3. Trains MLP to predict y-eps from Fourier embeddings of (x, t, y*t+(1-t)*eps)
-4. Uses scipy odeint with N(0,1) initial conditions to generate samples
+This approach (Energy Score: ~2.0):
+1. Standardizes inputs for stable training
+2. Generates 10 t values per training datapoint with endpoint bias
+3. For each t, generates random standard normal eps
+4. Trains MLP to predict y-eps from raw features + Fourier embeddings of (x, t, y*t+(1-t)*eps)
+5. Uses scipy solve_ivp (RK45) with tight tolerances and N(0,1) initial conditions to generate samples
+6. Computes metrics before float16 quantization
 
-**Naive Baseline:**
-For comparison, a naive baseline adds noise to mean predictions:
+**Ground Truth Oracle (for comparison):**
+For comparison, ground truth sampling from the true mixture distribution:
 ```bash
-python case2/scripts/generate_baseline.py
+python case2/scripts/generate_groundtruth.py
 ```
+This achieves Energy Score: ~0.5 (best possible with oracle access to true distribution).
 
 ## Deployment
 
