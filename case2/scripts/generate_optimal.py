@@ -46,25 +46,22 @@ test_y = np.load(dataset_dir / "test_y.npy")
 print(f"Test X shape: {test_x.shape}, Test Y shape: {test_y.shape}")
 
 def fourier_embedding(x, n_freqs=10):
-    """Create Fourier features for input x"""
+    """Create Fourier features for input x (scalar or array)"""
+    x = np.atleast_1d(x).flatten()
     freqs = 2 ** np.arange(n_freqs)
     features = []
     for freq in freqs:
         features.append(np.sin(2 * np.pi * freq * x))
         features.append(np.cos(2 * np.pi * freq * x))
-    return np.concatenate(features)
+    # Flatten all features into a single array
+    return np.concatenate([f.flatten() for f in features])
 
 def create_features(x, t, zt):
     """Create Fourier embeddings of (x, t, zt)"""
-    # Flatten inputs if needed
-    x_flat = np.atleast_1d(x).flatten()
-    t_flat = np.atleast_1d(t).flatten()
-    zt_flat = np.atleast_1d(zt).flatten()
-    
-    # Create Fourier embeddings for each component
-    x_emb = fourier_embedding(x_flat, n_freqs=5)
-    t_emb = fourier_embedding(t_flat, n_freqs=5)
-    zt_emb = fourier_embedding(zt_flat, n_freqs=5)
+    # Create Fourier embeddings for each component (each returns a flat array)
+    x_emb = fourier_embedding(x, n_freqs=5)
+    t_emb = fourier_embedding(t, n_freqs=5)
+    zt_emb = fourier_embedding(zt, n_freqs=5)
     
     # Concatenate all features
     return np.concatenate([x_emb, t_emb, zt_emb])
@@ -144,8 +141,9 @@ def generate_sample(x_val, model):
         solution = odeint(velocity_field, z0, t_eval, args=(x_val, model))
         # Return final value z_1
         return solution[-1, 0]
-    except:
+    except (ValueError, RuntimeError) as e:
         # Fallback: return z0 if ODE fails
+        print(f"Warning: ODE integration failed with {type(e).__name__}, using fallback")
         return z0
 
 # Generate two samples per test point
