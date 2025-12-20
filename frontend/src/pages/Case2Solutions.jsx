@@ -267,11 +267,12 @@ export default function Case2Solutions() {
                   <Plot
                     data={[
                       {
-                        x: [30],  // Energy score computed at epoch 30
+                        x: trainingHistory.epochs,  // Use actual epoch values
                         y: trainingHistory.val_energy_scores,
-                        mode: 'markers',
+                        mode: 'lines+markers',
                         name: 'Validation Energy Score',
-                        marker: { size: 10, color: 'rgba(16, 185, 129, 1)' },
+                        marker: { size: 8, color: 'rgba(16, 185, 129, 1)' },
+                        line: { color: 'rgba(16, 185, 129, 1)' },
                       },
                     ]}
                     layout={{
