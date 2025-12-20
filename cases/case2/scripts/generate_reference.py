@@ -12,7 +12,7 @@ This is a reference solution that demonstrates how to learn the conditional dist
 without knowing the true mixture structure.
 
 Outputs:
-- case2/data/reference_samples.npy: 100x2 matrix (two samples per test point)
+- cases/case2/data/reference_samples.npy: 100x2 matrix (two samples per test point)
 """
 
 import numpy as np

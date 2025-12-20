@@ -5,7 +5,7 @@ This script generates samples by directly sampling from the true mixture distrib
 This represents the best possible performance (oracle access to true distribution).
 
 Outputs:
-- case2/data/groundtruth_samples.npy: 100x2 matrix (two samples per test point)
+- cases/case2/data/groundtruth_samples.npy: 100x2 matrix (two samples per test point)
 """
 
 import numpy as np
