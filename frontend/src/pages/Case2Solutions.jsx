@@ -197,7 +197,7 @@ export default function Case2Solutions() {
 
         <section className="mb-12">
           <h2 className="text-2xl font-medium text-gray-900 mb-4">Visualization</h2>
-          <div className="bg-white border border-gray-200 rounded-lg p-6">
+          <div className="bg-white border border-gray-200 rounded-lg p-6 overflow-x-auto">
             {loading && (
               <div className="text-center py-12">
                 <div className="text-gray-600">Loading data...</div>
@@ -211,28 +211,30 @@ export default function Case2Solutions() {
             )}
             
             {plotData && (
-              <Plot
-                data={plotData}
-                layout={{
-                  title: 'Training Data Showing Mixture Distribution',
-                  xaxis: { title: 'x' },
-                  yaxis: { title: 'y' },
-                  hovermode: 'closest',
-                  showlegend: true,
-                  legend: {
-                    x: 0.02,
-                    y: 0.98,
-                    bgcolor: 'rgba(255, 255, 255, 0.8)',
-                    bordercolor: 'rgba(0, 0, 0, 0.2)',
-                    borderwidth: 1,
-                  },
-                  autosize: true,
-                  margin: { l: 50, r: 20, t: 50, b: 50 },
-                }}
-                style={{ width: '100%', height: '600px' }}
-                config={{ responsive: true }}
-                useResizeHandler={true}
-              />
+              <div className="min-w-[600px]">
+                <Plot
+                  data={plotData}
+                  layout={{
+                    title: 'Training Data Showing Mixture Distribution',
+                    xaxis: { title: 'x' },
+                    yaxis: { title: 'y' },
+                    hovermode: 'closest',
+                    showlegend: true,
+                    legend: {
+                      x: 0.02,
+                      y: 0.98,
+                      bgcolor: 'rgba(255, 255, 255, 0.8)',
+                      bordercolor: 'rgba(0, 0, 0, 0.2)',
+                      borderwidth: 1,
+                    },
+                    autosize: true,
+                    margin: { l: 50, r: 20, t: 50, b: 50 },
+                  }}
+                  style={{ width: '100%', height: '600px' }}
+                  config={{ responsive: true }}
+                  useResizeHandler={true}
+                />
+              </div>
             )}
           </div>
           
