@@ -41,7 +41,7 @@ export default function Case1() {
       const predictedY = predictions.data;
       const trueY = trueData.data;
 
-      // Calculate MSE
+      // Calculate RMSE
       if (predictedY.length !== trueY.length) {
         throw new Error(`Expected ${trueY.length} predictions, got ${predictedY.length}`);
       }
@@ -50,7 +50,9 @@ export default function Case1() {
         return sum + Math.pow(pred - trueY[i], 2);
       }, 0) / predictedY.length;
 
-      setScore(mse);
+      const rmse = Math.sqrt(mse);
+
+      setScore(rmse);
     } catch (err) {
       setError(`Error: ${err.message}`);
     } finally {
@@ -80,7 +82,7 @@ export default function Case1() {
 
             <p>
               The training set contains 900 examples, and the test set contains 100 examples.
-              Your predictions will be evaluated using Mean Squared Error (MSE).
+              Your predictions will be evaluated using Root Mean Squared Error (RMSE).
             </p>
           </div>
         </section>
@@ -155,10 +157,10 @@ export default function Case1() {
               <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
                 <h3 className="font-medium text-green-900 mb-2">Your Score:</h3>
                 <p className="text-2xl font-bold text-green-700">
-                  MSE = {score.toFixed(4)}
+                  RMSE = {score.toFixed(4)}
                 </p>
                 <p className="text-sm text-green-700 mt-2">
-                  Lower is better! The MSE measures the average squared difference between your predictions and the true values.
+                  Lower is better! The RMSE (Root Mean Squared Error) measures the typical prediction error.
                 </p>
               </div>
             )}
@@ -171,8 +173,8 @@ export default function Case1() {
               Want to see the solution?
             </h2>
             <p className="text-gray-700 mb-4">
-              View the solutions page to see the true data generation process and how the
-              HistGradientBoostingRegressor baseline compares to the optimal predictor.
+              View the solutions page to see the true data generation process and how a
+              tiny MLP baseline compares to the optimal predictor.
             </p>
             <Link
               to="/case1/solutions"

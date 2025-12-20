@@ -24,10 +24,10 @@ export default function Case1Solutions() {
         const testXArrayBuffer = await testXResponse.arrayBuffer();
         const testXData = await npy.load(testXArrayBuffer);
 
-        // Load HGB predictions
-        const hgbResponse = await fetch('/case1/data/hgb_test_yhat.npy');
-        const hgbArrayBuffer = await hgbResponse.arrayBuffer();
-        const hgbData = await npy.load(hgbArrayBuffer);
+        // Load MLP predictions
+        const mlpResponse = await fetch('/case1/data/mlp_test_yhat.npy');
+        const mlpArrayBuffer = await mlpResponse.arrayBuffer();
+        const mlpData = await npy.load(mlpArrayBuffer);
 
         // Extract data
         const trainX = [];
@@ -38,7 +38,7 @@ export default function Case1Solutions() {
         }
 
         const testX = Array.from(testXData.data);
-        const hgbPredictions = Array.from(hgbData.data);
+        const mlpPredictions = Array.from(mlpData.data);
 
         // Create a range of x values for the true conditional expectation curve
         const xMin = Math.min(...trainX);
@@ -78,10 +78,10 @@ export default function Case1Solutions() {
           },
           {
             x: testX,
-            y: hgbPredictions,
+            y: mlpPredictions,
             mode: 'markers',
             type: 'scatter',
-            name: 'HGB Predictions',
+            name: 'MLP Predictions (test set)',
             marker: {
               color: 'rgba(34, 197, 94, 1)',
               size: 8,
@@ -175,6 +175,10 @@ export default function Case1Solutions() {
           
           <div className="mt-6 prose max-w-none text-gray-700">
             <h3 className="text-lg font-medium text-gray-900 mb-2">Interpretation:</h3>
+            <p className="mb-4">
+              <strong>Note:</strong> The scatter plot shows the <strong>training data</strong> (900 points),
+              while the performance metrics below are evaluated on the <strong>test set</strong> (100 points).
+            </p>
             <ul className="space-y-2">
               <li>
                 <strong>Blue points</strong>: Training data showing the mixture distribution
@@ -183,34 +187,34 @@ export default function Case1Solutions() {
                 <strong>Red curve</strong>: True conditional expectation E[y|x] = 0.5x² (optimal predictor)
               </li>
               <li>
-                <strong>Green X markers</strong>: Predictions from HistGradientBoostingRegressor
+                <strong>Green X markers</strong>: Predictions from tiny MLP on test set
               </li>
             </ul>
             <p className="mt-4">
-              The HGB model does a reasonable job of learning the conditional expectation from the data,
-              despite the presence of noise from the N(0, 1) mixture component. The model achieves an MSE
-              of ~88.55, which is close to the theoretical best possible MSE of ~85.56.
-              {/* Note: These MSE values are from the baseline model in case1/scripts/train_hgb.py */}
+              The MLP model (16 hidden units) does an excellent job of learning the conditional expectation from the data,
+              despite the presence of noise from the N(0, 1) mixture component. The model achieves an RMSE
+              of ~9.28, which is very close to the theoretical best possible RMSE of ~9.25.
+              {/* Note: These RMSE values are from the baseline model in case1/scripts/train_mlp.py */}
             </p>
           </div>
         </section>
 
         <section className="mb-12">
-          <h2 className="text-2xl font-medium text-gray-900 mb-4">Baseline Performance</h2>
+          <h2 className="text-2xl font-medium text-gray-900 mb-4">Baseline Performance (Test Set)</h2>
           <div className="bg-blue-50 p-6 rounded-lg">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h3 className="font-medium text-gray-900 mb-2">HistGradientBoostingRegressor</h3>
-                <p className="text-3xl font-bold text-blue-700">MSE ≈ 88.55</p>
+                <h3 className="font-medium text-gray-900 mb-2">Tiny MLP (16 hidden units)</h3>
+                <p className="text-3xl font-bold text-blue-700">RMSE ≈ 9.28</p>
                 <p className="text-sm text-gray-600 mt-2">
-                  Default parameters, trained on 900 samples
+                  Trained on 900 samples, evaluated on 100 test samples
                 </p>
               </div>
               <div>
                 <h3 className="font-medium text-gray-900 mb-2">Optimal Predictor</h3>
-                <p className="text-3xl font-bold text-green-700">MSE ≈ 85.56</p>
+                <p className="text-3xl font-bold text-green-700">RMSE ≈ 9.25</p>
                 <p className="text-sm text-gray-600 mt-2">
-                  Using E[y|x] = 0.5x² (theoretical best)
+                  Using E[y|x] = 0.5x² (theoretical best on test set)
                 </p>
               </div>
             </div>
