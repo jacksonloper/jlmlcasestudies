@@ -5,9 +5,9 @@ A collection of machine learning case studies with interactive challenges.
 ## Project Structure
 
 - `frontend/` - React + Vite + Tailwind frontend application
-- `case1/` - First case study: Conditional Distribution Prediction
+- `dataset1/` - Shared dataset for case studies
   - `data/` - Generated data files (train.npy, test_x.npy, test_y.npy)
-  - `scripts/` - Data generation scripts
+  - `scripts/` - Data generation and baseline training scripts
 - `pyproject.toml` - Python dependencies and project configuration
 - `netlify.toml` - Netlify deployment configuration
 
@@ -22,7 +22,7 @@ pip install -e .
 
 2. Generate data for case studies:
 ```bash
-python case1/scripts/generate_data.py
+python dataset1/scripts/generate_data.py
 ```
 
 ### Frontend Development
@@ -38,16 +38,18 @@ npm install
 npm run dev
 ```
 
-The data files will be automatically copied from `case1/data/` to `frontend/public/case1/data/` during the dev/build process.
+The data files will be automatically copied from `dataset1/data/` to `frontend/public/case1/data/` and `frontend/public/case2/data/` during the dev/build process.
 
 3. Build for production:
 ```bash
 npm run build
 ```
 
-## Case Study 1: Conditional Distribution Prediction
+## Case Study 1: Point Prediction
 
-In this challenge, you are given training data where you can observe both x and y. Your goal is to predict y for the test set where only x is given.
+In this challenge, you are given training data where you can observe both x and y. Your goal is to predict a single y value for each test x.
+
+**Evaluation:** Root Mean Squared Error (RMSE)
 
 **Files:**
 - `train.npy` - 900×2 matrix with [x, y] pairs (float16)
@@ -58,10 +60,27 @@ In this challenge, you are given training data where you can observe both x and 
 **Baseline:**
 To generate a baseline using a tiny Multi-Layer Perceptron:
 ```bash
-python case1/scripts/train_mlp.py
+python dataset1/scripts/train_mlp.py
 ```
 
 This script trains a model and reports both a baseline RMSE and the theoretically best-possible RMSE.
+
+## Case Study 2: Distribution Sampling
+
+Uses the same dataset as Case Study 1, but now you must produce TWO samples from the conditional distribution for each test x.
+
+**Evaluation:** 2-sample Energy Score (CRPS - Continuous Ranked Probability Score)
+
+**Files:**
+- Same training and test data as Case Study 1
+- Predictions should be a 100×2 matrix (two samples per test point)
+
+**Energy Score:**
+The energy score is calculated as:
+```
+ES = E[||Y - X||] - 0.5 * E[||X - X'||]
+```
+where Y is the true value, X and X' are the two predicted samples.
 
 ## Deployment
 

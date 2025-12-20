@@ -7,22 +7,27 @@ const __dirname = dirname(__filename);
 
 // Define paths
 const rootDir = join(__dirname, '..', '..');
-const sourceDir = join(rootDir, 'case1', 'data');
-const targetDir = join(__dirname, '..', 'public', 'case1', 'data');
+const sourceDir = join(rootDir, 'dataset1', 'data');
+const targetDirs = [
+  join(__dirname, '..', 'public', 'case1', 'data'),
+  join(__dirname, '..', 'public', 'case2', 'data')
+];
 
-// Create target directory if it doesn't exist
-mkdirSync(targetDir, { recursive: true });
+// Create target directories if they don't exist
+targetDirs.forEach(dir => mkdirSync(dir, { recursive: true }));
 
-// Copy all .npy files
+// Copy all .npy files to both case1 and case2
 if (existsSync(sourceDir)) {
   const files = readdirSync(sourceDir).filter(file => file.endsWith('.npy'));
   
-  console.log(`Copying ${files.length} data files from case1/data to frontend/public/case1/data`);
+  console.log(`Copying ${files.length} data files from dataset1/data to frontend/public/case1/data and case2/data`);
   
   files.forEach(file => {
     const sourcePath = join(sourceDir, file);
-    const targetPath = join(targetDir, file);
-    copyFileSync(sourcePath, targetPath);
+    targetDirs.forEach(targetDir => {
+      const targetPath = join(targetDir, file);
+      copyFileSync(sourcePath, targetPath);
+    });
     console.log(`  ✓ Copied ${file}`);
   });
   

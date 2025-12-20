@@ -4,8 +4,13 @@ export default function Landing() {
   const caseStudies = [
     {
       id: 'case1',
-      title: 'Case Study 1: Conditional Distribution Prediction',
-      description: 'Predict y given x from a mixture distribution',
+      title: 'Case Study 1: Point Prediction',
+      description: 'Predict a single y value given x (evaluated with RMSE)',
+    },
+    {
+      id: 'case2',
+      title: 'Case Study 2: Distribution Sampling',
+      description: 'Generate two samples from the conditional distribution (evaluated with Energy Score)',
     },
   ];
 
