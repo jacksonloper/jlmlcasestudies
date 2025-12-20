@@ -8,7 +8,7 @@ This script:
 4. Saves predictions as hgb_test_yhat.npy
 5. Calculates and reports MSE scores:
    - Baseline MSE (HGB predictions)
-   - Best possible MSE (using ground truth: E[y|x] = 0.5 * x^2)
+   - Best possible MSE (using the optimal predictor)
 """
 
 import numpy as np
@@ -49,28 +49,26 @@ print("Training complete!")
 print("\nGenerating predictions on test set...")
 test_yhat = model.predict(test_x)
 
-# Save predictions
+# Save predictions as float16 to match the other data files
 output_path = data_dir / "hgb_test_yhat.npy"
 np.save(output_path, test_yhat.astype(np.float16))
 print(f"Predictions saved to: {output_path}")
 
-# Calculate MSE for HGB predictions
-mse_hgb = np.mean((test_yhat - test_y) ** 2)
-print(f"\n{'='*60}")
+# Calculate MSE for HGB predictions (using float32 for accuracy)
+mse_hgb = np.mean((test_yhat.astype(np.float32) - test_y.astype(np.float32)) ** 2)
+print(f"{'='*60}")
 print(f"HGB Baseline MSE: {mse_hgb:.4f}")
 print(f"{'='*60}")
 print("This is a not-awful baseline score using default HGB parameters.")
 
-# Calculate best possible MSE using ground truth expected value
-# The true distribution is: y | x ~ 0.5 * N(x^2, 1) + 0.5 * N(0, 1)
-# The optimal prediction minimizing MSE is the expected value:
-# E[y | x] = 0.5 * x^2 + 0.5 * 0 = 0.5 * x^2
+# Calculate best possible MSE using the optimal predictor for this problem
 print(f"\n{'='*60}")
-print("Calculating best possible MSE using ground truth...")
+print("Calculating best possible MSE using optimal predictor...")
 test_x_flat = test_x.flatten()
+# The optimal predictor (minimizing expected MSE) for this data distribution
 optimal_predictions = 0.5 * test_x_flat ** 2
-mse_optimal = np.mean((optimal_predictions - test_y) ** 2)
-print(f"Best Possible MSE (using E[y|x] = 0.5 * x²): {mse_optimal:.4f}")
+mse_optimal = np.mean((optimal_predictions.astype(np.float32) - test_y.astype(np.float32)) ** 2)
+print(f"Best Possible MSE (optimal predictor): {mse_optimal:.4f}")
 print(f"{'='*60}")
 print("This is the essentially best-possible score (expected MSE).")
 
