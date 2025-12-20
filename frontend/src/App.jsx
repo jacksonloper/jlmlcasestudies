@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Landing from './pages/Landing';
-import Case1 from './pages/Case1';
-import Case1Solutions from './pages/Case1Solutions';
-import Case2 from './pages/Case2';
-import Case2Solutions from './pages/Case2Solutions';
+import Case1 from './pages/case1/Case1';
+import Case1Solutions from './pages/case1/Case1Solutions';
+import Case2 from './pages/case2/Case2';
+import Case2Solutions from './pages/case2/Case2Solutions';
 
 function App() {
   return (

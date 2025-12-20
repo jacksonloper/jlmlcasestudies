@@ -4,10 +4,7 @@ A collection of machine learning case studies with interactive challenges.
 
 ## Project Structure
 
-- `frontend/` - React + Vite + Tailwind frontend application
-  - `src/` - Frontend source code
-  - `public/` - Static assets (data files are copied here during build)
-- `cases/` - Case study implementations
+- `cases/` - Case study implementations (both Python and frontend)
   - `case1/` - Case Study 1: Point Prediction
     - `scripts/` - Python scripts for training baselines
     - `data/` - Generated predictions and baseline results
@@ -17,6 +14,10 @@ A collection of machine learning case studies with interactive challenges.
 - `dataset1/` - Shared dataset used by multiple case studies
   - `data/` - Generated data files (train.npy, test_x.npy, test_y.npy)
   - `scripts/` - Dataset generation scripts
+- `frontend/` - React + Vite + Tailwind frontend application
+  - `src/pages/case1/` - Case 1 frontend pages
+  - `src/pages/case2/` - Case 2 frontend pages
+  - `public/` - Static assets (data files are copied here during build)
 - `pyproject.toml` - Python dependencies and project configuration
 - `netlify.toml` - Netlify deployment configuration
 
