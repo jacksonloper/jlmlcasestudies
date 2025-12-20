@@ -16,7 +16,8 @@ np.random.seed(42)
 
 # Define paths
 script_dir = Path(__file__).parent
-data_dir = script_dir.parent / "data"
+# Output to cases/case2/data at repo root
+data_dir = script_dir.parent.parent.parent / "cases" / "case2" / "data"
 # Dataset is at root level
 dataset_dir = script_dir.parent.parent.parent / "dataset1" / "data"
 

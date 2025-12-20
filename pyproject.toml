@@ -20,4 +20,4 @@ dev = [
 ]
 
 [tool.setuptools]
-py-modules = []
+packages = ["jlmlcasestudies", "jlmlcasestudies.cases", "jlmlcasestudies.cases.case1", "jlmlcasestudies.cases.case2", "jlmlcasestudies.dataset1"]

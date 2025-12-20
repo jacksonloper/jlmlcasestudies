@@ -42,8 +42,8 @@ train_y = y[:n_train]
 test_x = x[n_train:]
 test_y = y[n_train:]
 
-# Create output directory (case1/scripts -> case1/data)
-output_dir = Path(__file__).parent.parent / "data"
+# Create output directory at repo root level
+output_dir = Path(__file__).parent.parent.parent / "dataset1" / "data"
 output_dir.mkdir(parents=True, exist_ok=True)
 
 # Save as float16 to reduce file size

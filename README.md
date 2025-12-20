@@ -4,16 +4,20 @@ A collection of machine learning case studies with interactive challenges.
 
 ## Project Structure
 
-- `cases/` - Case study implementations (both Python and frontend)
-  - `case1/` - Case Study 1: Point Prediction
-    - `scripts/` - Python scripts for training baselines
-    - `data/` - Generated predictions and baseline results
-  - `case2/` - Case Study 2: Distribution Sampling
-    - `scripts/` - Python scripts for reference solutions
-    - `data/` - Generated samples and training history
-- `dataset1/` - Shared dataset used by multiple case studies
-  - `data/` - Generated data files (train.npy, test_x.npy, test_y.npy)
-  - `scripts/` - Dataset generation scripts
+- `jlmlcasestudies/` - Python package
+  - `cases/` - Case study Python implementations
+    - `case1/` - Case Study 1: Point Prediction
+      - `train_mlp.py` - MLP baseline training script
+      - `train_hgb.py` - Histogram Gradient Boosting baseline script
+    - `case2/` - Case Study 2: Distribution Sampling
+      - `generate_reference.py` - Reference solution script
+      - `generate_groundtruth.py` - Ground truth oracle script
+  - `dataset1/` - Shared dataset module
+    - `generate_data.py` - Dataset generation script
+- `cases/` - Case study data outputs
+  - `case1/data/` - Generated predictions and baseline results
+  - `case2/data/` - Generated samples and training history
+- `dataset1/data/` - Shared dataset files (train.npy, test_x.npy, test_y.npy)
 - `frontend/` - React + Vite + Tailwind frontend application
   - `src/pages/case1/` - Case 1 frontend pages
   - `src/pages/case2/` - Case 2 frontend pages
@@ -32,7 +36,7 @@ pip install -e .
 
 2. Generate data for case studies:
 ```bash
-python dataset1/scripts/generate_data.py
+python -m jlmlcasestudies.dataset1.generate_data
 ```
 
 ### Frontend Development
@@ -70,7 +74,7 @@ In this challenge, you are given training data where you can observe both x and 
 **Baseline:**
 To generate a baseline using a tiny Multi-Layer Perceptron:
 ```bash
-python cases/case1/scripts/train_mlp.py
+python -m jlmlcasestudies.cases.case1.train_mlp
 ```
 
 This script trains a model and reports both a baseline RMSE and the theoretically best-possible RMSE.
@@ -95,7 +99,7 @@ where Y is the true value, X1 and X2 are the two predicted samples.
 **Reference Solution - Rectified Flow Matching:**
 The reference solution uses rectified flow matching to learn the conditional distribution:
 ```bash
-python cases/case2/scripts/generate_reference.py
+python -m jlmlcasestudies.cases.case2.generate_reference
 ```
 
 This approach (Energy Score: ~2.0):
@@ -109,7 +113,7 @@ This approach (Energy Score: ~2.0):
 **Ground Truth Oracle (for comparison):**
 For comparison, ground truth sampling from the true mixture distribution:
 ```bash
-python cases/case2/scripts/generate_groundtruth.py
+python -m jlmlcasestudies.cases.case2.generate_groundtruth
 ```
 This achieves Energy Score: ~0.5 (best possible with oracle access to true distribution).
 
