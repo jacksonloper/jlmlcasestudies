@@ -137,7 +137,52 @@ def generate_flow_batch(x_data, y_data, n_t_per_sample):
     
     return np.array(X_batch), np.array(y_batch)
 
-# Step 2: Train MLP using partial_fit with fresh t samples each epoch
+# Step 2: Define helper functions for sampling
+def velocity_field(t, z, x_val, model):
+    """Velocity field for the ODE: dz/dt = v(x, t, z)"""
+    # Ensure z is scalar
+    z_scalar = float(np.atleast_1d(z).flatten()[0])
+    
+    # Create features
+    features = create_features(x_val, t, z_scalar)
+    
+    # Predict velocity (y - eps)
+    v = model.predict(features.reshape(1, -1))[0]
+    
+    return [v]
+
+def generate_sample(x_val, model):
+    """Generate a sample by integrating from z_0 ~ N(0,1) to z_1 ~ y"""
+    # Initial condition: z_0 ~ N(0,1)
+    z0 = [np.random.randn()]
+    
+    # Time span for integration (from 0 to 1)
+    t_span = (0, 1)
+    
+    # Solve ODE using RK45 with tighter tolerances
+    try:
+        solution = solve_ivp(
+            lambda t, z: velocity_field(t, z, x_val, model),
+            t_span,
+            z0,
+            method='RK45',
+            rtol=1e-5,
+            atol=1e-7,
+            dense_output=True
+        )
+        
+        if solution.success:
+            # Return final value z_1
+            return solution.y[0, -1]
+        else:
+            print(f"Warning: ODE integration failed, using fallback")
+            return z0[0]
+    except (ValueError, RuntimeError) as e:
+        # Fallback: return z0 if ODE fails
+        print(f"Warning: ODE integration failed with {type(e).__name__}, using fallback")
+        return z0[0]
+
+# Step 3: Train MLP using partial_fit with fresh t samples each epoch
 print("\nTraining MLP with partial_fit (fresh t samples each epoch)...")
 print("Using 3 t values per sample: t=0 (beginning), t=1 (ending), t=random (middle)")
 print(f"Hardware: {platform.processor() or platform.machine()} ({platform.system()})")
@@ -162,17 +207,18 @@ np.random.seed(999)
 X_val_fixed, y_val_fixed = generate_flow_batch(val_x, val_y, n_t_per_sample)
 np.random.seed(42)  # Reset to main seed
 
-best_val_score = -np.inf
+best_val_loss = np.inf  # Track best validation MSE (lower is better)
 patience = 30
 no_improve_count = 0
 
 # Track errors for plotting
-train_errors = []
-val_errors = []
+train_mse = []
+val_mse = []
+val_energy_scores = []
 epochs_recorded = []
 
-print(f"Epoch    Train Loss    Val Score")
-print("-" * 40)
+print(f"Epoch    Train MSE    Val MSE    Val Energy Score")
+print("-" * 60)
 
 for epoch in range(n_epochs):
     # Generate fresh batch with new random t, eps for each training sample
@@ -188,19 +234,46 @@ for epoch in range(n_epochs):
     
     # Evaluate every 10 epochs
     if (epoch + 1) % 10 == 0:
-        train_score = model.score(X_train, y_train)
-        val_score = model.score(X_val_fixed, y_val_fixed)
+        # Calculate MSE loss
+        train_pred = model.predict(X_train)
+        val_pred = model.predict(X_val_fixed)
         
-        # Store for plotting (convert R² to MSE-like loss)
-        train_errors.append(-train_score)
-        val_errors.append(-val_score)
+        train_loss = np.mean((train_pred - y_train) ** 2)
+        val_loss = np.mean((val_pred - y_val_fixed) ** 2)
+        
+        # Calculate energy score on validation set by generating samples
+        # (Only do this less frequently due to computational cost)
+        if (epoch + 1) % 30 == 0 or epoch == 0:
+            # Generate 2 samples per validation point
+            val_samples_scaled = np.zeros((len(val_x), 2), dtype=np.float32)
+            for i in range(len(val_x)):
+                val_samples_scaled[i, 0] = generate_sample(val_x[i], model)
+                val_samples_scaled[i, 1] = generate_sample(val_x[i], model)
+            
+            # Transform back to original scale
+            val_samples = y_scaler.inverse_transform(val_samples_scaled).astype(np.float32)
+            val_y_orig = y_scaler.inverse_transform(val_y.reshape(-1, 1)).flatten()
+            
+            # Calculate energy score
+            sum_d1 = np.sum(np.abs(val_y_orig - val_samples[:, 0]))
+            sum_d2 = np.sum(np.abs(val_y_orig - val_samples[:, 1]))
+            sum_ds = np.sum(np.abs(val_samples[:, 0] - val_samples[:, 1]))
+            val_energy = (sum_d1 + sum_d2) / (2 * len(val_y_orig)) - 0.5 * sum_ds / len(val_y_orig)
+            val_energy_scores.append(float(val_energy))
+        else:
+            # Use last computed energy score
+            val_energy = val_energy_scores[-1] if val_energy_scores else 0.0
+        
+        # Store for plotting
+        train_mse.append(float(train_loss))
+        val_mse.append(float(val_loss))
         epochs_recorded.append(epoch + 1)
         
-        print(f"{epoch+1:5d}    {-train_score:10.4f}    {val_score:9.4f}")
+        print(f"{epoch+1:5d}    {train_loss:10.4f}    {val_loss:8.4f}    {val_energy:14.4f}")
         
-        # Early stopping
-        if val_score > best_val_score:
-            best_val_score = val_score
+        # Early stopping based on validation MSE
+        if val_loss < best_val_loss:  # Lower MSE is better
+            best_val_loss = val_loss
             no_improve_count = 0
         else:
             no_improve_count += 1
@@ -214,53 +287,8 @@ training_time = training_end_time - training_start_time
 
 print(f"Training complete! Time: {training_time:.2f} seconds")
 
-# Step 3: Generate samples using improved ODE solver
+# Step 4: Generate samples using improved ODE solver
 print("\nGenerating samples using ODE integration...")
-
-def velocity_field(t, z, x_val):
-    """Velocity field for the ODE: dz/dt = v(x, t, z)"""
-    # Ensure z is scalar
-    z_scalar = float(np.atleast_1d(z).flatten()[0])
-    
-    # Create features
-    features = create_features(x_val, t, z_scalar)
-    
-    # Predict velocity (y - eps)
-    v = model.predict(features.reshape(1, -1))[0]
-    
-    return [v]
-
-def generate_sample(x_val):
-    """Generate a sample by integrating from z_0 ~ N(0,1) to z_1 ~ y"""
-    # Initial condition: z_0 ~ N(0,1)
-    z0 = [np.random.randn()]
-    
-    # Time span for integration (from 0 to 1)
-    t_span = (0, 1)
-    
-    # Solve ODE using RK45 with tighter tolerances
-    try:
-        solution = solve_ivp(
-            velocity_field,
-            t_span,
-            z0,
-            args=(x_val,),
-            method='RK45',
-            rtol=1e-5,
-            atol=1e-7,
-            dense_output=True
-        )
-        
-        if solution.success:
-            # Return final value z_1
-            return solution.y[0, -1]
-        else:
-            print(f"Warning: ODE integration failed, using fallback")
-            return z0[0]
-    except (ValueError, RuntimeError) as e:
-        # Fallback: return z0 if ODE fails
-        print(f"Warning: ODE integration failed with {type(e).__name__}, using fallback")
-        return z0[0]
 
 # Generate two samples per test point (in scaled space)
 samples_scaled = np.zeros((len(test_x_scaled), 2), dtype=np.float32)
@@ -272,8 +300,8 @@ for i in range(len(test_x_scaled)):
     x_val = test_x_scaled[i]
     
     # Generate two independent samples
-    samples_scaled[i, 0] = generate_sample(x_val)
-    samples_scaled[i, 1] = generate_sample(x_val)
+    samples_scaled[i, 0] = generate_sample(x_val, model)
+    samples_scaled[i, 1] = generate_sample(x_val, model)
 
 # Transform back to original scale
 samples = y_scaler.inverse_transform(samples_scaled).astype(np.float32)
@@ -305,11 +333,12 @@ print(f"\nReference samples saved to: {output_path}")
 # Save training history
 training_history = {
     'epochs': epochs_recorded,
-    'train_errors': [float(x) for x in train_errors],
-    'val_errors': [float(x) for x in val_errors],
+    'train_mse': train_mse,
+    'val_mse': val_mse,
+    'val_energy_scores': val_energy_scores,
     'training_time': float(training_time),
     'hardware': platform.processor() or platform.machine(),
-    'energy_score': float(energy_score)
+    'final_energy_score': float(energy_score)
 }
 history_path = data_dir / "reference_training_history.json"
 with open(history_path, 'w') as f:

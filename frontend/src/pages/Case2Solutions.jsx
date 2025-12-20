@@ -205,62 +205,117 @@ export default function Case2Solutions() {
           <section className="mb-12">
             <h2 className="text-2xl font-medium text-gray-900 mb-4">Training Progress</h2>
             <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6">
-              <Plot
-                data={[
-                  {
-                    x: Array.from(trainingHistory.epochs),
-                    y: Array.from(trainingHistory.train_errors),
-                    mode: 'lines+markers',
-                    name: 'Train Loss',
-                    line: { color: 'rgba(59, 130, 246, 1)' },
-                    marker: { size: 6 },
-                  },
-                  {
-                    x: Array.from(trainingHistory.epochs),
-                    y: Array.from(trainingHistory.val_errors),
-                    mode: 'lines+markers',
-                    name: 'Validation Loss',
-                    line: { color: 'rgba(220, 38, 38, 1)' },
-                    marker: { size: 6 },
-                  },
-                ]}
-                layout={{
-                  title: {
-                    text: 'Training and Validation Loss per Epoch',
-                    font: { size: window.innerWidth < 640 ? 14 : 16 }
-                  },
-                  xaxis: { title: 'Epoch' },
-                  yaxis: { title: 'Loss (negative R²)' },
-                  hovermode: 'closest',
-                  showlegend: true,
-                  legend: {
-                    x: window.innerWidth < 640 ? 0 : 0.02,
-                    y: window.innerWidth < 640 ? -0.15 : 0.98,
-                    orientation: window.innerWidth < 640 ? 'h' : 'v',
-                    xanchor: 'left',
-                    yanchor: window.innerWidth < 640 ? 'top' : 'top',
-                    bgcolor: 'rgba(255, 255, 255, 0.8)',
-                    bordercolor: 'rgba(0, 0, 0, 0.2)',
-                    borderwidth: 1,
-                  },
-                  autosize: true,
-                  margin: { 
-                    l: window.innerWidth < 640 ? 40 : 50, 
-                    r: window.innerWidth < 640 ? 10 : 20, 
-                    t: window.innerWidth < 640 ? 40 : 50, 
-                    b: window.innerWidth < 640 ? 80 : 50 
-                  },
-                }}
-                style={{ width: '100%', height: window.innerWidth < 640 ? '300px' : '400px' }}
-                config={{ responsive: true }}
-                useResizeHandler={true}
-              />
+              {/* MSE Loss Plot */}
+              <div className="mb-8">
+                <h3 className="text-lg font-medium text-gray-900 mb-3">Mean Squared Error (MSE) Loss</h3>
+                <Plot
+                  data={[
+                    {
+                      x: Array.from(trainingHistory.epochs),
+                      y: Array.from(trainingHistory.train_mse),
+                      mode: 'lines+markers',
+                      name: 'Train MSE',
+                      line: { color: 'rgba(59, 130, 246, 1)' },
+                      marker: { size: 6 },
+                    },
+                    {
+                      x: Array.from(trainingHistory.epochs),
+                      y: Array.from(trainingHistory.val_mse),
+                      mode: 'lines+markers',
+                      name: 'Validation MSE',
+                      line: { color: 'rgba(220, 38, 38, 1)' },
+                      marker: { size: 6 },
+                    },
+                  ]}
+                  layout={{
+                    title: {
+                      text: 'Training and Validation MSE per Epoch',
+                      font: { size: window.innerWidth < 640 ? 14 : 16 }
+                    },
+                    xaxis: { title: 'Epoch' },
+                    yaxis: { title: 'MSE Loss' },
+                    hovermode: 'closest',
+                    showlegend: true,
+                    legend: {
+                      x: window.innerWidth < 640 ? 0 : 0.02,
+                      y: window.innerWidth < 640 ? -0.2 : 0.98,
+                      orientation: window.innerWidth < 640 ? 'h' : 'v',
+                      xanchor: 'left',
+                      yanchor: window.innerWidth < 640 ? 'top' : 'top',
+                      bgcolor: 'rgba(255, 255, 255, 0.8)',
+                      bordercolor: 'rgba(0, 0, 0, 0.2)',
+                      borderwidth: 1,
+                    },
+                    autosize: true,
+                    margin: { 
+                      l: window.innerWidth < 640 ? 40 : 50, 
+                      r: window.innerWidth < 640 ? 10 : 20, 
+                      t: window.innerWidth < 640 ? 40 : 50, 
+                      b: window.innerWidth < 640 ? 90 : 50 
+                    },
+                  }}
+                  style={{ width: '100%', height: window.innerWidth < 640 ? '300px' : '400px' }}
+                  config={{ responsive: true }}
+                  useResizeHandler={true}
+                />
+              </div>
+              
+              {/* Energy Score Plot */}
+              {trainingHistory.val_energy_scores && trainingHistory.val_energy_scores.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-3">Energy Score (CRPS) on Validation Set</h3>
+                  <Plot
+                    data={[
+                      {
+                        x: [30],  // Energy score computed at epoch 30
+                        y: Array.from(trainingHistory.val_energy_scores),
+                        mode: 'markers',
+                        name: 'Validation Energy Score',
+                        marker: { size: 10, color: 'rgba(16, 185, 129, 1)' },
+                      },
+                    ]}
+                    layout={{
+                      title: {
+                        text: 'Validation Energy Score (Lower is Better)',
+                        font: { size: window.innerWidth < 640 ? 14 : 16 }
+                      },
+                      xaxis: { title: 'Epoch' },
+                      yaxis: { title: 'Energy Score (CRPS)' },
+                      hovermode: 'closest',
+                      showlegend: false,
+                      autosize: true,
+                      margin: { 
+                        l: window.innerWidth < 640 ? 40 : 50, 
+                        r: window.innerWidth < 640 ? 10 : 20, 
+                        t: window.innerWidth < 640 ? 40 : 50, 
+                        b: window.innerWidth < 640 ? 50 : 50 
+                      },
+                    }}
+                    style={{ width: '100%', height: window.innerWidth < 640 ? '250px' : '300px' }}
+                    config={{ responsive: true }}
+                    useResizeHandler={true}
+                  />
+                </div>
+              )}
+              
               <div className="mt-4 prose max-w-none text-gray-700 text-sm">
                 <p>
                   <strong>Training Details:</strong> Uses partial_fit with fresh random t and ε samples each epoch.
                   Each training sample generates 3 t values: t=0 (beginning), t=1 (ending), and t=random (middle).
-                  Model trained with early stopping based on validation performance.
+                  Model trained with early stopping based on validation MSE.
                 </p>
+                {trainingHistory.final_energy_score && (
+                  <p className="mt-2">
+                    <strong>Final Energy Score:</strong> {trainingHistory.final_energy_score.toFixed(4)} 
+                    {' '}(computed on test set after training)
+                  </p>
+                )}
+                {trainingHistory.training_time && (
+                  <p className="mt-2">
+                    <strong>Training Time:</strong> {trainingHistory.training_time.toFixed(2)} seconds
+                    {trainingHistory.hardware && ` on ${trainingHistory.hardware}`}
+                  </p>
+                )}
               </div>
             </div>
           </section>
