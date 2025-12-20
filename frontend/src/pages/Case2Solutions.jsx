@@ -19,12 +19,31 @@ export default function Case2Solutions() {
         const trainArrayBuffer = await trainResponse.arrayBuffer();
         const trainData = await npy.load(trainArrayBuffer);
 
+        // Load test X data
+        const testXResponse = await fetch('/case2/data/test_x.npy');
+        const testXArrayBuffer = await testXResponse.arrayBuffer();
+        const testXData = await npy.load(testXArrayBuffer);
+
+        // Load optimal samples from rectified flow
+        const optimalResponse = await fetch('/case2/data/optimal_samples.npy');
+        const optimalArrayBuffer = await optimalResponse.arrayBuffer();
+        const optimalData = await npy.load(optimalArrayBuffer);
+
         // Extract data
         const trainX = [];
         const trainY = [];
         for (let i = 0; i < trainData.shape[0]; i++) {
           trainX.push(trainData.data[i * 2]);
           trainY.push(trainData.data[i * 2 + 1]);
+        }
+
+        // Extract test X and optimal samples
+        const testX = Array.from(testXData.data);
+        const sample1 = [];
+        const sample2 = [];
+        for (let i = 0; i < optimalData.shape[0]; i++) {
+          sample1.push(optimalData.data[i * 2]);
+          sample2.push(optimalData.data[i * 2 + 1]);
         }
 
         // Create a range of x values for the true conditional expectation curve
@@ -61,6 +80,30 @@ export default function Case2Solutions() {
             line: {
               color: 'rgba(220, 38, 38, 1)',
               width: 3,
+            },
+          },
+          {
+            x: testX,
+            y: sample1,
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Reference Solution Sample 1',
+            marker: {
+              color: 'rgba(34, 197, 94, 1)',
+              size: 8,
+              symbol: 'circle',
+            },
+          },
+          {
+            x: testX,
+            y: sample2,
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Reference Solution Sample 2',
+            marker: {
+              color: 'rgba(168, 85, 247, 1)',
+              size: 8,
+              symbol: 'diamond',
             },
           },
         ];
@@ -202,11 +245,18 @@ export default function Case2Solutions() {
               <li>
                 <strong>Red curve</strong>: Conditional expectation E[y|x] = 5cos(x)
               </li>
+              <li>
+                <strong>Green circles</strong>: First sample from rectified flow reference solution
+              </li>
+              <li>
+                <strong>Purple diamonds</strong>: Second sample from rectified flow reference solution
+              </li>
             </ul>
             <p className="mt-4">
               Notice how the data splits into two clusters: one following the cosine pattern
-              (around the red curve) and another centered around y=0. To achieve a good energy
-              score, your two samples should capture this bimodal nature of the distribution.
+              (around the red curve) and another centered around y=0. The reference solution samples
+              (green and purple markers) demonstrate how rectified flow matching learns to capture
+              this bimodal distribution, with samples spread across both modes.
             </p>
           </div>
         </section>
