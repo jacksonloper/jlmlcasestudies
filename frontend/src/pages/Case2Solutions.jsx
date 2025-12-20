@@ -19,11 +19,6 @@ export default function Case2Solutions() {
         const trainArrayBuffer = await trainResponse.arrayBuffer();
         const trainData = await npy.load(trainArrayBuffer);
 
-        // Load test data
-        const testXResponse = await fetch('/case2/data/test_x.npy');
-        const testXArrayBuffer = await testXResponse.arrayBuffer();
-        await npy.load(testXArrayBuffer);
-
         // Extract data
         const trainX = [];
         const trainY = [];

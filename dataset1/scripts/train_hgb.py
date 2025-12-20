@@ -66,7 +66,7 @@ print(f"\n{'='*60}")
 print("Calculating best possible MSE using optimal predictor...")
 test_x_flat = test_x.flatten()
 # The optimal predictor (minimizing expected MSE) for this data distribution
-optimal_predictions = 0.5 * test_x_flat ** 2
+optimal_predictions = 0.5 * 10 * np.cos(test_x_flat)
 mse_optimal = np.mean((optimal_predictions.astype(np.float32) - test_y.astype(np.float32)) ** 2)
 print(f"Best Possible MSE (optimal predictor): {mse_optimal:.4f}")
 print(f"{'='*60}")
