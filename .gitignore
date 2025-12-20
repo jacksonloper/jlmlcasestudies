@@ -15,6 +15,7 @@ build/
 
 # Copied data files
 frontend/public/case1/
+frontend/public/case2/
 
 # IDE
 .vscode/
