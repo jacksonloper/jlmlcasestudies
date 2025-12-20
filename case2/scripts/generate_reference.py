@@ -108,34 +108,38 @@ def generate_flow_batch(x_data, y_data, n_t_per_sample):
     - t=0 (beginning)
     - t=1 (ending)  
     - t~random (middle)
+    
+    Vectorized implementation for efficiency.
     """
+    n_samples = len(x_data)
+    n_total = n_samples * n_t_per_sample
+    
+    # Vectorized: replicate each sample 3 times
+    x_expanded = np.repeat(x_data, n_t_per_sample)  # shape: (n_total,)
+    y_expanded = np.repeat(y_data, n_t_per_sample)  # shape: (n_total,)
+    
+    # Vectorized: generate t values for all samples at once
+    # For each sample: [0.0, 1.0, random]
+    t_values = np.zeros(n_total)
+    t_values[1::3] = 1.0  # Every 2nd element in each group of 3
+    t_values[2::3] = np.random.uniform(0.0, 1.0, n_samples)  # Every 3rd element
+    
+    # Vectorized: generate all random noise at once
+    eps_values = np.random.randn(n_total)
+    
+    # Vectorized: compute all z_t values
+    zt_values = y_expanded * t_values + (1 - t_values) * eps_values
+    
+    # Vectorized: compute all targets
+    y_batch = y_expanded - eps_values
+    
+    # Create features (still needs loop due to Fourier embedding complexity)
     X_batch = []
-    y_batch = []
+    for i in range(n_total):
+        features = create_features(x_expanded[i], t_values[i], zt_values[i])
+        X_batch.append(features)
     
-    for i in range(len(x_data)):
-        x_i = x_data[i]
-        y_i = y_data[i]
-        
-        # Exactly 3 t values: beginning (0), ending (1), and random middle
-        t_values = [0.0, 1.0, np.random.uniform(0.0, 1.0)]
-        
-        for t in t_values:
-            # Generate random standard normal noise
-            eps = np.random.randn()
-            
-            # Compute z_t = y*t + (1-t)*eps
-            zt = y_i * t + (1 - t) * eps
-            
-            # Create features from Fourier embeddings + raw values
-            features = create_features(x_i, t, zt)
-            
-            # Target is y - eps (velocity field)
-            target = y_i - eps
-            
-            X_batch.append(features)
-            y_batch.append(target)
-    
-    return np.array(X_batch), np.array(y_batch)
+    return np.array(X_batch), y_batch
 
 # Step 2: Define helper functions for sampling
 def velocity_field(t, z, x_val, model):
@@ -242,27 +246,22 @@ for epoch in range(n_epochs):
         val_loss = np.mean((val_pred - y_val_fixed) ** 2)
         
         # Calculate energy score on validation set by generating samples
-        # (Only do this less frequently due to computational cost)
-        if (epoch + 1) % 30 == 0 or epoch == 0:
-            # Generate 2 samples per validation point
-            val_samples_scaled = np.zeros((len(val_x), 2), dtype=np.float32)
-            for i in range(len(val_x)):
-                val_samples_scaled[i, 0] = generate_sample(val_x[i], model)
-                val_samples_scaled[i, 1] = generate_sample(val_x[i], model)
-            
-            # Transform back to original scale
-            val_samples = y_scaler.inverse_transform(val_samples_scaled).astype(np.float32)
-            val_y_orig = y_scaler.inverse_transform(val_y.reshape(-1, 1)).flatten()
-            
-            # Calculate energy score
-            sum_d1 = np.sum(np.abs(val_y_orig - val_samples[:, 0]))
-            sum_d2 = np.sum(np.abs(val_y_orig - val_samples[:, 1]))
-            sum_ds = np.sum(np.abs(val_samples[:, 0] - val_samples[:, 1]))
-            val_energy = (sum_d1 + sum_d2) / (2 * len(val_y_orig)) - 0.5 * sum_ds / len(val_y_orig)
-            val_energy_scores.append(float(val_energy))
-        else:
-            # Use last computed energy score
-            val_energy = val_energy_scores[-1] if val_energy_scores else 0.0
+        # Generate 2 samples per validation point
+        val_samples_scaled = np.zeros((len(val_x), 2), dtype=np.float32)
+        for i in range(len(val_x)):
+            val_samples_scaled[i, 0] = generate_sample(val_x[i], model)
+            val_samples_scaled[i, 1] = generate_sample(val_x[i], model)
+        
+        # Transform back to original scale
+        val_samples = y_scaler.inverse_transform(val_samples_scaled).astype(np.float32)
+        val_y_orig = y_scaler.inverse_transform(val_y.reshape(-1, 1)).flatten()
+        
+        # Calculate energy score
+        sum_d1 = np.sum(np.abs(val_y_orig - val_samples[:, 0]))
+        sum_d2 = np.sum(np.abs(val_y_orig - val_samples[:, 1]))
+        sum_ds = np.sum(np.abs(val_samples[:, 0] - val_samples[:, 1]))
+        val_energy = (sum_d1 + sum_d2) / (2 * len(val_y_orig)) - 0.5 * sum_ds / len(val_y_orig)
+        val_energy_scores.append(float(val_energy))
         
         # Store for plotting
         train_mse.append(float(train_loss))
