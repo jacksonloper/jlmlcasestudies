@@ -13,6 +13,9 @@ dist/
 build/
 *.egg-info/
 
+# Copied data files
+frontend/public/case1/
+
 # IDE
 .vscode/
 .idea/

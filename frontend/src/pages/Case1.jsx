@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { InlineMath, BlockMath } from 'react-katex';
+import { InlineMath } from 'react-katex';
 import npyjs from 'npyjs';
 
 export default function Case1() {
@@ -77,15 +77,6 @@ export default function Case1() {
               <InlineMath math="x" /> and <InlineMath math="y" />. Your goal is to predict{' '}
               <InlineMath math="y" /> for the test set where only <InlineMath math="x" /> is given.
             </p>
-            
-            <div className="bg-gray-50 p-6 rounded-lg my-6">
-              <h3 className="font-medium text-gray-900 mb-3">Data Generation Process:</h3>
-              <BlockMath math="x \sim N(4, 1)" />
-              <div className="my-2">
-                <InlineMath math="y \mid x" /> is an equal parts mixture:
-              </div>
-              <BlockMath math="y \mid x \sim \frac{1}{2} N(x^2, 1) + \frac{1}{2} N(0, 1)" />
-            </div>
 
             <p>
               The training set contains 900 examples, and the test set contains 100 examples.
