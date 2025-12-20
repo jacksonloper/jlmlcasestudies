@@ -119,17 +119,23 @@ export default function Case1Solutions() {
               The data for this challenge was generated using the following process:
             </p>
             
-            <div className="bg-gray-50 p-6 rounded-lg my-6">
+            <div className="bg-gray-50 p-6 rounded-lg my-6 overflow-x-auto">
               <h3 className="font-medium text-gray-900 mb-3">Data Generation:</h3>
-              <BlockMath math="x \sim N(4, 1)" />
+              <div className="overflow-x-auto">
+                <BlockMath math="x \sim N(4, 1)" />
+              </div>
               <div className="my-2">
                 <InlineMath math="y \mid x" /> is an equal parts mixture:
               </div>
-              <BlockMath math="y \mid x \sim \frac{1}{2} N(10\cos(x), 1) + \frac{1}{2} N(0, 1)" />
+              <div className="overflow-x-auto">
+                <BlockMath math="y \mid x \sim \frac{1}{2} N(10\cos(x), 1) + \frac{1}{2} N(0, 1)" />
+              </div>
               <div className="mt-4">
                 <p>This means the optimal prediction (minimizing MSE) is the conditional expectation:</p>
               </div>
-              <BlockMath math="E[y \mid x] = \frac{1}{2} \cdot 10\cos(x) + \frac{1}{2} \cdot 0 = 5\cos(x)" />
+              <div className="overflow-x-auto">
+                <BlockMath math="E[y \mid x] = \frac{1}{2} \cdot 10\cos(x) + \frac{1}{2} \cdot 0 = 5\cos(x)" />
+              </div>
             </div>
           </div>
         </section>
@@ -166,9 +172,11 @@ export default function Case1Solutions() {
                     borderwidth: 1,
                   },
                   autosize: true,
+                  margin: { l: 50, r: 20, t: 50, b: 50 },
                 }}
                 style={{ width: '100%', height: '600px' }}
                 config={{ responsive: true }}
+                useResizeHandler={true}
               />
             )}
           </div>
