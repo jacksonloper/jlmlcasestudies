@@ -78,9 +78,20 @@ Uses the same dataset as Case Study 1, but now you must produce TWO samples from
 **Energy Score:**
 The energy score is calculated as:
 ```
-ES = E[||Y - X||] - 0.5 * E[||X - X'||]
+ES = E[||Y - X1||] + E[||Y - X2||] - 0.5 * E[||X1 - X2||]
 ```
-where Y is the true value, X and X' are the two predicted samples.
+where Y is the true value, X1 and X2 are the two predicted samples.
+
+**Baselines:**
+Generate a naive baseline (adds noise to mean prediction):
+```bash
+python case2/scripts/generate_baseline.py
+```
+
+Generate an optimal baseline (samples from true mixture):
+```bash
+python case2/scripts/generate_optimal.py
+```
 
 ## Deployment
 

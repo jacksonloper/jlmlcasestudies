@@ -22,7 +22,7 @@ export default function Case2Solutions() {
         // Load test data
         const testXResponse = await fetch('/case2/data/test_x.npy');
         const testXArrayBuffer = await testXResponse.arrayBuffer();
-        const testXData = await npy.load(testXArrayBuffer);
+        await npy.load(testXArrayBuffer);
 
         // Extract data
         const trainX = [];
@@ -31,8 +31,6 @@ export default function Case2Solutions() {
           trainX.push(trainData.data[i * 2]);
           trainY.push(trainData.data[i * 2 + 1]);
         }
-
-        const testX = Array.from(testXData.data);
 
         // Create a range of x values for the true conditional expectation curve
         const xMin = Math.min(...trainX);
