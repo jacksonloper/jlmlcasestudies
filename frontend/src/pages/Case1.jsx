@@ -164,6 +164,24 @@ export default function Case1() {
             )}
           </div>
         </section>
+
+        <section className="mb-12 border-t pt-8">
+          <div className="bg-gray-50 p-6 rounded-lg">
+            <h2 className="text-xl font-medium text-gray-900 mb-3">
+              Want to see the solution?
+            </h2>
+            <p className="text-gray-700 mb-4">
+              View the solutions page to see the true data generation process and how the
+              HistGradientBoostingRegressor baseline compares to the optimal predictor.
+            </p>
+            <Link
+              to="/case1/solutions"
+              className="inline-block bg-gray-700 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+            >
+              View Solutions →
+            </Link>
+          </div>
+        </section>
       </div>
     </div>
   );
