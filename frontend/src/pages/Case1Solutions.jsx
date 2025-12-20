@@ -45,7 +45,9 @@ export default function Case1Solutions() {
         const xMax = Math.max(...trainX);
         const xRange = [];
         const trueExpectation = [];
-        for (let x = xMin; x <= xMax; x += 0.1) {
+        const numPoints = Math.ceil((xMax - xMin) * 10);
+        for (let i = 0; i <= numPoints; i++) {
+          const x = xMin + (i * 0.1);
           xRange.push(x);
           trueExpectation.push(0.5 * x * x); // E[y|x] = 0.5 * x^2
         }
@@ -188,6 +190,7 @@ export default function Case1Solutions() {
               The HGB model does a reasonable job of learning the conditional expectation from the data,
               despite the presence of noise from the N(0, 1) mixture component. The model achieves an MSE
               of ~88.55, which is close to the theoretical best possible MSE of ~85.56.
+              {/* Note: These MSE values are from the baseline model in case1/scripts/train_hgb.py */}
             </p>
           </div>
         </section>
