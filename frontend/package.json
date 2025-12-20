@@ -13,9 +13,11 @@
   "dependencies": {
     "katex": "^0.16.27",
     "npyjs": "^1.0.4",
+    "plotly.js-dist-min": "^3.3.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-katex": "^3.1.0",
+    "react-plotly.js": "^2.6.0",
     "react-router-dom": "^7.11.0"
   },
   "devDependencies": {

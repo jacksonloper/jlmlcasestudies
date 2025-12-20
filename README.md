@@ -49,14 +49,19 @@ npm run build
 
 In this challenge, you are given training data where you can observe both x and y. Your goal is to predict y for the test set where only x is given.
 
-**Data Generation:**
-- x ~ N(4, 1)
-- y | x is an equal parts mixture of N(x², 1) and N(0, 1)
-
 **Files:**
 - `train.npy` - 900×2 matrix with [x, y] pairs (float16)
 - `test_x.npy` - 100 vector of x values (float16)
 - `test_y.npy` - 100 vector of y values (float16) - used for scoring
+- `mlp_test_yhat.npy` - 100 vector of baseline predictions using a tiny MLP
+
+**Baseline:**
+To generate a baseline using a tiny Multi-Layer Perceptron:
+```bash
+python case1/scripts/train_mlp.py
+```
+
+This script trains a model and reports both a baseline RMSE and the theoretically best-possible RMSE.
 
 ## Deployment
 
