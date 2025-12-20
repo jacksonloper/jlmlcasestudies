@@ -83,27 +83,15 @@ export default function Case2Solutions() {
             },
           },
           {
-            x: testX,
-            y: sample1,
+            x: [...testX, ...testX],
+            y: [...sample1, ...sample2],
             mode: 'markers',
             type: 'scatter',
-            name: 'Reference Solution Sample 1',
+            name: 'Reference Solution Samples',
             marker: {
-              color: 'rgba(34, 197, 94, 1)',
-              size: 8,
+              color: 'rgba(34, 197, 94, 0.6)',
+              size: 6,
               symbol: 'circle',
-            },
-          },
-          {
-            x: testX,
-            y: sample2,
-            mode: 'markers',
-            type: 'scatter',
-            name: 'Reference Solution Sample 2',
-            marker: {
-              color: 'rgba(168, 85, 247, 1)',
-              size: 8,
-              symbol: 'diamond',
             },
           },
         ];
@@ -257,16 +245,13 @@ export default function Case2Solutions() {
                 <strong>Red curve</strong>: Conditional expectation E[y|x] = 5cos(x)
               </li>
               <li>
-                <strong>Green circles</strong>: First sample from rectified flow reference solution
-              </li>
-              <li>
-                <strong>Purple diamonds</strong>: Second sample from rectified flow reference solution
+                <strong>Green circles</strong>: Samples from rectified flow reference solution
               </li>
             </ul>
             <p className="mt-4">
               Notice how the data splits into two clusters: one following the cosine pattern
               (around the red curve) and another centered around y=0. The reference solution samples
-              (green and purple markers) demonstrate how rectified flow matching learns to capture
+              (green circles) demonstrate how rectified flow matching learns to capture
               this bimodal distribution, with samples spread across both modes.
             </p>
           </div>
