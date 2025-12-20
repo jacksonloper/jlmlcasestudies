@@ -187,10 +187,10 @@ export default function Case2Solutions() {
             <div className="bg-blue-50 p-4 rounded-lg my-4">
               <p className="text-sm">
                 <strong>Performance:</strong> The improved rectified flow implementation achieves
-                an energy score of {trainingHistory ? `${trainingHistory.energy_score.toFixed(4)}` : '~2.0'}.
+                an energy score of {trainingHistory?.final_energy_score ? `${trainingHistory.final_energy_score.toFixed(4)}` : '~2.0'}.
                 For comparison, oracle access to the true mixture structure
                 (ground truth) achieves ~0.5, representing the best possible performance.
-                {trainingHistory && (
+                {trainingHistory?.training_time && (
                   <>
                     <br /><br />
                     <strong>Training Time:</strong> {trainingHistory.training_time.toFixed(2)} seconds on {trainingHistory.hardware}
@@ -211,16 +211,16 @@ export default function Case2Solutions() {
                 <Plot
                   data={[
                     {
-                      x: Array.from(trainingHistory.epochs),
-                      y: Array.from(trainingHistory.train_mse),
+                      x: trainingHistory.epochs,
+                      y: trainingHistory.train_mse,
                       mode: 'lines+markers',
                       name: 'Train MSE',
                       line: { color: 'rgba(59, 130, 246, 1)' },
                       marker: { size: 6 },
                     },
                     {
-                      x: Array.from(trainingHistory.epochs),
-                      y: Array.from(trainingHistory.val_mse),
+                      x: trainingHistory.epochs,
+                      y: trainingHistory.val_mse,
                       mode: 'lines+markers',
                       name: 'Validation MSE',
                       line: { color: 'rgba(220, 38, 38, 1)' },
@@ -268,7 +268,7 @@ export default function Case2Solutions() {
                     data={[
                       {
                         x: [30],  // Energy score computed at epoch 30
-                        y: Array.from(trainingHistory.val_energy_scores),
+                        y: trainingHistory.val_energy_scores,
                         mode: 'markers',
                         name: 'Validation Energy Score',
                         marker: { size: 10, color: 'rgba(16, 185, 129, 1)' },
@@ -304,13 +304,13 @@ export default function Case2Solutions() {
                   Each training sample generates 3 t values: t=0 (beginning), t=1 (ending), and t=random (middle).
                   Model trained with early stopping based on validation MSE.
                 </p>
-                {trainingHistory.final_energy_score && (
+                {trainingHistory?.final_energy_score && (
                   <p className="mt-2">
                     <strong>Final Energy Score:</strong> {trainingHistory.final_energy_score.toFixed(4)} 
                     {' '}(computed on test set after training)
                   </p>
                 )}
-                {trainingHistory.training_time && (
+                {trainingHistory?.training_time && (
                   <p className="mt-2">
                     <strong>Training Time:</strong> {trainingHistory.training_time.toFixed(2)} seconds
                     {trainingHistory.hardware && ` on ${trainingHistory.hardware}`}
