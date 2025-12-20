@@ -197,7 +197,7 @@ export default function Case2Solutions() {
 
         <section className="mb-12">
           <h2 className="text-2xl font-medium text-gray-900 mb-4">Visualization</h2>
-          <div className="bg-white border border-gray-200 rounded-lg p-6 overflow-x-auto">
+          <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6">
             {loading && (
               <div className="text-center py-12">
                 <div className="text-gray-600">Loading data...</div>
@@ -211,30 +211,39 @@ export default function Case2Solutions() {
             )}
             
             {plotData && (
-              <div className="min-w-[600px]">
-                <Plot
-                  data={plotData}
-                  layout={{
-                    title: 'Training Data Showing Mixture Distribution',
-                    xaxis: { title: 'x' },
-                    yaxis: { title: 'y' },
-                    hovermode: 'closest',
-                    showlegend: true,
-                    legend: {
-                      x: 0.02,
-                      y: 0.98,
-                      bgcolor: 'rgba(255, 255, 255, 0.8)',
-                      bordercolor: 'rgba(0, 0, 0, 0.2)',
-                      borderwidth: 1,
-                    },
-                    autosize: true,
-                    margin: { l: 50, r: 20, t: 50, b: 50 },
-                  }}
-                  style={{ width: '100%', height: '600px' }}
-                  config={{ responsive: true }}
-                  useResizeHandler={true}
-                />
-              </div>
+              <Plot
+                data={plotData}
+                layout={{
+                  title: {
+                    text: 'Training Data Showing Mixture Distribution',
+                    font: { size: window.innerWidth < 640 ? 14 : 16 }
+                  },
+                  xaxis: { title: 'x' },
+                  yaxis: { title: 'y' },
+                  hovermode: 'closest',
+                  showlegend: true,
+                  legend: {
+                    x: window.innerWidth < 640 ? 0 : 0.02,
+                    y: window.innerWidth < 640 ? -0.15 : 0.98,
+                    orientation: window.innerWidth < 640 ? 'h' : 'v',
+                    xanchor: 'left',
+                    yanchor: window.innerWidth < 640 ? 'top' : 'top',
+                    bgcolor: 'rgba(255, 255, 255, 0.8)',
+                    bordercolor: 'rgba(0, 0, 0, 0.2)',
+                    borderwidth: 1,
+                  },
+                  autosize: true,
+                  margin: { 
+                    l: window.innerWidth < 640 ? 40 : 50, 
+                    r: window.innerWidth < 640 ? 10 : 20, 
+                    t: window.innerWidth < 640 ? 40 : 50, 
+                    b: window.innerWidth < 640 ? 80 : 50 
+                  },
+                }}
+                style={{ width: '100%', height: window.innerWidth < 640 ? '400px' : '600px' }}
+                config={{ responsive: true }}
+                useResizeHandler={true}
+              />
             )}
           </div>
           
