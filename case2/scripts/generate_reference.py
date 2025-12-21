@@ -4,7 +4,7 @@ Generate reference solution for Case Study 2: Distribution Sampling using Rectif
 This script uses improved Rectified Flow Matching with iterative training:
 1. Uses partial_fit to train on fresh random t, eps samples each epoch
 2. For each sample, uses exactly 3 t values: t=0 (beginning), t=1 (ending), t=random (middle)
-3. Train MLP to predict y-eps from Fourier embeddings + raw features of (x, t, z_t)
+3. Train MLP to predict y-eps from raw features of (x, t, z_t)
    where z_t = y*t + (1-t)*eps
 4. Use scipy solve_ivp with N(0,1) initial conditions to generate samples
 
@@ -20,7 +20,7 @@ from pathlib import Path
 import time
 import platform
 import json
-from model import RectifiedFlowModel, create_fourier_feature_extractor, calculate_energy_score
+from model import RectifiedFlowModel, create_raw_feature_extractor, calculate_energy_score
 
 # Set random seed for reproducibility
 np.random.seed(42)
@@ -48,11 +48,11 @@ test_y = np.load(dataset_dir / "test_y.npy")
 
 print(f"Test X shape: {test_x.shape}, Test Y shape: {test_y.shape}")
 
-# Create model with Fourier features
-print("\nSetting up rectified flow model with Fourier features...")
+# Create model with raw features only (no Fourier)
+print("\nSetting up rectified flow model with raw features (no Fourier)...")
 print(f"Hardware: {platform.processor() or platform.machine()} ({platform.system()})")
 
-feature_extractor = create_fourier_feature_extractor(n_freqs=5)
+feature_extractor = create_raw_feature_extractor()
 model = RectifiedFlowModel(
     feature_extractor=feature_extractor,
     learning_rate=0.001,

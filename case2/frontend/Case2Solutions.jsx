@@ -201,17 +201,17 @@ export default function Case2Solutions() {
           <div className="prose max-w-none text-gray-700 space-y-4">
             <p>
               We present two solutions using <strong>rectified flow matching</strong> with the same
-              architecture (256, 128, 128, 64 hidden layers) but different approaches:
+              architecture (256, 128, 128, 64 hidden layers) and the same raw features, but different training data:
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
               <div className="bg-green-50 p-6 rounded-lg border border-green-200">
                 <h3 className="font-medium text-gray-900 mb-3">Reference Solution</h3>
                 <ul className="list-disc list-inside space-y-2 text-sm">
-                  <li><strong>Features:</strong> Raw + Fourier embeddings</li>
-                  <li><strong>Training Data:</strong> 900 finite samples</li>
+                  <li><strong>Features:</strong> Raw features only</li>
+                  <li><strong>Training Data:</strong> 900 finite samples from dataset</li>
                   <li><strong>Energy Score:</strong> {trainingHistory?.final_energy_score ? trainingHistory.final_energy_score.toFixed(4) : '~1.8'}</li>
-                  <li><strong>Training Time:</strong> {trainingHistory?.training_time ? `${trainingHistory.training_time.toFixed(1)}s` : '~200s'}</li>
+                  <li><strong>Training Time:</strong> {trainingHistory?.training_time ? `${trainingHistory.training_time.toFixed(1)}s` : '~50s'}</li>
                 </ul>
               </div>
               
@@ -219,7 +219,7 @@ export default function Case2Solutions() {
                 <div className="bg-purple-50 p-6 rounded-lg border border-purple-200">
                   <h3 className="font-medium text-gray-900 mb-3">Infinite Data Solution</h3>
                   <ul className="list-disc list-inside space-y-2 text-sm">
-                    <li><strong>Features:</strong> Raw only (no Fourier)</li>
+                    <li><strong>Features:</strong> Raw features only</li>
                     <li><strong>Training Data:</strong> Fresh samples each epoch (infinite)</li>
                     <li><strong>Energy Score:</strong> {infiniteDataHistory.final_energy_score.toFixed(4)}</li>
                     <li><strong>Training Time:</strong> {infiniteDataHistory.training_time.toFixed(1)}s</li>
@@ -229,15 +229,15 @@ export default function Case2Solutions() {
             </div>
             
             <p>
-              Both solutions achieve similar performance (~1.8 energy score) despite different approaches.
-              The infinite data solution is significantly faster due to simpler raw features and
-              benefits from fresh training data each epoch.
+              Both solutions use identical architectures and features. The key difference is the training data:
+              the reference solution uses a fixed dataset while the infinite data solution generates fresh samples
+              from the true distribution each epoch.
             </p>
           </div>
         </section>
 
         <section className="mb-12">
-          <h2 className="text-2xl font-medium text-gray-900 mb-4">Reference Solution: Rectified Flow Matching with Fourier Features</h2>
+          <h2 className="text-2xl font-medium text-gray-900 mb-4">Reference Solution: Rectified Flow Matching with Finite Data</h2>
           <div className="prose max-w-none text-gray-700 space-y-4">
             <p>
               The reference solution uses <strong>rectified flow matching</strong>, a powerful technique
@@ -255,7 +255,7 @@ export default function Case2Solutions() {
                 </li>
                 <li>
                   Train MLP using partial_fit to predict the velocity field <InlineMath math="v = y - \epsilon" /> from 
-                  Fourier embeddings + raw features of <InlineMath math="(x, t, z_t)" />
+                  raw features of <InlineMath math="(x, t, z_t)" />
                 </li>
                 <li>
                   Generate samples by solving ODE: start from <InlineMath math="z_0 \sim N(0,1)" /> and 
@@ -272,8 +272,8 @@ export default function Case2Solutions() {
 
             <div className="bg-blue-50 p-4 rounded-lg my-4">
               <p className="text-sm">
-                <strong>Performance:</strong> The improved rectified flow implementation achieves
-                an energy score of {trainingHistory?.final_energy_score ? `${trainingHistory.final_energy_score.toFixed(4)}` : '~2.0'}.
+                <strong>Performance:</strong> The rectified flow implementation achieves
+                an energy score of {trainingHistory?.final_energy_score ? `${trainingHistory.final_energy_score.toFixed(4)}` : '~1.8'}.
                 For comparison, oracle access to the true mixture structure
                 (ground truth) achieves ~0.5, representing the best possible performance.
                 {trainingHistory?.training_time && (
@@ -303,15 +303,13 @@ export default function Case2Solutions() {
                     (x ~ N(4,1), y|x ~ mixture) rather than using the fixed 900 training samples
                   </li>
                   <li>
-                    <strong>Features:</strong> Uses only raw features (x, t, z_t) without Fourier embeddings,
-                    simplifying the model and reducing computation
+                    <strong>Features:</strong> Uses the same raw features (x, t, z_t) as the reference solution
                   </li>
                   <li>
                     <strong>Architecture:</strong> Same (256, 128, 128, 64) hidden layers as reference solution
                   </li>
                   <li>
-                    <strong>Benefit:</strong> Infinite fresh data prevents overfitting and compensates for
-                    simpler feature representation
+                    <strong>Benefit:</strong> Infinite fresh data prevents overfitting to a fixed training set
                   </li>
                 </ul>
               </div>
@@ -320,7 +318,7 @@ export default function Case2Solutions() {
                 <p className="text-sm">
                   <strong>Performance:</strong> The infinite data approach achieves
                   an energy score of {infiniteDataHistory.final_energy_score.toFixed(4)},
-                  similar to the reference solution but with {((infiniteDataHistory.training_time / trainingHistory?.training_time - 1) * -100).toFixed(0)}% faster training time.
+                  similar to the reference solution.
                   <br /><br />
                   <strong>Training Time:</strong> {infiniteDataHistory.training_time.toFixed(2)} seconds on {infiniteDataHistory.hardware}
                   <br />
@@ -330,7 +328,7 @@ export default function Case2Solutions() {
               
               <p className="text-sm text-gray-600 italic">
                 Note: This approach is only possible when the true data generation process is known,
-                making it a useful comparison for understanding the impact of training data quantity and feature engineering.
+                making it a useful comparison for understanding the impact of training data quantity.
               </p>
             </div>
           </section>
@@ -450,6 +448,128 @@ export default function Case2Solutions() {
                   <p className="mt-2">
                     <strong>Training Time:</strong> {trainingHistory.training_time.toFixed(2)} seconds
                     {trainingHistory.hardware && ` on ${trainingHistory.hardware}`}
+                  </p>
+                )}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {infiniteDataHistory && (
+          <section className="mb-12">
+            <h2 className="text-2xl font-medium text-gray-900 mb-4">Infinite Data Solution Training Progress</h2>
+            <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6">
+              {/* MSE Loss Plot */}
+              <div className="mb-8">
+                <h3 className="text-lg font-medium text-gray-900 mb-3">Mean Squared Error (MSE) Loss</h3>
+                <Plot
+                  data={[
+                    {
+                      x: infiniteDataHistory.epochs,
+                      y: infiniteDataHistory.train_mse,
+                      mode: 'lines+markers',
+                      name: 'Train MSE',
+                      line: { color: 'rgba(168, 85, 247, 1)' },
+                      marker: { size: 6 },
+                    },
+                    {
+                      x: infiniteDataHistory.epochs,
+                      y: infiniteDataHistory.val_mse,
+                      mode: 'lines+markers',
+                      name: 'Validation MSE',
+                      line: { color: 'rgba(220, 38, 38, 1)' },
+                      marker: { size: 6 },
+                    },
+                  ]}
+                  layout={{
+                    title: {
+                      text: 'Training and Validation MSE per Epoch',
+                      font: { size: window.innerWidth < 640 ? 14 : 16 }
+                    },
+                    xaxis: { title: 'Epoch' },
+                    yaxis: { title: 'MSE Loss' },
+                    hovermode: 'closest',
+                    showlegend: true,
+                    legend: {
+                      x: window.innerWidth < 640 ? 0 : 0.02,
+                      y: window.innerWidth < 640 ? -0.2 : 0.98,
+                      orientation: window.innerWidth < 640 ? 'h' : 'v',
+                      xanchor: 'left',
+                      yanchor: window.innerWidth < 640 ? 'top' : 'top',
+                      bgcolor: 'rgba(255, 255, 255, 0.8)',
+                      bordercolor: 'rgba(0, 0, 0, 0.2)',
+                      borderwidth: 1,
+                    },
+                    autosize: true,
+                    margin: { 
+                      l: window.innerWidth < 640 ? 40 : 50, 
+                      r: window.innerWidth < 640 ? 10 : 20, 
+                      t: window.innerWidth < 640 ? 40 : 50, 
+                      b: window.innerWidth < 640 ? 90 : 50 
+                    },
+                  }}
+                  style={{ width: '100%', height: window.innerWidth < 640 ? '300px' : '400px' }}
+                  config={{ responsive: true }}
+                  useResizeHandler={true}
+                />
+              </div>
+              
+              {/* Energy Score Plot */}
+              {infiniteDataHistory.val_energy_scores && infiniteDataHistory.val_energy_scores.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-3">Energy Score (CRPS) on Validation Set</h3>
+                  <Plot
+                    data={[
+                      {
+                        x: infiniteDataHistory.epochs,
+                        y: infiniteDataHistory.val_energy_scores,
+                        mode: 'lines+markers',
+                        name: 'Validation Energy Score',
+                        marker: { size: 8, color: 'rgba(168, 85, 247, 1)' },
+                        line: { color: 'rgba(168, 85, 247, 1)' },
+                      },
+                    ]}
+                    layout={{
+                      title: {
+                        text: 'Validation Energy Score (Lower is Better)',
+                        font: { size: window.innerWidth < 640 ? 14 : 16 }
+                      },
+                      xaxis: { title: 'Epoch' },
+                      yaxis: { title: 'Energy Score (CRPS)' },
+                      hovermode: 'closest',
+                      showlegend: false,
+                      autosize: true,
+                      margin: { 
+                        l: window.innerWidth < 640 ? 40 : 50, 
+                        r: window.innerWidth < 640 ? 10 : 20, 
+                        t: window.innerWidth < 640 ? 40 : 50, 
+                        b: window.innerWidth < 640 ? 50 : 50 
+                      },
+                    }}
+                    style={{ width: '100%', height: window.innerWidth < 640 ? '250px' : '300px' }}
+                    config={{ responsive: true }}
+                    useResizeHandler={true}
+                  />
+                </div>
+              )}
+              
+              <div className="mt-4 prose max-w-none text-gray-700 text-sm">
+                <p>
+                  <strong>Training Details:</strong> Uses partial_fit with fresh random t and ε samples each epoch.
+                  Each training sample generates 3 t values: t=0 (beginning), t=1 (ending), and t=random (middle).
+                  Fresh training data is generated from the true generative model each epoch.
+                  Model trained with early stopping based on validation MSE.
+                </p>
+                {infiniteDataHistory?.final_energy_score && (
+                  <p className="mt-2">
+                    <strong>Final Energy Score:</strong> {infiniteDataHistory.final_energy_score.toFixed(4)} 
+                    {' '}(computed on test set after training)
+                  </p>
+                )}
+                {infiniteDataHistory?.training_time && (
+                  <p className="mt-2">
+                    <strong>Training Time:</strong> {infiniteDataHistory.training_time.toFixed(2)} seconds
+                    {infiniteDataHistory.hardware && ` on ${infiniteDataHistory.hardware}`}
                   </p>
                 )}
               </div>

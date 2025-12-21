@@ -97,10 +97,11 @@ This approach (Energy Score: ~1.8):
 1. Standardizes inputs for stable training
 2. Generates 3 t values per training datapoint: t=0, t=1, and random t
 3. For each t, generates random standard normal eps
-4. Trains MLP to predict y-eps from raw features + Fourier embeddings of (x, t, y*t+(1-t)*eps)
+4. Trains MLP to predict y-eps from raw features of (x, t, y*t+(1-t)*eps)
 5. Uses scipy solve_ivp (RK45) with tight tolerances and N(0,1) initial conditions to generate samples
 6. Computes metrics before float16 quantization
 7. Architecture: (256, 128, 128, 64) hidden layers
+8. Training data: 900 samples from dataset1
 
 **Infinite Data Solution - Rectified Flow with Infinite Training Data:**
 An alternative solution that trains on infinite data by generating fresh samples from the true generative model:
@@ -110,16 +111,15 @@ python case2/scripts/generate_infinitedata.py
 
 This approach (Energy Score: ~1.8):
 1. Generates fresh training data each epoch from true distribution: x ~ N(4, 1), y|x ~ mixture of N(10*cos(x), 1) and N(0, 1)
-2. Uses raw features only (NO Fourier embeddings)
+2. Uses raw features (same as reference)
 3. Same architecture: (256, 128, 128, 64) hidden layers
 4. Trains with partial_fit on fresh samples each epoch
 5. Uses scipy solve_ivp (RK45) with tight tolerances and N(0,1) initial conditions to generate samples
-6. Faster training (~76% less time) due to simpler features
 
 **Comparison:**
-Both solutions use the same architecture but achieve similar performance through different trade-offs:
-- Reference: Complex features (Fourier) + limited data (900 samples) = slower training
-- Infinite data: Simple features (raw) + unlimited data (fresh each epoch) = faster training
+Both solutions use the same architecture and features but achieve similar performance through different training data:
+- Reference: Fixed dataset (900 samples from dataset1)
+- Infinite data: Fresh samples each epoch (unlimited data from true distribution)
 
 **Ground Truth Oracle (for comparison):**
 For comparison, ground truth sampling from the true mixture distribution:
