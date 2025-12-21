@@ -162,10 +162,11 @@ def train_model(duration_minutes=10, n_train_per_epoch=900, learning_rate=0.001)
         t_values = t_values.at[1::n_t_per_sample].set(1.0)
         
         # Fill random t values
-        key_parts = random.split(key, n_t_per_sample)
+        # Split key: one for eps, rest for random t values
+        key_parts = random.split(key, max(2, n_t_per_sample))
         k_eps = key_parts[0]
         for i in range(2, n_t_per_sample):
-            k_t = key_parts[i]
+            k_t = key_parts[i - 1]  # Use offset to avoid index 0 (reserved for eps)
             random_t = random.uniform(k_t, (n_samples,))
             t_values = t_values.at[i::n_t_per_sample].set(random_t)
         
@@ -269,9 +270,10 @@ def train_model(duration_minutes=10, n_train_per_epoch=900, learning_rate=0.001)
                 val_x, val_y = generate_training_data(100, val_key)
                 val_x_scaled, _ = transform_data(val_x, val_y, x_mean, x_std, y_mean, y_std)
                 
-                # Generate samples using ODE integration (simplified for JAX)
-                # For energy score, we'll use a simpler Euler integration
-                # Note: This is faster than RK45 but may be less accurate
+                # Generate samples using Euler integration
+                # Note: Using Euler instead of adaptive RK45 for simplicity and speed.
+                # This is acceptable for validation during training. Euler is easier
+                # to implement in JAX's functional style with JIT compilation.
                 val_samples = []
                 for i in range(len(val_x_scaled)):
                     x_val = val_x_scaled[i]
