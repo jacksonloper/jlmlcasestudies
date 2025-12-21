@@ -4,10 +4,16 @@ A collection of machine learning case studies with interactive challenges.
 
 ## Project Structure
 
-- `frontend/` - React + Vite + Tailwind frontend application
+- `frontend/` - React + Vite + Tailwind frontend application (shared components and build configuration)
+- `case1/` - Case Study 1: Point Prediction
+  - `frontend/` - Case 1 specific frontend pages (Case1.jsx, Case1Solutions.jsx)
+  - `scripts/` - Case 1 specific Python scripts (train_mlp.py, train_hgb.py)
+- `case2/` - Case Study 2: Distribution Sampling
+  - `frontend/` - Case 2 specific frontend pages (Case2.jsx, Case2Solutions.jsx)
+  - `scripts/` - Case 2 specific Python scripts (generate_reference.py, generate_groundtruth.py)
 - `dataset1/` - Shared dataset for case studies
   - `data/` - Generated data files (train.npy, test_x.npy, test_y.npy)
-  - `scripts/` - Data generation and baseline training scripts
+  - `scripts/` - Data generation script (generate_data.py)
 - `pyproject.toml` - Python dependencies and project configuration
 - `netlify.toml` - Netlify deployment configuration
 
@@ -60,7 +66,7 @@ In this challenge, you are given training data where you can observe both x and 
 **Baseline:**
 To generate a baseline using a tiny Multi-Layer Perceptron:
 ```bash
-python dataset1/scripts/train_mlp.py
+python case1/scripts/train_mlp.py
 ```
 
 This script trains a model and reports both a baseline RMSE and the theoretically best-possible RMSE.

@@ -20,7 +20,8 @@ np.random.seed(42)
 
 # Define paths
 script_dir = Path(__file__).parent
-data_dir = script_dir.parent / "data"
+# Data is in the shared dataset1 directory
+data_dir = script_dir.parent.parent / "dataset1" / "data"
 
 # Load training data
 print("Loading training data...")
