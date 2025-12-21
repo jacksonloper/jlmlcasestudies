@@ -4,7 +4,7 @@ A collection of machine learning case studies with interactive challenges.
 
 ## Project Structure
 
-- `frontend/` - React + Vite + Tailwind frontend application (shared components and build configuration)
+- Root contains React + Vite + Tailwind frontend application (package.json, vite.config.js, src/, etc.)
 - `case1/` - Case Study 1: Point Prediction
   - `frontend/` - Case 1 specific frontend pages (Case1.jsx, Case1Solutions.jsx)
   - `scripts/` - Case 1 specific Python scripts (train_mlp.py, train_hgb.py)
@@ -35,7 +35,6 @@ python dataset1/scripts/generate_data.py
 
 1. Install dependencies:
 ```bash
-cd frontend
 npm install
 ```
 
@@ -44,7 +43,7 @@ npm install
 npm run dev
 ```
 
-The data files will be automatically copied from `dataset1/data/` to `frontend/public/case1/data/` and `frontend/public/case2/data/` during the dev/build process.
+The data files will be automatically copied from `dataset1/data/` to `public/case1/data/` and `public/case2/data/` during the dev/build process.
 
 3. Build for production:
 ```bash

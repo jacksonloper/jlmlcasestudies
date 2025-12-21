@@ -14,10 +14,10 @@ export default defineConfig({
       name: 'resolve-external-deps',
       enforce: 'pre',
       resolveId(source, importer) {
-        // If importing from case directories, resolve dependencies from frontend/node_modules
+        // If importing from case directories, resolve dependencies from node_modules
         if (importer && (importer.includes('/case1/frontend/') || importer.includes('/case2/frontend/'))) {
           if (!source.startsWith('.') && !source.startsWith('/')) {
-            // This is a package import, resolve it relative to frontend's node_modules
+            // This is a package import, resolve it relative to root's node_modules
             return this.resolve(source, path.join(__dirname, 'src', 'App.jsx'), { skipSelf: true })
           }
         }
@@ -27,13 +27,13 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@case1': path.resolve(__dirname, '../case1/frontend'),
-      '@case2': path.resolve(__dirname, '../case2/frontend'),
+      '@case1': path.resolve(__dirname, 'case1/frontend'),
+      '@case2': path.resolve(__dirname, 'case2/frontend'),
     },
   },
   server: {
     fs: {
-      allow: ['..'],
+      allow: ['.'],
     },
   },
 })

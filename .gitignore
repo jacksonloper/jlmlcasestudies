@@ -10,18 +10,24 @@ venv/
 
 # Build outputs
 dist/
+dist-ssr/
 build/
 *.egg-info/
 
 # Copied data files
-frontend/public/case1/
-frontend/public/case2/
+public/case1/
+public/case2/
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 *~
 
 # OS
@@ -29,12 +35,16 @@ frontend/public/case2/
 Thumbs.db
 
 # Logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
 # Local env files
 .env
 .env.local
 .env.*.local
+*.local

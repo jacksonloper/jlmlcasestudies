@@ -6,7 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Define paths
-const rootDir = join(__dirname, '..', '..');
+const rootDir = join(__dirname, '..');
 const dataset1Dir = join(rootDir, 'dataset1', 'data');
 const case2Dir = join(rootDir, 'case2', 'data');
 const targetCase1Dir = join(__dirname, '..', 'public', 'case1', 'data');
@@ -20,7 +20,7 @@ mkdirSync(targetCase2Dir, { recursive: true });
 if (existsSync(dataset1Dir)) {
   const files = readdirSync(dataset1Dir).filter(file => file.endsWith('.npy'));
   
-  console.log(`Copying ${files.length} data files from dataset1/data to frontend/public/case1/data and case2/data`);
+  console.log(`Copying ${files.length} data files from dataset1/data to public/case1/data and case2/data`);
   
   files.forEach(file => {
     const sourcePath = join(dataset1Dir, file);
@@ -42,7 +42,7 @@ if (existsSync(case2Dir)) {
     file.endsWith('.npy') || file.endsWith('.json')
   );
   
-  console.log(`\nCopying ${case2Files.length} case2-specific files to frontend/public/case2/data`);
+  console.log(`\nCopying ${case2Files.length} case2-specific files to public/case2/data`);
   
   case2Files.forEach(file => {
     const sourcePath = join(case2Dir, file);
