@@ -10,6 +10,9 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.preprocessing import StandardScaler
 from scipy.integrate import solve_ivp
 
+# Standard architecture for Case 2: extra 256-neuron layer at beginning
+DEFAULT_ARCHITECTURE = (256, 128, 128, 64)
+
 
 class RectifiedFlowModel:
     """
@@ -22,8 +25,10 @@ class RectifiedFlowModel:
         random_state: Random seed for reproducibility
     """
     
-    def __init__(self, hidden_layers=(128, 128, 64), feature_extractor=None, 
+    def __init__(self, hidden_layers=None, feature_extractor=None, 
                  learning_rate=0.001, random_state=42):
+        if hidden_layers is None:
+            hidden_layers = DEFAULT_ARCHITECTURE
         self.hidden_layers = hidden_layers
         self.feature_extractor = feature_extractor or self._default_feature_extractor
         self.learning_rate = learning_rate

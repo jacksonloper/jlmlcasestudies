@@ -73,18 +73,18 @@ def generate_training_data(n_samples, random_state=None):
     return x, y
 
 
-# Create model with raw features only (no Fourier) and larger architecture
+# Create model with raw features only (no Fourier)
 print("\nSetting up rectified flow model with raw features (no Fourier)...")
-print("Architecture: (256, 128, 128, 64) - extra 256-neuron layer at beginning")
 print(f"Hardware: {platform.processor() or platform.machine()} ({platform.system()})")
 
 feature_extractor = create_raw_feature_extractor()
 model = RectifiedFlowModel(
-    hidden_layers=(256, 128, 128, 64),  # Extra 256 layer at beginning
     feature_extractor=feature_extractor,
     learning_rate=0.001,
     random_state=42
 )
+
+print(f"Architecture: {model.hidden_layers}")
 
 # Generate initial training data to fit scalers
 print("\nGenerating initial training data from true generative model...")

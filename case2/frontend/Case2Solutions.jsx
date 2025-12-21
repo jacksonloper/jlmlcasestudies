@@ -7,6 +7,7 @@ import npyjs from 'npyjs';
 export default function Case2Solutions() {
   const [plotData, setPlotData] = useState(null);
   const [trainingHistory, setTrainingHistory] = useState(null);
+  const [infiniteDataHistory, setInfiniteDataHistory] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -30,6 +31,16 @@ export default function Case2Solutions() {
         const optimalArrayBuffer = await optimalResponse.arrayBuffer();
         const optimalData = await npy.load(optimalArrayBuffer);
         
+        // Load infinite data samples
+        let infiniteDataData = null;
+        try {
+          const infiniteDataResponse = await fetch('/case2/data/infinitedata_samples.npy');
+          const infiniteDataArrayBuffer = await infiniteDataResponse.arrayBuffer();
+          infiniteDataData = await npy.load(infiniteDataArrayBuffer);
+        } catch (err) {
+          console.warn('Infinite data samples not available:', err);
+        }
+        
         // Load training history
         try {
           const historyResponse = await fetch('/case2/data/reference_training_history.json');
@@ -37,6 +48,15 @@ export default function Case2Solutions() {
           setTrainingHistory(history);
         } catch (err) {
           console.warn('Training history not available:', err);
+        }
+        
+        // Load infinite data training history
+        try {
+          const infHistoryResponse = await fetch('/case2/data/infinitedata_training_history.json');
+          const infHistory = await infHistoryResponse.json();
+          setInfiniteDataHistory(infHistory);
+        } catch (err) {
+          console.warn('Infinite data training history not available:', err);
         }
 
         // Extract data
@@ -54,6 +74,16 @@ export default function Case2Solutions() {
         for (let i = 0; i < optimalData.shape[0]; i++) {
           sample1.push(optimalData.data[i * 2]);
           sample2.push(optimalData.data[i * 2 + 1]);
+        }
+        
+        // Extract infinite data samples if available
+        const infiniteSample1 = [];
+        const infiniteSample2 = [];
+        if (infiniteDataData) {
+          for (let i = 0; i < infiniteDataData.shape[0]; i++) {
+            infiniteSample1.push(infiniteDataData.data[i * 2]);
+            infiniteSample2.push(infiniteDataData.data[i * 2 + 1]);
+          }
         }
 
         // Create a range of x values for the true conditional expectation curve
@@ -97,7 +127,7 @@ export default function Case2Solutions() {
             y: [...sample1, ...sample2],
             mode: 'markers',
             type: 'scatter',
-            name: 'Reference Solution Samples',
+            name: 'Reference Solution (Fourier + Finite Data)',
             marker: {
               color: 'rgba(34, 197, 94, 0.6)',
               size: 6,
@@ -105,6 +135,22 @@ export default function Case2Solutions() {
             },
           },
         ];
+        
+        // Add infinite data samples if available
+        if (infiniteDataData) {
+          traces.push({
+            x: [...testX, ...testX],
+            y: [...infiniteSample1, ...infiniteSample2],
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Infinite Data Solution (Raw + Infinite Data)',
+            marker: {
+              color: 'rgba(168, 85, 247, 0.6)',
+              size: 6,
+              symbol: 'diamond',
+            },
+          });
+        }
 
         setPlotData(traces);
         setLoading(false);
@@ -151,7 +197,47 @@ export default function Case2Solutions() {
         </section>
 
         <section className="mb-12">
-          <h2 className="text-2xl font-medium text-gray-900 mb-4">Reference Solution: Rectified Flow Matching</h2>
+          <h2 className="text-2xl font-medium text-gray-900 mb-4">Solutions Overview</h2>
+          <div className="prose max-w-none text-gray-700 space-y-4">
+            <p>
+              We present two solutions using <strong>rectified flow matching</strong> with the same
+              architecture (256, 128, 128, 64 hidden layers) but different approaches:
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+              <div className="bg-green-50 p-6 rounded-lg border border-green-200">
+                <h3 className="font-medium text-gray-900 mb-3">Reference Solution</h3>
+                <ul className="list-disc list-inside space-y-2 text-sm">
+                  <li><strong>Features:</strong> Raw + Fourier embeddings</li>
+                  <li><strong>Training Data:</strong> 900 finite samples</li>
+                  <li><strong>Energy Score:</strong> {trainingHistory?.final_energy_score ? trainingHistory.final_energy_score.toFixed(4) : '~1.8'}</li>
+                  <li><strong>Training Time:</strong> {trainingHistory?.training_time ? `${trainingHistory.training_time.toFixed(1)}s` : '~200s'}</li>
+                </ul>
+              </div>
+              
+              {infiniteDataHistory && (
+                <div className="bg-purple-50 p-6 rounded-lg border border-purple-200">
+                  <h3 className="font-medium text-gray-900 mb-3">Infinite Data Solution</h3>
+                  <ul className="list-disc list-inside space-y-2 text-sm">
+                    <li><strong>Features:</strong> Raw only (no Fourier)</li>
+                    <li><strong>Training Data:</strong> Fresh samples each epoch (infinite)</li>
+                    <li><strong>Energy Score:</strong> {infiniteDataHistory.final_energy_score.toFixed(4)}</li>
+                    <li><strong>Training Time:</strong> {infiniteDataHistory.training_time.toFixed(1)}s</li>
+                  </ul>
+                </div>
+              )}
+            </div>
+            
+            <p>
+              Both solutions achieve similar performance (~1.8 energy score) despite different approaches.
+              The infinite data solution is significantly faster due to simpler raw features and
+              benefits from fresh training data each epoch.
+            </p>
+          </div>
+        </section>
+
+        <section className="mb-12">
+          <h2 className="text-2xl font-medium text-gray-900 mb-4">Reference Solution: Rectified Flow Matching with Fourier Features</h2>
           <div className="prose max-w-none text-gray-700 space-y-4">
             <p>
               The reference solution uses <strong>rectified flow matching</strong>, a powerful technique
@@ -201,9 +287,58 @@ export default function Case2Solutions() {
           </div>
         </section>
 
+        {infiniteDataHistory && (
+          <section className="mb-12">
+            <h2 className="text-2xl font-medium text-gray-900 mb-4">Infinite Data Solution: Rectified Flow with Synthetic Data</h2>
+            <div className="prose max-w-none text-gray-700 space-y-4">
+              <p>
+                The infinite data solution uses the same rectified flow matching algorithm but with a different approach to training:
+              </p>
+              
+              <div className="bg-gray-50 p-6 rounded-lg my-6">
+                <h3 className="font-medium text-gray-900 mb-3">Key Differences:</h3>
+                <ul className="list-disc list-inside space-y-2">
+                  <li>
+                    <strong>Training Data:</strong> Generates fresh samples from the true generative model each epoch
+                    (x ~ N(4,1), y|x ~ mixture) rather than using the fixed 900 training samples
+                  </li>
+                  <li>
+                    <strong>Features:</strong> Uses only raw features (x, t, z_t) without Fourier embeddings,
+                    simplifying the model and reducing computation
+                  </li>
+                  <li>
+                    <strong>Architecture:</strong> Same (256, 128, 128, 64) hidden layers as reference solution
+                  </li>
+                  <li>
+                    <strong>Benefit:</strong> Infinite fresh data prevents overfitting and compensates for
+                    simpler feature representation
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bg-purple-50 p-4 rounded-lg my-4">
+                <p className="text-sm">
+                  <strong>Performance:</strong> The infinite data approach achieves
+                  an energy score of {infiniteDataHistory.final_energy_score.toFixed(4)},
+                  similar to the reference solution but with {((infiniteDataHistory.training_time / trainingHistory?.training_time - 1) * -100).toFixed(0)}% faster training time.
+                  <br /><br />
+                  <strong>Training Time:</strong> {infiniteDataHistory.training_time.toFixed(2)} seconds on {infiniteDataHistory.hardware}
+                  <br />
+                  <strong>Architecture:</strong> {infiniteDataHistory.hidden_layers.join(', ')} hidden layers
+                </p>
+              </div>
+              
+              <p className="text-sm text-gray-600 italic">
+                Note: This approach is only possible when the true data generation process is known,
+                making it a useful comparison for understanding the impact of training data quantity and feature engineering.
+              </p>
+            </div>
+          </section>
+        )}
+
         {trainingHistory && (
           <section className="mb-12">
-            <h2 className="text-2xl font-medium text-gray-900 mb-4">Training Progress</h2>
+            <h2 className="text-2xl font-medium text-gray-900 mb-4">Reference Solution Training Progress</h2>
             <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6">
               {/* MSE Loss Plot */}
               <div className="mb-8">
@@ -384,14 +519,19 @@ export default function Case2Solutions() {
                 <strong>Red curve</strong>: Conditional expectation E[y|x] = 5cos(x)
               </li>
               <li>
-                <strong>Green circles</strong>: Samples from rectified flow reference solution
+                <strong>Green circles</strong>: Samples from reference solution (Fourier features + finite data)
               </li>
+              {infiniteDataHistory && (
+                <li>
+                  <strong>Purple diamonds</strong>: Samples from infinite data solution (raw features + infinite data)
+                </li>
+              )}
             </ul>
             <p className="mt-4">
               Notice how the data splits into two clusters: one following the cosine pattern
-              (around the red curve) and another centered around y=0. The reference solution samples
-              (green circles) demonstrate how rectified flow matching learns to capture
-              this bimodal distribution, with samples spread across both modes.
+              (around the red curve) and another centered around y=0. Both solutions demonstrate
+              how rectified flow matching learns to capture this bimodal distribution, with samples
+              spread across both modes.
             </p>
           </div>
         </section>

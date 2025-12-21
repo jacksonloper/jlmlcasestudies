@@ -54,11 +54,12 @@ print(f"Hardware: {platform.processor() or platform.machine()} ({platform.system
 
 feature_extractor = create_fourier_feature_extractor(n_freqs=5)
 model = RectifiedFlowModel(
-    hidden_layers=(128, 128, 64),
     feature_extractor=feature_extractor,
     learning_rate=0.001,
     random_state=42
 )
+
+print(f"Architecture: {model.hidden_layers}")
 
 # Train the model
 print("\nTraining MLP with partial_fit (fresh t samples each epoch)...")
