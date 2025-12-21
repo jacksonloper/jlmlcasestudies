@@ -114,7 +114,8 @@ val_x_scaled = model.transform_x(val_x)
 val_y_scaled = model.transform_y(val_y)
 
 # Fixed validation batch for consistent scoring
-np.random.seed(9999)
+VAL_BATCH_SEED = 9999
+np.random.seed(VAL_BATCH_SEED)
 X_val_fixed, y_val_fixed = model.generate_flow_batch(val_x_scaled, val_y_scaled, n_t_per_sample)
 np.random.seed(42)
 
@@ -150,7 +151,9 @@ print("-" * 60)
 
 for epoch in range(n_epochs):
     # Generate fresh training data from the generative model
-    epoch_seed = 42 + epoch  # Different seed each epoch for variety
+    # Use different seed each epoch for variety
+    BASE_SEED = 42
+    epoch_seed = BASE_SEED + epoch
     train_x_epoch, train_y_epoch = generate_training_data(n_samples=n_train_per_epoch, random_state=epoch_seed)
     
     # Scale the data

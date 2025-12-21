@@ -202,7 +202,8 @@ class RectifiedFlowModel:
         self.model.partial_fit(X_init, y_init)
         
         # Fixed validation batch for consistent scoring
-        np.random.seed(999)
+        VALIDATION_SEED = 999
+        np.random.seed(VALIDATION_SEED)
         X_val_fixed, y_val_fixed = self.generate_flow_batch(val_x, val_y, n_t_per_sample)
         np.random.seed(self.random_state)
         
