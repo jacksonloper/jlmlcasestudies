@@ -120,7 +120,7 @@ This approach (Energy Score: ~1.8):
 For faster training on GPU infrastructure using JAX:
 ```bash
 # Run locally (requires Modal token)
-modal run case2/scripts/train_infinitedata_jax_modal.py --duration-minutes 10
+modal run case2/scripts/modal_train_infinitedata_jax.py --duration-minutes 10
 ```
 
 This approach uses JAX with T4 GPU on Modal.com infrastructure:
@@ -131,12 +131,19 @@ This approach uses JAX with T4 GPU on Modal.com infrastructure:
 5. Outputs training loss, energy score CSV files and plots
 6. Generates 1000 sample scatter plot with CSV
 
-**GitHub Actions Workflow:**
-A workflow is available to run the JAX training on Modal and upload artifacts:
+**GitHub Actions Workflows:**
+
+*Manual Workflow:*
 1. Go to Actions → "Train Case2 Infinite Data with JAX on Modal"
 2. Click "Run workflow" and optionally specify training duration
 3. Artifacts include: training_loss.csv, energy_score.csv, scatter_samples.csv, and corresponding plots
 4. Artifacts are retained for 3 days
+
+*Comment-Triggered Workflow:*
+1. In any PR, repo owner can comment `/runmodal`
+2. Automatically runs all `modal_*.py` scripts that differ from main
+3. Posts results as a reply comment with artifact links
+4. Useful for testing Modal script changes in PRs
 
 **Comparison:**
 All solutions use the same architecture and features but differ in training approach:

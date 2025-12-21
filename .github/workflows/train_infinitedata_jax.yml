@@ -36,7 +36,7 @@ jobs:
       - name: Run training on Modal
         run: |
           cd case2/scripts
-          modal run train_infinitedata_jax_modal.py --duration-minutes ${{ inputs.duration_minutes }}
+          modal run modal_train_infinitedata_jax.py --duration-minutes ${{ inputs.duration_minutes }}
       
       - name: Upload training artifacts
         uses: actions/upload-artifact@v4
