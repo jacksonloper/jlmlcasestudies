@@ -10,6 +10,7 @@ export default function Case2Solutions() {
   const [infiniteDataHistory, setInfiniteDataHistory] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedSolution, setSelectedSolution] = useState('reference');
 
   useEffect(() => {
     async function loadData() {
@@ -98,9 +99,9 @@ export default function Case2Solutions() {
           trueExpectation.push(5 * Math.cos(x)); // E[y|x] = 5*cos(x)
         }
 
-        // Prepare plot data
-        const traces = [
-          {
+        // Store all plot data components
+        const allPlotData = {
+          training: {
             x: trainX,
             y: trainY,
             mode: 'markers',
@@ -111,7 +112,7 @@ export default function Case2Solutions() {
               size: 5,
             },
           },
-          {
+          trueExpectation: {
             x: xRange,
             y: trueExpectation,
             mode: 'lines',
@@ -122,7 +123,7 @@ export default function Case2Solutions() {
               width: 3,
             },
           },
-          {
+          reference: {
             x: [...testX, ...testX],
             y: [...sample1, ...sample2],
             mode: 'markers',
@@ -134,11 +135,11 @@ export default function Case2Solutions() {
               symbol: 'circle',
             },
           },
-        ];
+        };
         
         // Add infinite data samples if available
         if (infiniteDataData) {
-          traces.push({
+          allPlotData.infinite = {
             x: [...testX, ...testX],
             y: [...infiniteSample1, ...infiniteSample2],
             mode: 'markers',
@@ -149,10 +150,10 @@ export default function Case2Solutions() {
               size: 6,
               symbol: 'diamond',
             },
-          });
+          };
         }
 
-        setPlotData(traces);
+        setPlotData(allPlotData);
         setLoading(false);
       } catch (err) {
         setError(`Error loading data: ${err.message}`);
@@ -593,39 +594,78 @@ export default function Case2Solutions() {
             )}
             
             {plotData && (
-              <Plot
-                data={plotData}
-                layout={{
-                  title: {
-                    text: 'Training Data Showing Mixture Distribution',
-                    font: { size: window.innerWidth < 640 ? 14 : 16 }
-                  },
-                  xaxis: { title: 'x' },
-                  yaxis: { title: 'y' },
-                  hovermode: 'closest',
-                  showlegend: true,
-                  legend: {
-                    x: window.innerWidth < 640 ? 0 : 0.02,
-                    y: window.innerWidth < 640 ? -0.15 : 0.98,
-                    orientation: window.innerWidth < 640 ? 'h' : 'v',
-                    xanchor: 'left',
-                    yanchor: window.innerWidth < 640 ? 'top' : 'top',
-                    bgcolor: 'rgba(255, 255, 255, 0.8)',
-                    bordercolor: 'rgba(0, 0, 0, 0.2)',
-                    borderwidth: 1,
-                  },
-                  autosize: true,
-                  margin: { 
-                    l: window.innerWidth < 640 ? 40 : 50, 
-                    r: window.innerWidth < 640 ? 10 : 20, 
-                    t: window.innerWidth < 640 ? 40 : 50, 
-                    b: window.innerWidth < 640 ? 80 : 50 
-                  },
-                }}
-                style={{ width: '100%', height: window.innerWidth < 640 ? '400px' : '600px' }}
-                config={{ responsive: true }}
-                useResizeHandler={true}
-              />
+              <>
+                {/* Radio button controls */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-900 mb-3">
+                    Select Solution to Display:
+                  </label>
+                  <div className="space-y-2">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="solution"
+                        value="reference"
+                        checked={selectedSolution === 'reference'}
+                        onChange={(e) => setSelectedSolution(e.target.value)}
+                        className="mr-2 h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300"
+                      />
+                      <span className="text-gray-700">Reference Solution (Fourier + Finite Data)</span>
+                    </label>
+                    {plotData.infinite && (
+                      <label className="flex items-center">
+                        <input
+                          type="radio"
+                          name="solution"
+                          value="infinite"
+                          checked={selectedSolution === 'infinite'}
+                          onChange={(e) => setSelectedSolution(e.target.value)}
+                          className="mr-2 h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300"
+                        />
+                        <span className="text-gray-700">Infinite Data Solution (Raw + Infinite Data)</span>
+                      </label>
+                    )}
+                  </div>
+                </div>
+                
+                <Plot
+                  data={[
+                    plotData.training,
+                    plotData.trueExpectation,
+                    plotData[selectedSolution]
+                  ]}
+                  layout={{
+                    title: {
+                      text: 'Training Data Showing Mixture Distribution',
+                      font: { size: window.innerWidth < 640 ? 14 : 16 }
+                    },
+                    xaxis: { title: 'x' },
+                    yaxis: { title: 'y' },
+                    hovermode: 'closest',
+                    showlegend: true,
+                    legend: {
+                      x: window.innerWidth < 640 ? 0 : 0.02,
+                      y: window.innerWidth < 640 ? -0.15 : 0.98,
+                      orientation: window.innerWidth < 640 ? 'h' : 'v',
+                      xanchor: 'left',
+                      yanchor: window.innerWidth < 640 ? 'top' : 'top',
+                      bgcolor: 'rgba(255, 255, 255, 0.8)',
+                      bordercolor: 'rgba(0, 0, 0, 0.2)',
+                      borderwidth: 1,
+                    },
+                    autosize: true,
+                    margin: { 
+                      l: window.innerWidth < 640 ? 40 : 50, 
+                      r: window.innerWidth < 640 ? 10 : 20, 
+                      t: window.innerWidth < 640 ? 40 : 50, 
+                      b: window.innerWidth < 640 ? 80 : 50 
+                    },
+                  }}
+                  style={{ width: '100%', height: window.innerWidth < 640 ? '400px' : '600px' }}
+                  config={{ responsive: true }}
+                  useResizeHandler={true}
+                />
+              </>
             )}
           </div>
           
@@ -638,10 +678,12 @@ export default function Case2Solutions() {
               <li>
                 <strong>Red curve</strong>: Conditional expectation E[y|x] = 5cos(x)
               </li>
-              <li>
-                <strong>Green circles</strong>: Samples from reference solution (Fourier features + finite data)
-              </li>
-              {infiniteDataHistory && (
+              {selectedSolution === 'reference' && (
+                <li>
+                  <strong>Green circles</strong>: Samples from reference solution (Fourier features + finite data)
+                </li>
+              )}
+              {selectedSolution === 'infinite' && infiniteDataHistory && (
                 <li>
                   <strong>Purple diamonds</strong>: Samples from infinite data solution (raw features + infinite data)
                 </li>
@@ -649,8 +691,10 @@ export default function Case2Solutions() {
             </ul>
             <p className="mt-4">
               Notice how the data splits into two clusters: one following the cosine pattern
-              (around the red curve) and another centered around y=0. Both solutions demonstrate
-              how rectified flow matching learns to capture this bimodal distribution, with samples
+              (around the red curve) and another centered around y=0. 
+              {selectedSolution === 'reference' && ' The reference solution demonstrates'}
+              {selectedSolution === 'infinite' && ' The infinite data solution demonstrates'}
+              {' '}how rectified flow matching learns to capture this bimodal distribution, with samples
               spread across both modes.
             </p>
           </div>
