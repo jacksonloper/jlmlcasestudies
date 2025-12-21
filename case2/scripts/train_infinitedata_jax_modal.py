@@ -289,7 +289,7 @@ def train_model(duration_minutes=10, n_train_per_epoch=900, learning_rate=0.001)
                             t = step * ODE_DT
                             features_ode = jnp.array([x_val, t, z])
                             v = mlp_forward(params, features_ode)
-                            z = z + v * ODE_DT
+                            z = z + v.item() * ODE_DT
                         
                         samples_for_x.append(z)
                     
@@ -336,7 +336,7 @@ def train_model(duration_minutes=10, n_train_per_epoch=900, learning_rate=0.001)
             t = step * ODE_DT
             features_ode = jnp.array([x_val, t, z])
             v = mlp_forward(params, features_ode)
-            z = z + v * ODE_DT
+            z = z + v.item() * ODE_DT
         
         scatter_samples.append(z)
     
