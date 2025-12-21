@@ -10,6 +10,7 @@ export default function Case2Solutions() {
   const [infiniteDataHistory, setInfiniteDataHistory] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedSolution, setSelectedSolution] = useState('training');
 
   useEffect(() => {
     async function loadData() {
@@ -25,6 +26,11 @@ export default function Case2Solutions() {
         const testXResponse = await fetch('/case2/data/test_x.npy');
         const testXArrayBuffer = await testXResponse.arrayBuffer();
         const testXData = await npy.load(testXArrayBuffer);
+
+        // Load test Y data
+        const testYResponse = await fetch('/case2/data/test_y.npy');
+        const testYArrayBuffer = await testYResponse.arrayBuffer();
+        const testYData = await npy.load(testYArrayBuffer);
 
         // Load optimal samples from rectified flow
         const optimalResponse = await fetch('/case2/data/optimal_samples.npy');
@@ -69,6 +75,7 @@ export default function Case2Solutions() {
 
         // Extract test X and optimal samples
         const testX = Array.from(testXData.data);
+        const testY = Array.from(testYData.data);
         const sample1 = [];
         const sample2 = [];
         for (let i = 0; i < optimalData.shape[0]; i++) {
@@ -98,9 +105,24 @@ export default function Case2Solutions() {
           trueExpectation.push(5 * Math.cos(x)); // E[y|x] = 5*cos(x)
         }
 
-        // Prepare plot data
-        const traces = [
-          {
+        // Calculate fixed axis ranges based on all data
+        const allX = [...trainX, ...testX, ...testX];
+        const allY = [...trainY, ...testY, ...sample1, ...sample2];
+        if (infiniteDataData) {
+          allY.push(...infiniteSample1, ...infiniteSample2);
+        }
+        const axisXMin = Math.min(...allX);
+        const axisXMax = Math.max(...allX);
+        const axisYMin = Math.min(...allY, ...trueExpectation);
+        const axisYMax = Math.max(...allY, ...trueExpectation);
+        
+        // Add padding to axis ranges
+        const xPadding = (axisXMax - axisXMin) * 0.05;
+        const yPadding = (axisYMax - axisYMin) * 0.05;
+        
+        // Store all plot data components with same marker style for all scatters
+        const allPlotData = {
+          training: {
             x: trainX,
             y: trainY,
             mode: 'markers',
@@ -111,7 +133,18 @@ export default function Case2Solutions() {
               size: 5,
             },
           },
-          {
+          test: {
+            x: testX,
+            y: testY,
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Test Data',
+            marker: {
+              color: 'rgba(251, 146, 60, 0.5)',
+              size: 5,
+            },
+          },
+          trueExpectation: {
             x: xRange,
             y: trueExpectation,
             mode: 'lines',
@@ -122,37 +155,39 @@ export default function Case2Solutions() {
               width: 3,
             },
           },
-          {
+          reference: {
             x: [...testX, ...testX],
             y: [...sample1, ...sample2],
             mode: 'markers',
             type: 'scatter',
-            name: 'Reference Solution (Fourier + Finite Data)',
+            name: 'Reference Solution',
             marker: {
               color: 'rgba(34, 197, 94, 0.6)',
               size: 6,
-              symbol: 'circle',
             },
           },
-        ];
+          axisRanges: {
+            x: [axisXMin - xPadding, axisXMax + xPadding],
+            y: [axisYMin - yPadding, axisYMax + yPadding],
+          },
+        };
         
         // Add infinite data samples if available
         if (infiniteDataData) {
-          traces.push({
+          allPlotData.infinite = {
             x: [...testX, ...testX],
             y: [...infiniteSample1, ...infiniteSample2],
             mode: 'markers',
             type: 'scatter',
-            name: 'Infinite Data Solution (Raw + Infinite Data)',
+            name: 'Infinite Data Solution',
             marker: {
               color: 'rgba(168, 85, 247, 0.6)',
               size: 6,
-              symbol: 'diamond',
             },
-          });
+          };
         }
 
-        setPlotData(traces);
+        setPlotData(allPlotData);
         setLoading(false);
       } catch (err) {
         setError(`Error loading data: ${err.message}`);
@@ -593,66 +628,159 @@ export default function Case2Solutions() {
             )}
             
             {plotData && (
-              <Plot
-                data={plotData}
-                layout={{
-                  title: {
-                    text: 'Training Data Showing Mixture Distribution',
-                    font: { size: window.innerWidth < 640 ? 14 : 16 }
-                  },
-                  xaxis: { title: 'x' },
-                  yaxis: { title: 'y' },
-                  hovermode: 'closest',
-                  showlegend: true,
-                  legend: {
-                    x: window.innerWidth < 640 ? 0 : 0.02,
-                    y: window.innerWidth < 640 ? -0.15 : 0.98,
-                    orientation: window.innerWidth < 640 ? 'h' : 'v',
-                    xanchor: 'left',
-                    yanchor: window.innerWidth < 640 ? 'top' : 'top',
-                    bgcolor: 'rgba(255, 255, 255, 0.8)',
-                    bordercolor: 'rgba(0, 0, 0, 0.2)',
-                    borderwidth: 1,
-                  },
-                  autosize: true,
-                  margin: { 
-                    l: window.innerWidth < 640 ? 40 : 50, 
-                    r: window.innerWidth < 640 ? 10 : 20, 
-                    t: window.innerWidth < 640 ? 40 : 50, 
-                    b: window.innerWidth < 640 ? 80 : 50 
-                  },
-                }}
-                style={{ width: '100%', height: window.innerWidth < 640 ? '400px' : '600px' }}
-                config={{ responsive: true }}
-                useResizeHandler={true}
-              />
+              <>
+                {/* Radio button controls */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-900 mb-3">
+                    Select Data to Display:
+                  </label>
+                  <div className="space-y-2">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="solution"
+                        value="training"
+                        checked={selectedSolution === 'training'}
+                        onChange={(e) => setSelectedSolution(e.target.value)}
+                        className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                      />
+                      <span className="text-gray-700">Training Data</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="solution"
+                        value="test"
+                        checked={selectedSolution === 'test'}
+                        onChange={(e) => setSelectedSolution(e.target.value)}
+                        className="mr-2 h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300"
+                      />
+                      <span className="text-gray-700">Test Data</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="solution"
+                        value="reference"
+                        checked={selectedSolution === 'reference'}
+                        onChange={(e) => setSelectedSolution(e.target.value)}
+                        className="mr-2 h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300"
+                      />
+                      <span className="text-gray-700">Reference Solution</span>
+                    </label>
+                    {plotData.infinite && (
+                      <label className="flex items-center">
+                        <input
+                          type="radio"
+                          name="solution"
+                          value="infinite"
+                          checked={selectedSolution === 'infinite'}
+                          onChange={(e) => setSelectedSolution(e.target.value)}
+                          className="mr-2 h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300"
+                        />
+                        <span className="text-gray-700">Infinite Data Solution</span>
+                      </label>
+                    )}
+                  </div>
+                </div>
+                
+                <Plot
+                  data={[plotData[selectedSolution]]}
+                  layout={{
+                    title: {
+                      text: 'Training Data Showing Mixture Distribution',
+                      font: { size: window.innerWidth < 640 ? 14 : 16 }
+                    },
+                    xaxis: { 
+                      title: 'x',
+                      range: plotData.axisRanges.x,
+                    },
+                    yaxis: { 
+                      title: 'y',
+                      range: plotData.axisRanges.y,
+                    },
+                    hovermode: 'closest',
+                    showlegend: true,
+                    legend: {
+                      x: window.innerWidth < 640 ? 0 : 0.02,
+                      y: window.innerWidth < 640 ? -0.15 : 0.98,
+                      orientation: window.innerWidth < 640 ? 'h' : 'v',
+                      xanchor: 'left',
+                      yanchor: window.innerWidth < 640 ? 'top' : 'top',
+                      bgcolor: 'rgba(255, 255, 255, 0.8)',
+                      bordercolor: 'rgba(0, 0, 0, 0.2)',
+                      borderwidth: 1,
+                    },
+                    autosize: true,
+                    margin: { 
+                      l: window.innerWidth < 640 ? 40 : 50, 
+                      r: window.innerWidth < 640 ? 10 : 20, 
+                      t: window.innerWidth < 640 ? 40 : 50, 
+                      b: window.innerWidth < 640 ? 80 : 50 
+                    },
+                  }}
+                  style={{ width: '100%', height: window.innerWidth < 640 ? '400px' : '600px' }}
+                  config={{ 
+                    responsive: true,
+                    displayModeBar: false,
+                    staticPlot: true,
+                  }}
+                  useResizeHandler={true}
+                />
+              </>
             )}
           </div>
           
           <div className="mt-6 prose max-w-none text-gray-700">
             <h3 className="text-lg font-medium text-gray-900 mb-2">Interpretation:</h3>
-            <ul className="space-y-2">
-              <li>
-                <strong>Blue points</strong>: Training data showing the mixture distribution
-              </li>
-              <li>
-                <strong>Red curve</strong>: Conditional expectation E[y|x] = 5cos(x)
-              </li>
-              <li>
-                <strong>Green circles</strong>: Samples from reference solution (Fourier features + finite data)
-              </li>
-              {infiniteDataHistory && (
-                <li>
-                  <strong>Purple diamonds</strong>: Samples from infinite data solution (raw features + infinite data)
-                </li>
-              )}
-            </ul>
-            <p className="mt-4">
-              Notice how the data splits into two clusters: one following the cosine pattern
-              (around the red curve) and another centered around y=0. Both solutions demonstrate
-              how rectified flow matching learns to capture this bimodal distribution, with samples
-              spread across both modes.
-            </p>
+            {selectedSolution === 'training' && (
+              <>
+                <p>
+                  <strong>Blue points</strong>: Training data showing the mixture distribution
+                </p>
+                <p className="mt-4">
+                  Notice how the data splits into two clusters: one following the cosine pattern
+                  and another centered around y=0. This bimodal distribution reflects the mixture
+                  of two normal distributions in the data generation process. The training data is
+                  denser (900 samples) compared to the test data.
+                </p>
+              </>
+            )}
+            {selectedSolution === 'test' && (
+              <>
+                <p>
+                  <strong>Orange points</strong>: Test data showing the mixture distribution
+                </p>
+                <p className="mt-4">
+                  The test data follows the same bimodal distribution as the training data but 
+                  is less dense (100 samples). This sparser sampling makes it easier to see the 
+                  individual data points and the two-mode structure of the mixture distribution.
+                </p>
+              </>
+            )}
+            {selectedSolution === 'reference' && (
+              <>
+                <p>
+                  <strong>Green points</strong>: Samples from the reference solution trained on finite data
+                </p>
+                <p className="mt-4">
+                  The reference solution demonstrates how rectified flow matching learns to capture
+                  the bimodal distribution, with samples spread across both modes of the mixture.
+                </p>
+              </>
+            )}
+            {selectedSolution === 'infinite' && infiniteDataHistory && (
+              <>
+                <p>
+                  <strong>Purple points</strong>: Samples from the infinite data solution
+                </p>
+                <p className="mt-4">
+                  The infinite data solution demonstrates how rectified flow matching with unlimited
+                  training samples learns to capture the bimodal distribution, with samples spread
+                  across both modes of the mixture.
+                </p>
+              </>
+            )}
           </div>
         </section>
 
