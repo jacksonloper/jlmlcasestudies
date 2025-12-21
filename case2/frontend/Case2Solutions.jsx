@@ -10,7 +10,7 @@ export default function Case2Solutions() {
   const [infiniteDataHistory, setInfiniteDataHistory] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedSolution, setSelectedSolution] = useState('reference');
+  const [selectedSolution, setSelectedSolution] = useState('training');
 
   useEffect(() => {
     async function loadData() {
@@ -615,9 +615,20 @@ export default function Case2Solutions() {
                 {/* Radio button controls */}
                 <div className="mb-6">
                   <label className="block text-sm font-medium text-gray-900 mb-3">
-                    Select Solution to Highlight:
+                    Select Data to Display:
                   </label>
                   <div className="space-y-2">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="solution"
+                        value="training"
+                        checked={selectedSolution === 'training'}
+                        onChange={(e) => setSelectedSolution(e.target.value)}
+                        className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                      />
+                      <span className="text-gray-700">Training Data</span>
+                    </label>
                     <label className="flex items-center">
                       <input
                         type="radio"
@@ -646,11 +657,7 @@ export default function Case2Solutions() {
                 </div>
                 
                 <Plot
-                  data={[
-                    plotData.training,
-                    plotData.reference,
-                    ...(plotData.infinite ? [plotData.infinite] : []),
-                  ]}
+                  data={[plotData[selectedSolution]]}
                   layout={{
                     title: {
                       text: 'Training Data Showing Mixture Distribution',
@@ -694,25 +701,41 @@ export default function Case2Solutions() {
           
           <div className="mt-6 prose max-w-none text-gray-700">
             <h3 className="text-lg font-medium text-gray-900 mb-2">Interpretation:</h3>
-            <ul className="space-y-2">
-              <li>
-                <strong>Blue points</strong>: Training data showing the mixture distribution
-              </li>
-              <li>
-                <strong>Green points</strong>: Reference solution samples
-              </li>
-              {infiniteDataHistory && (
-                <li>
-                  <strong>Purple points</strong>: Infinite data solution samples
-                </li>
-              )}
-            </ul>
-            <p className="mt-4">
-              Notice how the data splits into two clusters: one following the cosine pattern
-              and another centered around y=0. Both solutions demonstrate
-              how rectified flow matching learns to capture this bimodal distribution, with samples
-              spread across both modes.
-            </p>
+            {selectedSolution === 'training' && (
+              <>
+                <p>
+                  <strong>Blue points</strong>: Training data showing the mixture distribution
+                </p>
+                <p className="mt-4">
+                  Notice how the data splits into two clusters: one following the cosine pattern
+                  and another centered around y=0. This bimodal distribution reflects the mixture
+                  of two normal distributions in the data generation process.
+                </p>
+              </>
+            )}
+            {selectedSolution === 'reference' && (
+              <>
+                <p>
+                  <strong>Green points</strong>: Samples from the reference solution trained on finite data
+                </p>
+                <p className="mt-4">
+                  The reference solution demonstrates how rectified flow matching learns to capture
+                  the bimodal distribution, with samples spread across both modes of the mixture.
+                </p>
+              </>
+            )}
+            {selectedSolution === 'infinite' && infiniteDataHistory && (
+              <>
+                <p>
+                  <strong>Purple points</strong>: Samples from the infinite data solution
+                </p>
+                <p className="mt-4">
+                  The infinite data solution demonstrates how rectified flow matching with unlimited
+                  training samples learns to capture the bimodal distribution, with samples spread
+                  across both modes of the mixture.
+                </p>
+              </>
+            )}
           </div>
         </section>
 
