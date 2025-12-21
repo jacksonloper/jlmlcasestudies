@@ -116,10 +116,33 @@ This approach (Energy Score: ~1.8):
 4. Trains with partial_fit on fresh samples each epoch
 5. Uses scipy solve_ivp (RK45) with tight tolerances and N(0,1) initial conditions to generate samples
 
+**JAX + Modal.com GPU Training:**
+For faster training on GPU infrastructure using JAX:
+```bash
+# Run locally (requires Modal token)
+modal run case2/scripts/train_infinitedata_jax_modal.py --duration-minutes 10
+```
+
+This approach uses JAX with T4 GPU on Modal.com infrastructure:
+1. Same infinite data generation as above
+2. JAX for GPU-accelerated training
+3. Same architecture: (256, 128, 128, 64) hidden layers
+4. Trains for fixed duration (10 minutes default) without early stopping
+5. Outputs training loss, energy score CSV files and plots
+6. Generates 1000 sample scatter plot with CSV
+
+**GitHub Actions Workflow:**
+A workflow is available to run the JAX training on Modal and upload artifacts:
+1. Go to Actions → "Train Case2 Infinite Data with JAX on Modal"
+2. Click "Run workflow" and optionally specify training duration
+3. Artifacts include: training_loss.csv, energy_score.csv, scatter_samples.csv, and corresponding plots
+4. Artifacts are retained for 3 days
+
 **Comparison:**
-Both solutions use the same architecture and features but achieve similar performance through different training data:
-- Reference: Fixed dataset (900 samples from dataset1)
-- Infinite data: Fresh samples each epoch (unlimited data from true distribution)
+All solutions use the same architecture and features but differ in training approach:
+- Reference: Fixed dataset (900 samples from dataset1), CPU-based
+- Infinite data: Fresh samples each epoch (unlimited data from true distribution), CPU-based
+- JAX + Modal: Fresh samples each epoch with GPU acceleration
 
 **Ground Truth Oracle (for comparison):**
 For comparison, ground truth sampling from the true mixture distribution:

@@ -1,6 +1,6 @@
 name: Train Case2 Infinite Data with JAX on Modal
 
-on:
+'on':
   workflow_dispatch:
     inputs:
       duration_minutes:
