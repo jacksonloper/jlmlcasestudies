@@ -99,7 +99,22 @@ export default function Case2Solutions() {
           trueExpectation.push(5 * Math.cos(x)); // E[y|x] = 5*cos(x)
         }
 
-        // Store all plot data components
+        // Calculate fixed axis ranges based on all data
+        const allX = [...trainX, ...testX, ...testX];
+        const allY = [...trainY, ...sample1, ...sample2];
+        if (infiniteDataData) {
+          allY.push(...infiniteSample1, ...infiniteSample2);
+        }
+        const axisXMin = Math.min(...allX);
+        const axisXMax = Math.max(...allX);
+        const axisYMin = Math.min(...allY, ...trueExpectation);
+        const axisYMax = Math.max(...allY, ...trueExpectation);
+        
+        // Add padding to axis ranges
+        const xPadding = (axisXMax - axisXMin) * 0.05;
+        const yPadding = (axisYMax - axisYMin) * 0.05;
+        
+        // Store all plot data components with same marker style for all scatters
         const allPlotData = {
           training: {
             x: trainX,
@@ -128,12 +143,15 @@ export default function Case2Solutions() {
             y: [...sample1, ...sample2],
             mode: 'markers',
             type: 'scatter',
-            name: 'Reference Solution (Fourier + Finite Data)',
+            name: 'Reference Solution',
             marker: {
               color: 'rgba(34, 197, 94, 0.6)',
               size: 6,
-              symbol: 'circle',
             },
+          },
+          axisRanges: {
+            x: [axisXMin - xPadding, axisXMax + xPadding],
+            y: [axisYMin - yPadding, axisYMax + yPadding],
           },
         };
         
@@ -144,11 +162,10 @@ export default function Case2Solutions() {
             y: [...infiniteSample1, ...infiniteSample2],
             mode: 'markers',
             type: 'scatter',
-            name: 'Infinite Data Solution (Raw + Infinite Data)',
+            name: 'Infinite Data Solution',
             marker: {
               color: 'rgba(168, 85, 247, 0.6)',
               size: 6,
-              symbol: 'diamond',
             },
           };
         }
@@ -598,7 +615,7 @@ export default function Case2Solutions() {
                 {/* Radio button controls */}
                 <div className="mb-6">
                   <label className="block text-sm font-medium text-gray-900 mb-3">
-                    Select Solution to Display:
+                    Select Solution to Highlight:
                   </label>
                   <div className="space-y-2">
                     <label className="flex items-center">
@@ -610,7 +627,7 @@ export default function Case2Solutions() {
                         onChange={(e) => setSelectedSolution(e.target.value)}
                         className="mr-2 h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300"
                       />
-                      <span className="text-gray-700">Reference Solution (Fourier + Finite Data)</span>
+                      <span className="text-gray-700">Reference Solution</span>
                     </label>
                     {plotData.infinite && (
                       <label className="flex items-center">
@@ -622,7 +639,7 @@ export default function Case2Solutions() {
                           onChange={(e) => setSelectedSolution(e.target.value)}
                           className="mr-2 h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300"
                         />
-                        <span className="text-gray-700">Infinite Data Solution (Raw + Infinite Data)</span>
+                        <span className="text-gray-700">Infinite Data Solution</span>
                       </label>
                     )}
                   </div>
@@ -631,16 +648,22 @@ export default function Case2Solutions() {
                 <Plot
                   data={[
                     plotData.training,
-                    plotData.trueExpectation,
-                    plotData[selectedSolution]
+                    plotData.reference,
+                    ...(plotData.infinite ? [plotData.infinite] : []),
                   ]}
                   layout={{
                     title: {
                       text: 'Training Data Showing Mixture Distribution',
                       font: { size: window.innerWidth < 640 ? 14 : 16 }
                     },
-                    xaxis: { title: 'x' },
-                    yaxis: { title: 'y' },
+                    xaxis: { 
+                      title: 'x',
+                      range: plotData.axisRanges.x,
+                    },
+                    yaxis: { 
+                      title: 'y',
+                      range: plotData.axisRanges.y,
+                    },
                     hovermode: 'closest',
                     showlegend: true,
                     legend: {
@@ -676,25 +699,18 @@ export default function Case2Solutions() {
                 <strong>Blue points</strong>: Training data showing the mixture distribution
               </li>
               <li>
-                <strong>Red curve</strong>: Conditional expectation E[y|x] = 5cos(x)
+                <strong>Green points</strong>: Reference solution samples
               </li>
-              {selectedSolution === 'reference' && (
+              {infiniteDataHistory && (
                 <li>
-                  <strong>Green circles</strong>: Samples from reference solution (Fourier features + finite data)
-                </li>
-              )}
-              {selectedSolution === 'infinite' && infiniteDataHistory && (
-                <li>
-                  <strong>Purple diamonds</strong>: Samples from infinite data solution (raw features + infinite data)
+                  <strong>Purple points</strong>: Infinite data solution samples
                 </li>
               )}
             </ul>
             <p className="mt-4">
               Notice how the data splits into two clusters: one following the cosine pattern
-              (around the red curve) and another centered around y=0. 
-              {selectedSolution === 'reference' && ' The reference solution demonstrates'}
-              {selectedSolution === 'infinite' && ' The infinite data solution demonstrates'}
-              {' '}how rectified flow matching learns to capture this bimodal distribution, with samples
+              and another centered around y=0. Both solutions demonstrate
+              how rectified flow matching learns to capture this bimodal distribution, with samples
               spread across both modes.
             </p>
           </div>
