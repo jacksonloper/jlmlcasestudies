@@ -692,7 +692,11 @@ export default function Case2Solutions() {
                     },
                   }}
                   style={{ width: '100%', height: window.innerWidth < 640 ? '400px' : '600px' }}
-                  config={{ responsive: true }}
+                  config={{ 
+                    responsive: true,
+                    displayModeBar: false,
+                    staticPlot: true,
+                  }}
                   useResizeHandler={true}
                 />
               </>
