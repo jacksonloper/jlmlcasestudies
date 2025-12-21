@@ -93,13 +93,27 @@ The reference solution uses rectified flow matching to learn the conditional dis
 python case2/scripts/generate_reference.py
 ```
 
-This approach (Energy Score: ~2.0):
+This approach (Energy Score: ~2.3):
 1. Standardizes inputs for stable training
-2. Generates 10 t values per training datapoint with endpoint bias
+2. Generates 3 t values per training datapoint: t=0, t=1, and random t
 3. For each t, generates random standard normal eps
 4. Trains MLP to predict y-eps from raw features + Fourier embeddings of (x, t, y*t+(1-t)*eps)
 5. Uses scipy solve_ivp (RK45) with tight tolerances and N(0,1) initial conditions to generate samples
 6. Computes metrics before float16 quantization
+7. Architecture: (128, 128, 64) hidden layers
+
+**Infinite Data Solution - Rectified Flow with Infinite Training Data:**
+An improved solution that trains on infinite data by generating fresh samples from the true generative model:
+```bash
+python case2/scripts/generate_infinitedata.py
+```
+
+This approach (Energy Score: ~1.8):
+1. Generates fresh training data each epoch from true distribution: x ~ N(4, 1), y|x ~ mixture of N(10*cos(x), 1) and N(0, 1)
+2. Uses raw features only (NO Fourier embeddings)
+3. Larger architecture: (256, 128, 128, 64) - extra 256-neuron layer at beginning
+4. Trains with partial_fit on fresh samples each epoch
+5. Uses scipy solve_ivp (RK45) with tight tolerances and N(0,1) initial conditions to generate samples
 
 **Ground Truth Oracle (for comparison):**
 For comparison, ground truth sampling from the true mixture distribution:
