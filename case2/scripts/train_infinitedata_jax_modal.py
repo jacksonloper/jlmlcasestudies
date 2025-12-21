@@ -19,6 +19,10 @@ Outputs:
 import modal
 import os
 
+# ODE integration constants
+ODE_NUM_STEPS = 100  # Number of Euler integration steps
+ODE_DT = 0.01  # Time step size (1.0 / ODE_NUM_STEPS)
+
 # Create Modal app
 app = modal.App("case2-infinitedata-jax")
 
@@ -102,7 +106,7 @@ def train_model(duration_minutes=10, n_train_per_epoch=900, learning_rate=0.001)
         - x ~ N(4, 1)
         - y | x is mixture of N(10*cos(x), 1) and N(0, 1)
         """
-        k1, k2, k3 = random.split(key, 3)
+        k1, k2, k3, k4 = random.split(key, 4)
         
         # Generate x values from N(4, 1)
         x = random.normal(k1, (n_samples,)) + 4.0
@@ -111,11 +115,11 @@ def train_model(duration_minutes=10, n_train_per_epoch=900, learning_rate=0.001)
         # Flip coins for mixture component
         mixture_selector = random.uniform(k2, (n_samples,)) < 0.5
         
-        # Component 1: N(10*cos(x), 1)
+        # Component 1: N(10*cos(x), 1) - uses k3
         y1 = random.normal(k3, (n_samples,)) + 10.0 * jnp.cos(x)
         
-        # Component 2: N(0, 1)
-        y2 = random.normal(k3, (n_samples,))
+        # Component 2: N(0, 1) - uses k4
+        y2 = random.normal(k4, (n_samples,))
         
         # Select based on mixture
         y = jnp.where(mixture_selector, y1, y2)
@@ -158,13 +162,15 @@ def train_model(duration_minutes=10, n_train_per_epoch=900, learning_rate=0.001)
         t_values = t_values.at[1::n_t_per_sample].set(1.0)
         
         # Fill random t values
-        k1, k2 = random.split(key)
+        key_parts = random.split(key, n_t_per_sample)
+        k_eps = key_parts[0]
         for i in range(2, n_t_per_sample):
-            random_t = random.uniform(k1, (n_samples,))
+            k_t = key_parts[i]
+            random_t = random.uniform(k_t, (n_samples,))
             t_values = t_values.at[i::n_t_per_sample].set(random_t)
         
         # Generate random noise
-        eps_values = random.normal(k2, (n_total,))
+        eps_values = random.normal(k_eps, (n_total,))
         
         # Compute z_t = y*t + (1-t)*eps
         zt_values = y_expanded * t_values + (1 - t_values) * eps_values
@@ -185,11 +191,11 @@ def train_model(duration_minutes=10, n_train_per_epoch=900, learning_rate=0.001)
     
     @jit
     def update_step(params, features, targets, learning_rate):
-        """Single gradient descent step."""
+        """Single gradient descent step using vanilla SGD."""
         loss = loss_fn(params, features, targets)
         grads = grad(loss_fn)(params, features, targets)
         
-        # Update parameters with Adam-like update (simple SGD for now)
+        # Update parameters with vanilla SGD
         new_params = []
         for (w, b), (dw, db) in zip(params, grads):
             new_params.append((w - learning_rate * dw, b - learning_rate * db))
@@ -265,6 +271,7 @@ def train_model(duration_minutes=10, n_train_per_epoch=900, learning_rate=0.001)
                 
                 # Generate samples using ODE integration (simplified for JAX)
                 # For energy score, we'll use a simpler Euler integration
+                # Note: This is faster than RK45 but may be less accurate
                 val_samples = []
                 for i in range(len(val_x_scaled)):
                     x_val = val_x_scaled[i]
@@ -274,14 +281,13 @@ def train_model(duration_minutes=10, n_train_per_epoch=900, learning_rate=0.001)
                         key, sample_key = random.split(key)
                         z0 = random.normal(sample_key, ())
                         
-                        # Simple Euler integration
+                        # Euler integration with fixed step size
                         z = z0
-                        dt = 0.01
-                        for step in range(100):  # 100 steps from t=0 to t=1
-                            t = step * dt
+                        for step in range(ODE_NUM_STEPS):
+                            t = step * ODE_DT
                             features_ode = jnp.array([x_val, t, z])
                             v = mlp_forward(params, features_ode)
-                            z = z + v * dt
+                            z = z + v * ODE_DT
                         
                         samples_for_x.append(z)
                     
@@ -322,14 +328,13 @@ def train_model(duration_minutes=10, n_train_per_epoch=900, learning_rate=0.001)
         key, sample_key = random.split(key)
         z0 = random.normal(sample_key, ())
         
-        # Euler integration
+        # Euler integration with fixed step size
         z = z0
-        dt = 0.01
-        for step in range(100):
-            t = step * dt
+        for step in range(ODE_NUM_STEPS):
+            t = step * ODE_DT
             features_ode = jnp.array([x_val, t, z])
             v = mlp_forward(params, features_ode)
-            z = z + v * dt
+            z = z + v * ODE_DT
         
         scatter_samples.append(z)
     

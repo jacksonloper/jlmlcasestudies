@@ -27,8 +27,11 @@ jobs:
           pip install modal
       
       - name: Configure Modal Token
+        env:
+          MODAL_TOKEN_COMMAND: ${{ secrets.MODAL_TOKEN_COMMAND }}
         run: |
-          ${{ secrets.MODAL_TOKEN_COMMAND }}
+          # Execute the modal token command from environment variable
+          eval "$MODAL_TOKEN_COMMAND"
       
       - name: Run training on Modal
         run: |
