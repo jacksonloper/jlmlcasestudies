@@ -17,8 +17,8 @@ export default defineConfig({
         // If importing from case directories, resolve dependencies from frontend/node_modules
         if (importer && (importer.includes('/case1/frontend/') || importer.includes('/case2/frontend/'))) {
           if (!source.startsWith('.') && !source.startsWith('/')) {
-            // This is a package import, resolve it relative to frontend
-            return this.resolve(source, path.join(__dirname, 'src', 'dummy.js'), { skipSelf: true })
+            // This is a package import, resolve it relative to frontend's node_modules
+            return this.resolve(source, path.join(__dirname, 'src', 'App.jsx'), { skipSelf: true })
           }
         }
         return null
