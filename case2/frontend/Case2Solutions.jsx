@@ -27,6 +27,11 @@ export default function Case2Solutions() {
         const testXArrayBuffer = await testXResponse.arrayBuffer();
         const testXData = await npy.load(testXArrayBuffer);
 
+        // Load test Y data
+        const testYResponse = await fetch('/case2/data/test_y.npy');
+        const testYArrayBuffer = await testYResponse.arrayBuffer();
+        const testYData = await npy.load(testYArrayBuffer);
+
         // Load optimal samples from rectified flow
         const optimalResponse = await fetch('/case2/data/optimal_samples.npy');
         const optimalArrayBuffer = await optimalResponse.arrayBuffer();
@@ -70,6 +75,7 @@ export default function Case2Solutions() {
 
         // Extract test X and optimal samples
         const testX = Array.from(testXData.data);
+        const testY = Array.from(testYData.data);
         const sample1 = [];
         const sample2 = [];
         for (let i = 0; i < optimalData.shape[0]; i++) {
@@ -101,7 +107,7 @@ export default function Case2Solutions() {
 
         // Calculate fixed axis ranges based on all data
         const allX = [...trainX, ...testX, ...testX];
-        const allY = [...trainY, ...sample1, ...sample2];
+        const allY = [...trainY, ...testY, ...sample1, ...sample2];
         if (infiniteDataData) {
           allY.push(...infiniteSample1, ...infiniteSample2);
         }
@@ -124,6 +130,17 @@ export default function Case2Solutions() {
             name: 'Training Data',
             marker: {
               color: 'rgba(59, 130, 246, 0.5)',
+              size: 5,
+            },
+          },
+          test: {
+            x: testX,
+            y: testY,
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Test Data',
+            marker: {
+              color: 'rgba(251, 146, 60, 0.5)',
               size: 5,
             },
           },
@@ -633,6 +650,17 @@ export default function Case2Solutions() {
                       <input
                         type="radio"
                         name="solution"
+                        value="test"
+                        checked={selectedSolution === 'test'}
+                        onChange={(e) => setSelectedSolution(e.target.value)}
+                        className="mr-2 h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300"
+                      />
+                      <span className="text-gray-700">Test Data</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="solution"
                         value="reference"
                         checked={selectedSolution === 'reference'}
                         onChange={(e) => setSelectedSolution(e.target.value)}
@@ -713,7 +741,20 @@ export default function Case2Solutions() {
                 <p className="mt-4">
                   Notice how the data splits into two clusters: one following the cosine pattern
                   and another centered around y=0. This bimodal distribution reflects the mixture
-                  of two normal distributions in the data generation process.
+                  of two normal distributions in the data generation process. The training data is
+                  denser (900 samples) compared to the test data.
+                </p>
+              </>
+            )}
+            {selectedSolution === 'test' && (
+              <>
+                <p>
+                  <strong>Orange points</strong>: Test data showing the mixture distribution
+                </p>
+                <p className="mt-4">
+                  The test data follows the same bimodal distribution as the training data but 
+                  is less dense (100 samples). This sparser sampling makes it easier to see the 
+                  individual data points and the two-mode structure of the mixture distribution.
                 </p>
               </>
             )}
