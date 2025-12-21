@@ -48,3 +48,6 @@ lerna-debug.log*
 .env.local
 .env.*.local
 *.local
+
+# Modal outputs
+modal_outputs/
