@@ -88,97 +88,57 @@ jobs:
             echo "has_scripts=true" >> $GITHUB_OUTPUT
           fi
       
-      - name: Determine which workflows to trigger
+      - name: Trigger workflows for each changed script
         if: steps.find-scripts.outputs.has_scripts == 'true'
-        id: determine-workflows
-        run: |
-          scripts="${{ steps.find-scripts.outputs.scripts }}"
-          
-          # Map script names to workflow names
-          declare -A script_to_workflow
-          script_to_workflow["modal_train_infinitedata_jax.py"]="run_modal_train_infinitedata_jax.yml"
-          
-          workflows_to_trigger=""
-          
-          for script in $scripts; do
-            script_name=$(basename "$script")
-            
-            if [[ -v script_to_workflow[$script_name] ]]; then
-              workflow="${script_to_workflow[$script_name]}"
-              workflows_to_trigger="$workflows_to_trigger $workflow"
-              echo "✓ Found workflow for $script_name: $workflow"
-            else
-              echo "⚠ No workflow found for $script_name"
-            fi
-          done
-          
-          echo "workflows=$workflows_to_trigger" >> $GITHUB_OUTPUT
-          
-          if [ -z "$workflows_to_trigger" ]; then
-            echo "has_workflows=false" >> $GITHUB_OUTPUT
-          else
-            echo "has_workflows=true" >> $GITHUB_OUTPUT
-          fi
-      
-      - name: Trigger modal_train_infinitedata_jax workflow
-        if: steps.find-scripts.outputs.has_scripts == 'true' && contains(steps.determine-workflows.outputs.workflows, 'run_modal_train_infinitedata_jax.yml')
         uses: actions/github-script@v7
         with:
           script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'run_modal_train_infinitedata_jax.yml',
-              ref: '${{ steps.get-branch.outputs.branch }}',
-              inputs: {
-                duration_minutes: '5',
-                pr_number: '${{ github.event.issue.number }}',
-                branch_name: '${{ steps.get-branch.outputs.branch }}'
-              }
-            });
-      
-      - name: Post workflow triggered comment
-        if: steps.determine-workflows.outputs.has_workflows == 'true'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const workflows = '${{ steps.determine-workflows.outputs.workflows }}'.trim().split(/\s+/);
-            
+            const scripts = '${{ steps.find-scripts.outputs.scripts }}'.trim().split(/\s+/);
+            const branch = '${{ steps.get-branch.outputs.branch }}';
+            const prNumber = '${{ github.event.issue.number }}';
+
             let body = '## Modal Scripts Workflows Triggered\n\n';
-            body += 'The following workflows have been triggered to run the changed modal scripts:\n\n';
-            
-            for (const workflow of workflows) {
-              body += `- \`${workflow}\`\n`;
+            body += `Triggered \`run_modal_script.yml\` workflow for ${scripts.length} script(s):\n\n`;
+
+            for (const script of scripts) {
+              // Remove leading ./ if present
+              const cleanScript = script.replace(/^\.\//, '');
+              body += `- \`${cleanScript}\`\n`;
+
+              await github.rest.actions.createWorkflowDispatch({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: 'run_modal_script.yml',
+                ref: branch,
+                inputs: {
+                  script_path: cleanScript,
+                  duration_minutes: '5',
+                  pr_number: prNumber,
+                  branch_name: branch
+                }
+              });
             }
-            
+
             body += '\n';
-            body += 'You can monitor their progress in the [Actions tab](https://github.com/${{ github.repository }}/actions).\n';
+            body += 'You can monitor progress in the [Actions tab](https://github.com/${{ github.repository }}/actions).\n';
             body += '\n';
             body += 'Each workflow will post its own status comment when complete.';
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: body
             });
-      
-      - name: Post no scripts or workflows message
-        if: steps.find-scripts.outputs.has_scripts == 'false' || steps.determine-workflows.outputs.has_workflows == 'false'
+
+      - name: Post no scripts message
+        if: steps.find-scripts.outputs.has_scripts == 'false'
         uses: actions/github-script@v7
         with:
           script: |
-            let body = '## Modal Scripts Results\n\n';
-            
-            if ('${{ steps.find-scripts.outputs.has_scripts }}' === 'false') {
-              body += 'No `modal_*.py` scripts found that differ from main branch.';
-            } else if ('${{ steps.determine-workflows.outputs.has_workflows }}' === 'false') {
-              body += 'Changed modal scripts were found, but no corresponding workflows exist for them.';
-            }
-            
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: body
+              body: '## Modal Scripts Results\n\nNo `modal_*.py` scripts found that differ from main branch.'
             });
