@@ -14,9 +14,9 @@ Outputs:
 - training_loss.csv: Training loss over time (per step)
 - energy_score.csv: Energy score over time (computed every 50 steps)
 - scatter_samples.csv: 1000 conditional samples from the trained model
-- training_loss.png: Plot of training loss
-- energy_score.png: Plot of energy score
-- scatter_plot.png: Scatterplot of samples vs ground truth
+
+Note: The local entrypoint saves CSV files only (no plotting dependencies required locally).
+For visualization, you can load the CSVs in your preferred plotting tool or use matplotlib locally.
 """
 
 import modal
@@ -414,8 +414,7 @@ def main(duration_minutes: int = 10):
     Args:
         duration_minutes: How long to train (in minutes)
     """
-    import numpy as np
-    import matplotlib.pyplot as plt
+    import csv
     from pathlib import Path
     
     print(f"Starting training on Modal with T4 GPU for {duration_minutes} minutes...")
@@ -430,106 +429,35 @@ def main(duration_minutes: int = 10):
     
     print(f"\nSaving results to {output_dir}...")
     
-    # Save CSVs
+    # Save CSVs using standard library csv module
     # Training loss CSV
-    train_loss_data = np.column_stack([result['steps'], result['train_losses'], result['times']])
-    np.savetxt(
-        output_dir / "training_loss.csv",
-        train_loss_data,
-        delimiter=",",
-        header="step,train_loss,time_seconds",
-        comments=""
-    )
+    with open(output_dir / "training_loss.csv", 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['step', 'train_loss', 'time_seconds'])
+        for step, loss, time_val in zip(result['steps'], result['train_losses'], result['times']):
+            writer.writerow([step, loss, time_val])
     
     # Energy score CSV (only every 50 steps)
     if len(result['energy_scores']) > 0:
-        energy_data = np.column_stack([result['energy_steps'], result['energy_scores'], result['energy_times']])
-        np.savetxt(
-            output_dir / "energy_score.csv",
-            energy_data,
-            delimiter=",",
-            header="step,energy_score,time_seconds",
-            comments=""
-        )
+        with open(output_dir / "energy_score.csv", 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(['step', 'energy_score', 'time_seconds'])
+            for step, score, time_val in zip(result['energy_steps'], result['energy_scores'], result['energy_times']):
+                writer.writerow([step, score, time_val])
     
     # Scatter samples CSV
-    scatter_data = np.column_stack([result['scatter_x'], result['scatter_y'], result['scatter_samples']])
-    np.savetxt(
-        output_dir / "scatter_samples.csv",
-        scatter_data,
-        delimiter=",",
-        header="x,y_true,y_sampled",
-        comments=""
-    )
-    
-    # Create plots
-    fig, axes = plt.subplots(1, 3, figsize=(18, 5))
-    
-    # Training loss plot
-    axes[0].plot(result['times'], result['train_losses'], 'b-', linewidth=2)
-    axes[0].set_xlabel('Time (seconds)', fontsize=12)
-    axes[0].set_ylabel('Training Loss', fontsize=12)
-    axes[0].set_title('Training Loss Over Time', fontsize=14)
-    axes[0].grid(True, alpha=0.3)
-    
-    # Energy score plot
-    if len(result['energy_scores']) > 0:
-        axes[1].plot(result['energy_times'], result['energy_scores'], 'r-', linewidth=2)
-        axes[1].set_xlabel('Time (seconds)', fontsize=12)
-        axes[1].set_ylabel('Energy Score', fontsize=12)
-        axes[1].set_title('Energy Score Over Time', fontsize=14)
-        axes[1].grid(True, alpha=0.3)
-    
-    # Scatter plot
-    axes[2].scatter(result['scatter_x'], result['scatter_samples'], alpha=0.3, s=20, label='Model Samples')
-    axes[2].scatter(result['scatter_x'], result['scatter_y'], alpha=0.3, s=20, label='Ground Truth', color='red')
-    axes[2].set_xlabel('x', fontsize=12)
-    axes[2].set_ylabel('y', fontsize=12)
-    axes[2].set_title('1000 Samples: Model vs Ground Truth', fontsize=14)
-    axes[2].legend(fontsize=10)
-    axes[2].grid(True, alpha=0.3)
-    
-    plt.tight_layout()
-    plt.savefig(output_dir / "training_plots.png", dpi=150, bbox_inches='tight')
-    print(f"Combined plot saved to {output_dir / 'training_plots.png'}")
-    
-    # Also save individual plots
-    plt.figure(figsize=(8, 6))
-    plt.plot(result['times'], result['train_losses'], 'b-', linewidth=2)
-    plt.xlabel('Time (seconds)', fontsize=12)
-    plt.ylabel('Training Loss', fontsize=12)
-    plt.title('Training Loss Over Time', fontsize=14)
-    plt.grid(True, alpha=0.3)
-    plt.savefig(output_dir / "training_loss.png", dpi=150, bbox_inches='tight')
-    plt.close()
-    
-    if len(result['energy_scores']) > 0:
-        plt.figure(figsize=(8, 6))
-        plt.plot(result['energy_times'], result['energy_scores'], 'r-', linewidth=2)
-        plt.xlabel('Time (seconds)', fontsize=12)
-        plt.ylabel('Energy Score', fontsize=12)
-        plt.title('Energy Score Over Time', fontsize=14)
-        plt.grid(True, alpha=0.3)
-        plt.savefig(output_dir / "energy_score.png", dpi=150, bbox_inches='tight')
-        plt.close()
-    
-    plt.figure(figsize=(10, 8))
-    plt.scatter(result['scatter_x'], result['scatter_samples'], alpha=0.3, s=20, label='Model Samples')
-    plt.scatter(result['scatter_x'], result['scatter_y'], alpha=0.3, s=20, label='Ground Truth', color='red')
-    plt.xlabel('x', fontsize=12)
-    plt.ylabel('y', fontsize=12)
-    plt.title('1000 Samples: Model vs Ground Truth', fontsize=14)
-    plt.legend(fontsize=10)
-    plt.grid(True, alpha=0.3)
-    plt.savefig(output_dir / "scatter_plot.png", dpi=150, bbox_inches='tight')
-    plt.close()
+    with open(output_dir / "scatter_samples.csv", 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['x', 'y_true', 'y_sampled'])
+        for x, y_true, y_sampled in zip(result['scatter_x'], result['scatter_y'], result['scatter_samples']):
+            writer.writerow([x, y_true, y_sampled])
     
     print("\nAll outputs saved successfully!")
     print(f"  - training_loss.csv")
-    print(f"  - energy_score.csv")
+    if len(result['energy_scores']) > 0:
+        print(f"  - energy_score.csv")
     print(f"  - scatter_samples.csv")
-    print(f"  - training_loss.png")
-    print(f"  - energy_score.png")
-    print(f"  - scatter_plot.png")
-    print(f"  - training_plots.png (combined)")
     print(f"\nTotal training time: {result['total_time']:.2f} seconds ({result['total_time']/60:.2f} minutes)")
+    print(f"\nNote: CSV files saved. For plots, you can visualize the data using:")
+    print(f"  python -m matplotlib {output_dir / 'training_loss.csv'}")
+    print(f"  or load the CSVs in your preferred plotting tool.")
