@@ -1,0 +1,176 @@
+name: Run modal_train_infinitedata_jax.py
+
+'on':
+  workflow_dispatch:
+    inputs:
+      duration_minutes:
+        description: 'Training duration in minutes'
+        required: false
+        default: '5'
+        type: string
+      pr_number:
+        description: 'PR number (leave empty for manual runs)'
+        required: false
+        type: string
+      branch_name:
+        description: 'Branch name (leave empty for manual runs to use current branch)'
+        required: false
+        type: string
+  workflow_call:
+    inputs:
+      duration_minutes:
+        description: 'Training duration in minutes'
+        required: false
+        default: '5'
+        type: string
+      pr_number:
+        description: 'PR number for commenting'
+        required: false
+        type: string
+      branch_name:
+        description: 'Branch name to checkout'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch_name || github.ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install Modal
+        run: |
+          pip install modal
+      
+      - name: Configure Modal Token
+        env:
+          MODAL_TOKEN_COMMAND: ${{ secrets.MODAL_TOKEN_COMMAND }}
+        run: |
+          eval "$MODAL_TOKEN_COMMAND"
+      
+      - name: Run modal_train_infinitedata_jax.py
+        id: run-script
+        run: |
+          set -o pipefail
+          cd case2/scripts
+          
+          echo "Running modal_train_infinitedata_jax.py with duration_minutes=${{ inputs.duration_minutes || '5' }}"
+          
+          if modal run modal_train_infinitedata_jax.py --duration-minutes ${{ inputs.duration_minutes || '5' }} 2>&1 | tee /tmp/modal_run.log; then
+            echo "success=true" >> $GITHUB_OUTPUT
+            echo "✓ Script completed successfully"
+          else
+            echo "success=false" >> $GITHUB_OUTPUT
+            echo "✗ Script failed"
+            exit 1
+          fi
+      
+      - name: Move outputs to data directory
+        if: steps.run-script.outputs.success == 'true'
+        run: |
+          cd case2/scripts
+          
+          if [ -d "modal_outputs" ]; then
+            # Create data directory if it doesn't exist
+            if [ ! -d "../data" ]; then
+              echo "Creating data directory at case2/data/"
+              mkdir -p "../data"
+            fi
+            
+            echo "Moving outputs from modal_outputs/ to case2/data/"
+            shopt -s nullglob dotglob
+            files=(modal_outputs/*)
+            if [ ${#files[@]} -gt 0 ]; then
+              mv modal_outputs/* "../data/"
+              echo "✓ Outputs moved to case2/data/"
+            else
+              echo "⚠ No files found in modal_outputs/"
+            fi
+            rm -rf modal_outputs
+          fi
+      
+      - name: Commit and push data files
+        if: steps.run-script.outputs.success == 'true' && inputs.branch_name != ''
+        run: |
+          # Configure git
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Stage data files
+          find case2/data -type f \( -name '*.csv' -o -name '*.png' -o -name '*.npy' -o -name '*.json' \) -exec git add -f {} \;
+          
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            echo "Committing data files..."
+            git commit -m "Add data from modal_train_infinitedata_jax.py"
+            
+            echo "Pushing to branch: ${{ inputs.branch_name }}"
+            git push origin HEAD:${{ inputs.branch_name }}
+          fi
+      
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: modal-train-infinitedata-jax-${{ github.run_id }}
+          path: case2/data/
+          retention-days: 3
+          if-no-files-found: warn
+      
+      - name: Post success comment to PR
+        if: steps.run-script.outputs.success == 'true' && inputs.pr_number != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: ${{ inputs.pr_number }},
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '✅ **modal_train_infinitedata_jax.py** completed successfully!\n\nData files have been committed to this PR branch.'
+            });
+      
+      - name: Post failure comment to PR
+        if: steps.run-script.outputs.success == 'false' && inputs.pr_number != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: ${{ inputs.pr_number }},
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '❌ **modal_train_infinitedata_jax.py** failed!\n\nCheck the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.'
+            });
+      
+      - name: Display results summary
+        if: always()
+        run: |
+          echo "## Training Results Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.run-script.outputs.success }}" == "true" ]; then
+            echo "✅ Training completed successfully" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Training failed" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Script: modal_train_infinitedata_jax.py" >> $GITHUB_STEP_SUMMARY
+          echo "Duration: ${{ inputs.duration_minutes || '5' }} minutes" >> $GITHUB_STEP_SUMMARY

@@ -88,213 +88,97 @@ jobs:
             echo "has_scripts=true" >> $GITHUB_OUTPUT
           fi
       
-      - name: Run Modal scripts
+      - name: Determine which workflows to trigger
         if: steps.find-scripts.outputs.has_scripts == 'true'
-        id: run-scripts
+        id: determine-workflows
         run: |
-          set -o pipefail
-          mkdir -p /tmp/modal_results
-          
           scripts="${{ steps.find-scripts.outputs.scripts }}"
-          all_success=true
+          
+          # Map script names to workflow names
+          declare -A script_to_workflow
+          script_to_workflow["modal_train_infinitedata_jax.py"]="run_modal_train_infinitedata_jax.yml"
+          
+          workflows_to_trigger=""
           
           for script in $scripts; do
-            echo "Running: $script"
-            script_name=$(basename "$script" .py)
-            script_dir=$(dirname "$script")
+            script_name=$(basename "$script")
             
-            cd "$script_dir"
-            
-            # Run the modal script with 30 minute duration
-            if modal run "$(basename $script)" 2>&1 | tee "/tmp/modal_results/${script_name}.log"; then
-              echo "✓ $script completed successfully"
-              
-              # Move outputs to data directory, creating it if needed
-              if [ -d "modal_outputs" ]; then
-                # Determine the case directory (parent of scripts dir)
-                case_dir=$(dirname "$script_dir")
-                data_dir="$case_dir/data"
-                
-                # Create data directory if it doesn't exist
-                if [ ! -d "$data_dir" ]; then
-                  echo "Creating data directory at $data_dir/"
-                  mkdir -p "$data_dir"
-                fi
-                
-                echo "Moving outputs from modal_outputs/ to $data_dir/"
-                # Move all files from modal_outputs to data directory
-                # Use shopt to enable dotglob to include hidden files
-                shopt -s nullglob dotglob
-                files=(modal_outputs/*)
-                if [ ${#files[@]} -gt 0 ]; then
-                  mv modal_outputs/* "$data_dir/"
-                  echo "✓ Outputs moved to $data_dir/"
-                else
-                  echo "⚠ No files found in modal_outputs/"
-                fi
-                # Remove the modal_outputs directory (using -rf to handle any edge cases)
-                rm -rf modal_outputs
-              fi
+            if [[ -v script_to_workflow[$script_name] ]]; then
+              workflow="${script_to_workflow[$script_name]}"
+              workflows_to_trigger="$workflows_to_trigger $workflow"
+              echo "✓ Found workflow for $script_name: $workflow"
             else
-              echo "✗ $script failed"
-              all_success=false
-            fi
-            
-            cd - > /dev/null
-          done
-          
-          # Set output variable to track overall success
-          if [ "$all_success" = true ]; then
-            echo "all_success=true" >> $GITHUB_OUTPUT
-          else
-            echo "all_success=false" >> $GITHUB_OUTPUT
-          fi
-      
-      - name: Commit and push data files
-        if: steps.find-scripts.outputs.has_scripts == 'true' && steps.run-scripts.outputs.all_success == 'true'
-        run: |
-          # Configure git
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          
-          # Stage all data directory changes (CSV, PNG, NPY, JSON files)
-          # Limit search to case* and dataset* directories to improve performance
-          find . \( -path './case*/data/*' -o -path './dataset*/data/*' \) \( -name '*.csv' -o -name '*.png' -o -name '*.npy' -o -name '*.json' \) -type f -exec git add -f {} \;
-          
-          # Check if there are changes to commit
-          if git diff --staged --quiet; then
-            echo "No changes to commit"
-          else
-            echo "Committing data files..."
-            git commit -m "Add data and plots from /runmodal command"
-            
-            echo "Pushing to PR branch: ${{ steps.get-branch.outputs.branch }}"
-            git push origin HEAD:${{ steps.get-branch.outputs.branch }}
-          fi
-      
-      - name: Upload failure logs as artifact
-        if: steps.find-scripts.outputs.has_scripts == 'true' && steps.run-scripts.outputs.all_success == 'false'
-        uses: actions/upload-artifact@v4
-        with:
-          name: modal-failure-logs-${{ github.event.issue.number }}
-          path: /tmp/modal_results/*.log
-          retention-days: 7
-      
-      - name: Prepare success comment
-        if: steps.find-scripts.outputs.has_scripts == 'true' && steps.run-scripts.outputs.all_success == 'true'
-        id: prepare-success-comment
-        run: |
-          # Create comment body
-          cat << 'EOF' > /tmp/comment_body.md
-          ## Modal Scripts Results ✅
-          
-          All Modal scripts completed successfully in response to `/runmodal` command.
-          
-          ### Scripts Executed
-          
-          EOF
-          
-          scripts="${{ steps.find-scripts.outputs.scripts }}"
-          
-          for script in $scripts; do
-            script_name=$(basename "$script" .py)
-            echo "- \`$script\` ✓" >> /tmp/comment_body.md
-          done
-          
-          cat << 'EOF' >> /tmp/comment_body.md
-          
-          ### Committed Files
-          
-          All generated CSV and PNG files have been moved to the corresponding data directories and committed to this PR branch.
-          
-          EOF
-          
-          # Save comment body
-          cat /tmp/comment_body.md
-      
-      - name: Prepare failure comment
-        if: steps.find-scripts.outputs.has_scripts == 'true' && steps.run-scripts.outputs.all_success == 'false'
-        id: prepare-failure-comment
-        run: |
-          # Create comment body
-          cat << 'EOF' > /tmp/comment_body.md
-          ## Modal Scripts Results ❌
-          
-          One or more Modal scripts failed. No changes have been committed.
-          
-          ### Scripts Status
-          
-          EOF
-          
-          scripts="${{ steps.find-scripts.outputs.scripts }}"
-          
-          for script in $scripts; do
-            script_name=$(basename "$script" .py)
-            log_file="/tmp/modal_results/${script_name}.log"
-            
-            if [ -f "$log_file" ]; then
-              # Check if the log contains success or failure indicators
-              if grep -q "✓ $script completed successfully" "$log_file" 2>/dev/null || tail -20 "$log_file" | grep -qi "success\|complete"; then
-                echo "- \`$script\` ✓" >> /tmp/comment_body.md
-              else
-                echo "- \`$script\` ❌" >> /tmp/comment_body.md
-              fi
-            else
-              echo "- \`$script\` ❓" >> /tmp/comment_body.md
+              echo "⚠ No workflow found for $script_name"
             fi
           done
           
-          cat << 'EOF' >> /tmp/comment_body.md
+          echo "workflows=$workflows_to_trigger" >> $GITHUB_OUTPUT
           
-          ### Error Logs
-          
-          Full error logs have been uploaded as a workflow artifact: `modal-failure-logs-${{ github.event.issue.number }}`
-          
-          You can download the logs from the [workflow run artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}).
-          
-          EOF
-          
-          # Save comment body
-          cat /tmp/comment_body.md
+          if [ -z "$workflows_to_trigger" ]; then
+            echo "has_workflows=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_workflows=true" >> $GITHUB_OUTPUT
+          fi
       
-      - name: Post success comment to PR
-        if: steps.find-scripts.outputs.has_scripts == 'true' && steps.run-scripts.outputs.all_success == 'true'
+      - name: Trigger modal_train_infinitedata_jax workflow
+        if: steps.find-scripts.outputs.has_scripts == 'true' && contains(steps.determine-workflows.outputs.workflows, 'run_modal_train_infinitedata_jax.yml')
         uses: actions/github-script@v7
         with:
           script: |
-            const fs = require('fs');
-            const commentBody = fs.readFileSync('/tmp/comment_body.md', 'utf8');
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'run_modal_train_infinitedata_jax.yml',
+              ref: '${{ steps.get-branch.outputs.branch }}',
+              inputs: {
+                duration_minutes: '5',
+                pr_number: '${{ github.event.issue.number }}',
+                branch_name: '${{ steps.get-branch.outputs.branch }}'
+              }
+            });
+      
+      - name: Post workflow triggered comment
+        if: steps.determine-workflows.outputs.has_workflows == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const workflows = '${{ steps.determine-workflows.outputs.workflows }}'.trim().split(/\s+/);
+            
+            let body = '## Modal Scripts Workflows Triggered\n\n';
+            body += 'The following workflows have been triggered to run the changed modal scripts:\n\n';
+            
+            for (const workflow of workflows) {
+              body += `- \`${workflow}\`\n`;
+            }
+            
+            body += '\n';
+            body += 'You can monitor their progress in the [Actions tab](https://github.com/${{ github.repository }}/actions).\n';
+            body += '\n';
+            body += 'Each workflow will post its own status comment when complete.';
             
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: commentBody
+              body: body
             });
       
-      - name: Post failure comment to PR
-        if: steps.find-scripts.outputs.has_scripts == 'true' && steps.run-scripts.outputs.all_success == 'false'
+      - name: Post no scripts or workflows message
+        if: steps.find-scripts.outputs.has_scripts == 'false' || steps.determine-workflows.outputs.has_workflows == 'false'
         uses: actions/github-script@v7
         with:
           script: |
-            const fs = require('fs');
-            const commentBody = fs.readFileSync('/tmp/comment_body.md', 'utf8');
+            let body = '## Modal Scripts Results\n\n';
+            
+            if ('${{ steps.find-scripts.outputs.has_scripts }}' === 'false') {
+              body += 'No `modal_*.py` scripts found that differ from main branch.';
+            } else if ('${{ steps.determine-workflows.outputs.has_workflows }}' === 'false') {
+              body += 'Changed modal scripts were found, but no corresponding workflows exist for them.';
+            }
             
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: commentBody
-            });
-      
-      - name: Post no scripts message
-        if: steps.find-scripts.outputs.has_scripts == 'false'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '## Modal Scripts Results\n\nNo `modal_*.py` scripts found that differ from main branch.'
+              body: body
             });
