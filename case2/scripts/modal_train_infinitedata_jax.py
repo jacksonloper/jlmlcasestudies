@@ -41,9 +41,9 @@ image = (
 @app.function(
     image=image,
     gpu="T4",
-    timeout=60 * 60,  # 1 hour max timeout
+    timeout=60 * 30,  # 30 minute timeout as backstop
 )
-def train_model(duration_minutes=10, n_train_per_step=900, learning_rate=0.001, batch_size=300):
+def train_model(duration_minutes=5, n_train_per_step=900, learning_rate=0.001, batch_size=900):
     """
     Train rectified flow model using JAX with infinite data.
     
@@ -406,7 +406,7 @@ def train_model(duration_minutes=10, n_train_per_step=900, learning_rate=0.001, 
 
 
 @app.local_entrypoint()
-def main(duration_minutes: int = 10):
+def main(duration_minutes: int = 5):
     """
     Main entrypoint for running training on Modal.
     
