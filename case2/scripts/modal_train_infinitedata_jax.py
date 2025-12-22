@@ -43,7 +43,7 @@ image = (
     gpu="T4",
     timeout=30 * 60,  # 30 minute timeout as backstop
 )
-def train_model(duration_minutes=5, n_train_per_step=900, learning_rate=0.001, batch_size=900):
+def train_model(duration_minutes=5, n_train_per_step=900, learning_rate=0.001, batch_size=2700):
     """
     Train rectified flow model using JAX with infinite data.
     
@@ -164,7 +164,8 @@ def train_model(duration_minutes=5, n_train_per_step=900, learning_rate=0.001, b
         """
         Generate flow training batch.
         
-        For each sample, uses 3 t values: t=0, t=1, t~random
+        For each sample, draws n_t_per_sample independent random t values from Beta(2, 2) distribution.
+        Beta(2, 2) concentrates samples around t=0.5 while still covering the full [0, 1] range.
         """
         n_samples = len(x_data)
         n_total = n_samples * n_t_per_sample
@@ -173,18 +174,10 @@ def train_model(duration_minutes=5, n_train_per_step=900, learning_rate=0.001, b
         x_expanded = jnp.repeat(x_data, n_t_per_sample)
         y_expanded = jnp.repeat(y_data, n_t_per_sample)
         
-        # Generate t values: [0, 1, random, 0, 1, random, ...]
-        t_values = jnp.zeros(n_total)
-        t_values = t_values.at[1::n_t_per_sample].set(1.0)
-        
-        # Fill random t values (if n_t_per_sample > 2)
-        # Split key into one for eps and one for random t values
+        # Generate t values from Beta(2, 2) distribution for all samples
+        # Beta(2, 2) has mean=0.5 and concentrates probability around the middle
         k_eps, k_t = random.split(key)
-        if n_t_per_sample > 2:
-            # Generate random t values for indices 2, 5, 8, ... (i.e., every third starting at 2)
-            n_random_t = n_samples  # one random t per sample
-            random_t = random.uniform(k_t, (n_random_t,))
-            t_values = t_values.at[2::n_t_per_sample].set(random_t)
+        t_values = random.beta(k_t, 2.0, 2.0, shape=(n_total,))
         
         # Generate random noise
         eps_values = random.normal(k_eps, (n_total,))
