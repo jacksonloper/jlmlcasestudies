@@ -95,6 +95,7 @@ jobs:
           mkdir -p /tmp/modal_results
           
           scripts="${{ steps.find-scripts.outputs.scripts }}"
+          all_success=true
           
           for script in $scripts; do
             echo "Running: $script"
@@ -107,11 +108,8 @@ jobs:
             if modal run "$(basename $script)" --duration-minutes 30 2>&1 | tee "/tmp/modal_results/${script_name}.log"; then
               echo "✓ $script completed successfully"
               
-              # Copy outputs to temp for artifacts
+              # Move outputs to data directory, creating it if needed
               if [ -d "modal_outputs" ]; then
-                cp -r modal_outputs "/tmp/modal_results/${script_name}_outputs"
-                
-                # Move outputs to data directory, creating it if needed
                 # Determine the case directory (parent of scripts dir)
                 case_dir=$(dirname "$script_dir")
                 data_dir="$case_dir/data"
@@ -138,13 +136,21 @@ jobs:
               fi
             else
               echo "✗ $script failed"
+              all_success=false
             fi
             
             cd - > /dev/null
           done
+          
+          # Set output variable to track overall success
+          if [ "$all_success" = true ]; then
+            echo "all_success=true" >> $GITHUB_OUTPUT
+          else
+            echo "all_success=false" >> $GITHUB_OUTPUT
+          fi
       
       - name: Commit and push data files
-        if: steps.find-scripts.outputs.has_scripts == 'true'
+        if: steps.find-scripts.outputs.has_scripts == 'true' && steps.run-scripts.outputs.all_success == 'true'
         run: |
           # Configure git
           git config user.name "github-actions[bot]"
@@ -165,23 +171,23 @@ jobs:
             git push origin HEAD:${{ steps.get-branch.outputs.branch }}
           fi
       
-      - name: Upload results as artifacts
-        if: steps.find-scripts.outputs.has_scripts == 'true'
+      - name: Upload failure logs as artifact
+        if: steps.find-scripts.outputs.has_scripts == 'true' && steps.run-scripts.outputs.all_success == 'false'
         uses: actions/upload-artifact@v4
         with:
-          name: modal-results-${{ github.event.issue.number }}
-          path: /tmp/modal_results/
-          retention-days: 3
+          name: modal-failure-logs-${{ github.event.issue.number }}
+          path: /tmp/modal_results/*.log
+          retention-days: 7
       
-      - name: Prepare comment with results
-        if: steps.find-scripts.outputs.has_scripts == 'true'
-        id: prepare-comment
+      - name: Prepare success comment
+        if: steps.find-scripts.outputs.has_scripts == 'true' && steps.run-scripts.outputs.all_success == 'true'
+        id: prepare-success-comment
         run: |
           # Create comment body
           cat << 'EOF' > /tmp/comment_body.md
-          ## Modal Scripts Results
+          ## Modal Scripts Results ✅
           
-          Ran Modal scripts in response to `/runmodal` command.
+          All Modal scripts completed successfully in response to `/runmodal` command.
           
           ### Scripts Executed
           
@@ -191,39 +197,7 @@ jobs:
           
           for script in $scripts; do
             script_name=$(basename "$script" .py)
-            echo "- \`$script\`" >> /tmp/comment_body.md
-            
-            # Add plots if they exist
-            output_dir="/tmp/modal_results/${script_name}_outputs"
-            if [ -d "$output_dir" ]; then
-              echo "" >> /tmp/comment_body.md
-              echo "#### Results for \`$script\`" >> /tmp/comment_body.md
-              echo "" >> /tmp/comment_body.md
-              
-              # List key outputs
-              if [ -f "$output_dir/training_loss.csv" ]; then
-                echo "✓ Training loss data generated" >> /tmp/comment_body.md
-              fi
-              if [ -f "$output_dir/energy_score.csv" ]; then
-                echo "✓ Energy score data generated" >> /tmp/comment_body.md
-              fi
-              if [ -f "$output_dir/scatter_samples.csv" ]; then
-                samples=$(wc -l < "$output_dir/scatter_samples.csv")
-                echo "✓ Generated $samples scatter samples" >> /tmp/comment_body.md
-              fi
-              
-              echo "" >> /tmp/comment_body.md
-              echo "📊 **Plots and data files have been moved to the data directory and committed:**" >> /tmp/comment_body.md
-              echo "- training_loss.png" >> /tmp/comment_body.md
-              echo "- training_loss.csv" >> /tmp/comment_body.md
-              echo "- energy_score.png" >> /tmp/comment_body.md
-              echo "- energy_score.csv" >> /tmp/comment_body.md
-              echo "- scatter_plot.png" >> /tmp/comment_body.md
-              echo "- scatter_samples.csv" >> /tmp/comment_body.md
-              echo "- training_plots.png (combined)" >> /tmp/comment_body.md
-            fi
-            
-            echo "" >> /tmp/comment_body.md
+            echo "- \`$script\` ✓" >> /tmp/comment_body.md
           done
           
           cat << 'EOF' >> /tmp/comment_body.md
@@ -237,8 +211,68 @@ jobs:
           # Save comment body
           cat /tmp/comment_body.md
       
-      - name: Post comment to PR
-        if: steps.find-scripts.outputs.has_scripts == 'true'
+      - name: Prepare failure comment
+        if: steps.find-scripts.outputs.has_scripts == 'true' && steps.run-scripts.outputs.all_success == 'false'
+        id: prepare-failure-comment
+        run: |
+          # Create comment body
+          cat << 'EOF' > /tmp/comment_body.md
+          ## Modal Scripts Results ❌
+          
+          One or more Modal scripts failed. No changes have been committed.
+          
+          ### Scripts Status
+          
+          EOF
+          
+          scripts="${{ steps.find-scripts.outputs.scripts }}"
+          
+          for script in $scripts; do
+            script_name=$(basename "$script" .py)
+            log_file="/tmp/modal_results/${script_name}.log"
+            
+            if [ -f "$log_file" ]; then
+              # Check if the log contains success or failure indicators
+              if grep -q "✓ $script completed successfully" "$log_file" 2>/dev/null || tail -20 "$log_file" | grep -qi "success\|complete"; then
+                echo "- \`$script\` ✓" >> /tmp/comment_body.md
+              else
+                echo "- \`$script\` ❌" >> /tmp/comment_body.md
+              fi
+            else
+              echo "- \`$script\` ❓" >> /tmp/comment_body.md
+            fi
+          done
+          
+          cat << 'EOF' >> /tmp/comment_body.md
+          
+          ### Error Logs
+          
+          Full error logs have been uploaded as a workflow artifact: `modal-failure-logs-${{ github.event.issue.number }}`
+          
+          You can download the logs from the [workflow run artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}).
+          
+          EOF
+          
+          # Save comment body
+          cat /tmp/comment_body.md
+      
+      - name: Post success comment to PR
+        if: steps.find-scripts.outputs.has_scripts == 'true' && steps.run-scripts.outputs.all_success == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const commentBody = fs.readFileSync('/tmp/comment_body.md', 'utf8');
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: commentBody
+            });
+      
+      - name: Post failure comment to PR
+        if: steps.find-scripts.outputs.has_scripts == 'true' && steps.run-scripts.outputs.all_success == 'false'
         uses: actions/github-script@v7
         with:
           script: |
