@@ -105,7 +105,7 @@ jobs:
             cd "$script_dir"
             
             # Run the modal script with 30 minute duration
-            if modal run "$(basename $script)" --duration-minutes 30 2>&1 | tee "/tmp/modal_results/${script_name}.log"; then
+            if modal run "$(basename $script)" 2>&1 | tee "/tmp/modal_results/${script_name}.log"; then
               echo "✓ $script completed successfully"
               
               # Move outputs to data directory, creating it if needed
