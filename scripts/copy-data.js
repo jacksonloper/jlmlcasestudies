@@ -8,6 +8,7 @@ const __dirname = dirname(__filename);
 // Define paths
 const rootDir = join(__dirname, '..');
 const dataset1Dir = join(rootDir, 'dataset1', 'data');
+const case1Dir = join(rootDir, 'case1', 'data');
 const case2Dir = join(rootDir, 'case2', 'data');
 const targetCase1Dir = join(__dirname, '..', 'public', 'case1', 'data');
 const targetCase2Dir = join(__dirname, '..', 'public', 'case2', 'data');
@@ -36,10 +37,28 @@ if (existsSync(dataset1Dir)) {
   console.warn(`Warning: Source directory ${dataset1Dir} does not exist. Run the data generation script first.`);
 }
 
+// Copy case1-specific files
+if (existsSync(case1Dir)) {
+  const case1Files = readdirSync(case1Dir).filter(file => 
+    file.endsWith('.npy') || file.endsWith('.json') || file.endsWith('.csv') || file.endsWith('.png')
+  );
+  
+  console.log(`\nCopying ${case1Files.length} case1-specific files to public/case1/data`);
+  
+  case1Files.forEach(file => {
+    const sourcePath = join(case1Dir, file);
+    const targetPath = join(targetCase1Dir, file);
+    copyFileSync(sourcePath, targetPath);
+    console.log(`  ✓ Copied ${file}`);
+  });
+  
+  console.log('Case1-specific files copied successfully!');
+}
+
 // Copy case2-specific files
 if (existsSync(case2Dir)) {
   const case2Files = readdirSync(case2Dir).filter(file => 
-    file.endsWith('.npy') || file.endsWith('.json')
+    file.endsWith('.npy') || file.endsWith('.json') || file.endsWith('.csv') || file.endsWith('.png')
   );
   
   console.log(`\nCopying ${case2Files.length} case2-specific files to public/case2/data`);

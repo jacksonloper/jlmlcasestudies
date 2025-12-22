@@ -5,7 +5,7 @@ This script:
 1. Loads the training data
 2. Trains a HistGradientBoostingRegressor with default parameters
 3. Generates predictions on the test set
-4. Saves predictions as hgb_test_yhat.npy
+4. Saves predictions as hgb_test_yhat.npy to case1/data/
 5. Calculates and reports MSE scores:
    - Baseline MSE (HGB predictions)
    - Best possible MSE (using the optimal predictor)
@@ -22,6 +22,11 @@ np.random.seed(42)
 script_dir = Path(__file__).parent
 # Data is in the shared dataset1 directory
 data_dir = script_dir.parent.parent / "dataset1" / "data"
+# Output goes to case1/data directory
+output_dir = script_dir.parent / "data"
+
+# Create output directory if it doesn't exist
+output_dir.mkdir(exist_ok=True)
 
 # Load training data
 print("Loading training data...")
@@ -51,7 +56,7 @@ print("\nGenerating predictions on test set...")
 test_yhat = model.predict(test_x)
 
 # Save predictions as float16 to match the other data files
-output_path = data_dir / "hgb_test_yhat.npy"
+output_path = output_dir / "hgb_test_yhat.npy"
 np.save(output_path, test_yhat.astype(np.float16))
 print(f"Predictions saved to: {output_path}")
 
@@ -71,7 +76,7 @@ optimal_predictions = 0.5 * 10 * np.cos(test_x_flat)
 mse_optimal = np.mean((optimal_predictions.astype(np.float32) - test_y.astype(np.float32)) ** 2)
 print(f"Best Possible MSE (optimal predictor): {mse_optimal:.4f}")
 print(f"{'='*60}")
-print("This is the essentially best-possible score (expected MSE).")
+print("This is the essentially best-possible score (expected RMSE).")
 
 # Print summary
 print(f"\n{'='*60}")

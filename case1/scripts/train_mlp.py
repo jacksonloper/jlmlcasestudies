@@ -5,7 +5,7 @@ This script:
 1. Loads the training data
 2. Trains a small MLPRegressor with default parameters
 3. Generates predictions on the test set
-4. Saves predictions as mlp_test_yhat.npy
+4. Saves predictions as mlp_test_yhat.npy to case1/data/
 5. Calculates and reports RMSE scores:
    - Baseline RMSE (MLP predictions)
    - Best possible RMSE (using the optimal predictor)
@@ -22,6 +22,11 @@ np.random.seed(42)
 script_dir = Path(__file__).parent
 # Data is in the shared dataset1 directory
 data_dir = script_dir.parent.parent / "dataset1" / "data"
+# Output goes to case1/data directory
+output_dir = script_dir.parent / "data"
+
+# Create output directory if it doesn't exist
+output_dir.mkdir(exist_ok=True)
 
 # Load training data
 print("Loading training data...")
@@ -57,7 +62,7 @@ print("\nGenerating predictions on test set...")
 test_yhat = model.predict(test_x)
 
 # Save predictions as float16 to match the other data files
-output_path = data_dir / "mlp_test_yhat.npy"
+output_path = output_dir / "mlp_test_yhat.npy"
 np.save(output_path, test_yhat.astype(np.float16))
 print(f"Predictions saved to: {output_path}")
 
