@@ -35,7 +35,6 @@ image = (
         "jax[cuda12]",
         "optax",
         "numpy",
-        "matplotlib",
     )
 )
 
@@ -458,6 +457,7 @@ def main(duration_minutes: int = 10):
         print(f"  - energy_score.csv")
     print(f"  - scatter_samples.csv")
     print(f"\nTotal training time: {result['total_time']:.2f} seconds ({result['total_time']/60:.2f} minutes)")
-    print(f"\nNote: CSV files saved. For plots, you can visualize the data using:")
-    print(f"  python -m matplotlib {output_dir / 'training_loss.csv'}")
-    print(f"  or load the CSVs in your preferred plotting tool.")
+    print(f"\nNote: CSV files saved. You can visualize them with pandas/matplotlib:")
+    print(f"  import pandas as pd; import matplotlib.pyplot as plt")
+    print(f"  df = pd.read_csv('{output_dir / 'training_loss.csv'}')")
+    print(f"  plt.plot(df['time_seconds'], df['train_loss']); plt.show()")
