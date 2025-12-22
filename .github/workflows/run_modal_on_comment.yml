@@ -149,7 +149,8 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
           # Stage all data directory changes (CSV, PNG, NPY, JSON files)
-          find . -path '*/data/*' \( -name '*.csv' -o -name '*.png' -o -name '*.npy' -o -name '*.json' \) -type f -exec git add -f {} \;
+          # Limit search to case* and dataset* directories to improve performance
+          find . \( -path './case*/data/*' -o -path './dataset*/data/*' \) \( -name '*.csv' -o -name '*.png' -o -name '*.npy' -o -name '*.json' \) -type f -exec git add -f {} \;
           
           # Check if there are changes to commit
           if git diff --staged --quiet; then
