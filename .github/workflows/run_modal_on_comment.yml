@@ -5,7 +5,7 @@ name: Run Modal Scripts on Comment
     types: [created]
 
 permissions:
-  contents: read
+  contents: write
   pull-requests: write
   issues: write
 
@@ -25,6 +25,18 @@ jobs:
         with:
           ref: refs/pull/${{ github.event.issue.number }}/head
           fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Get PR branch name
+        id: get-branch
+        run: |
+          # Get the PR details to find the head branch
+          pr_data=$(gh api repos/${{ github.repository }}/pulls/${{ github.event.issue.number }})
+          branch_name=$(echo "$pr_data" | jq -r .head.ref)
+          echo "branch=$branch_name" >> $GITHUB_OUTPUT
+          echo "Branch name: $branch_name"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -106,6 +118,27 @@ jobs:
             cd - > /dev/null
           done
       
+      - name: Commit and push modal outputs
+        if: steps.find-scripts.outputs.has_scripts == 'true'
+        run: |
+          # Configure git
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Stage any new modal_outputs files
+          git add -A
+          
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            echo "Committing modal outputs..."
+            git commit -m "Add modal outputs from /runmodal command"
+            
+            echo "Pushing to PR branch: ${{ steps.get-branch.outputs.branch }}"
+            git push origin HEAD:${{ steps.get-branch.outputs.branch }}
+          fi
+      
       - name: Upload results as artifacts
         if: steps.find-scripts.outputs.has_scripts == 'true'
         uses: actions/upload-artifact@v4
@@ -153,13 +186,14 @@ jobs:
                 echo "✓ Generated $samples scatter samples" >> /tmp/comment_body.md
               fi
               
-              # Note: GitHub Actions cannot directly embed images in comments
-              # Images must be uploaded as artifacts and accessed separately
               echo "" >> /tmp/comment_body.md
-              echo "📊 **Plots generated** - Download artifacts to view:" >> /tmp/comment_body.md
+              echo "📊 **Plots and data files have been committed to this PR branch:**" >> /tmp/comment_body.md
               echo "- training_loss.png" >> /tmp/comment_body.md
+              echo "- training_loss.csv" >> /tmp/comment_body.md
               echo "- energy_score.png" >> /tmp/comment_body.md
+              echo "- energy_score.csv" >> /tmp/comment_body.md
               echo "- scatter_plot.png" >> /tmp/comment_body.md
+              echo "- scatter_samples.csv" >> /tmp/comment_body.md
               echo "- training_plots.png (combined)" >> /tmp/comment_body.md
             fi
             
@@ -168,10 +202,10 @@ jobs:
           
           cat << 'EOF' >> /tmp/comment_body.md
           
-          ### Artifacts
+          ### Committed Files
           
-          Download the artifacts from this workflow run to view all plots and CSV files.
-          The artifacts will be available for 3 days.
+          All generated CSV and PNG files have been committed directly to this PR branch.
+          The files are located in the respective \`modal_outputs/\` directories.
           
           EOF
           
