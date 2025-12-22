@@ -113,7 +113,7 @@ def train_model(duration_minutes=10, n_train_per_step=900, learning_rate=0.001, 
         # Final layer (no activation)
         w, b = params[-1]
         x = jnp.dot(x, w) + b
-        return x.flatten()
+        return x.squeeze()  # Return scalar instead of [1] array
     
     def generate_training_data(n_samples, key):
         """
