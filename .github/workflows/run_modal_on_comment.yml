@@ -111,28 +111,30 @@ jobs:
               if [ -d "modal_outputs" ]; then
                 cp -r modal_outputs "/tmp/modal_results/${script_name}_outputs"
                 
-                # Move outputs to data directory if it exists
+                # Move outputs to data directory, creating it if needed
                 # Determine the case directory (parent of scripts dir)
                 case_dir=$(dirname "$script_dir")
                 data_dir="$case_dir/data"
                 
-                if [ -d "$data_dir" ]; then
-                  echo "Moving outputs from modal_outputs/ to $data_dir/"
-                  # Move all files from modal_outputs to data directory
-                  # Use shopt to enable dotglob to include hidden files
-                  shopt -s nullglob dotglob
-                  files=(modal_outputs/*)
-                  if [ ${#files[@]} -gt 0 ]; then
-                    mv modal_outputs/* "$data_dir/"
-                    echo "✓ Outputs moved to $data_dir/"
-                  else
-                    echo "⚠ No files found in modal_outputs/"
-                  fi
-                  # Remove the modal_outputs directory (using -rf to handle any edge cases)
-                  rm -rf modal_outputs
-                else
-                  echo "⚠ No data directory found at $data_dir, outputs remain in modal_outputs/"
+                # Create data directory if it doesn't exist
+                if [ ! -d "$data_dir" ]; then
+                  echo "Creating data directory at $data_dir/"
+                  mkdir -p "$data_dir"
                 fi
+                
+                echo "Moving outputs from modal_outputs/ to $data_dir/"
+                # Move all files from modal_outputs to data directory
+                # Use shopt to enable dotglob to include hidden files
+                shopt -s nullglob dotglob
+                files=(modal_outputs/*)
+                if [ ${#files[@]} -gt 0 ]; then
+                  mv modal_outputs/* "$data_dir/"
+                  echo "✓ Outputs moved to $data_dir/"
+                else
+                  echo "⚠ No files found in modal_outputs/"
+                fi
+                # Remove the modal_outputs directory (using -rf to handle any edge cases)
+                rm -rf modal_outputs
               fi
             else
               echo "✗ $script failed"
