@@ -119,10 +119,17 @@ jobs:
                 if [ -d "$data_dir" ]; then
                   echo "Moving outputs from modal_outputs/ to $data_dir/"
                   # Move all files from modal_outputs to data directory
-                  mv modal_outputs/* "$data_dir/"
-                  # Remove the now-empty modal_outputs directory
-                  rmdir modal_outputs
-                  echo "✓ Outputs moved to $data_dir/"
+                  # Use shopt to enable dotglob to include hidden files
+                  shopt -s nullglob dotglob
+                  files=(modal_outputs/*)
+                  if [ ${#files[@]} -gt 0 ]; then
+                    mv modal_outputs/* "$data_dir/"
+                    echo "✓ Outputs moved to $data_dir/"
+                  else
+                    echo "⚠ No files found in modal_outputs/"
+                  fi
+                  # Remove the modal_outputs directory (using -rf to handle any edge cases)
+                  rm -rf modal_outputs
                 else
                   echo "⚠ No data directory found at $data_dir, outputs remain in modal_outputs/"
                 fi
