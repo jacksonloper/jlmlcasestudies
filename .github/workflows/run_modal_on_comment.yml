@@ -92,6 +92,7 @@ jobs:
         if: steps.find-scripts.outputs.has_scripts == 'true'
         id: run-scripts
         run: |
+          set -o pipefail
           mkdir -p /tmp/modal_results
           
           scripts="${{ steps.find-scripts.outputs.scripts }}"
