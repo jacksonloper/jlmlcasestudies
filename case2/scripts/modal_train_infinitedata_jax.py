@@ -41,7 +41,7 @@ image = (
 @app.function(
     image=image,
     gpu="T4",
-    timeout=60 * 30,  # 30 minute timeout as backstop
+    timeout=30 * 60,  # 30 minute timeout as backstop
 )
 def train_model(duration_minutes=5, n_train_per_step=900, learning_rate=0.001, batch_size=900):
     """
