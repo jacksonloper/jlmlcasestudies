@@ -1,0 +1,206 @@
+name: Run Modal Scripts on Comment
+
+'on':
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  run-modal:
+    # Only run on PR comments from repo owner with /runmodal command
+    if: |
+      github.event.issue.pull_request &&
+      github.event.comment.body == '/runmodal' &&
+      github.event.comment.author_association == 'OWNER'
+    
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: refs/pull/${{ github.event.issue.number }}/head
+          fetch-depth: 0
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install Modal
+        run: |
+          pip install modal
+      
+      - name: Configure Modal Token
+        env:
+          MODAL_TOKEN_COMMAND: ${{ secrets.MODAL_TOKEN_COMMAND }}
+        run: |
+          eval "$MODAL_TOKEN_COMMAND"
+      
+      - name: Find changed modal scripts
+        id: find-scripts
+        run: |
+          # Fetch main branch
+          git fetch origin main:main
+          
+          # Find all modal_*.py files that differ from main
+          echo "Finding modal_*.py files that differ from main..."
+          
+          # Get list of all modal_*.py files in current branch
+          modal_scripts=$(find . -name "modal_*.py" -type f)
+          
+          changed_scripts=""
+          for script in $modal_scripts; do
+            # Check if file exists in main and differs
+            if git diff main HEAD -- "$script" | grep -q .; then
+              echo "Changed: $script"
+              changed_scripts="$changed_scripts $script"
+            elif ! git cat-file -e main:"$script" 2>/dev/null; then
+              echo "New file: $script"
+              changed_scripts="$changed_scripts $script"
+            fi
+          done
+          
+          # Save to output
+          echo "scripts=$changed_scripts" >> $GITHUB_OUTPUT
+          
+          if [ -z "$changed_scripts" ]; then
+            echo "No changed modal scripts found"
+            echo "has_scripts=false" >> $GITHUB_OUTPUT
+          else
+            echo "Found changed scripts: $changed_scripts"
+            echo "has_scripts=true" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Run Modal scripts
+        if: steps.find-scripts.outputs.has_scripts == 'true'
+        id: run-scripts
+        run: |
+          mkdir -p /tmp/modal_results
+          
+          scripts="${{ steps.find-scripts.outputs.scripts }}"
+          
+          for script in $scripts; do
+            echo "Running: $script"
+            script_name=$(basename "$script" .py)
+            script_dir=$(dirname "$script")
+            
+            cd "$script_dir"
+            
+            # Run the modal script with 30 minute duration
+            if modal run "$(basename $script)" --duration-minutes 30 2>&1 | tee "/tmp/modal_results/${script_name}.log"; then
+              echo "✓ $script completed successfully"
+              
+              # Copy outputs if they exist
+              if [ -d "modal_outputs" ]; then
+                cp -r modal_outputs "/tmp/modal_results/${script_name}_outputs"
+              fi
+            else
+              echo "✗ $script failed"
+            fi
+            
+            cd - > /dev/null
+          done
+      
+      - name: Upload results as artifacts
+        if: steps.find-scripts.outputs.has_scripts == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: modal-results-${{ github.event.issue.number }}
+          path: /tmp/modal_results/
+          retention-days: 3
+      
+      - name: Prepare comment with results
+        if: steps.find-scripts.outputs.has_scripts == 'true'
+        id: prepare-comment
+        run: |
+          # Create comment body
+          cat << 'EOF' > /tmp/comment_body.md
+          ## Modal Scripts Results
+          
+          Ran Modal scripts in response to `/runmodal` command.
+          
+          ### Scripts Executed
+          
+          EOF
+          
+          scripts="${{ steps.find-scripts.outputs.scripts }}"
+          
+          for script in $scripts; do
+            script_name=$(basename "$script" .py)
+            echo "- \`$script\`" >> /tmp/comment_body.md
+            
+            # Add plots if they exist
+            output_dir="/tmp/modal_results/${script_name}_outputs"
+            if [ -d "$output_dir" ]; then
+              echo "" >> /tmp/comment_body.md
+              echo "#### Results for \`$script\`" >> /tmp/comment_body.md
+              echo "" >> /tmp/comment_body.md
+              
+              # List key outputs
+              if [ -f "$output_dir/training_loss.csv" ]; then
+                echo "✓ Training loss data generated" >> /tmp/comment_body.md
+              fi
+              if [ -f "$output_dir/energy_score.csv" ]; then
+                echo "✓ Energy score data generated" >> /tmp/comment_body.md
+              fi
+              if [ -f "$output_dir/scatter_samples.csv" ]; then
+                samples=$(wc -l < "$output_dir/scatter_samples.csv")
+                echo "✓ Generated $samples scatter samples" >> /tmp/comment_body.md
+              fi
+              
+              # Note: GitHub Actions cannot directly embed images in comments
+              # Images must be uploaded as artifacts and accessed separately
+              echo "" >> /tmp/comment_body.md
+              echo "📊 **Plots generated** - Download artifacts to view:" >> /tmp/comment_body.md
+              echo "- training_loss.png" >> /tmp/comment_body.md
+              echo "- energy_score.png" >> /tmp/comment_body.md
+              echo "- scatter_plot.png" >> /tmp/comment_body.md
+              echo "- training_plots.png (combined)" >> /tmp/comment_body.md
+            fi
+            
+            echo "" >> /tmp/comment_body.md
+          done
+          
+          cat << 'EOF' >> /tmp/comment_body.md
+          
+          ### Artifacts
+          
+          Download the artifacts from this workflow run to view all plots and CSV files.
+          The artifacts will be available for 3 days.
+          
+          EOF
+          
+          # Save comment body
+          cat /tmp/comment_body.md
+      
+      - name: Post comment to PR
+        if: steps.find-scripts.outputs.has_scripts == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const commentBody = fs.readFileSync('/tmp/comment_body.md', 'utf8');
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: commentBody
+            });
+      
+      - name: Post no scripts message
+        if: steps.find-scripts.outputs.has_scripts == 'false'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '## Modal Scripts Results\n\nNo `modal_*.py` scripts found that differ from main branch.'
+            });
