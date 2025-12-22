@@ -125,8 +125,8 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Stage any new modal_outputs files
-          git add -A
+          # Stage only modal_outputs directories
+          find . -type d -name "modal_outputs" -exec git add -f {}/ \;
           
           # Check if there are changes to commit
           if git diff --staged --quiet; then
@@ -204,8 +204,7 @@ jobs:
           
           ### Committed Files
           
-          All generated CSV and PNG files have been committed directly to this PR branch.
-          The files are located in the respective \`modal_outputs/\` directories.
+          All generated CSV and PNG files have been committed directly to this PR branch in their script directories (e.g., \`case2/scripts/modal_outputs/\`).
           
           EOF
           
