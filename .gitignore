@@ -49,6 +49,5 @@ lerna-debug.log*
 .env.*.local
 *.local
 
-# Modal outputs (except case2/scripts)
+# Modal outputs
 modal_outputs/
-!case2/scripts/modal_outputs/

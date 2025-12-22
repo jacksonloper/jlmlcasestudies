@@ -107,9 +107,25 @@ jobs:
             if modal run "$(basename $script)" --duration-minutes 30 2>&1 | tee "/tmp/modal_results/${script_name}.log"; then
               echo "✓ $script completed successfully"
               
-              # Copy outputs if they exist
+              # Copy outputs to temp for artifacts
               if [ -d "modal_outputs" ]; then
                 cp -r modal_outputs "/tmp/modal_results/${script_name}_outputs"
+                
+                # Move outputs to data directory if it exists
+                # Determine the case directory (parent of scripts dir)
+                case_dir=$(dirname "$script_dir")
+                data_dir="$case_dir/data"
+                
+                if [ -d "$data_dir" ]; then
+                  echo "Moving outputs from modal_outputs/ to $data_dir/"
+                  # Move all files from modal_outputs to data directory
+                  mv modal_outputs/* "$data_dir/"
+                  # Remove the now-empty modal_outputs directory
+                  rmdir modal_outputs
+                  echo "✓ Outputs moved to $data_dir/"
+                else
+                  echo "⚠ No data directory found at $data_dir, outputs remain in modal_outputs/"
+                fi
               fi
             else
               echo "✗ $script failed"
@@ -118,22 +134,22 @@ jobs:
             cd - > /dev/null
           done
       
-      - name: Commit and push modal outputs
+      - name: Commit and push data files
         if: steps.find-scripts.outputs.has_scripts == 'true'
         run: |
           # Configure git
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Stage only modal_outputs directories
-          find . -type d -name "modal_outputs" -exec git add -f {}/ \;
+          # Stage all data directory changes (CSV, PNG, NPY, JSON files)
+          find . -path '*/data/*' \( -name '*.csv' -o -name '*.png' -o -name '*.npy' -o -name '*.json' \) -type f -exec git add -f {} \;
           
           # Check if there are changes to commit
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            echo "Committing modal outputs..."
-            git commit -m "Add modal outputs from /runmodal command"
+            echo "Committing data files..."
+            git commit -m "Add data and plots from /runmodal command"
             
             echo "Pushing to PR branch: ${{ steps.get-branch.outputs.branch }}"
             git push origin HEAD:${{ steps.get-branch.outputs.branch }}
@@ -187,7 +203,7 @@ jobs:
               fi
               
               echo "" >> /tmp/comment_body.md
-              echo "📊 **Plots and data files have been committed to this PR branch:**" >> /tmp/comment_body.md
+              echo "📊 **Plots and data files have been moved to the data directory and committed:**" >> /tmp/comment_body.md
               echo "- training_loss.png" >> /tmp/comment_body.md
               echo "- training_loss.csv" >> /tmp/comment_body.md
               echo "- energy_score.png" >> /tmp/comment_body.md
@@ -204,7 +220,7 @@ jobs:
           
           ### Committed Files
           
-          All generated CSV and PNG files have been committed directly to this PR branch in their script directories (e.g., \`case2/scripts/modal_outputs/\`).
+          All generated CSV and PNG files have been moved to the corresponding data directories and committed to this PR branch.
           
           EOF
           
