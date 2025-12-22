@@ -1,27 +1,29 @@
 """
 Train infinite data solution using JAX on Modal.com with T4 GPU.
 
-This script runs rectified flow matching with infinite data generation using JAX
-for GPU acceleration. It runs for a fixed time duration (10 minutes by default)
-without early stopping since we have infinite data.
+This script implements rectified flow matching (Liu et al. 2022) with infinite data generation
+using JAX for GPU acceleration. Uses the linear interpolation path z_t = t*y + (1-t)*eps
+with target velocity v = y - eps.
 
 Architecture matches the reference implementation: (256, 128, 128, 64) with raw features only.
 
+Training uses minibatched AdamW optimization with gradient clipping for stability.
+The model is fully JIT-compiled including ODE integration for efficient GPU execution.
+
 Outputs:
-- training_loss.csv: Training loss over time
-- energy_score.csv: Energy score over time  
-- scatter_samples.csv: 1000 samples from the trained model
+- training_loss.csv: Training loss over time (per step)
+- energy_score.csv: Energy score over time (computed every 50 steps)
+- scatter_samples.csv: 1000 conditional samples from the trained model
 - training_loss.png: Plot of training loss
 - energy_score.png: Plot of energy score
-- scatter_plot.png: Scatterplot of samples
+- scatter_plot.png: Scatterplot of samples vs ground truth
 """
 
 import modal
-import os
 
 # ODE integration constants
 ODE_NUM_STEPS = 100  # Number of Euler integration steps
-ODE_DT = 0.01  # Time step size (1.0 / ODE_NUM_STEPS)
+ODE_DT = 1.0 / ODE_NUM_STEPS  # Time step size for integration from 0 to 1
 
 # Create Modal app
 app = modal.App("case2-infinitedata-jax")
@@ -31,8 +33,8 @@ image = (
     modal.Image.debian_slim(python_version="3.11")
     .pip_install(
         "jax[cuda12]",
+        "optax",
         "numpy",
-        "scipy",
         "matplotlib",
     )
 )
@@ -42,14 +44,15 @@ image = (
     gpu="T4",
     timeout=60 * 60,  # 1 hour max timeout
 )
-def train_model(duration_minutes=10, n_train_per_epoch=900, learning_rate=0.001):
+def train_model(duration_minutes=10, n_train_per_step=900, learning_rate=0.001, batch_size=300):
     """
     Train rectified flow model using JAX with infinite data.
     
     Args:
         duration_minutes: How long to train (in minutes)
-        n_train_per_epoch: Number of training samples per epoch
-        learning_rate: Learning rate for optimizer
+        n_train_per_step: Number of training samples to generate per step
+        learning_rate: Learning rate for AdamW optimizer
+        batch_size: Minibatch size for training
     
     Returns:
         Dictionary with training history and samples
@@ -57,13 +60,27 @@ def train_model(duration_minutes=10, n_train_per_epoch=900, learning_rate=0.001)
     import jax
     import jax.numpy as jnp
     from jax import random, grad, jit, vmap
+    import jax.lax as lax
+    import optax
     import numpy as np
-    from scipy.integrate import solve_ivp
     import time
     
+    # Verify GPU is available
     print(f"JAX version: {jax.__version__}")
     print(f"JAX devices: {jax.devices()}")
-    print(f"Training for {duration_minutes} minutes with learning_rate={learning_rate}")
+    backend = jax.default_backend()
+    print(f"JAX backend: {backend}")
+    
+    # Hard check for GPU
+    if backend != "gpu" and jax.devices()[0].platform != "gpu":
+        raise RuntimeError(
+            f"Expected GPU backend but got '{backend}'. "
+            f"Device platform: {jax.devices()[0].platform}. "
+            "This script requires GPU acceleration."
+        )
+    
+    print(f"✓ GPU backend confirmed")
+    print(f"Training for {duration_minutes} minutes with learning_rate={learning_rate}, batch_size={batch_size}")
     
     # Set random seeds
     key = random.PRNGKey(42)
@@ -161,22 +178,22 @@ def train_model(duration_minutes=10, n_train_per_epoch=900, learning_rate=0.001)
         t_values = jnp.zeros(n_total)
         t_values = t_values.at[1::n_t_per_sample].set(1.0)
         
-        # Fill random t values
-        # Split key: one for eps, rest for random t values
-        key_parts = random.split(key, max(2, n_t_per_sample))
-        k_eps = key_parts[0]
-        for i in range(2, n_t_per_sample):
-            k_t = key_parts[i - 1]  # Use offset to avoid index 0 (reserved for eps)
-            random_t = random.uniform(k_t, (n_samples,))
-            t_values = t_values.at[i::n_t_per_sample].set(random_t)
+        # Fill random t values (if n_t_per_sample > 2)
+        # Split key into one for eps and one for random t values
+        k_eps, k_t = random.split(key)
+        if n_t_per_sample > 2:
+            # Generate random t values for indices 2, 5, 8, ... (i.e., every third starting at 2)
+            n_random_t = n_samples  # one random t per sample
+            random_t = random.uniform(k_t, (n_random_t,))
+            t_values = t_values.at[2::n_t_per_sample].set(random_t)
         
         # Generate random noise
         eps_values = random.normal(k_eps, (n_total,))
         
-        # Compute z_t = y*t + (1-t)*eps
+        # Compute z_t = y*t + (1-t)*eps (linear interpolation)
         zt_values = y_expanded * t_values + (1 - t_values) * eps_values
         
-        # Target: y - eps
+        # Target: y - eps (rectified flow velocity target)
         targets = y_expanded - eps_values
         
         # Create features (x, t, zt)
@@ -190,18 +207,43 @@ def train_model(duration_minutes=10, n_train_per_epoch=900, learning_rate=0.001)
         predictions = vmap(lambda x: mlp_forward(params, x))(features)
         return jnp.mean((predictions - targets) ** 2)
     
-    @jit
-    def update_step(params, features, targets, learning_rate):
-        """Single gradient descent step using vanilla SGD."""
-        loss = loss_fn(params, features, targets)
-        grads = grad(loss_fn)(params, features, targets)
+    def euler_integrate_batch(params, x_batch, z0_batch):
+        """
+        JAX-accelerated Euler ODE integration for a batch of initial conditions.
         
-        # Update parameters with vanilla SGD
-        new_params = []
-        for (w, b), (dw, db) in zip(params, grads):
-            new_params.append((w - learning_rate * dw, b - learning_rate * db))
+        Integrates from t=0 to t=1.0 using fixed timesteps.
         
-        return new_params, loss
+        Args:
+            params: Model parameters
+            x_batch: Batch of x values (shape: [batch_size])
+            z0_batch: Batch of initial z values (shape: [batch_size])
+        
+        Returns:
+            Final z values after integration (shape: [batch_size])
+        """
+        def step_fn(z, t_idx):
+            # Compute t from step index: t ranges from 0 to 1.0
+            t = (t_idx + 1) * ODE_DT  # Start from ODE_DT, end at 1.0
+            
+            # Create feature array for batch: [x, t, z]
+            # t needs to be broadcast to match batch size
+            t_batch = jnp.full_like(z, t)
+            features = jnp.stack([x_batch, t_batch, z], axis=1)
+            
+            # Compute velocity for entire batch
+            v = vmap(lambda feat: mlp_forward(params, feat))(features)
+            
+            # Euler step: z_new = z + v * dt
+            z_new = z + v * ODE_DT
+            return z_new, None
+        
+        # Use lax.fori_loop for fast iteration (0 to ODE_NUM_STEPS-1)
+        # This integrates from t=ODE_DT to t=1.0
+        z_final, _ = lax.scan(step_fn, z0_batch, jnp.arange(ODE_NUM_STEPS))
+        return z_final
+    
+    # JIT compile the integration for speed
+    euler_integrate_batch_jit = jit(euler_integrate_batch)
     
     # Initialize model
     print("Initializing model...")
@@ -209,34 +251,50 @@ def train_model(duration_minutes=10, n_train_per_epoch=900, learning_rate=0.001)
     key, init_key = random.split(key)
     params = init_network_params(layer_sizes, init_key)
     
+    # Initialize AdamW optimizer with gradient clipping
+    optimizer = optax.chain(
+        optax.clip_by_global_norm(1.0),  # Gradient clipping for stability
+        optax.adamw(learning_rate=learning_rate)
+    )
+    opt_state = optimizer.init(params)
+    
+    @jit
+    def update_step(params, opt_state, features, targets):
+        """Single optimization step using AdamW."""
+        loss = loss_fn(params, features, targets)
+        grads = grad(loss_fn)(params, features, targets)
+        updates, opt_state = optimizer.update(grads, opt_state, params)
+        params = optax.apply_updates(params, updates)
+        return params, opt_state, loss
+    
     # Generate initial data for computing standardization stats
     print("Generating initial data for standardization...")
     key, data_key = random.split(key)
     init_x, init_y = generate_training_data(1000, data_key)
     x_mean, x_std, y_mean, y_std = standardize_data(init_x, init_y)
     
-    print(f"Standardization stats: x_mean={x_mean:.4f}, x_std={x_std:.4f}, y_mean={y_mean:.4f}, y_std={y_std:.4f}")
+    print(f"Standardization stats: x_mean={float(x_mean):.4f}, x_std={float(x_std):.4f}, y_mean={float(y_mean):.4f}, y_std={float(y_std):.4f}")
     
     # Training loop
     print(f"\nStarting training for {duration_minutes} minutes...")
-    print(f"Epoch    Train Loss    Time Elapsed")
+    print(f"Step     Train Loss    Time Elapsed")
     print("-" * 50)
     
     start_time = time.time()
     end_time = start_time + duration_minutes * 60
     
-    epoch = 0
+    step = 0
     train_losses = []
     energy_scores = []
-    epochs_recorded = []
+    steps_recorded = []
     times_recorded = []
-    energy_epochs = []
+    energy_steps = []
     energy_times = []
     
     while time.time() < end_time:
         # Generate fresh training data
         key, data_key = random.split(key)
-        train_x, train_y = generate_training_data(n_train_per_epoch, data_key)
+        train_x, train_y = generate_training_data(n_train_per_step, data_key)
         train_x_scaled, train_y_scaled = transform_data(train_x, train_y, x_mean, x_std, y_mean, y_std)
         
         # Generate flow batch
@@ -249,105 +307,96 @@ def train_model(duration_minutes=10, n_train_per_epoch=900, learning_rate=0.001)
         features = features[perm]
         targets = targets[perm]
         
-        # Update model
-        params, train_loss = update_step(params, features, targets, learning_rate)
+        # Minibatched training: split into chunks
+        n_batches = len(features) // batch_size
+        batch_losses = []
         
-        epoch += 1
+        for batch_idx in range(n_batches):
+            start_idx = batch_idx * batch_size
+            end_idx = start_idx + batch_size
+            batch_features = features[start_idx:end_idx]
+            batch_targets = targets[start_idx:end_idx]
+            
+            # Update model
+            params, opt_state, batch_loss = update_step(params, opt_state, batch_features, batch_targets)
+            batch_losses.append(float(batch_loss))
         
-        # Record every 10 epochs
-        if epoch % 10 == 0:
+        # Average loss across minibatches for this step
+        train_loss = np.mean(batch_losses)
+        step += 1
+        
+        # Record every 10 steps
+        if step % 10 == 0:
             elapsed = time.time() - start_time
-            train_losses.append(float(train_loss))
-            epochs_recorded.append(epoch)
+            train_losses.append(train_loss)
+            steps_recorded.append(step)
             times_recorded.append(elapsed)
             
-            print(f"{epoch:5d}    {train_loss:10.6f}    {elapsed:6.1f}s")
+            print(f"{step:5d}    {train_loss:10.6f}    {elapsed:6.1f}s")
             
-            # Calculate energy score every 50 epochs
-            if epoch % 50 == 0:
+            # Calculate energy score every 50 steps
+            if step % 50 == 0:
                 # Generate validation data
                 key, val_key = random.split(key)
                 val_x, val_y = generate_training_data(100, val_key)
                 val_x_scaled, _ = transform_data(val_x, val_y, x_mean, x_std, y_mean, y_std)
                 
-                # Generate samples using Euler integration
-                # Note: Using Euler instead of adaptive RK45 for simplicity and speed.
-                # This is acceptable for validation during training. Euler is easier
-                # to implement in JAX's functional style with JIT compilation.
-                val_samples = []
-                for i in range(len(val_x_scaled)):
-                    x_val = val_x_scaled[i]
-                    samples_for_x = []
-                    
-                    for _ in range(2):  # 2 samples per x
-                        key, sample_key = random.split(key)
-                        z0 = random.normal(sample_key, ())
-                        
-                        # Euler integration with fixed step size
-                        z = z0
-                        for step in range(ODE_NUM_STEPS):
-                            t = step * ODE_DT
-                            features_ode = jnp.array([x_val, t, z])
-                            v = mlp_forward(params, features_ode)
-                            z = z + v.item() * ODE_DT
-                        
-                        samples_for_x.append(z)
-                    
-                    val_samples.append(samples_for_x)
+                # Generate samples using JAX-accelerated Euler integration
+                # Generate 2 samples per validation point
+                key, sample_key = random.split(key)
+                z0_keys = random.split(sample_key, 200)  # 100 x values * 2 samples each
                 
-                val_samples = jnp.array(val_samples)  # shape: (n_val, 2)
+                # Create batches: repeat each x twice for 2 samples
+                val_x_expanded = jnp.repeat(val_x_scaled, 2)
+                z0_samples = jnp.array([random.normal(k, ()) for k in z0_keys])
+                
+                # Batch integrate all samples at once (fully GPU-accelerated)
+                val_samples_scaled = euler_integrate_batch_jit(params, val_x_expanded, z0_samples)
+                
+                # Reshape to (n_val, 2)
+                val_samples_scaled = val_samples_scaled.reshape(len(val_x), 2)
                 
                 # Transform back to original scale
-                val_samples_orig = inverse_transform_y(val_samples, y_mean, y_std)
+                val_samples_orig = inverse_transform_y(val_samples_scaled, y_mean, y_std)
                 
                 # Calculate energy score
+                # Energy = E[|Y - Y'|] - 0.5 * E[|Y' - Y''|]
+                # where Y is true, Y' and Y'' are two independent samples
                 sum_d1 = jnp.sum(jnp.abs(val_y - val_samples_orig[:, 0]))
                 sum_d2 = jnp.sum(jnp.abs(val_y - val_samples_orig[:, 1]))
                 sum_ds = jnp.sum(jnp.abs(val_samples_orig[:, 0] - val_samples_orig[:, 1]))
                 
                 val_energy = (sum_d1 + sum_d2) / (2 * len(val_y)) - 0.5 * sum_ds / len(val_y)
                 energy_scores.append(float(val_energy))
-                energy_epochs.append(epoch)
+                energy_steps.append(step)
                 energy_times.append(elapsed)
                 
-                print(f"         Energy Score: {val_energy:.4f}")
+                print(f"         Energy Score: {float(val_energy):.4f}")
     
     total_time = time.time() - start_time
     print(f"\nTraining complete! Total time: {total_time:.2f} seconds ({total_time/60:.2f} minutes)")
     
-    # Generate final samples for 1000 points
+    # Generate final samples for 1000 points using JAX-accelerated sampling
     print("\nGenerating 1000 samples for scatter plot...")
     key, sample_key = random.split(key)
     scatter_x, scatter_y = generate_training_data(1000, sample_key)
     scatter_x_scaled, _ = transform_data(scatter_x, scatter_y, x_mean, x_std, y_mean, y_std)
     
-    scatter_samples = []
-    for i in range(len(scatter_x_scaled)):
-        if (i + 1) % 100 == 0:
-            print(f"  Generated {i+1}/1000 samples...")
-        
-        x_val = scatter_x_scaled[i]
-        key, sample_key = random.split(key)
-        z0 = random.normal(sample_key, ())
-        
-        # Euler integration with fixed step size
-        z = z0
-        for step in range(ODE_NUM_STEPS):
-            t = step * ODE_DT
-            features_ode = jnp.array([x_val, t, z])
-            v = mlp_forward(params, features_ode)
-            z = z + v.item() * ODE_DT
-        
-        scatter_samples.append(z)
+    # Generate random initial conditions for all samples at once
+    key, z0_key = random.split(key)
+    z0_samples = random.normal(z0_key, (1000,))
     
-    scatter_samples = jnp.array(scatter_samples)
-    scatter_samples_orig = inverse_transform_y(scatter_samples, y_mean, y_std)
+    # Batch integrate all 1000 samples at once (fully GPU-accelerated)
+    print("  Running batch ODE integration on GPU...")
+    scatter_samples_scaled = euler_integrate_batch_jit(params, scatter_x_scaled, z0_samples)
+    scatter_samples_orig = inverse_transform_y(scatter_samples_scaled, y_mean, y_std)
+    print("  ✓ Sampling complete!")
     
     return {
-        'epochs': epochs_recorded,
+        'steps': steps_recorded,
         'train_losses': train_losses,
         'energy_scores': energy_scores,
-        'energy_epochs': energy_epochs,
+        'energy_steps': energy_steps,
         'energy_times': energy_times,
         'times': times_recorded,
         'scatter_x': np.array(scatter_x),
@@ -383,23 +432,23 @@ def main(duration_minutes: int = 10):
     
     # Save CSVs
     # Training loss CSV
-    train_loss_data = np.column_stack([result['epochs'], result['train_losses'], result['times']])
+    train_loss_data = np.column_stack([result['steps'], result['train_losses'], result['times']])
     np.savetxt(
         output_dir / "training_loss.csv",
         train_loss_data,
         delimiter=",",
-        header="epoch,train_loss,time_seconds",
+        header="step,train_loss,time_seconds",
         comments=""
     )
     
-    # Energy score CSV (only every 50 epochs)
+    # Energy score CSV (only every 50 steps)
     if len(result['energy_scores']) > 0:
-        energy_data = np.column_stack([result['energy_epochs'], result['energy_scores'], result['energy_times']])
+        energy_data = np.column_stack([result['energy_steps'], result['energy_scores'], result['energy_times']])
         np.savetxt(
             output_dir / "energy_score.csv",
             energy_data,
             delimiter=",",
-            header="epoch,energy_score,time_seconds",
+            header="step,energy_score,time_seconds",
             comments=""
         )
     
