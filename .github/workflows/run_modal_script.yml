@@ -50,9 +50,9 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install Modal
+      - name: Install Modal and dependencies
         run: |
-          pip install modal
+          pip install modal numpy
 
       - name: Configure Modal Token
         env:
