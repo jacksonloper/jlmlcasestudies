@@ -37,14 +37,39 @@ export default function Case2Solutions() {
         const optimalArrayBuffer = await optimalResponse.arrayBuffer();
         const optimalData = await npy.load(optimalArrayBuffer);
         
-        // Load infinite data samples
-        let infiniteDataData = null;
+        // Load infinite data samples from scatter CSV
+        let infiniteScatterData = null;
         try {
-          const infiniteDataResponse = await fetch('/case2/data/infinitedata_samples.npy');
-          const infiniteDataArrayBuffer = await infiniteDataResponse.arrayBuffer();
-          infiniteDataData = await npy.load(infiniteDataArrayBuffer);
+          const infiniteScatterResponse = await fetch('/case2/data/infinitedata_scatter_samples.csv');
+          const infiniteScatterText = await infiniteScatterResponse.text();
+          
+          // Check if we have content beyond just whitespace
+          if (infiniteScatterText && infiniteScatterText.trim().length > 0) {
+            const infiniteScatterLines = infiniteScatterText.trim().split('\n').slice(1); // Skip header
+            
+            const scatterX = [];
+            const scatterYSampled = [];
+            
+            for (const line of infiniteScatterLines) {
+              if (line && line.trim().length > 0) {
+                const parts = line.split(',');
+                if (parts.length >= 3) {
+                  const x = parseFloat(parts[0]);
+                  const ySampled = parseFloat(parts[2]);
+                  if (!isNaN(x) && !isNaN(ySampled)) {
+                    scatterX.push(x);
+                    scatterYSampled.push(ySampled);
+                  }
+                }
+              }
+            }
+            
+            if (scatterX.length > 0) {
+              infiniteScatterData = { x: scatterX, y: scatterYSampled };
+            }
+          }
         } catch (err) {
-          console.warn('Infinite data samples not available:', err);
+          console.warn('Infinite data scatter samples not available:', err);
         }
         
         // Load training history
@@ -139,16 +164,6 @@ export default function Case2Solutions() {
           sample1.push(optimalData.data[i * 2]);
           sample2.push(optimalData.data[i * 2 + 1]);
         }
-        
-        // Extract infinite data samples if available
-        const infiniteSample1 = [];
-        const infiniteSample2 = [];
-        if (infiniteDataData) {
-          for (let i = 0; i < infiniteDataData.shape[0]; i++) {
-            infiniteSample1.push(infiniteDataData.data[i * 2]);
-            infiniteSample2.push(infiniteDataData.data[i * 2 + 1]);
-          }
-        }
 
         // Create a range of x values for the true conditional expectation curve
         const xMin = Math.min(...trainX);
@@ -165,8 +180,9 @@ export default function Case2Solutions() {
         // Calculate fixed axis ranges based on all data
         const allX = [...trainX, ...testX, ...testX];
         const allY = [...trainY, ...testY, ...sample1, ...sample2];
-        if (infiniteDataData) {
-          allY.push(...infiniteSample1, ...infiniteSample2);
+        if (infiniteScatterData) {
+          allX.push(...infiniteScatterData.x);
+          allY.push(...infiniteScatterData.y);
         }
         const axisXMin = Math.min(...allX);
         const axisXMax = Math.max(...allX);
@@ -229,11 +245,11 @@ export default function Case2Solutions() {
           },
         };
         
-        // Add infinite data samples if available
-        if (infiniteDataData) {
+        // Add infinite data samples if available from scatter CSV
+        if (infiniteScatterData) {
           allPlotData.infinite = {
-            x: [...testX, ...testX],
-            y: [...infiniteSample1, ...infiniteSample2],
+            x: infiniteScatterData.x,
+            y: infiniteScatterData.y,
             mode: 'markers',
             type: 'scatter',
             name: 'Infinite Data Solution',
