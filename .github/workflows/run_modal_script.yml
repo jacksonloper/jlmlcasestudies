@@ -16,10 +16,6 @@ name: Run Modal Script
         description: 'PR number (leave empty for manual runs)'
         required: false
         type: string
-      branch_name:
-        description: 'Branch name (leave empty for manual runs to use current branch)'
-        required: false
-        type: string
   workflow_call:
     inputs:
       script_path:
@@ -35,27 +31,19 @@ name: Run Modal Script
         description: 'PR number for commenting'
         required: false
         type: string
-      branch_name:
-        description: 'Branch name to checkout'
-        required: false
-        type: string
 
 permissions:
-  contents: write
-  pull-requests: write
-  issues: write
+  contents: read
 
 jobs:
   run-script:
     runs-on: ubuntu-latest
+    # Add timeout to prevent long-running jobs from stacking up
+    timeout-minutes: 45
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.branch_name || github.ref }}
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -128,32 +116,11 @@ jobs:
             rm -rf modal_outputs
           fi
 
-      - name: Commit and push data files
-        if: steps.run-script.outputs.success == 'true' && inputs.branch_name != ''
-        run: |
-          # Configure git
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          # Stage data files
-          find . \( -path './case*/data/*' -o -path './dataset*/data/*' \) \( -name '*.csv' -o -name '*.png' -o -name '*.npy' -o -name '*.json' \) -type f -exec git add -f {} \;
-
-          # Check if there are changes to commit
-          if git diff --staged --quiet; then
-            echo "No changes to commit"
-          else
-            echo "Committing data files..."
-            git commit -m "Add data from ${{ inputs.script_path }}"
-
-            echo "Pushing to branch: ${{ inputs.branch_name }}"
-            git push origin HEAD:${{ inputs.branch_name }}
-          fi
-
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: modal-script-output-${{ github.run_id }}
+          name: modal-script-output-${{ github.run_id }}-${{ strategy.job-index }}
           path: |
             case*/data/
             dataset*/data/
@@ -169,7 +136,7 @@ jobs:
               issue_number: ${{ inputs.pr_number }},
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '✅ **${{ inputs.script_path }}** completed successfully!\n\nData files have been committed to this PR branch.'
+              body: '✅ **${{ inputs.script_path }}** completed successfully!'
             });
 
       - name: Post failure comment to PR

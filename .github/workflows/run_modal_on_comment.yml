@@ -4,141 +4,135 @@ name: Run Modal Scripts on Comment
   issue_comment:
     types: [created]
 
+# Add concurrency guard to prevent duplicate runs from repeated comments
+concurrency:
+  group: run-modal-${{ github.event.issue.number }}
+  cancel-in-progress: true
+
 permissions:
   contents: write
   pull-requests: write
-  issues: write
 
 jobs:
-  run-modal:
-    # Only run on PR comments from repo owner with /runmodal command
+  find-scripts:
+    # Allow OWNER, MEMBER, and COLLABORATOR to trigger
     if: |
       github.event.issue.pull_request &&
       github.event.comment.body == '/runmodal' &&
-      github.event.comment.author_association == 'OWNER'
-    
+      (github.event.comment.author_association == 'OWNER' ||
+       github.event.comment.author_association == 'MEMBER' ||
+       github.event.comment.author_association == 'COLLABORATOR')
+
     runs-on: ubuntu-latest
-    
+    outputs:
+      scripts: ${{ steps.find.outputs.scripts }}
+      has_scripts: ${{ steps.find.outputs.has_scripts }}
+
     steps:
-      - name: Checkout PR branch
-        uses: actions/checkout@v4
-        with:
-          ref: refs/pull/${{ github.event.issue.number }}/head
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
-      
-      - name: Get PR branch name
-        id: get-branch
-        run: |
-          # Get the PR details to find the head branch
-          pr_data=$(gh api repos/${{ github.repository }}/pulls/${{ github.event.issue.number }})
-          branch_name=$(echo "$pr_data" | jq -r .head.ref)
-          echo "branch=$branch_name" >> $GITHUB_OUTPUT
-          echo "Branch name: $branch_name"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      
-      - name: Install Modal
-        run: |
-          pip install modal
-      
-      - name: Configure Modal Token
-        env:
-          MODAL_TOKEN_COMMAND: ${{ secrets.MODAL_TOKEN_COMMAND }}
-        run: |
-          eval "$MODAL_TOKEN_COMMAND"
-      
-      - name: Find changed modal scripts
-        id: find-scripts
-        run: |
-          # Fetch main branch
-          git fetch origin main:main
-          
-          # Find all modal_*.py files that differ from main
-          echo "Finding modal_*.py files that differ from main..."
-          
-          # Get list of all modal_*.py files in current branch
-          modal_scripts=$(find . -name "modal_*.py" -type f)
-          
-          changed_scripts=""
-          for script in $modal_scripts; do
-            # Check if file exists in main and differs
-            if git diff main HEAD -- "$script" | grep -q .; then
-              echo "Changed: $script"
-              changed_scripts="$changed_scripts $script"
-            elif ! git cat-file -e main:"$script" 2>/dev/null; then
-              echo "New file: $script"
-              changed_scripts="$changed_scripts $script"
-            fi
-          done
-          
-          # Save to output
-          echo "scripts=$changed_scripts" >> $GITHUB_OUTPUT
-          
-          if [ -z "$changed_scripts" ]; then
-            echo "No changed modal scripts found"
-            echo "has_scripts=false" >> $GITHUB_OUTPUT
-          else
-            echo "Found changed scripts: $changed_scripts"
-            echo "has_scripts=true" >> $GITHUB_OUTPUT
-          fi
-      
-      - name: Trigger workflows for each changed script
-        if: steps.find-scripts.outputs.has_scripts == 'true'
+      - name: Get PR details and checkout
+        id: pr-info
         uses: actions/github-script@v7
         with:
           script: |
-            const scripts = '${{ steps.find-scripts.outputs.scripts }}'.trim().split(/\s+/);
-            const branch = '${{ steps.get-branch.outputs.branch }}';
-            const prNumber = '${{ github.event.issue.number }}';
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
 
-            let body = '## Modal Scripts Workflows Triggered\n\n';
-            body += `Triggered \`run_modal_script.yml\` workflow for ${scripts.length} script(s):\n\n`;
+            // For fork PRs, use the SHA directly instead of branch name
+            // This avoids issues with refs not existing in base repo
+            core.setOutput('sha', pr.data.head.sha);
+            core.setOutput('base_sha', pr.data.base.sha);
+            core.setOutput('is_fork', pr.data.head.repo.full_name !== pr.data.base.repo.full_name);
+
+            return pr.data;
+
+      - name: Checkout PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.pr-info.outputs.sha }}
+          fetch-depth: 0
+
+      - name: Find changed modal scripts
+        id: find
+        run: |
+          # Fetch base branch for comparison
+          git fetch origin ${{ steps.pr-info.outputs.base_sha }}
+
+          # Use git diff to find modified/added modal_*.py files
+          # This is simpler and handles new/modified files correctly
+          changed_files=$(git diff --name-only --diff-filter=AM ${{ steps.pr-info.outputs.base_sha }}..HEAD -- '**/modal_*.py' || echo "")
+
+          if [ -z "$changed_files" ]; then
+            echo "No changed modal scripts found"
+            echo "has_scripts=false" >> $GITHUB_OUTPUT
+            echo "scripts=[]" >> $GITHUB_OUTPUT
+          else
+            echo "Found changed scripts:"
+            echo "$changed_files"
+
+            # Convert to JSON array for matrix strategy
+            scripts_json=$(echo "$changed_files" | jq -R -s -c 'split("\n") | map(select(length > 0))')
+            echo "scripts=$scripts_json" >> $GITHUB_OUTPUT
+            echo "has_scripts=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Post no scripts message
+        if: steps.find.outputs.has_scripts == 'false'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '## Modal Scripts Results\n\nNo `modal_*.py` scripts found that differ from the base branch.'
+            });
+
+  run-scripts:
+    needs: find-scripts
+    if: needs.find-scripts.outputs.has_scripts == 'true'
+    strategy:
+      matrix:
+        script: ${{ fromJson(needs.find-scripts.outputs.scripts) }}
+      fail-fast: false
+      max-parallel: 3
+    uses: ./.github/workflows/run_modal_script.yml
+    with:
+      script_path: ${{ matrix.script }}
+      duration_minutes: '5'
+      pr_number: ${{ github.event.issue.number }}
+    secrets: inherit
+
+  post-summary:
+    needs: [find-scripts, run-scripts]
+    if: always() && needs.find-scripts.outputs.has_scripts == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Post completion comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const scripts = ${{ needs.find-scripts.outputs.scripts }};
+            const runScriptsResult = '${{ needs.run-scripts.result }}';
+
+            let body = '## Modal Scripts Execution Complete\n\n';
+            body += `Executed ${scripts.length} script(s) with status: **${runScriptsResult}**\n\n`;
+            body += '### Scripts:\n';
 
             for (const script of scripts) {
-              // Remove leading ./ if present
-              const cleanScript = script.replace(/^\.\//, '');
-              body += `- \`${cleanScript}\`\n`;
-
-              await github.rest.actions.createWorkflowDispatch({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                workflow_id: 'run_modal_script.yml',
-                ref: branch,
-                inputs: {
-                  script_path: cleanScript,
-                  duration_minutes: '5',
-                  pr_number: prNumber,
-                  branch_name: branch
-                }
-              });
+              body += `- \`${script}\`\n`;
             }
 
             body += '\n';
-            body += 'You can monitor progress in the [Actions tab](https://github.com/${{ github.repository }}/actions).\n';
-            body += '\n';
-            body += 'Each workflow will post its own status comment when complete.';
+            body += `View detailed results in the [workflow run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}).`;
 
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: body
-            });
-
-      - name: Post no scripts message
-        if: steps.find-scripts.outputs.has_scripts == 'false'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '## Modal Scripts Results\n\nNo `modal_*.py` scripts found that differ from main branch.'
             });
