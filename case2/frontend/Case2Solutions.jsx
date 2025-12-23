@@ -72,9 +72,8 @@ export default function Case2Solutions() {
           console.warn('Infinite data scatter samples not available:', err);
         }
         
-        // Load reference solution training history from CSVs (preferred) or JSON (fallback)
+        // Load reference solution training history from CSVs
         try {
-          // Try to load from CSVs first (Modal-trained reference model)
           const refTrainingLossResponse = await fetch('/case2/data/reference_training_loss.csv');
           const refTrainingLossText = await refTrainingLossResponse.text();
           
@@ -89,7 +88,7 @@ export default function Case2Solutions() {
             
             for (const line of refTrainingLossLines) {
               const parts = line.split(',');
-              // New format: step, train_loss, train_val_mse, test_val_mse, time_seconds
+              // Format: step, train_loss, train_val_mse, test_val_mse, time_seconds
               if (parts.length >= 5) {
                 const step = parseInt(parts[0]);
                 const loss = parseFloat(parts[1]);
@@ -101,16 +100,6 @@ export default function Case2Solutions() {
                   refTrainMse.push(loss);
                   if (!isNaN(trainValMse)) refTrainValMse.push(trainValMse);
                   if (!isNaN(testValMse)) refTestValMse.push(testValMse);
-                  if (!isNaN(time)) refLastTime = time;
-                }
-              } else if (parts.length >= 3) {
-                // Old format fallback: step, train_loss, time_seconds
-                const step = parseInt(parts[0]);
-                const loss = parseFloat(parts[1]);
-                const time = parseFloat(parts[2]);
-                if (!isNaN(step) && !isNaN(loss)) {
-                  refSteps.push(step);
-                  refTrainMse.push(loss);
                   if (!isNaN(time)) refLastTime = time;
                 }
               }
@@ -155,19 +144,9 @@ export default function Case2Solutions() {
             };
             
             setTrainingHistory(refHistory);
-          } else {
-            throw new Error('CSV not available, falling back to JSON');
           }
-        } catch (csvErr) {
-          // Fallback to JSON if CSVs not available
-          console.warn('Reference CSVs not available, trying JSON:', csvErr);
-          try {
-            const historyResponse = await fetch('/case2/data/reference_training_history.json');
-            const history = await historyResponse.json();
-            setTrainingHistory(history);
-          } catch (err) {
-            console.warn('Training history not available:', err);
-          }
+        } catch (err) {
+          console.warn('Reference training history CSVs not available:', err);
         }
         
         // Load reference scatter samples from CSV (if available)
@@ -597,7 +576,7 @@ export default function Case2Solutions() {
                       line: { color: 'rgba(34, 197, 94, 1)' },
                       marker: { size: 6 },
                     },
-                    // Show train_val_mse if available (Modal CSV format with fixed t values)
+                    // Show train_val_mse if available
                     ...(trainingHistory.train_val_mse ? [{
                       x: trainingHistory.epochs,
                       y: trainingHistory.train_val_mse,
@@ -606,7 +585,7 @@ export default function Case2Solutions() {
                       line: { color: 'rgba(59, 130, 246, 1)' },
                       marker: { size: 6 },
                     }] : []),
-                    // Show test_val_mse if available (Modal CSV format with fixed t values)
+                    // Show test_val_mse if available
                     ...(trainingHistory.test_val_mse ? [{
                       x: trainingHistory.epochs,
                       y: trainingHistory.test_val_mse,
@@ -615,24 +594,15 @@ export default function Case2Solutions() {
                       line: { color: 'rgba(220, 38, 38, 1)' },
                       marker: { size: 6 },
                     }] : []),
-                    // Only show legacy validation MSE if available (legacy JSON format)
-                    ...(trainingHistory.val_mse ? [{
-                      x: trainingHistory.epochs,
-                      y: trainingHistory.val_mse,
-                      mode: 'lines+markers',
-                      name: 'Validation MSE',
-                      line: { color: 'rgba(220, 38, 38, 1)' },
-                      marker: { size: 6 },
-                    }] : []),
                   ]}
                   layout={{
                     title: {
                       text: (trainingHistory.train_val_mse || trainingHistory.test_val_mse) 
                         ? 'Flow Matching MSE per Step (at 3 fixed t values)'
-                        : (trainingHistory.val_mse ? 'Training and Validation MSE per Epoch' : 'Training MSE per Step'),
+                        : 'Training MSE per Step',
                       font: { size: window.innerWidth < 640 ? 14 : 16 }
                     },
-                    xaxis: { title: trainingHistory.val_mse ? 'Epoch' : 'Step' },
+                    xaxis: { title: 'Step' },
                     yaxis: { title: 'MSE Loss' },
                     hovermode: 'closest',
                     showlegend: true,
@@ -680,7 +650,7 @@ export default function Case2Solutions() {
                         text: 'Energy Score on Fixed Test Set (Lower is Better)',
                         font: { size: window.innerWidth < 640 ? 14 : 16 }
                       },
-                      xaxis: { title: trainingHistory.val_mse ? 'Epoch' : 'Step' },
+                      xaxis: { title: 'Step' },
                       yaxis: { title: 'Energy Score (CRPS)' },
                       hovermode: 'closest',
                       showlegend: false,
@@ -701,15 +671,12 @@ export default function Case2Solutions() {
               
               <div className="mt-4 prose max-w-none text-gray-700 text-sm">
                 <p>
-                  <strong>Training Details:</strong> {trainingHistory.val_mse 
-                    ? 'Uses partial_fit with fresh random t and ε samples each epoch. Each training sample generates 3 t values: t=0 (beginning), t=1 (ending), and t=random (middle). Model trained with early stopping based on validation MSE.'
-                    : 'JAX-based training with diffrax ODE integration on T4 GPU. Uses minibatched AdamW optimization with gradient clipping for stability. Learning rate is halved halfway through training.'
-                  }
+                  <strong>Training Details:</strong> JAX-based training with diffrax ODE integration on T4 GPU. Uses minibatched AdamW optimization with gradient clipping for stability. Learning rate is halved halfway through training.
                 </p>
                 {trainingHistory?.final_energy_score && (
                   <p className="mt-2">
                     <strong>Final Energy Score:</strong> {trainingHistory.final_energy_score.toFixed(4)} 
-                    {' '}(computed on {trainingHistory.val_mse ? 'test set after training' : 'validation set during training'})
+                    {' '}(computed on fixed 100 test points)
                   </p>
                 )}
                 {trainingHistory?.training_time && (
