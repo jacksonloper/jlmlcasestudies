@@ -305,9 +305,10 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list, duration_m
     
     # Calculate n_t_per_sample to get similar batch size as infinite data
     # Infinite data uses n_train_per_step=90000 with n_t_per_sample=3, giving 270000 flow samples
-    # With 900 training points, we need n_t_per_sample = 270000 / 900 = 300
+    # With 900 training points, we need n_t_per_sample = 270000 / 900 = 300 to match
+    # This ensures comparable batch sizes between reference (finite) and infinite data training
     n_t_per_sample = 300
-    print(f"Using n_t_per_sample={n_t_per_sample} to match infinite data batch size")
+    print(f"Using n_t_per_sample={n_t_per_sample} to match infinite data batch size (900 * 300 = 270,000 flow samples)")
     
     # Pre-generate fixed validation flow batches for consistent MSE evaluation
     # Use 3 random t values per sample for validation MSE (as specified in requirements)
