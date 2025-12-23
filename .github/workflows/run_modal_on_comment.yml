@@ -101,7 +101,7 @@ jobs:
     uses: ./.github/workflows/run_modal_script.yml
     with:
       script_path: ${{ matrix.script }}
-      duration_minutes: '5'
+      duration_minutes: ''
       pr_number: ${{ github.event.issue.number }}
     secrets: inherit
 

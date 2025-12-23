@@ -10,7 +10,7 @@ name: Run Modal Script
       duration_minutes:
         description: 'Training duration in minutes (if applicable)'
         required: false
-        default: '5'
+        default: ''
         type: string
       pr_number:
         description: 'PR number (leave empty for manual runs)'
@@ -25,7 +25,7 @@ name: Run Modal Script
       duration_minutes:
         description: 'Training duration in minutes (if applicable)'
         required: false
-        default: '5'
+        default: ''
         type: string
       pr_number:
         description: 'PR number for commenting'
@@ -75,14 +75,27 @@ jobs:
 
           cd "$script_dir"
 
-          # Run the modal script with duration parameter if provided
-          if modal run "$script_name" --duration-minutes ${{ inputs.duration_minutes || '5' }} 2>&1 | tee /tmp/modal_run.log; then
-            echo "success=true" >> $GITHUB_OUTPUT
-            echo "✓ Script completed successfully"
+          # Run the modal script with duration parameter only if provided
+          if [ -n "${{ inputs.duration_minutes }}" ]; then
+            echo "Running with duration: ${{ inputs.duration_minutes }} minutes"
+            if modal run "$script_name" --duration-minutes ${{ inputs.duration_minutes }} 2>&1 | tee /tmp/modal_run.log; then
+              echo "success=true" >> $GITHUB_OUTPUT
+              echo "✓ Script completed successfully"
+            else
+              echo "success=false" >> $GITHUB_OUTPUT
+              echo "✗ Script failed"
+              exit 1
+            fi
           else
-            echo "success=false" >> $GITHUB_OUTPUT
-            echo "✗ Script failed"
-            exit 1
+            echo "Running with default duration"
+            if modal run "$script_name" 2>&1 | tee /tmp/modal_run.log; then
+              echo "success=true" >> $GITHUB_OUTPUT
+              echo "✓ Script completed successfully"
+            else
+              echo "success=false" >> $GITHUB_OUTPUT
+              echo "✗ Script failed"
+              exit 1
+            fi
           fi
 
       - name: Move outputs to data directory
@@ -165,4 +178,8 @@ jobs:
 
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Script**: \`${{ inputs.script_path }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "**Duration**: ${{ inputs.duration_minutes || '5' }} minutes" >> $GITHUB_STEP_SUMMARY
+          if [ -n "${{ inputs.duration_minutes }}" ]; then
+            echo "**Duration**: ${{ inputs.duration_minutes }} minutes" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "**Duration**: Using script default" >> $GITHUB_STEP_SUMMARY
+          fi
