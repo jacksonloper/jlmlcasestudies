@@ -99,37 +99,6 @@ jobs:
             fi
           fi
 
-      - name: Move outputs to data directory
-        if: steps.run-script.outputs.success == 'true'
-        run: |
-          script_path="${{ inputs.script_path }}"
-          script_dir=$(dirname "$script_path")
-
-          cd "$script_dir"
-
-          if [ -d "modal_outputs" ]; then
-            # Determine the case/dataset directory (parent of scripts dir)
-            parent_dir=$(dirname "$script_dir")
-            data_dir="$parent_dir/data"
-
-            # Create data directory if it doesn't exist
-            if [ ! -d "$data_dir" ]; then
-              echo "Creating data directory at $data_dir/"
-              mkdir -p "$data_dir"
-            fi
-
-            echo "Moving outputs from modal_outputs/ to $data_dir/"
-            shopt -s nullglob dotglob
-            files=(modal_outputs/*)
-            if [ ${#files[@]} -gt 0 ]; then
-              mv modal_outputs/* "$data_dir/"
-              echo "✓ Outputs moved to $data_dir/"
-            else
-              echo "⚠ No files found in modal_outputs/"
-            fi
-            rm -rf modal_outputs
-          fi
-
       - name: Get PR branch info
         if: steps.run-script.outputs.success == 'true' && inputs.pr_number != ''
         id: pr-info
@@ -152,17 +121,24 @@ jobs:
           script_dir=$(dirname "$script_path")
           parent_dir=$(dirname "$script_dir")
           data_dir="$parent_dir/data"
+          modal_outputs_dir="$script_dir/modal_outputs"
 
-          # Check if there are any data files to commit
-          if [ -d "$data_dir" ] && [ "$(ls -A "$data_dir" 2>/dev/null)" ]; then
-            echo "Found data files in $data_dir"
+          # Check if there are any modal output files
+          if [ -d "$modal_outputs_dir" ] && [ "$(ls -A "$modal_outputs_dir" 2>/dev/null)" ]; then
+            echo "Found modal outputs in $modal_outputs_dir"
 
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
 
-            # Fetch and checkout the PR branch
+            # Fetch and checkout the PR branch FIRST (before moving files)
             git fetch origin ${{ steps.pr-info.outputs.branch }}
             git checkout ${{ steps.pr-info.outputs.branch }}
+
+            # Now move outputs from modal_outputs/ to data directory
+            mkdir -p "$data_dir"
+            mv "$modal_outputs_dir"/* "$data_dir/"
+            rm -rf "$modal_outputs_dir"
+            echo "✓ Outputs moved to $data_dir"
 
             # Add the data files
             git add "$data_dir"
@@ -176,7 +152,23 @@ jobs:
               echo "✓ Data files committed to PR branch"
             fi
           else
-            echo "No data files found to commit"
+            echo "No modal output files found to commit"
+          fi
+
+      - name: Move outputs to data directory (non-PR runs)
+        if: steps.run-script.outputs.success == 'true' && inputs.pr_number == ''
+        run: |
+          script_path="${{ inputs.script_path }}"
+          script_dir=$(dirname "$script_path")
+          parent_dir=$(dirname "$script_dir")
+          data_dir="$parent_dir/data"
+          modal_outputs_dir="$script_dir/modal_outputs"
+
+          if [ -d "$modal_outputs_dir" ] && [ "$(ls -A "$modal_outputs_dir" 2>/dev/null)" ]; then
+            mkdir -p "$data_dir"
+            mv "$modal_outputs_dir"/* "$data_dir/"
+            rm -rf "$modal_outputs_dir"
+            echo "✓ Outputs moved to $data_dir"
           fi
 
       - name: Skip commit for fork PRs
