@@ -43,7 +43,7 @@ image = (
     gpu="T4",
     timeout=30 * 60,  # 30 minute timeout as backstop
 )
-def train_model(duration_minutes=5, n_train_per_step=90000, learning_rate=0.0001, batch_size=4096):
+def train_model(duration_minutes=7, n_train_per_step=90000, learning_rate=0.0001, batch_size=4096):
     """
     Train rectified flow model using JAX with infinite data.
     
@@ -274,6 +274,8 @@ def train_model(duration_minutes=5, n_train_per_step=90000, learning_rate=0.0001
     
     start_time = time.time()
     end_time = start_time + duration_minutes * 60
+    halfway_time = start_time + (duration_minutes * 60) / 2
+    learning_rate_halved = False
     
     step = 0
     train_losses = []
@@ -284,6 +286,23 @@ def train_model(duration_minutes=5, n_train_per_step=90000, learning_rate=0.0001
     energy_times = []
     
     while time.time() < end_time:
+        # Check if we've passed the halfway point and need to halve the learning rate
+        if not learning_rate_halved and time.time() >= halfway_time:
+            new_learning_rate = learning_rate / 2
+            print(f"\n{'='*50}")
+            print(f"Halfway point reached! Halving learning rate from {learning_rate} to {new_learning_rate}")
+            print(f"{'='*50}\n")
+            
+            # Create new optimizer with halved learning rate
+            optimizer = optax.chain(
+                optax.clip_by_global_norm(1.0),
+                optax.adamw(learning_rate=new_learning_rate)
+            )
+            # Reinitialize optimizer state with current params
+            # Note: This resets momentum, which is intentional when making a significant LR change
+            opt_state = optimizer.init(params)
+            learning_rate_halved = True
+        
         # Generate fresh training data
         key, data_key = random.split(key)
         train_x, train_y = generate_training_data(n_train_per_step, data_key)
@@ -399,7 +418,7 @@ def train_model(duration_minutes=5, n_train_per_step=90000, learning_rate=0.0001
 
 
 @app.local_entrypoint()
-def main(duration_minutes: int = 5):
+def main(duration_minutes: int = 7):
     """
     Main entrypoint for running training on Modal.
     

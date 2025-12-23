@@ -127,9 +127,10 @@ This approach uses JAX with T4 GPU on Modal.com infrastructure:
 1. Same infinite data generation as above
 2. JAX for GPU-accelerated training
 3. Same architecture: (256, 128, 128, 64) hidden layers
-4. Trains for fixed duration (10 minutes default) without early stopping
-5. Outputs training loss, energy score CSV files and plots
-6. Generates 1000 sample scatter plot with CSV
+4. Trains for fixed duration (7 minutes default) without early stopping
+5. Learning rate is halved halfway through training for better convergence
+6. Outputs training loss, energy score CSV files and plots
+7. Generates 1000 sample scatter plot with CSV
 
 **GitHub Actions Workflows:**
 
