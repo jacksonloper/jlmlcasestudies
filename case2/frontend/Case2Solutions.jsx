@@ -37,14 +37,39 @@ export default function Case2Solutions() {
         const optimalArrayBuffer = await optimalResponse.arrayBuffer();
         const optimalData = await npy.load(optimalArrayBuffer);
         
-        // Load infinite data samples
-        let infiniteDataData = null;
+        // Load infinite data samples from scatter CSV
+        let infiniteScatterData = null;
         try {
-          const infiniteDataResponse = await fetch('/case2/data/infinitedata_samples.npy');
-          const infiniteDataArrayBuffer = await infiniteDataResponse.arrayBuffer();
-          infiniteDataData = await npy.load(infiniteDataArrayBuffer);
+          const infiniteScatterResponse = await fetch('/case2/data/infinitedata_scatter_samples.csv');
+          const infiniteScatterText = await infiniteScatterResponse.text();
+          
+          // Check if we have content beyond just whitespace
+          if (infiniteScatterText && infiniteScatterText.trim().length > 0) {
+            const infiniteScatterLines = infiniteScatterText.trim().split('\n').slice(1); // Skip header
+            
+            const scatterX = [];
+            const scatterYSampled = [];
+            
+            for (const line of infiniteScatterLines) {
+              if (line && line.trim().length > 0) {
+                const parts = line.split(',');
+                if (parts.length >= 3) {
+                  const x = parseFloat(parts[0]);
+                  const ySampled = parseFloat(parts[2]);
+                  if (!isNaN(x) && !isNaN(ySampled)) {
+                    scatterX.push(x);
+                    scatterYSampled.push(ySampled);
+                  }
+                }
+              }
+            }
+            
+            if (scatterX.length > 0) {
+              infiniteScatterData = { x: scatterX, y: scatterYSampled };
+            }
+          }
         } catch (err) {
-          console.warn('Infinite data samples not available:', err);
+          console.warn('Infinite data scatter samples not available:', err);
         }
         
         // Load training history
@@ -56,10 +81,67 @@ export default function Case2Solutions() {
           console.warn('Training history not available:', err);
         }
         
-        // Load infinite data training history
+        // Load infinite data training history from CSVs
         try {
-          const infHistoryResponse = await fetch('/case2/data/infinitedata_training_history.json');
-          const infHistory = await infHistoryResponse.json();
+          // Load training loss CSV
+          const trainingLossResponse = await fetch('/case2/data/infinitedata_training_loss.csv');
+          const trainingLossText = await trainingLossResponse.text();
+          const trainingLossLines = trainingLossText.trim().split('\n').slice(1); // Skip header
+          
+          const steps = [];
+          const trainMse = [];
+          let lastTime = 0;
+          
+          for (const line of trainingLossLines) {
+            const parts = line.split(',');
+            if (parts.length >= 3) {
+              const step = parseInt(parts[0]);
+              const loss = parseFloat(parts[1]);
+              const time = parseFloat(parts[2]);
+              if (!isNaN(step) && !isNaN(loss)) {
+                steps.push(step);
+                trainMse.push(loss);
+                if (!isNaN(time)) lastTime = time;
+              }
+            }
+          }
+          
+          // Load energy score CSV
+          const energyScoreResponse = await fetch('/case2/data/infinitedata_energy_score.csv');
+          const energyScoreText = await energyScoreResponse.text();
+          const energyScoreLines = energyScoreText.trim().split('\n').slice(1); // Skip header
+          
+          const energySteps = [];
+          const energyScores = [];
+          let finalEnergyScore = 0;
+          
+          for (const line of energyScoreLines) {
+            const parts = line.split(',');
+            if (parts.length >= 2) {
+              const step = parseInt(parts[0]);
+              const score = parseFloat(parts[1]);
+              if (!isNaN(step) && !isNaN(score)) {
+                energySteps.push(step);
+                energyScores.push(score);
+                finalEnergyScore = score; // Last one is final
+              }
+            }
+          }
+          
+          // Build history object matching expected format
+          const infHistory = {
+            epochs: steps,  // Using steps as epochs for display
+            train_mse: trainMse,
+            val_energy_scores: energyScores,
+            energy_epochs: energySteps,  // Store energy score steps separately
+            training_time: lastTime,
+            hardware: 'T4 GPU (Modal)',
+            final_energy_score: finalEnergyScore,
+            architecture: 'raw_features_only',
+            hidden_layers: [256, 128, 128, 64],
+            training_data: 'infinite (generated fresh each step)'
+          };
+          
           setInfiniteDataHistory(infHistory);
         } catch (err) {
           console.warn('Infinite data training history not available:', err);
@@ -82,16 +164,6 @@ export default function Case2Solutions() {
           sample1.push(optimalData.data[i * 2]);
           sample2.push(optimalData.data[i * 2 + 1]);
         }
-        
-        // Extract infinite data samples if available
-        const infiniteSample1 = [];
-        const infiniteSample2 = [];
-        if (infiniteDataData) {
-          for (let i = 0; i < infiniteDataData.shape[0]; i++) {
-            infiniteSample1.push(infiniteDataData.data[i * 2]);
-            infiniteSample2.push(infiniteDataData.data[i * 2 + 1]);
-          }
-        }
 
         // Create a range of x values for the true conditional expectation curve
         const xMin = Math.min(...trainX);
@@ -108,8 +180,9 @@ export default function Case2Solutions() {
         // Calculate fixed axis ranges based on all data
         const allX = [...trainX, ...testX, ...testX];
         const allY = [...trainY, ...testY, ...sample1, ...sample2];
-        if (infiniteDataData) {
-          allY.push(...infiniteSample1, ...infiniteSample2);
+        if (infiniteScatterData) {
+          allX.push(...infiniteScatterData.x);
+          allY.push(...infiniteScatterData.y);
         }
         const axisXMin = Math.min(...allX);
         const axisXMax = Math.max(...allX);
@@ -172,11 +245,11 @@ export default function Case2Solutions() {
           },
         };
         
-        // Add infinite data samples if available
-        if (infiniteDataData) {
+        // Add infinite data samples if available from scatter CSV
+        if (infiniteScatterData) {
           allPlotData.infinite = {
-            x: [...testX, ...testX],
-            y: [...infiniteSample1, ...infiniteSample2],
+            x: infiniteScatterData.x,
+            y: infiniteScatterData.y,
             mode: 'markers',
             type: 'scatter',
             name: 'Infinite Data Solution',
@@ -309,8 +382,8 @@ export default function Case2Solutions() {
               <p className="text-sm">
                 <strong>Performance:</strong> The rectified flow implementation achieves
                 an energy score of {trainingHistory?.final_energy_score ? `${trainingHistory.final_energy_score.toFixed(4)}` : '~1.8'}.
-                For comparison, oracle access to the true mixture structure
-                (ground truth) achieves ~0.5, representing the best possible performance.
+                For comparison, random sampling from the true mixture distribution
+                (ground truth) achieves ~1.9.
                 {trainingHistory?.training_time && (
                   <>
                     <br /><br />
@@ -507,21 +580,13 @@ export default function Case2Solutions() {
                       line: { color: 'rgba(168, 85, 247, 1)' },
                       marker: { size: 6 },
                     },
-                    {
-                      x: infiniteDataHistory.epochs,
-                      y: infiniteDataHistory.val_mse,
-                      mode: 'lines+markers',
-                      name: 'Validation MSE',
-                      line: { color: 'rgba(220, 38, 38, 1)' },
-                      marker: { size: 6 },
-                    },
                   ]}
                   layout={{
                     title: {
-                      text: 'Training and Validation MSE per Epoch',
+                      text: 'Training MSE per Step',
                       font: { size: window.innerWidth < 640 ? 14 : 16 }
                     },
-                    xaxis: { title: 'Epoch' },
+                    xaxis: { title: 'Step' },
                     yaxis: { title: 'MSE Loss' },
                     hovermode: 'closest',
                     showlegend: true,
@@ -556,7 +621,7 @@ export default function Case2Solutions() {
                   <Plot
                     data={[
                       {
-                        x: infiniteDataHistory.epochs,
+                        x: infiniteDataHistory.energy_epochs || infiniteDataHistory.epochs,
                         y: infiniteDataHistory.val_energy_scores,
                         mode: 'lines+markers',
                         name: 'Validation Energy Score',
@@ -569,7 +634,7 @@ export default function Case2Solutions() {
                         text: 'Validation Energy Score (Lower is Better)',
                         font: { size: window.innerWidth < 640 ? 14 : 16 }
                       },
-                      xaxis: { title: 'Epoch' },
+                      xaxis: { title: 'Step' },
                       yaxis: { title: 'Energy Score (CRPS)' },
                       hovermode: 'closest',
                       showlegend: false,
@@ -590,15 +655,14 @@ export default function Case2Solutions() {
               
               <div className="mt-4 prose max-w-none text-gray-700 text-sm">
                 <p>
-                  <strong>Training Details:</strong> Uses partial_fit with fresh random t and ε samples each epoch.
-                  Each training sample generates 3 t values: t=0 (beginning), t=1 (ending), and t=random (middle).
-                  Fresh training data is generated from the true generative model each epoch.
-                  Model trained with early stopping based on validation MSE.
+                  <strong>Training Details:</strong> JAX-based training with diffrax ODE integration on T4 GPU.
+                  Uses minibatched AdamW optimization with gradient clipping for stability.
+                  Fresh training data is generated from the true generative model each step.
                 </p>
                 {infiniteDataHistory?.final_energy_score && (
                   <p className="mt-2">
                     <strong>Final Energy Score:</strong> {infiniteDataHistory.final_energy_score.toFixed(4)} 
-                    {' '}(computed on test set after training)
+                    {' '}(computed on validation set during training)
                   </p>
                 )}
                 {infiniteDataHistory?.training_time && (
