@@ -21,10 +21,6 @@ For visualization, you can load the CSVs in your preferred plotting tool or use 
 
 import modal
 
-# ODE integration constants
-ODE_NUM_STEPS = 100  # Number of Euler integration steps
-ODE_DT = 1.0 / ODE_NUM_STEPS  # Time step size for integration from 0 to 1
-
 # Create Modal app
 app = modal.App("case2-infinitedata-jax")
 
@@ -35,6 +31,7 @@ image = (
         "jax[cuda12]",
         "optax",
         "numpy",
+        "diffrax",
     )
 )
 
@@ -59,8 +56,8 @@ def train_model(duration_minutes=7, n_train_per_step=90000, learning_rate=0.0001
     import jax
     import jax.numpy as jnp
     from jax import random, grad, jit, vmap
-    import jax.lax as lax
     import optax
+    import diffrax
     import numpy as np
     import time
     
@@ -199,11 +196,47 @@ def train_model(duration_minutes=7, n_train_per_step=90000, learning_rate=0.0001
         predictions = vmap(lambda x: mlp_forward(params, x))(features)
         return jnp.mean((predictions - targets) ** 2)
     
-    def euler_integrate_batch(params, x_batch, z0_batch):
+    def diffrax_integrate_single(params, x_val, z0):
         """
-        JAX-accelerated Euler ODE integration for a batch of initial conditions.
+        Integrate a single ODE using diffrax from t=0 to t=1.
         
-        Integrates from t=0 to t=1.0 using fixed timesteps.
+        Args:
+            params: Model parameters
+            x_val: Single x value (scalar)
+            z0: Initial z value (scalar)
+        
+        Returns:
+            Final z value after integration (scalar)
+        """
+        def vector_field(t, z, args):
+            # Unpack args
+            params_arg, x_arg = args
+            # Create feature array: [x, t, z]
+            features = jnp.array([x_arg, t, z])
+            return mlp_forward(params_arg, features)
+        
+        term = diffrax.ODETerm(vector_field)
+        solver = diffrax.Tsit5()  # Tsitouras 5/4 method (similar to RK45)
+        
+        solution = diffrax.diffeqsolve(
+            term,
+            solver,
+            t0=0.0,
+            t1=1.0,
+            dt0=0.01,
+            y0=z0,
+            args=(params, x_val),
+            stepsize_controller=diffrax.PIDController(rtol=1e-5, atol=1e-7),
+            saveat=diffrax.SaveAt(t1=True),
+            max_steps=1000,
+        )
+        return solution.ys[-1]
+    
+    def diffrax_integrate_batch(params, x_batch, z0_batch):
+        """
+        Integrate ODEs for a batch of initial conditions using diffrax.
+        
+        Integrates from t=0 to t=1.0 using adaptive step size control.
         
         Args:
             params: Model parameters
@@ -213,29 +246,11 @@ def train_model(duration_minutes=7, n_train_per_step=90000, learning_rate=0.0001
         Returns:
             Final z values after integration (shape: [batch_size])
         """
-        def step_fn(z, t_idx):
-            # Compute t from step index: t ranges from 0 to 1.0
-            t = (t_idx + 1) * ODE_DT  # Start from ODE_DT, end at 1.0
-            
-            # Create feature array for batch: [x, t, z]
-            # t needs to be broadcast to match batch size
-            t_batch = jnp.full_like(z, t)
-            features = jnp.stack([x_batch, t_batch, z], axis=1)
-            
-            # Compute velocity for entire batch
-            v = vmap(lambda feat: mlp_forward(params, feat))(features)
-            
-            # Euler step: z_new = z + v * dt
-            z_new = z + v * ODE_DT
-            return z_new, None
-        
-        # Use lax.fori_loop for fast iteration (0 to ODE_NUM_STEPS-1)
-        # This integrates from t=ODE_DT to t=1.0
-        z_final, _ = lax.scan(step_fn, z0_batch, jnp.arange(ODE_NUM_STEPS))
-        return z_final
+        # vmap over batch dimension
+        return vmap(lambda x, z0: diffrax_integrate_single(params, x, z0))(x_batch, z0_batch)
     
     # JIT compile the integration for speed
-    euler_integrate_batch_jit = jit(euler_integrate_batch)
+    diffrax_integrate_batch_jit = jit(diffrax_integrate_batch)
     
     # Initialize model
     print("Initializing model...")
@@ -352,7 +367,7 @@ def train_model(duration_minutes=7, n_train_per_step=90000, learning_rate=0.0001
                 val_x, val_y = generate_training_data(100, val_key)
                 val_x_scaled, _ = transform_data(val_x, val_y, x_mean, x_std, y_mean, y_std)
                 
-                # Generate samples using JAX-accelerated Euler integration
+                # Generate samples using diffrax ODE integration
                 # Generate 2 samples per validation point
                 key, sample_key = random.split(key)
                 z0_keys = random.split(sample_key, 200)  # 100 x values * 2 samples each
@@ -362,7 +377,7 @@ def train_model(duration_minutes=7, n_train_per_step=90000, learning_rate=0.0001
                 z0_samples = jnp.array([random.normal(k, ()) for k in z0_keys])
                 
                 # Batch integrate all samples at once (fully GPU-accelerated)
-                val_samples_scaled = euler_integrate_batch_jit(params, val_x_expanded, z0_samples)
+                val_samples_scaled = diffrax_integrate_batch_jit(params, val_x_expanded, z0_samples)
                 
                 # Reshape to (n_val, 2)
                 val_samples_scaled = val_samples_scaled.reshape(len(val_x), 2)
@@ -399,7 +414,7 @@ def train_model(duration_minutes=7, n_train_per_step=90000, learning_rate=0.0001
     
     # Batch integrate all 1000 samples at once (fully GPU-accelerated)
     print("  Running batch ODE integration on GPU...")
-    scatter_samples_scaled = euler_integrate_batch_jit(params, scatter_x_scaled, z0_samples)
+    scatter_samples_scaled = diffrax_integrate_batch_jit(params, scatter_x_scaled, z0_samples)
     scatter_samples_orig = inverse_transform_y(scatter_samples_scaled, y_mean, y_std)
     print("  ✓ Sampling complete!")
     
