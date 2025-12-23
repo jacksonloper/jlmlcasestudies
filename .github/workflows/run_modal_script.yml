@@ -33,7 +33,8 @@ name: Run Modal Script
         type: string
 
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
 
 jobs:
   run-script:
@@ -129,19 +130,63 @@ jobs:
             rm -rf modal_outputs
           fi
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        if: always()
+      - name: Get PR branch info
+        if: steps.run-script.outputs.success == 'true' && inputs.pr_number != ''
+        id: pr-info
+        uses: actions/github-script@v7
         with:
-          name: modal-script-output-${{ github.run_id }}-${{ strategy.job-index }}
-          path: |
-            case*/data/
-            dataset*/data/
-          retention-days: 3
-          if-no-files-found: warn
+          script: |
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: ${{ inputs.pr_number }}
+            });
+            const isFork = pr.data.head.repo.full_name !== pr.data.base.repo.full_name;
+            core.setOutput('branch', pr.data.head.ref);
+            core.setOutput('is_fork', isFork.toString());
+
+      - name: Commit data files to PR branch
+        if: steps.run-script.outputs.success == 'true' && inputs.pr_number != '' && steps.pr-info.outputs.is_fork != 'true'
+        run: |
+          script_path="${{ inputs.script_path }}"
+          script_dir=$(dirname "$script_path")
+          parent_dir=$(dirname "$script_dir")
+          data_dir="$parent_dir/data"
+
+          # Check if there are any data files to commit
+          if [ -d "$data_dir" ] && [ "$(ls -A "$data_dir" 2>/dev/null)" ]; then
+            echo "Found data files in $data_dir"
+
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+
+            # Fetch and checkout the PR branch
+            git fetch origin ${{ steps.pr-info.outputs.branch }}
+            git checkout ${{ steps.pr-info.outputs.branch }}
+
+            # Add the data files
+            git add "$data_dir"
+
+            # Commit if there are changes
+            if git diff --staged --quiet; then
+              echo "No changes to commit"
+            else
+              git commit -m "Add modal script outputs for ${{ inputs.script_path }}"
+              git push origin ${{ steps.pr-info.outputs.branch }}
+              echo "✓ Data files committed to PR branch"
+            fi
+          else
+            echo "No data files found to commit"
+          fi
+
+      - name: Skip commit for fork PRs
+        if: steps.run-script.outputs.success == 'true' && inputs.pr_number != '' && steps.pr-info.outputs.is_fork == 'true'
+        run: |
+          echo "⚠ Skipping commit: Cannot push to fork PR branches due to permission restrictions."
+          echo "Data files were generated but must be committed manually."
 
       - name: Post success comment to PR
-        if: steps.run-script.outputs.success == 'true' && inputs.pr_number != ''
+        if: steps.run-script.outputs.success == 'true' && inputs.pr_number != '' && steps.pr-info.outputs.is_fork != 'true'
         uses: actions/github-script@v7
         with:
           script: |
@@ -149,7 +194,19 @@ jobs:
               issue_number: ${{ inputs.pr_number }},
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '✅ **${{ inputs.script_path }}** completed successfully!'
+              body: '✅ **${{ inputs.script_path }}** completed successfully! Data files have been committed to this PR branch.'
+            });
+
+      - name: Post success comment to fork PR
+        if: steps.run-script.outputs.success == 'true' && inputs.pr_number != '' && steps.pr-info.outputs.is_fork == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: ${{ inputs.pr_number }},
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '✅ **${{ inputs.script_path }}** completed successfully!\n\n⚠️ Note: This is a fork PR, so data files could not be automatically committed. Please check the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for the generated outputs.'
             });
 
       - name: Post failure comment to PR
