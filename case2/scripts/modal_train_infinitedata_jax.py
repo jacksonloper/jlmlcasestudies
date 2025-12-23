@@ -288,17 +288,18 @@ def train_model(duration_minutes=5, n_train_per_step=90000, learning_rate=0.0001
     while time.time() < end_time:
         # Check if we've passed the halfway point and need to halve the learning rate
         if not learning_rate_halved and time.time() >= halfway_time:
+            new_learning_rate = learning_rate / 2
             print(f"\n{'='*50}")
-            print(f"Halfway point reached! Halving learning rate from {learning_rate} to {learning_rate/2}")
+            print(f"Halfway point reached! Halving learning rate from {learning_rate} to {new_learning_rate}")
             print(f"{'='*50}\n")
             
             # Create new optimizer with halved learning rate
-            new_learning_rate = learning_rate / 2
             optimizer = optax.chain(
                 optax.clip_by_global_norm(1.0),
                 optax.adamw(learning_rate=new_learning_rate)
             )
             # Reinitialize optimizer state with current params
+            # Note: This resets momentum, which is intentional when making a significant LR change
             opt_state = optimizer.init(params)
             
             # Update the update_step function with the new optimizer
