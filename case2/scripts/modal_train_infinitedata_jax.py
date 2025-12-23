@@ -457,7 +457,7 @@ def main(duration_minutes: int = 7):
     
     # Save CSVs using standard library csv module
     # Training loss CSV
-    with open(output_dir / "training_loss.csv", 'w', newline='') as f:
+    with open(output_dir / "infinitedata_training_loss.csv", 'w', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(['step', 'train_loss', 'time_seconds'])
         for step, loss, time_val in zip(result['steps'], result['train_losses'], result['times']):
@@ -465,26 +465,26 @@ def main(duration_minutes: int = 7):
     
     # Energy score CSV (only every 50 steps)
     if len(result['energy_scores']) > 0:
-        with open(output_dir / "energy_score.csv", 'w', newline='') as f:
+        with open(output_dir / "infinitedata_energy_score.csv", 'w', newline='') as f:
             writer = csv.writer(f)
             writer.writerow(['step', 'energy_score', 'time_seconds'])
             for step, score, time_val in zip(result['energy_steps'], result['energy_scores'], result['energy_times']):
                 writer.writerow([step, score, time_val])
     
     # Scatter samples CSV
-    with open(output_dir / "scatter_samples.csv", 'w', newline='') as f:
+    with open(output_dir / "infinitedata_scatter_samples.csv", 'w', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(['x', 'y_true', 'y_sampled'])
         for x, y_true, y_sampled in zip(result['scatter_x'], result['scatter_y'], result['scatter_samples']):
             writer.writerow([x, y_true, y_sampled])
     
     print("\nAll outputs saved successfully!")
-    print(f"  - training_loss.csv")
+    print(f"  - infinitedata_training_loss.csv")
     if len(result['energy_scores']) > 0:
-        print(f"  - energy_score.csv")
-    print(f"  - scatter_samples.csv")
+        print(f"  - infinitedata_energy_score.csv")
+    print(f"  - infinitedata_scatter_samples.csv")
     print(f"\nTotal training time: {result['total_time']:.2f} seconds ({result['total_time']/60:.2f} minutes)")
     print(f"\nNote: CSV files saved. You can visualize them with pandas/matplotlib:")
     print(f"  import pandas as pd; import matplotlib.pyplot as plt")
-    print(f"  df = pd.read_csv('{output_dir / 'training_loss.csv'}')")
+    print(f"  df = pd.read_csv('{output_dir / 'infinitedata_training_loss.csv'}')")
     print(f"  plt.plot(df['time_seconds'], df['train_loss']); plt.show()")
