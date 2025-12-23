@@ -301,17 +301,6 @@ def train_model(duration_minutes=5, n_train_per_step=90000, learning_rate=0.0001
             # Reinitialize optimizer state with current params
             # Note: This resets momentum, which is intentional when making a significant LR change
             opt_state = optimizer.init(params)
-            
-            # Update the update_step function with the new optimizer
-            @jit
-            def update_step(params, opt_state, features, targets):
-                """Single optimization step using AdamW."""
-                loss = loss_fn(params, features, targets)
-                grads = grad(loss_fn)(params, features, targets)
-                updates, opt_state = optimizer.update(grads, opt_state, params)
-                params = optax.apply_updates(params, updates)
-                return params, opt_state, loss
-            
             learning_rate_halved = True
         
         # Generate fresh training data
