@@ -83,11 +83,28 @@ export default function Case2Solutions() {
             
             const refSteps = [];
             const refTrainMse = [];
+            const refTrainValMse = [];  // Flow MSE on training data at 3 fixed t values
+            const refTestValMse = [];   // Flow MSE on test data at 3 fixed t values
             let refLastTime = 0;
             
             for (const line of refTrainingLossLines) {
               const parts = line.split(',');
-              if (parts.length >= 3) {
+              // New format: step, train_loss, train_val_mse, test_val_mse, time_seconds
+              if (parts.length >= 5) {
+                const step = parseInt(parts[0]);
+                const loss = parseFloat(parts[1]);
+                const trainValMse = parseFloat(parts[2]);
+                const testValMse = parseFloat(parts[3]);
+                const time = parseFloat(parts[4]);
+                if (!isNaN(step) && !isNaN(loss)) {
+                  refSteps.push(step);
+                  refTrainMse.push(loss);
+                  if (!isNaN(trainValMse)) refTrainValMse.push(trainValMse);
+                  if (!isNaN(testValMse)) refTestValMse.push(testValMse);
+                  if (!isNaN(time)) refLastTime = time;
+                }
+              } else if (parts.length >= 3) {
+                // Old format fallback: step, train_loss, time_seconds
                 const step = parseInt(parts[0]);
                 const loss = parseFloat(parts[1]);
                 const time = parseFloat(parts[2]);
@@ -125,6 +142,8 @@ export default function Case2Solutions() {
             const refHistory = {
               epochs: refSteps,
               train_mse: refTrainMse,
+              train_val_mse: refTrainValMse.length > 0 ? refTrainValMse : null,  // Flow MSE on training data
+              test_val_mse: refTestValMse.length > 0 ? refTestValMse : null,     // Flow MSE on test data
               val_energy_scores: refEnergyScores,
               energy_epochs: refEnergySteps,
               training_time: refLastTime,
@@ -574,11 +593,29 @@ export default function Case2Solutions() {
                       x: trainingHistory.epochs,
                       y: trainingHistory.train_mse,
                       mode: 'lines+markers',
-                      name: 'Train MSE',
+                      name: 'Train MSE (batch)',
                       line: { color: 'rgba(34, 197, 94, 1)' },
                       marker: { size: 6 },
                     },
-                    // Only show validation MSE if available (legacy JSON format)
+                    // Show train_val_mse if available (Modal CSV format with fixed t values)
+                    ...(trainingHistory.train_val_mse ? [{
+                      x: trainingHistory.epochs,
+                      y: trainingHistory.train_val_mse,
+                      mode: 'lines+markers',
+                      name: 'Train Data Flow MSE',
+                      line: { color: 'rgba(59, 130, 246, 1)' },
+                      marker: { size: 6 },
+                    }] : []),
+                    // Show test_val_mse if available (Modal CSV format with fixed t values)
+                    ...(trainingHistory.test_val_mse ? [{
+                      x: trainingHistory.epochs,
+                      y: trainingHistory.test_val_mse,
+                      mode: 'lines+markers',
+                      name: 'Test Data Flow MSE',
+                      line: { color: 'rgba(220, 38, 38, 1)' },
+                      marker: { size: 6 },
+                    }] : []),
+                    // Only show legacy validation MSE if available (legacy JSON format)
                     ...(trainingHistory.val_mse ? [{
                       x: trainingHistory.epochs,
                       y: trainingHistory.val_mse,
@@ -590,7 +627,9 @@ export default function Case2Solutions() {
                   ]}
                   layout={{
                     title: {
-                      text: trainingHistory.val_mse ? 'Training and Validation MSE per Epoch' : 'Training MSE per Step',
+                      text: (trainingHistory.train_val_mse || trainingHistory.test_val_mse) 
+                        ? 'Flow Matching MSE per Step (at 3 fixed t values)'
+                        : (trainingHistory.val_mse ? 'Training and Validation MSE per Epoch' : 'Training MSE per Step'),
                       font: { size: window.innerWidth < 640 ? 14 : 16 }
                     },
                     xaxis: { title: trainingHistory.val_mse ? 'Epoch' : 'Step' },
@@ -624,21 +663,21 @@ export default function Case2Solutions() {
               {/* Energy Score Plot */}
               {trainingHistory.val_energy_scores && trainingHistory.val_energy_scores.length > 0 && (
                 <div className="mb-6">
-                  <h3 className="text-lg font-medium text-gray-900 mb-3">Energy Score (CRPS) on Validation Set</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-3">Energy Score (CRPS) on Fixed 100 Test Points</h3>
                   <Plot
                     data={[
                       {
                         x: trainingHistory.energy_epochs || trainingHistory.epochs,  // Use energy_epochs if available (CSV format)
                         y: trainingHistory.val_energy_scores,
                         mode: 'lines+markers',
-                        name: 'Validation Energy Score',
+                        name: 'Energy Score',
                         marker: { size: 8, color: 'rgba(34, 197, 94, 1)' },
                         line: { color: 'rgba(34, 197, 94, 1)' },
                       },
                     ]}
                     layout={{
                       title: {
-                        text: 'Validation Energy Score (Lower is Better)',
+                        text: 'Energy Score on Fixed Test Set (Lower is Better)',
                         font: { size: window.innerWidth < 640 ? 14 : 16 }
                       },
                       xaxis: { title: trainingHistory.val_mse ? 'Epoch' : 'Step' },

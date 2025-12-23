@@ -40,11 +40,13 @@ image = (
     gpu="T4",
     timeout=30 * 60,  # 30 minute timeout as backstop
 )
-def train_model(duration_minutes=7, n_train_per_step=90000, learning_rate=0.0001, batch_size=4096):
+def train_model(test_x_list, test_y_list, duration_minutes=7, n_train_per_step=90000, learning_rate=0.0001, batch_size=4096):
     """
     Train rectified flow model using JAX with infinite data.
     
     Args:
+        test_x_list: Held-out test x values for energy score computation
+        test_y_list: Held-out test y values for energy score computation
         duration_minutes: How long to train (in minutes)
         n_train_per_step: Number of training samples to generate per step
         learning_rate: Learning rate for AdamW optimizer
@@ -60,6 +62,11 @@ def train_model(duration_minutes=7, n_train_per_step=90000, learning_rate=0.0001
     import diffrax
     import numpy as np
     import time
+    
+    # Convert test data to JAX arrays
+    test_x_orig = jnp.array(test_x_list)
+    test_y_orig = jnp.array(test_y_list)
+    n_test = len(test_x_orig)
     
     # Verify GPU is available
     print(f"JAX version: {jax.__version__}")
@@ -77,6 +84,7 @@ def train_model(duration_minutes=7, n_train_per_step=90000, learning_rate=0.0001
     
     print(f"✓ GPU backend confirmed")
     print(f"Training for {duration_minutes} minutes with learning_rate={learning_rate}, batch_size={batch_size}")
+    print(f"Test data: {n_test} samples (for energy score computation)")
     
     # Set random seeds
     key = random.PRNGKey(42)
@@ -280,6 +288,9 @@ def train_model(duration_minutes=7, n_train_per_step=90000, learning_rate=0.0001
     init_x, init_y = generate_training_data(1000, data_key)
     x_mean, x_std, y_mean, y_std = standardize_data(init_x, init_y)
     
+    # Scale the test data using these standardization stats
+    test_x_scaled = (test_x_orig - x_mean) / (x_std + 1e-8)
+    
     print(f"Standardization stats: x_mean={float(x_mean):.4f}, x_std={float(x_std):.4f}, y_mean={float(y_mean):.4f}, y_std={float(y_std):.4f}")
     
     # Training loop
@@ -360,44 +371,39 @@ def train_model(duration_minutes=7, n_train_per_step=90000, learning_rate=0.0001
             
             print(f"{step:5d}    {train_loss:10.6f}    {elapsed:6.1f}s")
             
-            # Calculate energy score every 50 steps
+            # Calculate energy score every 50 steps using the FIXED 100 test points
             if step % 50 == 0:
-                # Generate validation data
-                key, val_key = random.split(key)
-                val_x, val_y = generate_training_data(100, val_key)
-                val_x_scaled, _ = transform_data(val_x, val_y, x_mean, x_std, y_mean, y_std)
-                
-                # Generate samples using diffrax ODE integration
-                # Generate 2 samples per validation point
+                # Use the fixed test data (test_x_orig, test_y_orig) for energy score
+                # Generate 2 samples per test point
                 key, sample_key = random.split(key)
-                z0_keys = random.split(sample_key, 200)  # 100 x values * 2 samples each
+                z0_keys = random.split(sample_key, 2 * n_test)  # 100 x values * 2 samples each
                 
                 # Create batches: repeat each x twice for 2 samples
-                val_x_expanded = jnp.repeat(val_x_scaled, 2)
+                test_x_expanded = jnp.repeat(test_x_scaled, 2)
                 z0_samples = jnp.array([random.normal(k, ()) for k in z0_keys])
                 
                 # Batch integrate all samples at once (fully GPU-accelerated)
-                val_samples_scaled = diffrax_integrate_batch_jit(params, val_x_expanded, z0_samples)
+                test_samples_scaled = diffrax_integrate_batch_jit(params, test_x_expanded, z0_samples)
                 
-                # Reshape to (n_val, 2)
-                val_samples_scaled = val_samples_scaled.reshape(len(val_x), 2)
+                # Reshape to (n_test, 2)
+                test_samples_scaled = test_samples_scaled.reshape(n_test, 2)
                 
                 # Transform back to original scale
-                val_samples_orig = inverse_transform_y(val_samples_scaled, y_mean, y_std)
+                test_samples_orig = inverse_transform_y(test_samples_scaled, y_mean, y_std)
                 
-                # Calculate energy score
+                # Calculate energy score using the FIXED test_y_orig
                 # Energy = E[|Y - Y'|] - 0.5 * E[|Y' - Y''|]
                 # where Y is true, Y' and Y'' are two independent samples
-                sum_d1 = jnp.sum(jnp.abs(val_y - val_samples_orig[:, 0]))
-                sum_d2 = jnp.sum(jnp.abs(val_y - val_samples_orig[:, 1]))
-                sum_ds = jnp.sum(jnp.abs(val_samples_orig[:, 0] - val_samples_orig[:, 1]))
+                sum_d1 = jnp.sum(jnp.abs(test_y_orig - test_samples_orig[:, 0]))
+                sum_d2 = jnp.sum(jnp.abs(test_y_orig - test_samples_orig[:, 1]))
+                sum_ds = jnp.sum(jnp.abs(test_samples_orig[:, 0] - test_samples_orig[:, 1]))
                 
-                val_energy = (sum_d1 + sum_d2) / (2 * len(val_y)) - 0.5 * sum_ds / len(val_y)
-                energy_scores.append(float(val_energy))
+                test_energy = (sum_d1 + sum_d2) / (2 * n_test) - 0.5 * sum_ds / n_test
+                energy_scores.append(float(test_energy))
                 energy_steps.append(step)
                 energy_times.append(elapsed)
                 
-                print(f"         Energy Score: {float(val_energy):.4f}")
+                print(f"         Energy Score (on fixed 100 test points): {float(test_energy):.4f}")
     
     total_time = time.time() - start_time
     print(f"\nTraining complete! Total time: {total_time:.2f} seconds ({total_time/60:.2f} minutes)")
@@ -441,15 +447,28 @@ def main(duration_minutes: int = 7):
         duration_minutes: How long to train (in minutes)
     """
     import csv
+    import numpy as np
     from pathlib import Path
     
     print(f"Starting training on Modal with T4 GPU for {duration_minutes} minutes...")
     
+    # Load held-out test data from dataset1
+    script_dir = Path(__file__).parent
+    dataset_dir = script_dir.parent.parent / "dataset1" / "data"
+    
+    print(f"Loading test data from {dataset_dir / 'test_x.npy'} and {dataset_dir / 'test_y.npy'}...")
+    test_x = np.load(dataset_dir / "test_x.npy").astype(np.float32).tolist()
+    test_y = np.load(dataset_dir / "test_y.npy").astype(np.float32).tolist()
+    print(f"Loaded {len(test_x)} test samples (for energy score computation)")
+    
     # Run training on Modal
-    result = train_model.remote(duration_minutes=duration_minutes)
+    result = train_model.remote(
+        test_x_list=test_x,
+        test_y_list=test_y,
+        duration_minutes=duration_minutes
+    )
     
     # Create output directory
-    script_dir = Path(__file__).parent
     output_dir = script_dir / "modal_outputs"
     output_dir.mkdir(exist_ok=True)
     
@@ -481,7 +500,7 @@ def main(duration_minutes: int = 7):
     print("\nAll outputs saved successfully!")
     print(f"  - infinitedata_training_loss.csv")
     if len(result['energy_scores']) > 0:
-        print(f"  - infinitedata_energy_score.csv")
+        print(f"  - infinitedata_energy_score.csv (computed on fixed 100 test points)")
     print(f"  - infinitedata_scatter_samples.csv")
     print(f"\nTotal training time: {result['total_time']:.2f} seconds ({result['total_time']/60:.2f} minutes)")
     print(f"\nNote: CSV files saved. You can visualize them with pandas/matplotlib:")
