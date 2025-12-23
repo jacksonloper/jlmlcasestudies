@@ -1,0 +1,168 @@
+name: Run Modal Script
+
+'on':
+  workflow_dispatch:
+    inputs:
+      script_path:
+        description: 'Path to the modal script (e.g., case2/scripts/modal_train_infinitedata_jax.py)'
+        required: true
+        type: string
+      duration_minutes:
+        description: 'Training duration in minutes (if applicable)'
+        required: false
+        default: '5'
+        type: string
+      pr_number:
+        description: 'PR number (leave empty for manual runs)'
+        required: false
+        type: string
+  workflow_call:
+    inputs:
+      script_path:
+        description: 'Path to the modal script'
+        required: true
+        type: string
+      duration_minutes:
+        description: 'Training duration in minutes (if applicable)'
+        required: false
+        default: '5'
+        type: string
+      pr_number:
+        description: 'PR number for commenting'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    # Add timeout to prevent long-running jobs from stacking up
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Modal
+        run: |
+          pip install modal
+
+      - name: Configure Modal Token
+        env:
+          MODAL_TOKEN_COMMAND: ${{ secrets.MODAL_TOKEN_COMMAND }}
+        run: |
+          eval "$MODAL_TOKEN_COMMAND"
+
+      - name: Run modal script
+        id: run-script
+        run: |
+          set -o pipefail
+
+          script_path="${{ inputs.script_path }}"
+          script_name=$(basename "$script_path")
+          script_dir=$(dirname "$script_path")
+
+          echo "Running: $script_path"
+          echo "Script name: $script_name"
+          echo "Script directory: $script_dir"
+
+          cd "$script_dir"
+
+          # Run the modal script with duration parameter if provided
+          if modal run "$script_name" --duration-minutes ${{ inputs.duration_minutes || '5' }} 2>&1 | tee /tmp/modal_run.log; then
+            echo "success=true" >> $GITHUB_OUTPUT
+            echo "✓ Script completed successfully"
+          else
+            echo "success=false" >> $GITHUB_OUTPUT
+            echo "✗ Script failed"
+            exit 1
+          fi
+
+      - name: Move outputs to data directory
+        if: steps.run-script.outputs.success == 'true'
+        run: |
+          script_path="${{ inputs.script_path }}"
+          script_dir=$(dirname "$script_path")
+
+          cd "$script_dir"
+
+          if [ -d "modal_outputs" ]; then
+            # Determine the case/dataset directory (parent of scripts dir)
+            parent_dir=$(dirname "$script_dir")
+            data_dir="$parent_dir/data"
+
+            # Create data directory if it doesn't exist
+            if [ ! -d "$data_dir" ]; then
+              echo "Creating data directory at $data_dir/"
+              mkdir -p "$data_dir"
+            fi
+
+            echo "Moving outputs from modal_outputs/ to $data_dir/"
+            shopt -s nullglob dotglob
+            files=(modal_outputs/*)
+            if [ ${#files[@]} -gt 0 ]; then
+              mv modal_outputs/* "$data_dir/"
+              echo "✓ Outputs moved to $data_dir/"
+            else
+              echo "⚠ No files found in modal_outputs/"
+            fi
+            rm -rf modal_outputs
+          fi
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: modal-script-output-${{ github.run_id }}-${{ strategy.job-index }}
+          path: |
+            case*/data/
+            dataset*/data/
+          retention-days: 3
+          if-no-files-found: warn
+
+      - name: Post success comment to PR
+        if: steps.run-script.outputs.success == 'true' && inputs.pr_number != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: ${{ inputs.pr_number }},
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '✅ **${{ inputs.script_path }}** completed successfully!'
+            });
+
+      - name: Post failure comment to PR
+        if: steps.run-script.outputs.success == 'false' && inputs.pr_number != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: ${{ inputs.pr_number }},
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '❌ **${{ inputs.script_path }}** failed!\n\nCheck the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.'
+            });
+
+      - name: Display results summary
+        if: always()
+        run: |
+          echo "## Modal Script Results Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ steps.run-script.outputs.success }}" == "true" ]; then
+            echo "✅ Script completed successfully" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Script failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Script**: \`${{ inputs.script_path }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Duration**: ${{ inputs.duration_minutes || '5' }} minutes" >> $GITHUB_STEP_SUMMARY
