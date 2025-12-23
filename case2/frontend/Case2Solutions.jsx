@@ -382,8 +382,8 @@ export default function Case2Solutions() {
               <p className="text-sm">
                 <strong>Performance:</strong> The rectified flow implementation achieves
                 an energy score of {trainingHistory?.final_energy_score ? `${trainingHistory.final_energy_score.toFixed(4)}` : '~1.8'}.
-                For comparison, oracle access to the true mixture structure
-                (ground truth) achieves ~0.5, representing the best possible performance.
+                For comparison, random sampling from the true mixture distribution
+                (ground truth) achieves ~1.9.
                 {trainingHistory?.training_time && (
                   <>
                     <br /><br />

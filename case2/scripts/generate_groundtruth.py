@@ -1,8 +1,8 @@
 """
-Generate ground truth optimal samples for Case Study 2: Distribution Sampling
+Generate ground truth samples for Case Study 2: Distribution Sampling
 
 This script generates samples by directly sampling from the true mixture distribution.
-This represents the best possible performance (oracle access to true distribution).
+This represents what a perfect model that learns the true distribution would produce.
 
 Outputs:
 - case2/data/groundtruth_samples.npy: 100x2 matrix (two samples per test point)
@@ -31,15 +31,18 @@ print(f"Test X shape: {test_x.shape}, Test Y shape: {test_y.shape}")
 
 # Generate two samples per test point from the true mixture distribution
 print("\nGenerating ground truth samples from true mixture distribution...")
-samples = np.zeros((test_x.shape[0], 2), dtype=np.float16)
+samples = np.zeros((test_x.shape[0], 2), dtype=np.float32)
 
 for i in range(test_x.shape[0]):
     x = test_x[i]
-    # Sample from the two modes of the mixture
-    # Mode 1: N(10*cos(x), 1)
-    samples[i, 0] = np.random.normal(10 * np.cos(x), 1)
-    # Mode 2: N(0, 1)
-    samples[i, 1] = np.random.normal(0, 1)
+    # Sample randomly from the mixture distribution (50% Mode 1, 50% Mode 2)
+    for j in range(2):
+        if np.random.rand() < 0.5:
+            # Mode 1: N(10*cos(x), 1)
+            samples[i, j] = np.random.normal(10 * np.cos(x), 1)
+        else:
+            # Mode 2: N(0, 1)
+            samples[i, j] = np.random.normal(0, 1)
 
 # Save samples
 output_path = data_dir / "groundtruth_samples.npy"
@@ -57,5 +60,5 @@ energy_score = (sum_dist1 + sum_dist2) / (2 * len(test_y)) - 0.5 * sum_dist_samp
 print(f"{'='*60}")
 print(f"Ground Truth Energy Score: {energy_score:.4f}")
 print(f"{'='*60}")
-print("This uses the true mixture distribution: one sample from each mode.")
-print("This represents the best possible energy score (oracle performance).")
+print("This uses random sampling from the true mixture distribution.")
+print("Expected energy score is approximately 1.9.")
