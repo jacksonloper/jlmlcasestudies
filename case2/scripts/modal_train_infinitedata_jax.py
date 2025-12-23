@@ -43,7 +43,7 @@ image = (
     gpu="T4",
     timeout=30 * 60,  # 30 minute timeout as backstop
 )
-def train_model(duration_minutes=5, n_train_per_step=90000, learning_rate=0.0001, batch_size=4096):
+def train_model(duration_minutes=7, n_train_per_step=90000, learning_rate=0.0001, batch_size=4096):
     """
     Train rectified flow model using JAX with infinite data.
     
