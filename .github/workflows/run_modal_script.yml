@@ -43,8 +43,27 @@ jobs:
     timeout-minutes: 45
 
     steps:
+      - name: Get PR branch info
+        if: inputs.pr_number != ''
+        id: pr-checkout-info
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: ${{ inputs.pr_number }}
+            });
+            const isFork = pr.data.head.repo.full_name !== pr.data.base.repo.full_name;
+            core.setOutput('sha', pr.data.head.sha);
+            core.setOutput('branch', pr.data.head.ref);
+            core.setOutput('is_fork', isFork.toString());
+
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.pr_number != '' && steps.pr-checkout-info.outputs.sha || '' }}
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -99,23 +118,8 @@ jobs:
             fi
           fi
 
-      - name: Get PR branch info
-        if: steps.run-script.outputs.success == 'true' && inputs.pr_number != ''
-        id: pr-info
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const pr = await github.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: ${{ inputs.pr_number }}
-            });
-            const isFork = pr.data.head.repo.full_name !== pr.data.base.repo.full_name;
-            core.setOutput('branch', pr.data.head.ref);
-            core.setOutput('is_fork', isFork.toString());
-
       - name: Commit data files to PR branch
-        if: steps.run-script.outputs.success == 'true' && inputs.pr_number != '' && steps.pr-info.outputs.is_fork != 'true'
+        if: steps.run-script.outputs.success == 'true' && inputs.pr_number != '' && steps.pr-checkout-info.outputs.is_fork != 'true'
         run: |
           script_path="${{ inputs.script_path }}"
           script_dir=$(dirname "$script_path")
@@ -130,10 +134,7 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
 
-            # Fetch and checkout the PR branch FIRST (before moving files)
-            git fetch origin ${{ steps.pr-info.outputs.branch }}
-            git checkout ${{ steps.pr-info.outputs.branch }}
-
+            # We're already on the PR branch (checked out at start)
             # Now move outputs from modal_outputs/ to data directory
             mkdir -p "$data_dir"
             mv "$modal_outputs_dir"/* "$data_dir/"
@@ -148,7 +149,7 @@ jobs:
               echo "No changes to commit"
             else
               git commit -m "Add modal script outputs for ${{ inputs.script_path }}"
-              git push origin ${{ steps.pr-info.outputs.branch }}
+              git push origin ${{ steps.pr-checkout-info.outputs.branch }}
               echo "✓ Data files committed to PR branch"
             fi
           else
@@ -172,13 +173,13 @@ jobs:
           fi
 
       - name: Skip commit for fork PRs
-        if: steps.run-script.outputs.success == 'true' && inputs.pr_number != '' && steps.pr-info.outputs.is_fork == 'true'
+        if: steps.run-script.outputs.success == 'true' && inputs.pr_number != '' && steps.pr-checkout-info.outputs.is_fork == 'true'
         run: |
           echo "⚠ Skipping commit: Cannot push to fork PR branches due to permission restrictions."
           echo "Data files were generated but must be committed manually."
 
       - name: Post success comment to PR
-        if: steps.run-script.outputs.success == 'true' && inputs.pr_number != '' && steps.pr-info.outputs.is_fork != 'true'
+        if: steps.run-script.outputs.success == 'true' && inputs.pr_number != '' && steps.pr-checkout-info.outputs.is_fork != 'true'
         uses: actions/github-script@v7
         with:
           script: |
@@ -190,7 +191,7 @@ jobs:
             });
 
       - name: Post success comment to fork PR
-        if: steps.run-script.outputs.success == 'true' && inputs.pr_number != '' && steps.pr-info.outputs.is_fork == 'true'
+        if: steps.run-script.outputs.success == 'true' && inputs.pr_number != '' && steps.pr-checkout-info.outputs.is_fork == 'true'
         uses: actions/github-script@v7
         with:
           script: |
