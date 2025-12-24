@@ -7,7 +7,6 @@ import npyjs from 'npyjs';
 export default function Case2Solutions() {
   const [plotData, setPlotData] = useState(null);
   const [trainingHistory, setTrainingHistory] = useState(null);
-  const [infiniteDataHistory, setInfiniteDataHistory] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedSolution, setSelectedSolution] = useState('training');
@@ -37,41 +36,6 @@ export default function Case2Solutions() {
         const optimalArrayBuffer = await optimalResponse.arrayBuffer();
         const optimalData = await npy.load(optimalArrayBuffer);
         
-        // Load infinite data samples from scatter CSV
-        let infiniteScatterData = null;
-        try {
-          const infiniteScatterResponse = await fetch('/case2/data/infinitedata_scatter_samples.csv');
-          const infiniteScatterText = await infiniteScatterResponse.text();
-          
-          // Check if we have content beyond just whitespace
-          if (infiniteScatterText && infiniteScatterText.trim().length > 0) {
-            const infiniteScatterLines = infiniteScatterText.trim().split('\n').slice(1); // Skip header
-            
-            const scatterX = [];
-            const scatterYSampled = [];
-            
-            for (const line of infiniteScatterLines) {
-              if (line && line.trim().length > 0) {
-                const parts = line.split(',');
-                if (parts.length >= 3) {
-                  const x = parseFloat(parts[0]);
-                  const ySampled = parseFloat(parts[2]);
-                  if (!isNaN(x) && !isNaN(ySampled)) {
-                    scatterX.push(x);
-                    scatterYSampled.push(ySampled);
-                  }
-                }
-              }
-            }
-            
-            if (scatterX.length > 0) {
-              infiniteScatterData = { x: scatterX, y: scatterYSampled };
-            }
-          }
-        } catch (err) {
-          console.warn('Infinite data scatter samples not available:', err);
-        }
-        
         // Load reference solution training history from CSVs
         try {
           const refTrainingLossResponse = await fetch('/case2/data/reference_training_loss.csv');
@@ -82,24 +46,18 @@ export default function Case2Solutions() {
             
             const refSteps = [];
             const refTrainMse = [];
-            const refTrainValMse = [];  // Flow MSE on training data at 3 fixed t values
-            const refTestValMse = [];   // Flow MSE on test data at 3 fixed t values
             let refLastTime = 0;
             
             for (const line of refTrainingLossLines) {
               const parts = line.split(',');
-              // Format: step, train_loss, train_val_mse, test_val_mse, time_seconds
-              if (parts.length >= 5) {
+              // Format: step, train_loss, time_seconds
+              if (parts.length >= 3) {
                 const step = parseInt(parts[0]);
                 const loss = parseFloat(parts[1]);
-                const trainValMse = parseFloat(parts[2]);
-                const testValMse = parseFloat(parts[3]);
-                const time = parseFloat(parts[4]);
+                const time = parseFloat(parts[2]);
                 if (!isNaN(step) && !isNaN(loss)) {
                   refSteps.push(step);
                   refTrainMse.push(loss);
-                  if (!isNaN(trainValMse)) refTrainValMse.push(trainValMse);
-                  if (!isNaN(testValMse)) refTestValMse.push(testValMse);
                   if (!isNaN(time)) refLastTime = time;
                 }
               }
@@ -131,8 +89,6 @@ export default function Case2Solutions() {
             const refHistory = {
               epochs: refSteps,
               train_mse: refTrainMse,
-              train_val_mse: refTrainValMse.length > 0 ? refTrainValMse : null,  // Flow MSE on training data
-              test_val_mse: refTestValMse.length > 0 ? refTestValMse : null,     // Flow MSE on test data
               val_energy_scores: refEnergyScores,
               energy_epochs: refEnergySteps,
               training_time: refLastTime,
@@ -182,72 +138,6 @@ export default function Case2Solutions() {
         } catch (err) {
           console.warn('Reference scatter samples CSV not available:', err);
         }
-        
-        // Load infinite data training history from CSVs
-        try {
-          // Load training loss CSV
-          const trainingLossResponse = await fetch('/case2/data/infinitedata_training_loss.csv');
-          const trainingLossText = await trainingLossResponse.text();
-          const trainingLossLines = trainingLossText.trim().split('\n').slice(1); // Skip header
-          
-          const steps = [];
-          const trainMse = [];
-          let lastTime = 0;
-          
-          for (const line of trainingLossLines) {
-            const parts = line.split(',');
-            if (parts.length >= 3) {
-              const step = parseInt(parts[0]);
-              const loss = parseFloat(parts[1]);
-              const time = parseFloat(parts[2]);
-              if (!isNaN(step) && !isNaN(loss)) {
-                steps.push(step);
-                trainMse.push(loss);
-                if (!isNaN(time)) lastTime = time;
-              }
-            }
-          }
-          
-          // Load energy score CSV
-          const energyScoreResponse = await fetch('/case2/data/infinitedata_energy_score.csv');
-          const energyScoreText = await energyScoreResponse.text();
-          const energyScoreLines = energyScoreText.trim().split('\n').slice(1); // Skip header
-          
-          const energySteps = [];
-          const energyScores = [];
-          let finalEnergyScore = 0;
-          
-          for (const line of energyScoreLines) {
-            const parts = line.split(',');
-            if (parts.length >= 2) {
-              const step = parseInt(parts[0]);
-              const score = parseFloat(parts[1]);
-              if (!isNaN(step) && !isNaN(score)) {
-                energySteps.push(step);
-                energyScores.push(score);
-                finalEnergyScore = score; // Last one is final
-              }
-            }
-          }
-          
-          // Build history object matching expected format
-          const infHistory = {
-            epochs: steps,  // Using steps as epochs for display
-            train_mse: trainMse,
-            val_energy_scores: energyScores,
-            energy_epochs: energySteps,  // Store energy score steps separately
-            training_time: lastTime,
-            hardware: 'T4 GPU (Modal)',
-            final_energy_score: finalEnergyScore,
-            architecture: 'raw_features_only',
-            hidden_layers: [256, 128, 128, 64],
-            training_data: 'infinite (generated fresh each step)'
-          };
-          
-          setInfiniteDataHistory(infHistory);
-        } catch (err) {
-          console.warn('Infinite data training history not available:', err);
-        }
 
         // Extract data
         const trainX = [];
@@ -282,10 +172,6 @@ export default function Case2Solutions() {
         // Calculate fixed axis ranges based on all data
         const allX = [...trainX, ...testX, ...testX];
         const allY = [...trainY, ...testY, ...sample1, ...sample2];
-        if (infiniteScatterData) {
-          allX.push(...infiniteScatterData.x);
-          allY.push(...infiniteScatterData.y);
-        }
         if (referenceScatterData) {
           allX.push(...referenceScatterData.x);
           allY.push(...referenceScatterData.y);
@@ -361,21 +247,6 @@ export default function Case2Solutions() {
             y: [axisYMin - yPadding, axisYMax + yPadding],
           },
         };
-        
-        // Add infinite data samples if available from scatter CSV
-        if (infiniteScatterData) {
-          allPlotData.infinite = {
-            x: infiniteScatterData.x,
-            y: infiniteScatterData.y,
-            mode: 'markers',
-            type: 'scatter',
-            name: 'Infinite Data Solution',
-            marker: {
-              color: 'rgba(168, 85, 247, 0.6)',
-              size: 6,
-            },
-          };
-        }
 
         setPlotData(allPlotData);
         setLoading(false);
@@ -422,14 +293,14 @@ export default function Case2Solutions() {
         </section>
 
         <section className="mb-12">
-          <h2 className="text-2xl font-medium text-gray-900 mb-4">Solutions Overview</h2>
+          <h2 className="text-2xl font-medium text-gray-900 mb-4">Reference Solution</h2>
           <div className="prose max-w-none text-gray-700 space-y-4">
             <p>
-              We present two solutions using <strong>rectified flow matching</strong> with the same
-              architecture (256, 128, 128, 64 hidden layers) and the same raw features, but different training data:
+              We present a solution using <strong>rectified flow matching</strong> with
+              architecture (256, 128, 128, 64 hidden layers) and raw features:
             </p>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+            <div className="my-6">
               <div className="bg-green-50 p-6 rounded-lg border border-green-200">
                 <h3 className="font-medium text-gray-900 mb-3">Reference Solution</h3>
                 <ul className="list-disc list-inside space-y-2 text-sm">
@@ -439,30 +310,12 @@ export default function Case2Solutions() {
                   <li><strong>Training Time:</strong> {trainingHistory?.training_time ? `${trainingHistory.training_time.toFixed(1)}s` : '~50s'}</li>
                 </ul>
               </div>
-              
-              {infiniteDataHistory && (
-                <div className="bg-purple-50 p-6 rounded-lg border border-purple-200">
-                  <h3 className="font-medium text-gray-900 mb-3">Infinite Data Solution</h3>
-                  <ul className="list-disc list-inside space-y-2 text-sm">
-                    <li><strong>Features:</strong> Raw features only</li>
-                    <li><strong>Training Data:</strong> Fresh samples each epoch (infinite)</li>
-                    <li><strong>Energy Score:</strong> {infiniteDataHistory.final_energy_score.toFixed(4)}</li>
-                    <li><strong>Training Time:</strong> {infiniteDataHistory.training_time.toFixed(1)}s</li>
-                  </ul>
-                </div>
-              )}
             </div>
-            
-            <p>
-              Both solutions use identical architectures and features. The key difference is the training data:
-              the reference solution uses a fixed dataset while the infinite data solution generates fresh samples
-              from the true distribution each epoch.
-            </p>
           </div>
         </section>
 
         <section className="mb-12">
-          <h2 className="text-2xl font-medium text-gray-900 mb-4">Reference Solution: Rectified Flow Matching with Finite Data</h2>
+          <h2 className="text-2xl font-medium text-gray-900 mb-4">Rectified Flow Matching</h2>
           <div className="prose max-w-none text-gray-700 space-y-4">
             <p>
               The reference solution uses <strong>rectified flow matching</strong>, a powerful technique
@@ -512,56 +365,9 @@ export default function Case2Solutions() {
           </div>
         </section>
 
-        {infiniteDataHistory && (
-          <section className="mb-12">
-            <h2 className="text-2xl font-medium text-gray-900 mb-4">Infinite Data Solution: Rectified Flow with Synthetic Data</h2>
-            <div className="prose max-w-none text-gray-700 space-y-4">
-              <p>
-                The infinite data solution uses the same rectified flow matching algorithm but with a different approach to training:
-              </p>
-              
-              <div className="bg-gray-50 p-6 rounded-lg my-6">
-                <h3 className="font-medium text-gray-900 mb-3">Key Differences:</h3>
-                <ul className="list-disc list-inside space-y-2">
-                  <li>
-                    <strong>Training Data:</strong> Generates fresh samples from the true generative model each epoch
-                    (x ~ N(4,1), y|x ~ mixture) rather than using the fixed 900 training samples
-                  </li>
-                  <li>
-                    <strong>Features:</strong> Uses the same raw features (x, t, z_t) as the reference solution
-                  </li>
-                  <li>
-                    <strong>Architecture:</strong> Same (256, 128, 128, 64) hidden layers as reference solution
-                  </li>
-                  <li>
-                    <strong>Benefit:</strong> Infinite fresh data prevents overfitting to a fixed training set
-                  </li>
-                </ul>
-              </div>
-
-              <div className="bg-purple-50 p-4 rounded-lg my-4">
-                <p className="text-sm">
-                  <strong>Performance:</strong> The infinite data approach achieves
-                  an energy score of {infiniteDataHistory.final_energy_score.toFixed(4)},
-                  similar to the reference solution.
-                  <br /><br />
-                  <strong>Training Time:</strong> {infiniteDataHistory.training_time.toFixed(2)} seconds on {infiniteDataHistory.hardware}
-                  <br />
-                  <strong>Architecture:</strong> {infiniteDataHistory.hidden_layers.join(', ')} hidden layers
-                </p>
-              </div>
-              
-              <p className="text-sm text-gray-600 italic">
-                Note: This approach is only possible when the true data generation process is known,
-                making it a useful comparison for understanding the impact of training data quantity.
-              </p>
-            </div>
-          </section>
-        )}
-
         {trainingHistory && (
           <section className="mb-12">
-            <h2 className="text-2xl font-medium text-gray-900 mb-4">Reference Solution Training Progress</h2>
+            <h2 className="text-2xl font-medium text-gray-900 mb-4">Training Progress</h2>
             <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6">
               {/* MSE Loss Plot */}
               <div className="mb-8">
@@ -572,139 +378,8 @@ export default function Case2Solutions() {
                       x: trainingHistory.epochs,
                       y: trainingHistory.train_mse,
                       mode: 'lines+markers',
-                      name: 'Train MSE (batch)',
-                      line: { color: 'rgba(34, 197, 94, 1)' },
-                      marker: { size: 6 },
-                    },
-                    // Show train_val_mse if available
-                    ...(trainingHistory.train_val_mse ? [{
-                      x: trainingHistory.epochs,
-                      y: trainingHistory.train_val_mse,
-                      mode: 'lines+markers',
-                      name: 'Train Data Flow MSE',
-                      line: { color: 'rgba(59, 130, 246, 1)' },
-                      marker: { size: 6 },
-                    }] : []),
-                    // Show test_val_mse if available
-                    ...(trainingHistory.test_val_mse ? [{
-                      x: trainingHistory.epochs,
-                      y: trainingHistory.test_val_mse,
-                      mode: 'lines+markers',
-                      name: 'Test Data Flow MSE',
-                      line: { color: 'rgba(220, 38, 38, 1)' },
-                      marker: { size: 6 },
-                    }] : []),
-                  ]}
-                  layout={{
-                    title: {
-                      text: (trainingHistory.train_val_mse || trainingHistory.test_val_mse) 
-                        ? 'Flow Matching MSE per Step (at 3 fixed t values)'
-                        : 'Training MSE per Step',
-                      font: { size: window.innerWidth < 640 ? 14 : 16 }
-                    },
-                    xaxis: { title: 'Step' },
-                    yaxis: { title: 'MSE Loss' },
-                    hovermode: 'closest',
-                    showlegend: true,
-                    legend: {
-                      x: window.innerWidth < 640 ? 0 : 0.02,
-                      y: window.innerWidth < 640 ? -0.2 : 0.98,
-                      orientation: window.innerWidth < 640 ? 'h' : 'v',
-                      xanchor: 'left',
-                      yanchor: window.innerWidth < 640 ? 'top' : 'top',
-                      bgcolor: 'rgba(255, 255, 255, 0.8)',
-                      bordercolor: 'rgba(0, 0, 0, 0.2)',
-                      borderwidth: 1,
-                    },
-                    autosize: true,
-                    margin: { 
-                      l: window.innerWidth < 640 ? 40 : 50, 
-                      r: window.innerWidth < 640 ? 10 : 20, 
-                      t: window.innerWidth < 640 ? 40 : 50, 
-                      b: window.innerWidth < 640 ? 90 : 50 
-                    },
-                  }}
-                  style={{ width: '100%', height: window.innerWidth < 640 ? '300px' : '400px' }}
-                  config={{ responsive: true }}
-                  useResizeHandler={true}
-                />
-              </div>
-              
-              {/* Energy Score Plot */}
-              {trainingHistory.val_energy_scores && trainingHistory.val_energy_scores.length > 0 && (
-                <div className="mb-6">
-                  <h3 className="text-lg font-medium text-gray-900 mb-3">Energy Score (CRPS) on Fixed 100 Test Points</h3>
-                  <Plot
-                    data={[
-                      {
-                        x: trainingHistory.energy_epochs || trainingHistory.epochs,  // Use energy_epochs if available (CSV format)
-                        y: trainingHistory.val_energy_scores,
-                        mode: 'lines+markers',
-                        name: 'Energy Score',
-                        marker: { size: 8, color: 'rgba(34, 197, 94, 1)' },
-                        line: { color: 'rgba(34, 197, 94, 1)' },
-                      },
-                    ]}
-                    layout={{
-                      title: {
-                        text: 'Energy Score on Fixed Test Set (Lower is Better)',
-                        font: { size: window.innerWidth < 640 ? 14 : 16 }
-                      },
-                      xaxis: { title: 'Step' },
-                      yaxis: { title: 'Energy Score (CRPS)' },
-                      hovermode: 'closest',
-                      showlegend: false,
-                      autosize: true,
-                      margin: { 
-                        l: window.innerWidth < 640 ? 40 : 50, 
-                        r: window.innerWidth < 640 ? 10 : 20, 
-                        t: window.innerWidth < 640 ? 40 : 50, 
-                        b: window.innerWidth < 640 ? 50 : 50 
-                      },
-                    }}
-                    style={{ width: '100%', height: window.innerWidth < 640 ? '250px' : '300px' }}
-                    config={{ responsive: true }}
-                    useResizeHandler={true}
-                  />
-                </div>
-              )}
-              
-              <div className="mt-4 prose max-w-none text-gray-700 text-sm">
-                <p>
-                  <strong>Training Details:</strong> JAX-based training with diffrax ODE integration on T4 GPU. Uses minibatched AdamW optimization with gradient clipping for stability. Learning rate is halved halfway through training.
-                </p>
-                {trainingHistory?.final_energy_score && (
-                  <p className="mt-2">
-                    <strong>Final Energy Score:</strong> {trainingHistory.final_energy_score.toFixed(4)} 
-                    {' '}(computed on fixed 100 test points)
-                  </p>
-                )}
-                {trainingHistory?.training_time && (
-                  <p className="mt-2">
-                    <strong>Training Time:</strong> {trainingHistory.training_time.toFixed(2)} seconds
-                    {trainingHistory.hardware && ` on ${trainingHistory.hardware}`}
-                  </p>
-                )}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {infiniteDataHistory && (
-          <section className="mb-12">
-            <h2 className="text-2xl font-medium text-gray-900 mb-4">Infinite Data Solution Training Progress</h2>
-            <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6">
-              {/* MSE Loss Plot */}
-              <div className="mb-8">
-                <h3 className="text-lg font-medium text-gray-900 mb-3">Mean Squared Error (MSE) Loss</h3>
-                <Plot
-                  data={[
-                    {
-                      x: infiniteDataHistory.epochs,
-                      y: infiniteDataHistory.train_mse,
-                      mode: 'lines+markers',
                       name: 'Train MSE',
-                      line: { color: 'rgba(168, 85, 247, 1)' },
+                      line: { color: 'rgba(34, 197, 94, 1)' },
                       marker: { size: 6 },
                     },
                   ]}
@@ -742,27 +417,27 @@ export default function Case2Solutions() {
               </div>
               
               {/* Energy Score Plot */}
-              {infiniteDataHistory.val_energy_scores && infiniteDataHistory.val_energy_scores.length > 0 && (
+              {trainingHistory.val_energy_scores && trainingHistory.val_energy_scores.length > 0 && (
                 <div className="mb-6">
-                  <h3 className="text-lg font-medium text-gray-900 mb-3">Energy Score (CRPS) on Validation Set</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-3">Energy Score on Fixed 100 Test Points</h3>
                   <Plot
                     data={[
                       {
-                        x: infiniteDataHistory.energy_epochs || infiniteDataHistory.epochs,
-                        y: infiniteDataHistory.val_energy_scores,
+                        x: trainingHistory.energy_epochs || trainingHistory.epochs,  // Use energy_epochs if available (CSV format)
+                        y: trainingHistory.val_energy_scores,
                         mode: 'lines+markers',
-                        name: 'Validation Energy Score',
-                        marker: { size: 8, color: 'rgba(168, 85, 247, 1)' },
-                        line: { color: 'rgba(168, 85, 247, 1)' },
+                        name: 'Energy Score',
+                        marker: { size: 8, color: 'rgba(34, 197, 94, 1)' },
+                        line: { color: 'rgba(34, 197, 94, 1)' },
                       },
                     ]}
                     layout={{
                       title: {
-                        text: 'Validation Energy Score (Lower is Better)',
+                        text: 'Energy Score on Fixed Test Set (Lower is Better)',
                         font: { size: window.innerWidth < 640 ? 14 : 16 }
                       },
                       xaxis: { title: 'Step' },
-                      yaxis: { title: 'Energy Score (CRPS)' },
+                      yaxis: { title: 'Energy Score' },
                       hovermode: 'closest',
                       showlegend: false,
                       autosize: true,
@@ -782,20 +457,18 @@ export default function Case2Solutions() {
               
               <div className="mt-4 prose max-w-none text-gray-700 text-sm">
                 <p>
-                  <strong>Training Details:</strong> JAX-based training with diffrax ODE integration on T4 GPU.
-                  Uses minibatched AdamW optimization with gradient clipping for stability.
-                  Fresh training data is generated from the true generative model each step.
+                  <strong>Training Details:</strong> JAX-based training with diffrax ODE integration on T4 GPU. Uses minibatched AdamW optimization with gradient clipping for stability. Learning rate is halved halfway through training.
                 </p>
-                {infiniteDataHistory?.final_energy_score && (
+                {trainingHistory?.final_energy_score && (
                   <p className="mt-2">
-                    <strong>Final Energy Score:</strong> {infiniteDataHistory.final_energy_score.toFixed(4)} 
-                    {' '}(computed on validation set during training)
+                    <strong>Final Energy Score:</strong> {trainingHistory.final_energy_score.toFixed(4)} 
+                    {' '}(computed on fixed 100 test points)
                   </p>
                 )}
-                {infiniteDataHistory?.training_time && (
+                {trainingHistory?.training_time && (
                   <p className="mt-2">
-                    <strong>Training Time:</strong> {infiniteDataHistory.training_time.toFixed(2)} seconds
-                    {infiniteDataHistory.hardware && ` on ${infiniteDataHistory.hardware}`}
+                    <strong>Training Time:</strong> {trainingHistory.training_time.toFixed(2)} seconds
+                    {trainingHistory.hardware && ` on ${trainingHistory.hardware}`}
                   </p>
                 )}
               </div>
@@ -859,19 +532,6 @@ export default function Case2Solutions() {
                       />
                       <span className="text-gray-700">Reference Solution</span>
                     </label>
-                    {plotData.infinite && (
-                      <label className="flex items-center">
-                        <input
-                          type="radio"
-                          name="solution"
-                          value="infinite"
-                          checked={selectedSolution === 'infinite'}
-                          onChange={(e) => setSelectedSolution(e.target.value)}
-                          className="mr-2 h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300"
-                        />
-                        <span className="text-gray-700">Infinite Data Solution</span>
-                      </label>
-                    )}
                   </div>
                 </div>
                 
@@ -960,18 +620,6 @@ export default function Case2Solutions() {
                 </p>
               </>
             )}
-            {selectedSolution === 'infinite' && infiniteDataHistory && (
-              <>
-                <p>
-                  <strong>Purple points</strong>: Samples from the infinite data solution
-                </p>
-                <p className="mt-4">
-                  The infinite data solution demonstrates how rectified flow matching with unlimited
-                  training samples learns to capture the bimodal distribution, with samples spread
-                  across both modes of the mixture.
-                </p>
-              </>
-            )}
           </div>
         </section>
 
@@ -980,23 +628,23 @@ export default function Case2Solutions() {
           <div className="bg-blue-50 p-6 rounded-lg">
             <div className="prose max-w-none text-gray-700">
               <p className="mb-4">
-                The 2-sample energy score balances two objectives:
+                The energy score (with 90 samples per held-out point) provides a Monte Carlo estimate
+                that balances two objectives:
               </p>
               <ol className="space-y-3">
                 <li>
-                  <strong>Accuracy</strong>: Both samples should be close to the true value
-                  (minimizing <InlineMath math="|Y - X_1|" /> and <InlineMath math="|Y - X_2|" />)
+                  <strong>Accuracy</strong>: Samples should be close to the true value
+                  (minimizing <InlineMath math="E[|Y - X_j|]" /> averaged over 90 samples)
                 </li>
                 <li>
-                  <strong>Diversity</strong>: The samples should be different from each other
-                  (maximizing <InlineMath math="|X_1 - X_2|" />), which encourages exploration
-                  of the distribution
+                  <strong>Diversity</strong>: Samples should cover the distribution
+                  (maximizing <InlineMath math="E[|X_j - X_{j'}|]" /> between different samples)
                 </li>
               </ol>
               <p className="mt-4">
-                A good strategy often involves sampling from different modes or regions of
-                the conditional distribution, rather than returning two nearly identical
-                predictions.
+                A good strategy involves sampling from different modes or regions of
+                the conditional distribution, capturing its full structure rather than
+                returning nearly identical predictions.
               </p>
             </div>
           </div>
@@ -1018,12 +666,12 @@ export default function Case2Solutions() {
                   <tr className="border-b border-gray-200">
                     <td className="py-2 pr-4 font-medium">Prediction</td>
                     <td className="py-2 pr-4">Single point</td>
-                    <td className="py-2">Two samples</td>
+                    <td className="py-2">90 samples</td>
                   </tr>
                   <tr className="border-b border-gray-200">
                     <td className="py-2 pr-4 font-medium">Output shape</td>
                     <td className="py-2 pr-4">100×1</td>
-                    <td className="py-2">100×2</td>
+                    <td className="py-2">100×90</td>
                   </tr>
                   <tr className="border-b border-gray-200">
                     <td className="py-2 pr-4 font-medium">Metric</td>

@@ -46,7 +46,7 @@ image = (
     gpu="T4",
     timeout=30 * 60,  # 30 minute timeout as backstop
 )
-def train_model(train_x_list, train_y_list, test_x_list, test_y_list, duration_minutes=7, learning_rate=0.0001, batch_size=4096):
+def train_model(train_x_list, train_y_list, test_x_list, test_y_list, duration_minutes=2, learning_rate=0.0001, batch_size=4096):
     """
     Train rectified flow model using JAX with finite data.
     
@@ -310,32 +310,10 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list, duration_m
     n_t_per_sample = 300
     print(f"Using n_t_per_sample={n_t_per_sample} to match infinite data batch size (900 * 300 = 270,000 flow samples)")
     
-    # Pre-generate fixed validation flow batches for consistent MSE evaluation
-    # Use 3 random t values per sample for validation MSE (as specified in requirements)
-    n_val_t_per_sample = 3
-    val_batch_key = random.PRNGKey(9999)  # Fixed seed for reproducibility
-    
-    # Generate fixed validation batch for training data MSE
-    key_train_val, key_test_val = random.split(val_batch_key)
-    train_val_features, train_val_targets = generate_flow_batch(
-        train_x_scaled, train_y_scaled, n_val_t_per_sample, key_train_val
-    )
-    
-    # Generate fixed validation batch for test data MSE (at 3 random t values)
-    # We need to create a flow batch for test data - use scaled test_y for the flow targets
-    # But we need y values for the test set - we'll generate synthetic y from the process
-    # Actually, we should use the actual test_y for this
-    test_y_scaled = (test_y_orig - y_mean) / (y_std + 1e-8)
-    test_val_features, test_val_targets = generate_flow_batch(
-        test_x_scaled, test_y_scaled, n_val_t_per_sample, key_test_val
-    )
-    
-    print(f"Validation batches: train={len(train_val_features)} samples, test={len(test_val_features)} samples")
-    
     # Training loop
     print(f"\nStarting training for {duration_minutes} minutes...")
-    print(f"Step     Train Loss    Train Val MSE    Test Val MSE    Time Elapsed")
-    print("-" * 80)
+    print(f"Step     Train Loss    Time Elapsed")
+    print("-" * 50)
     
     start_time = time.time()
     end_time = start_time + duration_minutes * 60
@@ -344,13 +322,14 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list, duration_m
     
     step = 0
     train_losses = []
-    train_val_mses = []  # Flow MSE on training data at 3 random t values
-    test_val_mses = []   # Flow MSE on test data at 3 random t values
     energy_scores = []
     steps_recorded = []
     times_recorded = []
     energy_steps = []
     energy_times = []
+    
+    # Number of samples per held-out point for energy score (Task 4: use 90 samples)
+    N_ENERGY_SAMPLES = 90
     
     while time.time() < end_time:
         # Check if we've passed the halfway point and need to halve the learning rate
@@ -398,59 +377,73 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list, duration_m
         train_loss = np.mean(batch_losses)
         step += 1
         
-        # Record every 10 steps (matching infinite data logging frequency)
+        # Record every 10 steps
         if step % 10 == 0:
             elapsed = time.time() - start_time
             
-            # Compute validation MSE on training data (at 3 fixed t values)
-            train_val_predictions = vmap(lambda x: mlp_forward(params, x))(train_val_features)
-            train_val_mse = float(jnp.mean((train_val_predictions - train_val_targets) ** 2))
-            
-            # Compute validation MSE on test data (at 3 fixed t values)
-            test_val_predictions = vmap(lambda x: mlp_forward(params, x))(test_val_features)
-            test_val_mse = float(jnp.mean((test_val_predictions - test_val_targets) ** 2))
-            
             train_losses.append(train_loss)
-            train_val_mses.append(train_val_mse)
-            test_val_mses.append(test_val_mse)
             steps_recorded.append(step)
             times_recorded.append(elapsed)
             
-            print(f"{step:5d}    {train_loss:10.6f}    {train_val_mse:12.6f}    {test_val_mse:12.6f}    {elapsed:6.1f}s")
+            print(f"{step:5d}    {train_loss:10.6f}    {elapsed:6.1f}s")
             
             # Calculate energy score every 50 steps using the FIXED 100 test points
+            # Task 4: Use 90 samples per held-out point instead of 2
             if step % 50 == 0:
                 # Use the fixed test data (test_x_orig, test_y_orig) for energy score
-                # Generate 2 samples per test point
+                # Generate N_ENERGY_SAMPLES (90) samples per test point
                 key, sample_key = random.split(key)
-                z0_keys = random.split(sample_key, 2 * n_test)  # 100 x values * 2 samples each
+                z0_keys = random.split(sample_key, N_ENERGY_SAMPLES * n_test)  # 100 x values * 90 samples each
                 
-                # Create batches: repeat each x twice for 2 samples
-                test_x_expanded = jnp.repeat(test_x_scaled, 2)
+                # Create batches: repeat each x N_ENERGY_SAMPLES times
+                test_x_expanded = jnp.repeat(test_x_scaled, N_ENERGY_SAMPLES)
                 z0_samples = jnp.array([random.normal(k, ()) for k in z0_keys])
                 
                 # Batch integrate all samples at once (fully GPU-accelerated)
                 test_samples_scaled = diffrax_integrate_batch_jit(params, test_x_expanded, z0_samples)
                 
-                # Reshape to (n_test, 2)
-                test_samples_scaled = test_samples_scaled.reshape(n_test, 2)
+                # Reshape to (n_test, N_ENERGY_SAMPLES)
+                test_samples_scaled = test_samples_scaled.reshape(n_test, N_ENERGY_SAMPLES)
                 
                 # Transform back to original scale
                 test_samples_orig = inverse_transform_y(test_samples_scaled, y_mean, y_std)
                 
-                # Calculate energy score using the FIXED test_y_orig
-                # Energy = E[|Y - Y'|] - 0.5 * E[|Y' - Y''|]
-                # where Y is true, Y' and Y'' are two independent samples
-                sum_d1 = jnp.sum(jnp.abs(test_y_orig - test_samples_orig[:, 0]))
-                sum_d2 = jnp.sum(jnp.abs(test_y_orig - test_samples_orig[:, 1]))
-                sum_ds = jnp.sum(jnp.abs(test_samples_orig[:, 0] - test_samples_orig[:, 1]))
+                # Calculate 90-sample Monte Carlo energy score for each of 100 held-out points
+                # Energy Score = E[|Y - X_j|] - 0.5 * E[|X_j - X_j'|]
+                # where Y is true, X_j are samples (j=1..90)
                 
-                test_energy = (sum_d1 + sum_d2) / (2 * n_test) - 0.5 * sum_ds / n_test
-                energy_scores.append(float(test_energy))
+                # Term 1: Average |Y_i - X_ij| for each i, then average over all i
+                # For each held-out point y_i, compute average distance to its 90 samples
+                term1 = 0.0
+                for i in range(n_test):
+                    y_i = test_y_orig[i]
+                    samples_i = test_samples_orig[i, :]  # 90 samples for this point
+                    term1 += jnp.mean(jnp.abs(y_i - samples_i))
+                term1 = term1 / n_test
+                
+                # Term 2: Average |X_ij - X_ij'| for all pairs j != j', then average over all i
+                # For each held-out point, compute average pairwise distance between its 90 samples
+                term2 = 0.0
+                for i in range(n_test):
+                    samples_i = test_samples_orig[i, :]  # 90 samples for this point
+                    # Compute all pairwise distances
+                    pairwise_sum = 0.0
+                    count = 0
+                    for j in range(N_ENERGY_SAMPLES):
+                        for jp in range(j + 1, N_ENERGY_SAMPLES):
+                            pairwise_sum += jnp.abs(samples_i[j] - samples_i[jp])
+                            count += 1
+                    # Average over all pairs
+                    if count > 0:
+                        term2 += pairwise_sum / count
+                term2 = term2 / n_test
+                
+                test_energy = float(term1 - 0.5 * term2)
+                energy_scores.append(test_energy)
                 energy_steps.append(step)
                 energy_times.append(elapsed)
                 
-                print(f"         Energy Score (on fixed 100 test points): {float(test_energy):.4f}")
+                print(f"         Energy Score (90 samples per 100 test points): {test_energy:.4f}")
     
     total_time = time.time() - start_time
     print(f"\nTraining complete! Total time: {total_time:.2f} seconds ({total_time/60:.2f} minutes)")
@@ -474,8 +467,6 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list, duration_m
     return {
         'steps': steps_recorded,
         'train_losses': train_losses,
-        'train_val_mses': train_val_mses,
-        'test_val_mses': test_val_mses,
         'energy_scores': energy_scores,
         'energy_steps': energy_steps,
         'energy_times': energy_times,
@@ -488,7 +479,7 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list, duration_m
 
 
 @app.local_entrypoint()
-def main(duration_minutes: float = 7):
+def main(duration_minutes: float = 2):
     """
     Main entrypoint for running training on Modal.
     
@@ -533,16 +524,16 @@ def main(duration_minutes: float = 7):
     print(f"\nSaving results to {output_dir}...")
     
     # Save CSVs using standard library csv module
-    # Training loss CSV - now includes train_val_mse and test_val_mse
+    # Training loss CSV - simplified to just train_loss
     with open(output_dir / "reference_training_loss.csv", 'w', newline='') as f:
         writer = csv.writer(f)
-        writer.writerow(['step', 'train_loss', 'train_val_mse', 'test_val_mse', 'time_seconds'])
-        for step, loss, train_val_mse, test_val_mse, time_val in zip(
-            result['steps'], result['train_losses'], result['train_val_mses'], result['test_val_mses'], result['times']
+        writer.writerow(['step', 'train_loss', 'time_seconds'])
+        for step, loss, time_val in zip(
+            result['steps'], result['train_losses'], result['times']
         ):
-            writer.writerow([step, loss, train_val_mse, test_val_mse, time_val])
+            writer.writerow([step, loss, time_val])
     
-    # Energy score CSV (only every 50 steps)
+    # Energy score CSV (only every 50 steps, using 90-sample Monte Carlo)
     if len(result['energy_scores']) > 0:
         with open(output_dir / "reference_energy_score.csv", 'w', newline='') as f:
             writer = csv.writer(f)
@@ -558,9 +549,9 @@ def main(duration_minutes: float = 7):
             writer.writerow([x, y_true, y_sampled])
     
     print("\nAll outputs saved successfully!")
-    print(f"  - reference_training_loss.csv (with train_val_mse and test_val_mse columns)")
+    print(f"  - reference_training_loss.csv")
     if len(result['energy_scores']) > 0:
-        print(f"  - reference_energy_score.csv (computed on fixed 100 test points)")
+        print(f"  - reference_energy_score.csv (90-sample Monte Carlo on 100 test points)")
     print(f"  - reference_scatter_samples.csv")
     print(f"\nTotal training time: {result['total_time']:.2f} seconds ({result['total_time']/60:.2f} minutes)")
     print(f"\nNote: CSV files saved. You can visualize them with pandas/matplotlib:")
