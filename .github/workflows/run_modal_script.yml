@@ -62,7 +62,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.pr_number != '' && steps.pr-checkout-info.outputs.is_fork != 'true' && steps.pr-checkout-info.outputs.branch || inputs.pr_number != '' && steps.pr-checkout-info.outputs.sha || '' }}
+          ref: ${{ (inputs.pr_number != '' && steps.pr-checkout-info.outputs.is_fork != 'true' && steps.pr-checkout-info.outputs.branch) || (inputs.pr_number != '' && steps.pr-checkout-info.outputs.sha) || '' }}
           fetch-depth: 0
 
       - name: Set up Python
