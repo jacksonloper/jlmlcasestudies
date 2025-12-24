@@ -429,17 +429,21 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list, duration_m
                 term1 = jnp.mean(jnp.abs(test_y_orig[:, None] - test_samples_orig))
                 
                 # Vectorized Term 2: Average |X_ij - X_ij'| for all pairs j != j'
-                # Use O(n log n) algorithm instead of O(n^2) pairwise computation:
-                # For 1D samples, E[|X_j - X_j'|] = (2/(n*(n-1))) * sum_i (2*i - n - 1) * X_{(i)}
-                # where X_{(i)} is the i-th sorted sample (1-indexed)
-                # Sort samples for each test point along the sample dimension
+                # Use O(n log n) algorithm instead of O(n^2) pairwise computation.
+                # 
+                # Key insight: For sorted samples x_{(0)} <= x_{(1)} <= ... <= x_{(n-1)} (0-indexed),
+                # Sum_{i<j} |x_i - x_j| = Sum_{i<j} (x_{(j)} - x_{(i)})
+                # 
+                # Each x_{(k)} appears as the larger element in k pairs (with i in 0..k-1)
+                # and as the smaller element in (n-1-k) pairs (with j in k+1..n-1).
+                # So coefficient of x_{(k)} = k - (n-1-k) = 2k - n + 1
+                #
+                # This formula is shift-invariant because sum of weights = 0.
                 sorted_samples = jnp.sort(test_samples_orig, axis=1)  # (n_test, N_ENERGY_SAMPLES)
-                # Create weights: for 0-indexed position i, weight is (2*(i+1) - N - 1) = 2*i + 1 - N
                 indices = jnp.arange(N_ENERGY_SAMPLES)
-                weights = 2 * indices + 1 - N_ENERGY_SAMPLES  # shape (N_ENERGY_SAMPLES,)
-                # Compute weighted sum for each test point
+                weights = 2 * indices - N_ENERGY_SAMPLES + 1  # coefficient for x_{(k)}, k is 0-indexed
                 weighted_sum = jnp.sum(sorted_samples * weights, axis=1)  # (n_test,)
-                # Normalize by n*(n-1)/2 pairs to get mean |X_j - X_j'|
+                # Normalize by number of pairs to get mean |X_j - X_j'|
                 n_pairs = N_ENERGY_SAMPLES * (N_ENERGY_SAMPLES - 1) // 2
                 term2_per_test = weighted_sum / n_pairs
                 term2 = jnp.mean(term2_per_test)
