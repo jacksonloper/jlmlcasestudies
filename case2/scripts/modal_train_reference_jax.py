@@ -337,8 +337,8 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list, duration_m
     energy_steps = []
     energy_times = []
     
-    # Number of samples per held-out point for energy score (Task 4: use 90 samples)
-    N_ENERGY_SAMPLES = 90
+    # Number of samples per held-out point for energy score (Task 4: use 900 samples)
+    N_ENERGY_SAMPLES = 900
     
     while time.time() < end_time:
         # Check if we've passed the halfway point and need to halve the learning rate
@@ -401,10 +401,10 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list, duration_m
             print(f"{step:5d}    {train_loss:10.6f}    {test_mse:10.6f}    {elapsed:6.1f}s")
             
             # Calculate energy score every 50 steps using the FIXED 100 test points
-            # Task 4: Use 90 samples per held-out point instead of 2
+            # Task 4: Use 900 samples per held-out point instead of 2
             if step % 50 == 0:
                 # Use the fixed test data (test_x_orig, test_y_orig) for energy score
-                # Generate N_ENERGY_SAMPLES (90) samples per test point
+                # Generate N_ENERGY_SAMPLES (900) samples per test point
                 key, sample_key = random.split(key)
                 z0_samples = random.normal(sample_key, (N_ENERGY_SAMPLES * n_test,))
                 
@@ -420,9 +420,9 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list, duration_m
                 # Transform back to original scale
                 test_samples_orig = inverse_transform_y(test_samples_scaled, y_mean, y_std)
                 
-                # Calculate 90-sample Monte Carlo energy score for each of 100 held-out points
+                # Calculate 900-sample Monte Carlo energy score for each of 100 held-out points
                 # Energy Score = E[|Y - X_j|] - 0.5 * E[|X_j - X_j'|]
-                # where Y is true, X_j are samples (j=1..90)
+                # where Y is true, X_j are samples (j=1..900)
                 
                 # Vectorized Term 1: Average |Y_i - X_ij| for each i, then average over all i
                 # test_y_orig has shape (n_test,), test_samples_orig has shape (n_test, N_ENERGY_SAMPLES)
@@ -445,7 +445,7 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list, duration_m
                 energy_steps.append(step)
                 energy_times.append(elapsed)
                 
-                print(f"         Energy Score (90 samples per 100 test points): {test_energy:.4f}")
+                print(f"         Energy Score (900 samples per 100 test points): {test_energy:.4f}")
     
     total_time = time.time() - start_time
     print(f"\nTraining complete! Total time: {total_time:.2f} seconds ({total_time/60:.2f} minutes)")
@@ -536,7 +536,7 @@ def main(duration_minutes: float = 2):
         ):
             writer.writerow([step, loss, test_mse, time_val])
     
-    # Energy score CSV (only every 50 steps, using 90-sample Monte Carlo)
+    # Energy score CSV (only every 50 steps, using 900-sample Monte Carlo)
     if len(result['energy_scores']) > 0:
         with open(output_dir / "reference_energy_score.csv", 'w', newline='') as f:
             writer = csv.writer(f)
@@ -554,7 +554,7 @@ def main(duration_minutes: float = 2):
     print("\nAll outputs saved successfully!")
     print(f"  - reference_training_loss.csv (with test_mse column)")
     if len(result['energy_scores']) > 0:
-        print(f"  - reference_energy_score.csv (90-sample Monte Carlo on 100 test points)")
+        print(f"  - reference_energy_score.csv (900-sample Monte Carlo on 100 test points)")
     print(f"  - reference_scatter_samples.csv")
     print(f"\nTotal training time: {result['total_time']:.2f} seconds ({result['total_time']/60:.2f} minutes)")
     print(f"\nNote: CSV files saved. You can visualize them with pandas/matplotlib:")
