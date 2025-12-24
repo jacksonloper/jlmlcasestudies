@@ -310,10 +310,18 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list, duration_m
     n_t_per_sample = 300
     print(f"Using n_t_per_sample={n_t_per_sample} to match infinite data batch size (900 * 300 = 270,000 flow samples)")
     
+    # Pre-generate fixed test flow batch for consistent test MSE evaluation
+    test_y_scaled = (test_y_orig - y_mean) / (y_std + 1e-8)
+    test_flow_key = random.PRNGKey(9999)  # Fixed seed for reproducibility
+    test_flow_features, test_flow_targets = generate_flow_batch(
+        test_x_scaled, test_y_scaled, n_t_per_sample, test_flow_key
+    )
+    print(f"Test flow batch size: {len(test_flow_features)} samples (for test MSE evaluation)")
+    
     # Training loop
     print(f"\nStarting training for {duration_minutes} minutes...")
-    print(f"Step     Train Loss    Time Elapsed")
-    print("-" * 50)
+    print(f"Step     Train Loss    Test MSE      Time Elapsed")
+    print("-" * 60)
     
     start_time = time.time()
     end_time = start_time + duration_minutes * 60
@@ -322,6 +330,7 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list, duration_m
     
     step = 0
     train_losses = []
+    test_mses = []
     energy_scores = []
     steps_recorded = []
     times_recorded = []
@@ -381,11 +390,15 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list, duration_m
         if step % 10 == 0:
             elapsed = time.time() - start_time
             
+            # Compute test MSE on fixed test flow batch
+            test_mse = float(loss_fn(params, test_flow_features, test_flow_targets))
+            
             train_losses.append(train_loss)
+            test_mses.append(test_mse)
             steps_recorded.append(step)
             times_recorded.append(elapsed)
             
-            print(f"{step:5d}    {train_loss:10.6f}    {elapsed:6.1f}s")
+            print(f"{step:5d}    {train_loss:10.6f}    {test_mse:10.6f}    {elapsed:6.1f}s")
             
             # Calculate energy score every 50 steps using the FIXED 100 test points
             # Task 4: Use 90 samples per held-out point instead of 2
@@ -457,6 +470,7 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list, duration_m
     return {
         'steps': steps_recorded,
         'train_losses': train_losses,
+        'test_mses': test_mses,
         'energy_scores': energy_scores,
         'energy_steps': energy_steps,
         'energy_times': energy_times,
@@ -514,14 +528,14 @@ def main(duration_minutes: float = 2):
     print(f"\nSaving results to {output_dir}...")
     
     # Save CSVs using standard library csv module
-    # Training loss CSV - simplified to just train_loss
+    # Training loss CSV - includes both train_loss and test_mse
     with open(output_dir / "reference_training_loss.csv", 'w', newline='') as f:
         writer = csv.writer(f)
-        writer.writerow(['step', 'train_loss', 'time_seconds'])
-        for step, loss, time_val in zip(
-            result['steps'], result['train_losses'], result['times']
+        writer.writerow(['step', 'train_loss', 'test_mse', 'time_seconds'])
+        for step, loss, test_mse, time_val in zip(
+            result['steps'], result['train_losses'], result['test_mses'], result['times']
         ):
-            writer.writerow([step, loss, time_val])
+            writer.writerow([step, loss, test_mse, time_val])
     
     # Energy score CSV (only every 50 steps, using 90-sample Monte Carlo)
     if len(result['energy_scores']) > 0:
@@ -539,7 +553,7 @@ def main(duration_minutes: float = 2):
             writer.writerow([x, y_true, y_sampled])
     
     print("\nAll outputs saved successfully!")
-    print(f"  - reference_training_loss.csv")
+    print(f"  - reference_training_loss.csv (with test_mse column)")
     if len(result['energy_scores']) > 0:
         print(f"  - reference_energy_score.csv (90-sample Monte Carlo on 100 test points)")
     print(f"  - reference_scatter_samples.csv")

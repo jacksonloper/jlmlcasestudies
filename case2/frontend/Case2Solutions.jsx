@@ -46,12 +46,25 @@ export default function Case2Solutions() {
             
             const refSteps = [];
             const refTrainMse = [];
+            const refTestMse = [];
             let refLastTime = 0;
             
             for (const line of refTrainingLossLines) {
               const parts = line.split(',');
-              // Format: step, train_loss, time_seconds
-              if (parts.length >= 3) {
+              // Format: step, train_loss, test_mse, time_seconds
+              if (parts.length >= 4) {
+                const step = parseInt(parts[0]);
+                const loss = parseFloat(parts[1]);
+                const testMse = parseFloat(parts[2]);
+                const time = parseFloat(parts[3]);
+                if (!isNaN(step) && !isNaN(loss)) {
+                  refSteps.push(step);
+                  refTrainMse.push(loss);
+                  if (!isNaN(testMse)) refTestMse.push(testMse);
+                  if (!isNaN(time)) refLastTime = time;
+                }
+              } else if (parts.length >= 3) {
+                // Backwards compatibility: step, train_loss, time_seconds
                 const step = parseInt(parts[0]);
                 const loss = parseFloat(parts[1]);
                 const time = parseFloat(parts[2]);
@@ -89,6 +102,7 @@ export default function Case2Solutions() {
             const refHistory = {
               epochs: refSteps,
               train_mse: refTrainMse,
+              test_mse: refTestMse.length > 0 ? refTestMse : null,
               val_energy_scores: refEnergyScores,
               energy_epochs: refEnergySteps,
               training_time: refLastTime,
@@ -296,15 +310,13 @@ export default function Case2Solutions() {
           <h2 className="text-2xl font-medium text-gray-900 mb-4">Reference Solution</h2>
           <div className="prose max-w-none text-gray-700 space-y-4">
             <p>
-              We present a solution using <strong>rectified flow matching</strong> with
-              architecture (256, 128, 128, 64 hidden layers) and raw features:
+              We present a solution using <strong>rectified flow matching</strong>. See below for more details on how it works.
             </p>
             
             <div className="my-6">
               <div className="bg-green-50 p-6 rounded-lg border border-green-200">
                 <h3 className="font-medium text-gray-900 mb-3">Reference Solution</h3>
                 <ul className="list-disc list-inside space-y-2 text-sm">
-                  <li><strong>Features:</strong> Raw features only</li>
                   <li><strong>Training Data:</strong> 900 finite samples from dataset</li>
                   <li><strong>Energy Score:</strong> {trainingHistory?.final_energy_score ? trainingHistory.final_energy_score.toFixed(4) : '~1.8'}</li>
                   <li><strong>Training Time:</strong> {trainingHistory?.training_time ? `${trainingHistory.training_time.toFixed(1)}s` : '~50s'}</li>
@@ -325,19 +337,17 @@ export default function Case2Solutions() {
             <div className="bg-gray-50 p-6 rounded-lg my-6">
               <h3 className="font-medium text-gray-900 mb-3">Algorithm:</h3>
               <ol className="list-decimal list-inside space-y-2">
-                <li>For each training epoch, generate fresh random time values and noise for each sample</li>
-                <li>Use exactly 3 t values per sample: t=0 (beginning), t=1 (ending), t=random (middle)</li>
-                <li>For each <InlineMath math="t" />, generate random noise <InlineMath math="\epsilon \sim N(0,1)" /></li>
+                <li>For each training step, sample time values <InlineMath math="t \sim \text{Uniform}(0, 1)" /> and noise <InlineMath math="\epsilon \sim N(0,1)" /></li>
                 <li>
                   Compute interpolated points: <InlineMath math="z_t = y \cdot t + (1-t) \cdot \epsilon" />
                 </li>
                 <li>
-                  Train MLP using partial_fit to predict the velocity field <InlineMath math="v = y - \epsilon" /> from 
-                  raw features of <InlineMath math="(x, t, z_t)" />
+                  Train MLP to predict the velocity field <InlineMath math="v = y - \epsilon" /> from 
+                  inputs <InlineMath math="(x, t, z_t)" />
                 </li>
                 <li>
                   Generate samples by solving ODE: start from <InlineMath math="z_0 \sim N(0,1)" /> and 
-                  integrate <InlineMath math="dz/dt = v(x,t,z)" /> to <InlineMath math="t=1" /> using scipy solve_ivp
+                  integrate <InlineMath math="dz/dt = v(x,t,z)" /> to <InlineMath math="t=1" /> using diffrax
                 </li>
               </ol>
             </div>
@@ -438,6 +448,45 @@ export default function Case2Solutions() {
                       },
                       xaxis: { title: 'Step' },
                       yaxis: { title: 'Energy Score' },
+                      hovermode: 'closest',
+                      showlegend: false,
+                      autosize: true,
+                      margin: { 
+                        l: window.innerWidth < 640 ? 40 : 50, 
+                        r: window.innerWidth < 640 ? 10 : 20, 
+                        t: window.innerWidth < 640 ? 40 : 50, 
+                        b: window.innerWidth < 640 ? 50 : 50 
+                      },
+                    }}
+                    style={{ width: '100%', height: window.innerWidth < 640 ? '250px' : '300px' }}
+                    config={{ responsive: true }}
+                    useResizeHandler={true}
+                  />
+                </div>
+              )}
+              
+              {/* Test MSE Plot */}
+              {trainingHistory.test_mse && trainingHistory.test_mse.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-3">Test MSE Over Time</h3>
+                  <Plot
+                    data={[
+                      {
+                        x: trainingHistory.epochs,
+                        y: trainingHistory.test_mse,
+                        mode: 'lines+markers',
+                        name: 'Test MSE',
+                        marker: { size: 6, color: 'rgba(220, 38, 38, 1)' },
+                        line: { color: 'rgba(220, 38, 38, 1)' },
+                      },
+                    ]}
+                    layout={{
+                      title: {
+                        text: 'Test MSE per Step (on Fixed Test Flow Batch)',
+                        font: { size: window.innerWidth < 640 ? 14 : 16 }
+                      },
+                      xaxis: { title: 'Step' },
+                      yaxis: { title: 'Test MSE' },
                       hovermode: 'closest',
                       showlegend: false,
                       autosize: true,
