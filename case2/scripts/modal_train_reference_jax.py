@@ -428,16 +428,20 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list, duration_m
                 # test_y_orig has shape (n_test,), test_samples_orig has shape (n_test, N_ENERGY_SAMPLES)
                 term1 = jnp.mean(jnp.abs(test_y_orig[:, None] - test_samples_orig))
                 
-                # Vectorized Term 2: Average |X_ij - X_ij'| for all pairs j != j', then average over all i
-                # For each test point, compute pairwise distances between its samples
-                # samples_diff[i, j, jp] = samples_i[j] - samples_i[jp]
-                samples_diff = test_samples_orig[:, :, None] - test_samples_orig[:, None, :]  # (n_test, N, N)
-                samples_abs_diff = jnp.abs(samples_diff)
-                # Extract upper triangle (j < jp) and compute mean
-                triu_mask = jnp.triu(jnp.ones((N_ENERGY_SAMPLES, N_ENERGY_SAMPLES)), k=1)
-                # For each test point, sum upper triangle and divide by number of pairs
+                # Vectorized Term 2: Average |X_ij - X_ij'| for all pairs j != j'
+                # Use O(n log n) algorithm instead of O(n^2) pairwise computation:
+                # For 1D samples, E[|X_j - X_j'|] = (2/(n*(n-1))) * sum_i (2*i - n - 1) * X_{(i)}
+                # where X_{(i)} is the i-th sorted sample (1-indexed)
+                # Sort samples for each test point along the sample dimension
+                sorted_samples = jnp.sort(test_samples_orig, axis=1)  # (n_test, N_ENERGY_SAMPLES)
+                # Create weights: for 0-indexed position i, weight is (2*(i+1) - N - 1) = 2*i + 1 - N
+                indices = jnp.arange(N_ENERGY_SAMPLES)
+                weights = 2 * indices + 1 - N_ENERGY_SAMPLES  # shape (N_ENERGY_SAMPLES,)
+                # Compute weighted sum for each test point
+                weighted_sum = jnp.sum(sorted_samples * weights, axis=1)  # (n_test,)
+                # Normalize by n*(n-1)/2 pairs to get mean |X_j - X_j'|
                 n_pairs = N_ENERGY_SAMPLES * (N_ENERGY_SAMPLES - 1) // 2
-                term2_per_test = jnp.sum(samples_abs_diff * triu_mask, axis=(1, 2)) / n_pairs
+                term2_per_test = weighted_sum / n_pairs
                 term2 = jnp.mean(term2_per_test)
                 
                 test_energy = float(term1 - 0.5 * term2)
