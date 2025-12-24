@@ -527,7 +527,7 @@ def main(duration_minutes: float = 7):
     )
     
     # Create output directory
-    output_dir = script_dir.parent / "data"
+    output_dir = script_dir / "modal_outputs"
     output_dir.mkdir(exist_ok=True)
     
     print(f"\nSaving results to {output_dir}...")
