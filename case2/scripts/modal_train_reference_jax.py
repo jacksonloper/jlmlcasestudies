@@ -370,7 +370,7 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list, duration_m
         
         # Minibatched training: split into chunks
         n_batches = len(features) // batch_size
-        batch_losses = []
+        loss_sum = 0.0
         
         for batch_idx in range(n_batches):
             start_idx = batch_idx * batch_size
@@ -380,10 +380,10 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list, duration_m
             
             # Update model
             params, opt_state, batch_loss = update_step(params, opt_state, batch_features, batch_targets)
-            batch_losses.append(float(batch_loss))
+            loss_sum += batch_loss
         
-        # Average loss across minibatches for this step
-        train_loss = np.mean(batch_losses)
+        # Average loss across minibatches for this step (call .item() only once to avoid device sync)
+        train_loss = (loss_sum / n_batches).item()
         step += 1
         
         # Record every 10 steps
@@ -406,11 +406,10 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list, duration_m
                 # Use the fixed test data (test_x_orig, test_y_orig) for energy score
                 # Generate N_ENERGY_SAMPLES (90) samples per test point
                 key, sample_key = random.split(key)
-                z0_keys = random.split(sample_key, N_ENERGY_SAMPLES * n_test)  # 100 x values * 90 samples each
+                z0_samples = random.normal(sample_key, (N_ENERGY_SAMPLES * n_test,))
                 
                 # Create batches: repeat each x N_ENERGY_SAMPLES times
                 test_x_expanded = jnp.repeat(test_x_scaled, N_ENERGY_SAMPLES)
-                z0_samples = jnp.array([random.normal(k, ()) for k in z0_keys])
                 
                 # Batch integrate all samples at once (fully GPU-accelerated)
                 test_samples_scaled = diffrax_integrate_batch_jit(params, test_x_expanded, z0_samples)
