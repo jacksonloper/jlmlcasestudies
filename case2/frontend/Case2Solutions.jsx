@@ -677,13 +677,13 @@ export default function Case2Solutions() {
           <div className="bg-blue-50 p-6 rounded-lg">
             <div className="prose max-w-none text-gray-700">
               <p className="mb-4">
-                The energy score (with 90 samples per held-out point) provides a Monte Carlo estimate
+                The energy score (with 1300 samples per held-out point) provides a Monte Carlo estimate
                 that balances two objectives:
               </p>
               <ol className="space-y-3">
                 <li>
                   <strong>Accuracy</strong>: Samples should be close to the true value
-                  (minimizing <InlineMath math="E[|Y - X_j|]" /> averaged over 90 samples)
+                  (minimizing <InlineMath math="E[|Y - X_j|]" /> averaged over 1300 samples)
                 </li>
                 <li>
                   <strong>Diversity</strong>: Samples should cover the distribution
@@ -715,12 +715,12 @@ export default function Case2Solutions() {
                   <tr className="border-b border-gray-200">
                     <td className="py-2 pr-4 font-medium">Prediction</td>
                     <td className="py-2 pr-4">Single point</td>
-                    <td className="py-2">90 samples</td>
+                    <td className="py-2">1300 samples</td>
                   </tr>
                   <tr className="border-b border-gray-200">
                     <td className="py-2 pr-4 font-medium">Output shape</td>
                     <td className="py-2 pr-4">100×1</td>
-                    <td className="py-2">100×90</td>
+                    <td className="py-2">100×1300</td>
                   </tr>
                   <tr className="border-b border-gray-200">
                     <td className="py-2 pr-4 font-medium">Metric</td>

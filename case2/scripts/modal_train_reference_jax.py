@@ -325,8 +325,6 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list, duration_m
     
     start_time = time.time()
     end_time = start_time + duration_minutes * 60
-    halfway_time = start_time + (duration_minutes * 60) / 2
-    learning_rate_halved = False
     
     step = 0
     train_losses = []
@@ -337,27 +335,51 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list, duration_m
     energy_steps = []
     energy_times = []
     
-    # Number of samples per held-out point for energy score (Task 4: use 90 samples)
-    N_ENERGY_SAMPLES = 90
+    # Number of samples per held-out point for energy score: 1300 samples (100 × 1300 = 130,000 total per energy calc)
+    N_ENERGY_SAMPLES = 1300
+    
+    # Helper function to calculate energy score
+    def calc_energy_score(params, key):
+        key, sample_key = random.split(key)
+        z0_samples = random.normal(sample_key, (N_ENERGY_SAMPLES * n_test,))
+        
+        # Create batches: repeat each x N_ENERGY_SAMPLES times
+        test_x_expanded = jnp.repeat(test_x_scaled, N_ENERGY_SAMPLES)
+        
+        # Batch integrate all samples at once (fully GPU-accelerated)
+        test_samples_scaled = diffrax_integrate_batch_jit(params, test_x_expanded, z0_samples)
+        
+        # Reshape to (n_test, N_ENERGY_SAMPLES)
+        test_samples_scaled = test_samples_scaled.reshape(n_test, N_ENERGY_SAMPLES)
+        
+        # Transform back to original scale
+        test_samples_orig = inverse_transform_y(test_samples_scaled, y_mean, y_std)
+        
+        # Calculate energy score: E[|Y - X_j|] - 0.5 * E[|X_j - X_j'|]
+        # Vectorized Term 1: Average |Y_i - X_ij| for each i, then average over all i
+        term1 = jnp.mean(jnp.abs(test_y_orig[:, None] - test_samples_orig))
+        
+        # Vectorized Term 2: Use O(n log n) algorithm with sorted samples
+        # For sorted samples, coefficient of x_{(k)} = k - (n-1-k) = 2k - n + 1
+        sorted_samples = jnp.sort(test_samples_orig, axis=1)  # (n_test, N_ENERGY_SAMPLES)
+        indices = jnp.arange(N_ENERGY_SAMPLES)
+        weights = 2 * indices - N_ENERGY_SAMPLES + 1  # coefficient for x_{(k)}, k is 0-indexed
+        weighted_sum = jnp.sum(sorted_samples * weights, axis=1)  # (n_test,)
+        n_pairs = N_ENERGY_SAMPLES * (N_ENERGY_SAMPLES - 1) // 2
+        term2_per_test = weighted_sum / n_pairs
+        term2 = jnp.mean(term2_per_test)
+        
+        return float(term1 - 0.5 * term2), key
+    
+    # Calculate energy score at step 0 (before training)
+    elapsed = 0.0
+    test_energy, key = calc_energy_score(params, key)
+    energy_scores.append(test_energy)
+    energy_steps.append(step)
+    energy_times.append(elapsed)
+    print(f"Step 0   Energy Score (1300 samples per 100 test points): {test_energy:.4f}")
     
     while time.time() < end_time:
-        # Check if we've passed the halfway point and need to halve the learning rate
-        if not learning_rate_halved and time.time() >= halfway_time:
-            new_learning_rate = learning_rate / 2
-            print(f"\n{'='*50}")
-            print(f"Halfway point reached! Halving learning rate from {learning_rate} to {new_learning_rate}")
-            print(f"{'='*50}\n")
-            
-            # Create new optimizer with halved learning rate
-            optimizer = optax.chain(
-                optax.clip_by_global_norm(1.0),
-                optax.adamw(learning_rate=new_learning_rate)
-            )
-            # Reinitialize optimizer state with current params
-            # Note: This resets momentum, which is intentional when making a significant LR change
-            opt_state = optimizer.init(params)
-            learning_rate_halved = True
-        
         # Generate flow batch from finite training data (with fresh t and eps each step)
         key, batch_key = random.split(key)
         features, targets = generate_flow_batch(train_x_scaled, train_y_scaled, n_t_per_sample, batch_key)
@@ -401,51 +423,13 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list, duration_m
             print(f"{step:5d}    {train_loss:10.6f}    {test_mse:10.6f}    {elapsed:6.1f}s")
             
             # Calculate energy score every 50 steps using the FIXED 100 test points
-            # Task 4: Use 90 samples per held-out point instead of 2
             if step % 50 == 0:
-                # Use the fixed test data (test_x_orig, test_y_orig) for energy score
-                # Generate N_ENERGY_SAMPLES (90) samples per test point
-                key, sample_key = random.split(key)
-                z0_samples = random.normal(sample_key, (N_ENERGY_SAMPLES * n_test,))
-                
-                # Create batches: repeat each x N_ENERGY_SAMPLES times
-                test_x_expanded = jnp.repeat(test_x_scaled, N_ENERGY_SAMPLES)
-                
-                # Batch integrate all samples at once (fully GPU-accelerated)
-                test_samples_scaled = diffrax_integrate_batch_jit(params, test_x_expanded, z0_samples)
-                
-                # Reshape to (n_test, N_ENERGY_SAMPLES)
-                test_samples_scaled = test_samples_scaled.reshape(n_test, N_ENERGY_SAMPLES)
-                
-                # Transform back to original scale
-                test_samples_orig = inverse_transform_y(test_samples_scaled, y_mean, y_std)
-                
-                # Calculate 90-sample Monte Carlo energy score for each of 100 held-out points
-                # Energy Score = E[|Y - X_j|] - 0.5 * E[|X_j - X_j'|]
-                # where Y is true, X_j are samples (j=1..90)
-                
-                # Vectorized Term 1: Average |Y_i - X_ij| for each i, then average over all i
-                # test_y_orig has shape (n_test,), test_samples_orig has shape (n_test, N_ENERGY_SAMPLES)
-                term1 = jnp.mean(jnp.abs(test_y_orig[:, None] - test_samples_orig))
-                
-                # Vectorized Term 2: Average |X_ij - X_ij'| for all pairs j != j', then average over all i
-                # For each test point, compute pairwise distances between its samples
-                # samples_diff[i, j, jp] = samples_i[j] - samples_i[jp]
-                samples_diff = test_samples_orig[:, :, None] - test_samples_orig[:, None, :]  # (n_test, N, N)
-                samples_abs_diff = jnp.abs(samples_diff)
-                # Extract upper triangle (j < jp) and compute mean
-                triu_mask = jnp.triu(jnp.ones((N_ENERGY_SAMPLES, N_ENERGY_SAMPLES)), k=1)
-                # For each test point, sum upper triangle and divide by number of pairs
-                n_pairs = N_ENERGY_SAMPLES * (N_ENERGY_SAMPLES - 1) // 2
-                term2_per_test = jnp.sum(samples_abs_diff * triu_mask, axis=(1, 2)) / n_pairs
-                term2 = jnp.mean(term2_per_test)
-                
-                test_energy = float(term1 - 0.5 * term2)
+                test_energy, key = calc_energy_score(params, key)
                 energy_scores.append(test_energy)
                 energy_steps.append(step)
                 energy_times.append(elapsed)
                 
-                print(f"         Energy Score (90 samples per 100 test points): {test_energy:.4f}")
+                print(f"         Energy Score (1300 samples per 100 test points): {test_energy:.4f}")
     
     total_time = time.time() - start_time
     print(f"\nTraining complete! Total time: {total_time:.2f} seconds ({total_time/60:.2f} minutes)")
@@ -536,7 +520,7 @@ def main(duration_minutes: float = 2):
         ):
             writer.writerow([step, loss, test_mse, time_val])
     
-    # Energy score CSV (only every 50 steps, using 90-sample Monte Carlo)
+    # Energy score CSV (only every 50 steps, using 900-sample Monte Carlo)
     if len(result['energy_scores']) > 0:
         with open(output_dir / "reference_energy_score.csv", 'w', newline='') as f:
             writer = csv.writer(f)
@@ -554,7 +538,7 @@ def main(duration_minutes: float = 2):
     print("\nAll outputs saved successfully!")
     print(f"  - reference_training_loss.csv (with test_mse column)")
     if len(result['energy_scores']) > 0:
-        print(f"  - reference_energy_score.csv (90-sample Monte Carlo on 100 test points)")
+        print(f"  - reference_energy_score.csv (900-sample Monte Carlo on 100 test points)")
     print(f"  - reference_scatter_samples.csv")
     print(f"\nTotal training time: {result['total_time']:.2f} seconds ({result['total_time']/60:.2f} minutes)")
     print(f"\nNote: CSV files saved. You can visualize them with pandas/matplotlib:")

@@ -51,3 +51,8 @@ lerna-debug.log*
 
 # Modal outputs
 modal_outputs/
+
+# Playwright
+tests/fixtures/
+playwright-report/
+test-results/
