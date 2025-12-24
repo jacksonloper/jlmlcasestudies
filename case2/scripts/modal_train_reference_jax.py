@@ -1,19 +1,25 @@
 """
-Train infinite data solution using JAX on Modal.com with T4 GPU.
+Train reference solution using JAX on Modal.com with T4 GPU.
 
-This script implements rectified flow matching (Liu et al. 2022) with infinite data generation
+This script implements rectified flow matching (Liu et al. 2022) with finite training data
 using JAX for GPU acceleration. Uses the linear interpolation path z_t = t*y + (1-t)*eps
 with target velocity v = y - eps.
 
-Architecture matches the reference implementation: (256, 128, 128, 64) with raw features only.
+Architecture matches the infinite data implementation: (256, 128, 128, 64) with raw features only.
 
 Training uses minibatched AdamW optimization with gradient clipping for stability.
 The model is fully JIT-compiled including ODE integration for efficient GPU execution.
 
+Key differences from infinite data:
+- Uses finite 900 training samples from dataset1/data/train.npy
+- Samples multiple t values per training point to achieve comparable batch size
+- Since dataset is small, epochs are meaningless; instead trains for fixed wall clock time
+- Logs at similar wall clock frequency as infinite data script
+
 Outputs:
-- training_loss.csv: Training loss over time (per step)
-- energy_score.csv: Energy score over time (computed every 50 steps)
-- scatter_samples.csv: 1000 conditional samples from the trained model
+- reference_training_loss.csv: Training loss over time (per step)
+- reference_energy_score.csv: Energy score over time (computed periodically)
+- reference_scatter_samples.csv: 1000 conditional samples from the trained model
 
 Note: The local entrypoint saves CSV files only (no plotting dependencies required locally).
 For visualization, you can load the CSVs in your preferred plotting tool or use matplotlib locally.
@@ -22,7 +28,7 @@ For visualization, you can load the CSVs in your preferred plotting tool or use 
 import modal
 
 # Create Modal app
-app = modal.App("case2-infinitedata-jax")
+app = modal.App("case2-reference-jax")
 
 # Define the image with JAX and required dependencies
 image = (
@@ -40,15 +46,16 @@ image = (
     gpu="T4",
     timeout=30 * 60,  # 30 minute timeout as backstop
 )
-def train_model(test_x_list, test_y_list, duration_minutes=7, n_train_per_step=90000, learning_rate=0.0001, batch_size=4096):
+def train_model(train_x_list, train_y_list, test_x_list, test_y_list, duration_minutes=7, learning_rate=0.0001, batch_size=4096):
     """
-    Train rectified flow model using JAX with infinite data.
+    Train rectified flow model using JAX with finite data.
     
     Args:
+        train_x_list: Training x values as list (will be converted to JAX array)
+        train_y_list: Training y values as list (will be converted to JAX array)
         test_x_list: Held-out test x values for energy score computation
         test_y_list: Held-out test y values for energy score computation
         duration_minutes: How long to train (in minutes)
-        n_train_per_step: Number of training samples to generate per step
         learning_rate: Learning rate for AdamW optimizer
         batch_size: Minibatch size for training
     
@@ -63,10 +70,14 @@ def train_model(test_x_list, test_y_list, duration_minutes=7, n_train_per_step=9
     import numpy as np
     import time
     
-    # Convert test data to JAX arrays
+    # Convert input lists to JAX arrays
+    train_x_orig = jnp.array(train_x_list)
+    train_y_orig = jnp.array(train_y_list)
     test_x_orig = jnp.array(test_x_list)
     test_y_orig = jnp.array(test_y_list)
+    n_train = len(train_x_orig)
     n_test = len(test_x_orig)
+    
     
     # Verify GPU is available
     print(f"JAX version: {jax.__version__}")
@@ -84,13 +95,13 @@ def train_model(test_x_list, test_y_list, duration_minutes=7, n_train_per_step=9
     
     print(f"✓ GPU backend confirmed")
     print(f"Training for {duration_minutes} minutes with learning_rate={learning_rate}, batch_size={batch_size}")
-    print(f"Test data: {n_test} samples (for energy score computation)")
+    print(f"Training data: {n_train} samples, Test data: {n_test} samples")
     
     # Set random seeds
     key = random.PRNGKey(42)
     np.random.seed(42)
     
-    # Architecture: (256, 128, 128, 64) matching reference
+    # Architecture: (256, 128, 128, 64) matching infinite data
     hidden_layers = [256, 128, 128, 64]
     input_dim = 3  # x, t, zt (raw features only)
     output_dim = 1  # velocity field
@@ -120,9 +131,9 @@ def train_model(test_x_list, test_y_list, duration_minutes=7, n_train_per_step=9
         x = jnp.dot(x, w) + b
         return x.squeeze()  # Return scalar instead of [1] array
     
-    def generate_training_data(n_samples, key):
+    def generate_training_data_from_process(n_samples, key):
         """
-        Generate training data from the true generative model.
+        Generate training data from the true generative model (for validation/scatter plots).
         
         - x ~ N(4, 1)
         - y | x is mixture of N(10*cos(x), 1) and N(0, 1)
@@ -167,7 +178,7 @@ def train_model(test_x_list, test_y_list, duration_minutes=7, n_train_per_step=9
     
     def generate_flow_batch(x_data, y_data, n_t_per_sample, key):
         """
-        Generate flow training batch.
+        Generate flow training batch from finite data.
         
         For each sample, draws n_t_per_sample independent random t values from Beta(2, 2) distribution.
         Beta(2, 2) concentrates samples around t=0.5 while still covering the full [0, 1] range.
@@ -282,21 +293,49 @@ def train_model(test_x_list, test_y_list, duration_minutes=7, n_train_per_step=9
         params = optax.apply_updates(params, updates)
         return params, opt_state, loss
     
-    # Generate initial data for computing standardization stats
-    print("Generating initial data for standardization...")
-    key, data_key = random.split(key)
-    init_x, init_y = generate_training_data(1000, data_key)
-    x_mean, x_std, y_mean, y_std = standardize_data(init_x, init_y)
+    # Compute standardization stats from training data
+    print("Computing standardization stats from training data...")
+    x_mean, x_std, y_mean, y_std = standardize_data(train_x_orig, train_y_orig)
     
-    # Scale the test data using these standardization stats
-    test_x_scaled = (test_x_orig - x_mean) / (x_std + 1e-8)
+    # Scale training data and test data
+    train_x_scaled, train_y_scaled = transform_data(train_x_orig, train_y_orig, x_mean, x_std, y_mean, y_std)
+    test_x_scaled, _ = transform_data(test_x_orig, test_y_orig, x_mean, x_std, y_mean, y_std)
     
     print(f"Standardization stats: x_mean={float(x_mean):.4f}, x_std={float(x_std):.4f}, y_mean={float(y_mean):.4f}, y_std={float(y_std):.4f}")
     
+    # Calculate n_t_per_sample to get similar batch size as infinite data
+    # Infinite data uses n_train_per_step=90000 with n_t_per_sample=3, giving 270000 flow samples
+    # With 900 training points, we need n_t_per_sample = 270000 / 900 = 300 to match
+    # This ensures comparable batch sizes between reference (finite) and infinite data training
+    n_t_per_sample = 300
+    print(f"Using n_t_per_sample={n_t_per_sample} to match infinite data batch size (900 * 300 = 270,000 flow samples)")
+    
+    # Pre-generate fixed validation flow batches for consistent MSE evaluation
+    # Use 3 random t values per sample for validation MSE (as specified in requirements)
+    n_val_t_per_sample = 3
+    val_batch_key = random.PRNGKey(9999)  # Fixed seed for reproducibility
+    
+    # Generate fixed validation batch for training data MSE
+    key_train_val, key_test_val = random.split(val_batch_key)
+    train_val_features, train_val_targets = generate_flow_batch(
+        train_x_scaled, train_y_scaled, n_val_t_per_sample, key_train_val
+    )
+    
+    # Generate fixed validation batch for test data MSE (at 3 random t values)
+    # We need to create a flow batch for test data - use scaled test_y for the flow targets
+    # But we need y values for the test set - we'll generate synthetic y from the process
+    # Actually, we should use the actual test_y for this
+    test_y_scaled = (test_y_orig - y_mean) / (y_std + 1e-8)
+    test_val_features, test_val_targets = generate_flow_batch(
+        test_x_scaled, test_y_scaled, n_val_t_per_sample, key_test_val
+    )
+    
+    print(f"Validation batches: train={len(train_val_features)} samples, test={len(test_val_features)} samples")
+    
     # Training loop
     print(f"\nStarting training for {duration_minutes} minutes...")
-    print(f"Step     Train Loss    Time Elapsed")
-    print("-" * 50)
+    print(f"Step     Train Loss    Train Val MSE    Test Val MSE    Time Elapsed")
+    print("-" * 80)
     
     start_time = time.time()
     end_time = start_time + duration_minutes * 60
@@ -305,6 +344,8 @@ def train_model(test_x_list, test_y_list, duration_minutes=7, n_train_per_step=9
     
     step = 0
     train_losses = []
+    train_val_mses = []  # Flow MSE on training data at 3 random t values
+    test_val_mses = []   # Flow MSE on test data at 3 random t values
     energy_scores = []
     steps_recorded = []
     times_recorded = []
@@ -329,14 +370,9 @@ def train_model(test_x_list, test_y_list, duration_minutes=7, n_train_per_step=9
             opt_state = optimizer.init(params)
             learning_rate_halved = True
         
-        # Generate fresh training data
-        key, data_key = random.split(key)
-        train_x, train_y = generate_training_data(n_train_per_step, data_key)
-        train_x_scaled, train_y_scaled = transform_data(train_x, train_y, x_mean, x_std, y_mean, y_std)
-        
-        # Generate flow batch
+        # Generate flow batch from finite training data (with fresh t and eps each step)
         key, batch_key = random.split(key)
-        features, targets = generate_flow_batch(train_x_scaled, train_y_scaled, 3, batch_key)
+        features, targets = generate_flow_batch(train_x_scaled, train_y_scaled, n_t_per_sample, batch_key)
         
         # Shuffle
         key, shuffle_key = random.split(key)
@@ -362,14 +398,25 @@ def train_model(test_x_list, test_y_list, duration_minutes=7, n_train_per_step=9
         train_loss = np.mean(batch_losses)
         step += 1
         
-        # Record every 10 steps
+        # Record every 10 steps (matching infinite data logging frequency)
         if step % 10 == 0:
             elapsed = time.time() - start_time
+            
+            # Compute validation MSE on training data (at 3 fixed t values)
+            train_val_predictions = vmap(lambda x: mlp_forward(params, x))(train_val_features)
+            train_val_mse = float(jnp.mean((train_val_predictions - train_val_targets) ** 2))
+            
+            # Compute validation MSE on test data (at 3 fixed t values)
+            test_val_predictions = vmap(lambda x: mlp_forward(params, x))(test_val_features)
+            test_val_mse = float(jnp.mean((test_val_predictions - test_val_targets) ** 2))
+            
             train_losses.append(train_loss)
+            train_val_mses.append(train_val_mse)
+            test_val_mses.append(test_val_mse)
             steps_recorded.append(step)
             times_recorded.append(elapsed)
             
-            print(f"{step:5d}    {train_loss:10.6f}    {elapsed:6.1f}s")
+            print(f"{step:5d}    {train_loss:10.6f}    {train_val_mse:12.6f}    {test_val_mse:12.6f}    {elapsed:6.1f}s")
             
             # Calculate energy score every 50 steps using the FIXED 100 test points
             if step % 50 == 0:
@@ -411,7 +458,7 @@ def train_model(test_x_list, test_y_list, duration_minutes=7, n_train_per_step=9
     # Generate final samples for 1000 points using JAX-accelerated sampling
     print("\nGenerating 1000 samples for scatter plot...")
     key, sample_key = random.split(key)
-    scatter_x, scatter_y = generate_training_data(1000, sample_key)
+    scatter_x, scatter_y = generate_training_data_from_process(1000, sample_key)
     scatter_x_scaled, _ = transform_data(scatter_x, scatter_y, x_mean, x_std, y_mean, y_std)
     
     # Generate random initial conditions for all samples at once
@@ -427,6 +474,8 @@ def train_model(test_x_list, test_y_list, duration_minutes=7, n_train_per_step=9
     return {
         'steps': steps_recorded,
         'train_losses': train_losses,
+        'train_val_mses': train_val_mses,
+        'test_val_mses': test_val_mses,
         'energy_scores': energy_scores,
         'energy_steps': energy_steps,
         'energy_times': energy_times,
@@ -439,7 +488,7 @@ def train_model(test_x_list, test_y_list, duration_minutes=7, n_train_per_step=9
 
 
 @app.local_entrypoint()
-def main(duration_minutes: int = 7):
+def main(duration_minutes: float = 7):
     """
     Main entrypoint for running training on Modal.
     
@@ -450,60 +499,71 @@ def main(duration_minutes: int = 7):
     import numpy as np
     from pathlib import Path
     
-    print(f"Starting training on Modal with T4 GPU for {duration_minutes} minutes...")
+    print(f"Starting reference model training on Modal with T4 GPU for {duration_minutes} minutes...")
     
-    # Load held-out test data from dataset1
+    # Load training data from dataset1
     script_dir = Path(__file__).parent
     dataset_dir = script_dir.parent.parent / "dataset1" / "data"
     
+    print(f"Loading training data from {dataset_dir / 'train.npy'}...")
+    train_data = np.load(dataset_dir / "train.npy")
+    train_x = train_data[:, 0].astype(np.float32).tolist()
+    train_y = train_data[:, 1].astype(np.float32).tolist()
+    print(f"Loaded {len(train_x)} training samples")
+    
+    # Load held-out test data from dataset1
     print(f"Loading test data from {dataset_dir / 'test_x.npy'} and {dataset_dir / 'test_y.npy'}...")
     test_x = np.load(dataset_dir / "test_x.npy").astype(np.float32).tolist()
     test_y = np.load(dataset_dir / "test_y.npy").astype(np.float32).tolist()
-    print(f"Loaded {len(test_x)} test samples (for energy score computation)")
+    print(f"Loaded {len(test_x)} test samples")
     
     # Run training on Modal
     result = train_model.remote(
+        train_x_list=train_x,
+        train_y_list=train_y,
         test_x_list=test_x,
         test_y_list=test_y,
         duration_minutes=duration_minutes
     )
     
     # Create output directory
-    output_dir = script_dir / "modal_outputs"
+    output_dir = script_dir.parent / "data"
     output_dir.mkdir(exist_ok=True)
     
     print(f"\nSaving results to {output_dir}...")
     
     # Save CSVs using standard library csv module
-    # Training loss CSV
-    with open(output_dir / "infinitedata_training_loss.csv", 'w', newline='') as f:
+    # Training loss CSV - now includes train_val_mse and test_val_mse
+    with open(output_dir / "reference_training_loss.csv", 'w', newline='') as f:
         writer = csv.writer(f)
-        writer.writerow(['step', 'train_loss', 'time_seconds'])
-        for step, loss, time_val in zip(result['steps'], result['train_losses'], result['times']):
-            writer.writerow([step, loss, time_val])
+        writer.writerow(['step', 'train_loss', 'train_val_mse', 'test_val_mse', 'time_seconds'])
+        for step, loss, train_val_mse, test_val_mse, time_val in zip(
+            result['steps'], result['train_losses'], result['train_val_mses'], result['test_val_mses'], result['times']
+        ):
+            writer.writerow([step, loss, train_val_mse, test_val_mse, time_val])
     
     # Energy score CSV (only every 50 steps)
     if len(result['energy_scores']) > 0:
-        with open(output_dir / "infinitedata_energy_score.csv", 'w', newline='') as f:
+        with open(output_dir / "reference_energy_score.csv", 'w', newline='') as f:
             writer = csv.writer(f)
             writer.writerow(['step', 'energy_score', 'time_seconds'])
             for step, score, time_val in zip(result['energy_steps'], result['energy_scores'], result['energy_times']):
                 writer.writerow([step, score, time_val])
     
     # Scatter samples CSV
-    with open(output_dir / "infinitedata_scatter_samples.csv", 'w', newline='') as f:
+    with open(output_dir / "reference_scatter_samples.csv", 'w', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(['x', 'y_true', 'y_sampled'])
         for x, y_true, y_sampled in zip(result['scatter_x'], result['scatter_y'], result['scatter_samples']):
             writer.writerow([x, y_true, y_sampled])
     
     print("\nAll outputs saved successfully!")
-    print(f"  - infinitedata_training_loss.csv")
+    print(f"  - reference_training_loss.csv (with train_val_mse and test_val_mse columns)")
     if len(result['energy_scores']) > 0:
-        print(f"  - infinitedata_energy_score.csv (computed on fixed 100 test points)")
-    print(f"  - infinitedata_scatter_samples.csv")
+        print(f"  - reference_energy_score.csv (computed on fixed 100 test points)")
+    print(f"  - reference_scatter_samples.csv")
     print(f"\nTotal training time: {result['total_time']:.2f} seconds ({result['total_time']/60:.2f} minutes)")
     print(f"\nNote: CSV files saved. You can visualize them with pandas/matplotlib:")
     print(f"  import pandas as pd; import matplotlib.pyplot as plt")
-    print(f"  df = pd.read_csv('{output_dir / 'infinitedata_training_loss.csv'}')")
+    print(f"  df = pd.read_csv('{output_dir / 'reference_training_loss.csv'}')")
     print(f"  plt.plot(df['time_seconds'], df['train_loss']); plt.show()")

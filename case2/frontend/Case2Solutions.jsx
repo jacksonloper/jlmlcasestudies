@@ -72,13 +72,115 @@ export default function Case2Solutions() {
           console.warn('Infinite data scatter samples not available:', err);
         }
         
-        // Load training history
+        // Load reference solution training history from CSVs
         try {
-          const historyResponse = await fetch('/case2/data/reference_training_history.json');
-          const history = await historyResponse.json();
-          setTrainingHistory(history);
+          const refTrainingLossResponse = await fetch('/case2/data/reference_training_loss.csv');
+          const refTrainingLossText = await refTrainingLossResponse.text();
+          
+          if (refTrainingLossText && refTrainingLossText.trim().length > 0 && !refTrainingLossText.includes('<!DOCTYPE')) {
+            const refTrainingLossLines = refTrainingLossText.trim().split('\n').slice(1); // Skip header
+            
+            const refSteps = [];
+            const refTrainMse = [];
+            const refTrainValMse = [];  // Flow MSE on training data at 3 fixed t values
+            const refTestValMse = [];   // Flow MSE on test data at 3 fixed t values
+            let refLastTime = 0;
+            
+            for (const line of refTrainingLossLines) {
+              const parts = line.split(',');
+              // Format: step, train_loss, train_val_mse, test_val_mse, time_seconds
+              if (parts.length >= 5) {
+                const step = parseInt(parts[0]);
+                const loss = parseFloat(parts[1]);
+                const trainValMse = parseFloat(parts[2]);
+                const testValMse = parseFloat(parts[3]);
+                const time = parseFloat(parts[4]);
+                if (!isNaN(step) && !isNaN(loss)) {
+                  refSteps.push(step);
+                  refTrainMse.push(loss);
+                  if (!isNaN(trainValMse)) refTrainValMse.push(trainValMse);
+                  if (!isNaN(testValMse)) refTestValMse.push(testValMse);
+                  if (!isNaN(time)) refLastTime = time;
+                }
+              }
+            }
+            
+            // Load reference energy score CSV
+            const refEnergyScoreResponse = await fetch('/case2/data/reference_energy_score.csv');
+            const refEnergyScoreText = await refEnergyScoreResponse.text();
+            const refEnergyScoreLines = refEnergyScoreText.trim().split('\n').slice(1); // Skip header
+            
+            const refEnergySteps = [];
+            const refEnergyScores = [];
+            let refFinalEnergyScore = 0;
+            
+            for (const line of refEnergyScoreLines) {
+              const parts = line.split(',');
+              if (parts.length >= 2) {
+                const step = parseInt(parts[0]);
+                const score = parseFloat(parts[1]);
+                if (!isNaN(step) && !isNaN(score)) {
+                  refEnergySteps.push(step);
+                  refEnergyScores.push(score);
+                  refFinalEnergyScore = score; // Last one is final
+                }
+              }
+            }
+            
+            // Build history object from CSVs
+            const refHistory = {
+              epochs: refSteps,
+              train_mse: refTrainMse,
+              train_val_mse: refTrainValMse.length > 0 ? refTrainValMse : null,  // Flow MSE on training data
+              test_val_mse: refTestValMse.length > 0 ? refTestValMse : null,     // Flow MSE on test data
+              val_energy_scores: refEnergyScores,
+              energy_epochs: refEnergySteps,
+              training_time: refLastTime,
+              hardware: 'T4 GPU (Modal)',
+              final_energy_score: refFinalEnergyScore,
+              architecture: 'raw_features_only',
+              hidden_layers: [256, 128, 128, 64],
+              training_data: '900 samples (finite)'
+            };
+            
+            setTrainingHistory(refHistory);
+          }
         } catch (err) {
-          console.warn('Training history not available:', err);
+          console.warn('Reference training history CSVs not available:', err);
+        }
+        
+        // Load reference scatter samples from CSV (if available)
+        let referenceScatterData = null;
+        try {
+          const refScatterResponse = await fetch('/case2/data/reference_scatter_samples.csv');
+          const refScatterText = await refScatterResponse.text();
+          
+          if (refScatterText && refScatterText.trim().length > 0 && !refScatterText.includes('<!DOCTYPE')) {
+            const refScatterLines = refScatterText.trim().split('\n').slice(1); // Skip header
+            
+            const refScatterX = [];
+            const refScatterYSampled = [];
+            
+            for (const line of refScatterLines) {
+              if (line && line.trim().length > 0) {
+                const parts = line.split(',');
+                if (parts.length >= 3) {
+                  const x = parseFloat(parts[0]);
+                  const ySampled = parseFloat(parts[2]);
+                  if (!isNaN(x) && !isNaN(ySampled)) {
+                    refScatterX.push(x);
+                    refScatterYSampled.push(ySampled);
+                  }
+                }
+              }
+            }
+            
+            if (refScatterX.length > 0) {
+              referenceScatterData = { x: refScatterX, y: refScatterYSampled };
+            }
+          }
+        } catch (err) {
+          console.warn('Reference scatter samples CSV not available:', err);
         }
         
         // Load infinite data training history from CSVs
@@ -184,6 +286,10 @@ export default function Case2Solutions() {
           allX.push(...infiniteScatterData.x);
           allY.push(...infiniteScatterData.y);
         }
+        if (referenceScatterData) {
+          allX.push(...referenceScatterData.x);
+          allY.push(...referenceScatterData.y);
+        }
         const axisXMin = Math.min(...allX);
         const axisXMax = Math.max(...allX);
         const axisYMin = Math.min(...allY, ...trueExpectation);
@@ -228,7 +334,18 @@ export default function Case2Solutions() {
               width: 3,
             },
           },
-          reference: {
+          // Use reference scatter CSV if available, otherwise fall back to npy samples
+          reference: referenceScatterData ? {
+            x: referenceScatterData.x,
+            y: referenceScatterData.y,
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Reference Solution',
+            marker: {
+              color: 'rgba(34, 197, 94, 0.6)',
+              size: 6,
+            },
+          } : {
             x: [...testX, ...testX],
             y: [...sample1, ...sample2],
             mode: 'markers',
@@ -455,25 +572,37 @@ export default function Case2Solutions() {
                       x: trainingHistory.epochs,
                       y: trainingHistory.train_mse,
                       mode: 'lines+markers',
-                      name: 'Train MSE',
+                      name: 'Train MSE (batch)',
+                      line: { color: 'rgba(34, 197, 94, 1)' },
+                      marker: { size: 6 },
+                    },
+                    // Show train_val_mse if available
+                    ...(trainingHistory.train_val_mse ? [{
+                      x: trainingHistory.epochs,
+                      y: trainingHistory.train_val_mse,
+                      mode: 'lines+markers',
+                      name: 'Train Data Flow MSE',
                       line: { color: 'rgba(59, 130, 246, 1)' },
                       marker: { size: 6 },
-                    },
-                    {
+                    }] : []),
+                    // Show test_val_mse if available
+                    ...(trainingHistory.test_val_mse ? [{
                       x: trainingHistory.epochs,
-                      y: trainingHistory.val_mse,
+                      y: trainingHistory.test_val_mse,
                       mode: 'lines+markers',
-                      name: 'Validation MSE',
+                      name: 'Test Data Flow MSE',
                       line: { color: 'rgba(220, 38, 38, 1)' },
                       marker: { size: 6 },
-                    },
+                    }] : []),
                   ]}
                   layout={{
                     title: {
-                      text: 'Training and Validation MSE per Epoch',
+                      text: (trainingHistory.train_val_mse || trainingHistory.test_val_mse) 
+                        ? 'Flow Matching MSE per Step (at 3 fixed t values)'
+                        : 'Training MSE per Step',
                       font: { size: window.innerWidth < 640 ? 14 : 16 }
                     },
-                    xaxis: { title: 'Epoch' },
+                    xaxis: { title: 'Step' },
                     yaxis: { title: 'MSE Loss' },
                     hovermode: 'closest',
                     showlegend: true,
@@ -504,24 +633,24 @@ export default function Case2Solutions() {
               {/* Energy Score Plot */}
               {trainingHistory.val_energy_scores && trainingHistory.val_energy_scores.length > 0 && (
                 <div className="mb-6">
-                  <h3 className="text-lg font-medium text-gray-900 mb-3">Energy Score (CRPS) on Validation Set</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-3">Energy Score (CRPS) on Fixed 100 Test Points</h3>
                   <Plot
                     data={[
                       {
-                        x: trainingHistory.epochs,  // Use actual epoch values
+                        x: trainingHistory.energy_epochs || trainingHistory.epochs,  // Use energy_epochs if available (CSV format)
                         y: trainingHistory.val_energy_scores,
                         mode: 'lines+markers',
-                        name: 'Validation Energy Score',
-                        marker: { size: 8, color: 'rgba(16, 185, 129, 1)' },
-                        line: { color: 'rgba(16, 185, 129, 1)' },
+                        name: 'Energy Score',
+                        marker: { size: 8, color: 'rgba(34, 197, 94, 1)' },
+                        line: { color: 'rgba(34, 197, 94, 1)' },
                       },
                     ]}
                     layout={{
                       title: {
-                        text: 'Validation Energy Score (Lower is Better)',
+                        text: 'Energy Score on Fixed Test Set (Lower is Better)',
                         font: { size: window.innerWidth < 640 ? 14 : 16 }
                       },
-                      xaxis: { title: 'Epoch' },
+                      xaxis: { title: 'Step' },
                       yaxis: { title: 'Energy Score (CRPS)' },
                       hovermode: 'closest',
                       showlegend: false,
@@ -542,14 +671,12 @@ export default function Case2Solutions() {
               
               <div className="mt-4 prose max-w-none text-gray-700 text-sm">
                 <p>
-                  <strong>Training Details:</strong> Uses partial_fit with fresh random t and ε samples each epoch.
-                  Each training sample generates 3 t values: t=0 (beginning), t=1 (ending), and t=random (middle).
-                  Model trained with early stopping based on validation MSE.
+                  <strong>Training Details:</strong> JAX-based training with diffrax ODE integration on T4 GPU. Uses minibatched AdamW optimization with gradient clipping for stability. Learning rate is halved halfway through training.
                 </p>
                 {trainingHistory?.final_energy_score && (
                   <p className="mt-2">
                     <strong>Final Energy Score:</strong> {trainingHistory.final_energy_score.toFixed(4)} 
-                    {' '}(computed on test set after training)
+                    {' '}(computed on fixed 100 test points)
                   </p>
                 )}
                 {trainingHistory?.training_time && (
