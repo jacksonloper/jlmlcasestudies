@@ -3,9 +3,57 @@ import { Link } from 'react-router-dom';
 import { InlineMath, BlockMath } from 'react-katex';
 import npyjs from 'npyjs';
 
+/**
+ * Compute mean pairwise absolute difference using O(n log n) algorithm.
+ * For sorted samples x_{(0)} <= ... <= x_{(n-1)}, each x_{(k)} appears as
+ * the larger element in k pairs and as the smaller element in (n-1-k) pairs.
+ * Coefficient for x_{(k)} = k - (n-1-k) = 2k - n + 1.
+ * The formula is shift-invariant because weights sum to zero.
+ */
+function meanPairwiseAbsDiff(samples) {
+  const n = samples.length;
+  if (n < 2) return 0;
+  
+  // Sort samples in-place (samples array is freshly created for each test point)
+  samples.sort((a, b) => a - b);
+  
+  // Compute weighted sum: sum_k (2k - n + 1) * x_{(k)}
+  let weightedSum = 0;
+  for (let k = 0; k < n; k++) {
+    const weight = 2 * k - n + 1;
+    weightedSum += weight * samples[k];
+  }
+  
+  // Divide by number of pairs to get mean
+  const nPairs = (n * (n - 1)) / 2;
+  return weightedSum / nPairs;
+}
+
+/**
+ * Compute energy score for a single test point.
+ * ES = E[|Y - X_j|] - 0.5 * E[|X_j - X_{j'}|]
+ * where X_j are samples and Y is the true value.
+ */
+function computeEnergyScoreForPoint(samples, trueValue) {
+  const n = samples.length;
+  
+  // Term 1: mean |Y - X_j|
+  let sumDist = 0;
+  for (let j = 0; j < n; j++) {
+    sumDist += Math.abs(trueValue - samples[j]);
+  }
+  const term1 = sumDist / n;
+  
+  // Term 2: mean |X_j - X_{j'}| using O(n log n) algorithm
+  const term2 = meanPairwiseAbsDiff(samples);
+  
+  return term1 - 0.5 * term2;
+}
+
 export default function Case2() {
   const [predictionFile, setPredictionFile] = useState(null);
   const [score, setScore] = useState(null);
+  const [numSamples, setNumSamples] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -13,6 +61,7 @@ export default function Case2() {
     const file = e.target.files[0];
     setPredictionFile(file);
     setScore(null);
+    setNumSamples(null);
     setError(null);
   };
 
@@ -29,7 +78,7 @@ export default function Case2() {
     try {
       const npy = new npyjs();
       
-      // Read the uploaded file (should be 100x2 matrix)
+      // Read the uploaded file (should be 100×n matrix where n is between 5 and 100)
       const arrayBuffer = await predictionFile.arrayBuffer();
       const predictions = await npy.load(arrayBuffer);
       
@@ -41,32 +90,40 @@ export default function Case2() {
       const predictedSamples = predictions.data;
       const trueY = trueData.data;
 
-      // Validate shape
-      if (predictions.shape.length !== 2 || predictions.shape[0] !== trueY.length || predictions.shape[1] !== 2) {
-        throw new Error(`Expected a ${trueY.length}×2 matrix (two samples per test point), got shape [${predictions.shape.join(', ')}]`);
+      // Validate shape: must be 2D with 100 rows and 5-100 columns
+      if (predictions.shape.length !== 2) {
+        throw new Error(`Expected a 2D matrix, got ${predictions.shape.length}D array`);
+      }
+      
+      const nTestPoints = predictions.shape[0];
+      const nSamplesPerPoint = predictions.shape[1];
+      
+      if (nTestPoints !== trueY.length) {
+        throw new Error(`Expected ${trueY.length} test points, got ${nTestPoints}`);
+      }
+      
+      if (nSamplesPerPoint < 5 || nSamplesPerPoint > 100) {
+        throw new Error(`Expected between 5 and 100 samples per test point, got ${nSamplesPerPoint}`);
       }
 
-      // Calculate 2-sample energy score
-      // ES = E[|Y - X1|] + E[|Y - X2|] - 0.5 * (E[|X1 - X2|])
-      // where X1 and X2 are the two samples, Y is the true value
+      // Calculate energy score using efficient O(n log n) algorithm
+      let totalEnergyScore = 0;
       
-      let sumDist1 = 0; // sum of |Y - X1|
-      let sumDist2 = 0; // sum of |Y - X2|
-      let sumDistSamples = 0; // sum of |X1 - X2|
-      
-      for (let i = 0; i < trueY.length; i++) {
-        const sample1 = predictedSamples[i * 2];
-        const sample2 = predictedSamples[i * 2 + 1];
-        const truth = trueY[i];
+      for (let i = 0; i < nTestPoints; i++) {
+        // Extract samples for this test point
+        const samples = [];
+        for (let j = 0; j < nSamplesPerPoint; j++) {
+          samples.push(predictedSamples[i * nSamplesPerPoint + j]);
+        }
         
-        sumDist1 += Math.abs(truth - sample1);
-        sumDist2 += Math.abs(truth - sample2);
-        sumDistSamples += Math.abs(sample1 - sample2);
+        // Compute energy score for this point
+        totalEnergyScore += computeEnergyScoreForPoint(samples, trueY[i]);
       }
 
-      const energyScore = (sumDist1 + sumDist2) / (2 * trueY.length) - 0.5 * sumDistSamples / trueY.length;
+      const avgEnergyScore = totalEnergyScore / nTestPoints;
 
-      setScore(energyScore);
+      setScore(avgEnergyScore);
+      setNumSamples(nSamplesPerPoint);
     } catch (err) {
       setError(`Error: ${err.message}`);
     } finally {
@@ -90,25 +147,31 @@ export default function Case2() {
           <div className="prose max-w-none text-gray-700 space-y-4">
             <p>
               This case study uses the same dataset as Case Study 1, but instead of predicting
-              a single value, you must produce <strong>two samples</strong> from the conditional
+              a single value, you must produce <strong>multiple samples</strong> from the conditional
               distribution of <InlineMath math="y" /> given <InlineMath math="x" />.
             </p>
 
             <p>
               The training set contains 900 examples, and the test set contains 100 examples.
-              For each test point, you should provide two samples from the distribution.
+              For each test point, you should provide between <strong>5 and 100 samples</strong> from the distribution.
             </p>
 
             <p>
-              Your predictions will be evaluated using the <strong>2-sample Energy Score</strong>,
-              which measures how well your samples represent the true distribution. The energy score is:
+              Your predictions will be evaluated using the <strong>Energy Score</strong>,
+              which measures how well your samples represent the true distribution:
             </p>
 
-            <BlockMath math="\text{ES} = \frac{1}{2}\mathbb{E}[|Y - X_1|] + \frac{1}{2}\mathbb{E}[|Y - X_2|] - \frac{1}{2}\mathbb{E}[|X_1 - X_2|]" />
+            <BlockMath math="\text{ES} = \mathbb{E}[|Y - X_j|] - \frac{1}{2}\mathbb{E}[|X_j - X_{j'}|]" />
 
             <p>
-              where <InlineMath math="X_1" /> and <InlineMath math="X_2" /> are your two samples,
-              and <InlineMath math="Y" /> is the true value. Lower scores are better.
+              where <InlineMath math="X_j" /> are your samples (j = 1, ..., n),
+              and <InlineMath math="Y" /> is the true value. The first term measures accuracy
+              (how close samples are to the truth), and the second term rewards diversity
+              (how spread out your samples are). Lower scores are better.
+            </p>
+
+            <p className="font-medium text-blue-700">
+              🎯 Goal: Try to achieve an energy score less than 2.1!
             </p>
           </div>
         </section>
@@ -146,8 +209,8 @@ export default function Case2() {
           <h2 className="text-2xl font-medium text-gray-900 mb-4">Submit Your Predictions</h2>
           <div className="bg-gray-50 p-6 rounded-lg">
             <p className="text-gray-700 mb-4">
-              Upload your predictions as a .npy file containing a 100×2 matrix where each row
-              contains two samples for the corresponding test point.
+              Upload your predictions as a .npy file containing a 100×n matrix where each row
+              contains between 5 and 100 samples for the corresponding test point.
             </p>
             
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -181,13 +244,18 @@ export default function Case2() {
             )}
 
             {score !== null && (
-              <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-                <h3 className="font-medium text-green-900 mb-2">Your Score:</h3>
-                <p className="text-2xl font-bold text-green-700">
+              <div className={`mt-4 p-4 border rounded-lg ${score < 2.1 ? 'bg-green-50 border-green-200' : 'bg-yellow-50 border-yellow-200'}`}>
+                <h3 className={`font-medium mb-2 ${score < 2.1 ? 'text-green-900' : 'text-yellow-900'}`}>Your Score:</h3>
+                <p className={`text-2xl font-bold ${score < 2.1 ? 'text-green-700' : 'text-yellow-700'}`}>
                   Energy Score = {score.toFixed(4)}
                 </p>
-                <p className="text-sm text-green-700 mt-2">
-                  Lower is better! The energy score measures how well your samples represent the true distribution.
+                <p className={`text-sm mt-2 ${score < 2.1 ? 'text-green-700' : 'text-yellow-700'}`}>
+                  {numSamples && `(using ${numSamples} samples per test point)`}
+                </p>
+                <p className={`text-sm mt-1 ${score < 2.1 ? 'text-green-700' : 'text-yellow-700'}`}>
+                  {score < 2.1 
+                    ? '🎉 Great job! You beat the target of 2.1!' 
+                    : '🎯 Try to get below 2.1! Lower is better.'}
                 </p>
               </div>
             )}
