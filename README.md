@@ -2,6 +2,8 @@
 
 A collection of machine learning case studies with interactive challenges.
 
+**Live Demo:** https://jacksonloper.github.io/jlmlcasestudies/
+
 ## Project Structure
 
 - Root contains React + Vite + Tailwind frontend application (package.json, vite.config.js, src/, etc.)
