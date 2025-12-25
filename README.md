@@ -2,7 +2,7 @@
 
 A collection of machine learning case studies with interactive challenges.
 
-**Live Demo:** https://jacksonloper.github.io/jlmlcasestudies/
+Main is at https://jacksonloper.github.io/jlmlcasestudies/ and production branch at https://jlmlcasestudies.netlify.app/
 
 ## Project Structure
 
