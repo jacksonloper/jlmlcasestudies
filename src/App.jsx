@@ -7,7 +7,7 @@ import Case2Solutions from '@case2/Case2Solutions';
 
 function App() {
   return (
-    <Router>
+    <Router basename={import.meta.env.BASE_URL}>
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/case1" element={<Case1 />} />
