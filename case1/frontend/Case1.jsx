@@ -34,7 +34,7 @@ export default function Case1() {
       const predictions = await npy.load(arrayBuffer);
       
       // Fetch the true test_y values
-      const response = await fetch('/case1/data/test_y.npy');
+      const response = await fetch(`${import.meta.env.BASE_URL}case1/data/test_y.npy`);
       const trueArrayBuffer = await response.arrayBuffer();
       const trueData = await npy.load(trueArrayBuffer);
 
@@ -91,7 +91,7 @@ export default function Case1() {
           <h2 className="text-2xl font-medium text-gray-900 mb-4">Download Data</h2>
           <div className="space-y-3">
             <a
-              href="/case1/data/train.npy"
+              href={`${import.meta.env.BASE_URL}case1/data/train.npy`}
               download="train.npy"
               className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
             >
@@ -104,7 +104,7 @@ export default function Case1() {
 
           <div className="space-y-3 mt-6">
             <a
-              href="/case1/data/test_x.npy"
+              href={`${import.meta.env.BASE_URL}case1/data/test_x.npy`}
               download="test_x.npy"
               className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
             >

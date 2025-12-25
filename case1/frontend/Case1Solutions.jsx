@@ -15,17 +15,17 @@ export default function Case1Solutions() {
         const npy = new npyjs();
 
         // Load training data
-        const trainResponse = await fetch('/case1/data/train.npy');
+        const trainResponse = await fetch(`${import.meta.env.BASE_URL}case1/data/train.npy`);
         const trainArrayBuffer = await trainResponse.arrayBuffer();
         const trainData = await npy.load(trainArrayBuffer);
 
         // Load test data
-        const testXResponse = await fetch('/case1/data/test_x.npy');
+        const testXResponse = await fetch(`${import.meta.env.BASE_URL}case1/data/test_x.npy`);
         const testXArrayBuffer = await testXResponse.arrayBuffer();
         const testXData = await npy.load(testXArrayBuffer);
 
         // Load MLP predictions
-        const mlpResponse = await fetch('/case1/data/mlp_test_yhat.npy');
+        const mlpResponse = await fetch(`${import.meta.env.BASE_URL}case1/data/mlp_test_yhat.npy`);
         const mlpArrayBuffer = await mlpResponse.arrayBuffer();
         const mlpData = await npy.load(mlpArrayBuffer);
 

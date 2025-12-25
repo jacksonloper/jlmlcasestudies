@@ -17,28 +17,28 @@ export default function Case2Solutions() {
         const npy = new npyjs();
 
         // Load training data
-        const trainResponse = await fetch('/case2/data/train.npy');
+        const trainResponse = await fetch(`${import.meta.env.BASE_URL}case2/data/train.npy`);
         const trainArrayBuffer = await trainResponse.arrayBuffer();
         const trainData = await npy.load(trainArrayBuffer);
 
         // Load test X data
-        const testXResponse = await fetch('/case2/data/test_x.npy');
+        const testXResponse = await fetch(`${import.meta.env.BASE_URL}case2/data/test_x.npy`);
         const testXArrayBuffer = await testXResponse.arrayBuffer();
         const testXData = await npy.load(testXArrayBuffer);
 
         // Load test Y data
-        const testYResponse = await fetch('/case2/data/test_y.npy');
+        const testYResponse = await fetch(`${import.meta.env.BASE_URL}case2/data/test_y.npy`);
         const testYArrayBuffer = await testYResponse.arrayBuffer();
         const testYData = await npy.load(testYArrayBuffer);
 
         // Load optimal samples from rectified flow
-        const optimalResponse = await fetch('/case2/data/optimal_samples.npy');
+        const optimalResponse = await fetch(`${import.meta.env.BASE_URL}case2/data/optimal_samples.npy`);
         const optimalArrayBuffer = await optimalResponse.arrayBuffer();
         const optimalData = await npy.load(optimalArrayBuffer);
         
         // Load reference solution training history from CSVs
         try {
-          const refTrainingLossResponse = await fetch('/case2/data/reference_training_loss.csv');
+          const refTrainingLossResponse = await fetch(`${import.meta.env.BASE_URL}case2/data/reference_training_loss.csv`);
           const refTrainingLossText = await refTrainingLossResponse.text();
           
           if (refTrainingLossText && refTrainingLossText.trim().length > 0 && !refTrainingLossText.includes('<!DOCTYPE')) {
@@ -77,7 +77,7 @@ export default function Case2Solutions() {
             }
             
             // Load reference energy score CSV
-            const refEnergyScoreResponse = await fetch('/case2/data/reference_energy_score.csv');
+            const refEnergyScoreResponse = await fetch(`${import.meta.env.BASE_URL}case2/data/reference_energy_score.csv`);
             const refEnergyScoreText = await refEnergyScoreResponse.text();
             const refEnergyScoreLines = refEnergyScoreText.trim().split('\n').slice(1); // Skip header
             
@@ -122,7 +122,7 @@ export default function Case2Solutions() {
         // Load reference scatter samples from CSV (if available)
         let referenceScatterData = null;
         try {
-          const refScatterResponse = await fetch('/case2/data/reference_scatter_samples.csv');
+          const refScatterResponse = await fetch(`${import.meta.env.BASE_URL}case2/data/reference_scatter_samples.csv`);
           const refScatterText = await refScatterResponse.text();
           
           if (refScatterText && refScatterText.trim().length > 0 && !refScatterText.includes('<!DOCTYPE')) {
