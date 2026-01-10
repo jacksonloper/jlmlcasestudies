@@ -21,6 +21,7 @@ export default function Case3Solutions() {
         const testLoss = [];
         const trainAccuracy = [];
         const testAccuracy = [];
+        const weightNorm = [];
         
         for (const line of lines) {
           const parts = line.split(',');
@@ -30,6 +31,7 @@ export default function Case3Solutions() {
             const tel = parseFloat(parts[2]);
             const ta = parseFloat(parts[3]);
             const tea = parseFloat(parts[4]);
+            const wn = parts.length >= 6 ? parseFloat(parts[5]) : null;
             
             if (!isNaN(epoch)) {
               epochs.push(epoch);
@@ -37,11 +39,14 @@ export default function Case3Solutions() {
               testLoss.push(tel);
               trainAccuracy.push(ta);
               testAccuracy.push(tea);
+              if (wn !== null && !isNaN(wn)) {
+                weightNorm.push(wn);
+              }
             }
           }
         }
         
-        return { epochs, trainLoss, testLoss, trainAccuracy, testAccuracy };
+        return { epochs, trainLoss, testLoss, trainAccuracy, testAccuracy, weightNorm };
       };
 
       try {
@@ -226,8 +231,8 @@ export default function Case3Solutions() {
             <h2 className="text-2xl font-medium text-gray-900 mb-4">Training Results</h2>
             <div className="prose max-w-none text-gray-700 space-y-4 mb-6">
               <p>
-                The plot below shows real training of a neural network (194→128→128→97 with ReLU) 
-                using AdamW optimizer with weight decay=1.0.
+                The plots below show real training of a neural network (194→128→128→97 with ReLU) 
+                using AdamW optimizer with weight decay=0.5.
               </p>
             </div>
 
@@ -255,7 +260,7 @@ export default function Case3Solutions() {
                   },
                 ]}
                 layout={{
-                  title: { text: 'Train vs Test Accuracy (Weight Decay=1.0)', font: { size: 16 } },
+                  title: { text: 'Train vs Test Accuracy (Weight Decay=0.5)', font: { size: 16 } },
                   xaxis: { title: 'Epoch' },
                   yaxis: { title: 'Accuracy (%)', range: [0, 105] },
                   hovermode: 'closest',
@@ -269,11 +274,38 @@ export default function Case3Solutions() {
                 useResizeHandler={true}
               />
               
+              {trainingHistory.weightNorm && trainingHistory.weightNorm.length > 0 && (
+                <Plot
+                  data={[
+                    {
+                      x: trainingHistory.epochs,
+                      y: trainingHistory.weightNorm,
+                      mode: 'lines+markers',
+                      name: 'Weight Norm',
+                      line: { color: 'rgba(168, 85, 247, 1)', width: 2 },
+                      marker: { size: 8 },
+                    },
+                  ]}
+                  layout={{
+                    title: { text: 'Total Weight Norm Over Time', font: { size: 16 } },
+                    xaxis: { title: 'Epoch' },
+                    yaxis: { title: 'L2 Norm of Weights' },
+                    hovermode: 'closest',
+                    showlegend: true,
+                    legend: { x: 0.02, y: 0.98, bgcolor: 'rgba(255,255,255,0.8)' },
+                    autosize: true,
+                    margin: { l: 50, r: 20, t: 50, b: 50 },
+                  }}
+                  style={{ width: '100%', height: '400px' }}
+                  config={{ responsive: true }}
+                  useResizeHandler={true}
+                />
+              )}
+              
               <div className="mt-4 bg-green-50 p-4 rounded-lg">
                 <p className="text-sm text-gray-700">
-                  <strong>Result:</strong> With weight decay=1.0, both train and test accuracy reach 100% 
-                  within ~1500 epochs. The network successfully learns the underlying modular arithmetic 
-                  structure rather than just memorizing the training data.
+                  <strong>Result:</strong> With weight decay=0.5, both train and test accuracy reach high values. 
+                  The weight norm plot shows how regularization constrains the network weights during training.
                 </p>
               </div>
             </div>

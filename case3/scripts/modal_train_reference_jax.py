@@ -173,10 +173,17 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
         accuracy = jnp.mean(predictions == y_data)
         return loss, accuracy
     
+    def compute_weight_norm(params):
+        """Compute total L2 norm of all weights (excluding biases)."""
+        total_norm_sq = 0.0
+        for key in ['w1', 'w2', 'w3']:
+            total_norm_sq += jnp.sum(params[key] ** 2)
+        return jnp.sqrt(total_norm_sq)
+    
     # Training loop
     print(f"\nStarting training for {n_epochs} epochs...")
-    print(f"{'Epoch':>8} {'Train Loss':>12} {'Test Loss':>12} {'Train Acc':>10} {'Test Acc':>10} {'Time':>8}")
-    print("-" * 70)
+    print(f"{'Epoch':>8} {'Train Loss':>12} {'Test Loss':>12} {'Train Acc':>10} {'Test Acc':>10} {'W Norm':>10} {'Time':>8}")
+    print("-" * 80)
     
     start_time = time.time()
     
@@ -185,6 +192,7 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
     test_losses = []
     train_accuracies = []
     test_accuracies = []
+    weight_norms = []
     times_recorded = []
     
     # Number of batches per epoch
@@ -214,20 +222,23 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
         if epoch == 0 or epoch % log_interval_epochs == 0 or epoch == n_epochs:
             train_loss, train_acc = compute_metrics(params, train_x, train_y)
             test_loss, test_acc = compute_metrics(params, test_x, test_y)
+            weight_norm = compute_weight_norm(params)
             
             train_loss = float(train_loss)
             test_loss = float(test_loss)
             train_acc = float(train_acc)
             test_acc = float(test_acc)
+            weight_norm = float(weight_norm)
             
             epochs_recorded.append(epoch)
             train_losses.append(train_loss)
             test_losses.append(test_loss)
             train_accuracies.append(train_acc)
             test_accuracies.append(test_acc)
+            weight_norms.append(weight_norm)
             times_recorded.append(elapsed)
             
-            print(f"{epoch:8d} {train_loss:12.4f} {test_loss:12.4f} {train_acc:10.4f} {test_acc:10.4f} {elapsed:8.1f}s")
+            print(f"{epoch:8d} {train_loss:12.4f} {test_loss:12.4f} {train_acc:10.4f} {test_acc:10.4f} {weight_norm:10.2f} {elapsed:8.1f}s")
             
             # Early stopping if both train and test are near perfect
             if train_acc > 0.999 and test_acc > 0.999:
@@ -243,6 +254,7 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
         'test_losses': test_losses,
         'train_accuracies': train_accuracies,
         'test_accuracies': test_accuracies,
+        'weight_norms': weight_norms,
         'times': times_recorded,
         'total_time': total_time,
         'run_name': run_name,
@@ -321,7 +333,7 @@ def main(hidden_size: int = 128, n_epochs: int = 50000, learning_rate: float = 0
     csv_path = output_dir / output_filename
     with open(csv_path, 'w', newline='') as f:
         writer = csv.writer(f)
-        writer.writerow(['epoch', 'train_loss', 'test_loss', 'train_accuracy', 'test_accuracy', 'time_seconds'])
+        writer.writerow(['epoch', 'train_loss', 'test_loss', 'train_accuracy', 'test_accuracy', 'weight_norm', 'time_seconds'])
         for i in range(len(result['epochs'])):
             writer.writerow([
                 result['epochs'][i],
@@ -329,6 +341,7 @@ def main(hidden_size: int = 128, n_epochs: int = 50000, learning_rate: float = 0
                 result['test_losses'][i],
                 result['train_accuracies'][i],
                 result['test_accuracies'][i],
+                result['weight_norms'][i],
                 result['times'][i],
             ])
     print(f"Saved to {csv_path}")
