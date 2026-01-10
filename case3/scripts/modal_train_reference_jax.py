@@ -5,8 +5,9 @@ This script trains a neural network to learn modular addition mod 97.
 Architecture: 194 (input) -> hidden -> hidden -> 97 (output) with ReLU activations
 Optimizer: Adam (no weight decay)
 
-The training demonstrates the "grokking" phenomenon where test accuracy suddenly
-improves long after training accuracy reaches 100%.
+Without weight decay, the network memorizes the training data (100% train accuracy)
+but does not generalize to the test set. To observe grokking (delayed generalization),
+weight decay regularization would need to be added.
 
 Outputs:
 - reference_training_loss.csv: Training and test loss/accuracy over epochs
@@ -30,7 +31,7 @@ image = (
 @app.function(
     image=image,
     gpu="T4",
-    timeout=60 * 60,  # 60 minute timeout for grokking (can take many epochs)
+    timeout=60 * 60,  # 60 minute timeout for extended training
 )
 def train_model(train_x_list, train_y_list, test_x_list, test_y_list, 
                 hidden_size=128, n_epochs=50000, learning_rate=0.001, batch_size=512,

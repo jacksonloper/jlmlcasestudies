@@ -215,7 +215,7 @@ export default function Case3Solutions() {
               <p className="mt-3 text-sm">
                 This &quot;grokking&quot; behavior suggests the network is learning the underlying
                 algorithmic structure rather than just memorizing the training data.
-                <strong> Note: </strong>Weight decay is critical for grokking to occur.
+                <strong>Note:</strong> Weight decay is critical for grokking to occur.
               </p>
             </div>
           </div>
