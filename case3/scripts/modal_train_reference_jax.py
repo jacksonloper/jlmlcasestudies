@@ -259,13 +259,10 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
 
 @app.local_entrypoint()
 def main(hidden_size: int = 128, n_epochs: int = 50000, learning_rate: float = 0.001, 
-         batch_size: int = 512, log_interval_seconds: int = 30, weight_decay: float = 1.0):
+         batch_size: int = 512, log_interval_seconds: int = 30, weight_decay: float = 0.0,
+         output_suffix: str = ""):
     """
     Main entrypoint for running training on Modal.
-    
-    Runs two training configurations:
-    1. Without weight decay (memorization only)
-    2. With weight decay (grokking/generalization)
     
     Args:
         hidden_size: Size of hidden layers
@@ -273,7 +270,8 @@ def main(hidden_size: int = 128, n_epochs: int = 50000, learning_rate: float = 0
         learning_rate: Learning rate for Adam
         batch_size: Minibatch size
         log_interval_seconds: Log approximately every N seconds
-        weight_decay: Weight decay for AdamW in second run (default 1.0 is typical for grokking experiments)
+        weight_decay: Weight decay for AdamW (0.0 = no weight decay, try 1.0 for grokking)
+        output_suffix: Suffix for output filename (e.g., "_wd" for weight decay run)
     """
     import csv
     import numpy as np
@@ -282,6 +280,7 @@ def main(hidden_size: int = 128, n_epochs: int = 50000, learning_rate: float = 0
     print(f"Starting Case 3 training on Modal with T4 GPU...")
     print(f"Architecture: 194 -> {hidden_size} -> {hidden_size} -> 97")
     print(f"Epochs: {n_epochs}, LR: {learning_rate}, Batch size: {batch_size}")
+    print(f"Weight decay: {weight_decay}")
     print(f"Logging every ~{log_interval_seconds} seconds")
     
     # Load training and test data
@@ -300,52 +299,19 @@ def main(hidden_size: int = 128, n_epochs: int = 50000, learning_rate: float = 0
     output_dir = script_dir / "modal_outputs"
     output_dir.mkdir(exist_ok=True)
     
-    def save_result(result, filename):
-        """Save training result to CSV."""
-        csv_path = output_dir / filename
-        with open(csv_path, 'w', newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow(['epoch', 'train_loss', 'test_loss', 'train_accuracy', 'test_accuracy', 'time_seconds'])
-            for i in range(len(result['epochs'])):
-                writer.writerow([
-                    result['epochs'][i],
-                    result['train_losses'][i],
-                    result['test_losses'][i],
-                    result['train_accuracies'][i],
-                    result['test_accuracies'][i],
-                    result['times'][i],
-                ])
-        print(f"Saved {result['run_name']} to {csv_path}")
-        return csv_path
+    # Determine run name and output filename
+    if weight_decay > 0:
+        run_name = f"Weight Decay={weight_decay}"
+    else:
+        run_name = "No Weight Decay"
     
-    # Run 1: WITHOUT weight decay (memorization)
+    output_filename = f"reference_training_loss{output_suffix}.csv"
+    
     print("\n" + "="*70)
-    print("RUN 1: Training WITHOUT weight decay (shows memorization)")
+    print(f"Training: {run_name}")
     print("="*70)
     
-    result_no_wd = train_model.remote(
-        train_x_list=train_x,
-        train_y_list=train_y,
-        test_x_list=test_x,
-        test_y_list=test_y,
-        hidden_size=hidden_size,
-        n_epochs=n_epochs,
-        learning_rate=learning_rate,
-        batch_size=batch_size,
-        log_interval_seconds=log_interval_seconds,
-        weight_decay=0.0,
-        run_name="No Weight Decay (Memorization)",
-    )
-    
-    csv_no_wd = save_result(result_no_wd, "reference_training_loss.csv")
-    print(f"Training time: {result_no_wd['total_time']:.2f}s ({result_no_wd['total_time']/60:.2f} min)")
-    
-    # Run 2: WITH weight decay (grokking)
-    print("\n" + "="*70)
-    print(f"RUN 2: Training WITH weight decay={weight_decay} (shows grokking)")
-    print("="*70)
-    
-    result_wd = train_model.remote(
+    result = train_model.remote(
         train_x_list=train_x,
         train_y_list=train_y,
         test_x_list=test_x,
@@ -356,20 +322,34 @@ def main(hidden_size: int = 128, n_epochs: int = 50000, learning_rate: float = 0
         batch_size=batch_size,
         log_interval_seconds=log_interval_seconds,
         weight_decay=weight_decay,
-        run_name=f"Weight Decay={weight_decay} (Grokking)",
+        run_name=run_name,
     )
     
-    csv_wd = save_result(result_wd, "reference_training_loss_wd.csv")
-    print(f"Training time: {result_wd['total_time']:.2f}s ({result_wd['total_time']/60:.2f} min)")
+    # Save result to CSV
+    csv_path = output_dir / output_filename
+    with open(csv_path, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['epoch', 'train_loss', 'test_loss', 'train_accuracy', 'test_accuracy', 'time_seconds'])
+        for i in range(len(result['epochs'])):
+            writer.writerow([
+                result['epochs'][i],
+                result['train_losses'][i],
+                result['test_losses'][i],
+                result['train_accuracies'][i],
+                result['test_accuracies'][i],
+                result['times'][i],
+            ])
+    print(f"Saved to {csv_path}")
     
     # Copy to data directory for frontend
     import shutil
-    shutil.copy(csv_no_wd, data_dir / "reference_training_loss.csv")
-    shutil.copy(csv_wd, data_dir / "reference_training_loss_wd.csv")
-    print(f"\nCopied results to {data_dir}")
+    final_path = data_dir / output_filename
+    shutil.copy(csv_path, final_path)
+    print(f"Copied to {final_path}")
     
     print("\n" + "="*70)
     print("SUMMARY")
     print("="*70)
-    print(f"Run 1 (No WD): Final test acc = {result_no_wd['test_accuracies'][-1]:.4f}")
-    print(f"Run 2 (WD={weight_decay}): Final test acc = {result_wd['test_accuracies'][-1]:.4f}")
+    print(f"Training time: {result['total_time']:.2f}s ({result['total_time']/60:.2f} min)")
+    print(f"Final train accuracy: {result['train_accuracies'][-1]:.4f}")
+    print(f"Final test accuracy: {result['test_accuracies'][-1]:.4f}")

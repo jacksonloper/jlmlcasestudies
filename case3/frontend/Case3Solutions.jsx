@@ -5,7 +5,6 @@ import Plot from 'react-plotly.js';
 
 export default function Case3Solutions() {
   const [trainingHistory, setTrainingHistory] = useState(null);
-  const [trainingHistoryWD, setTrainingHistoryWD] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -46,22 +45,11 @@ export default function Case3Solutions() {
       };
 
       try {
-        // Load both training histories in parallel
-        const [responseNoWD, responseWD] = await Promise.all([
-          fetch(`${import.meta.env.BASE_URL}case3/data/reference_training_loss.csv`),
-          fetch(`${import.meta.env.BASE_URL}case3/data/reference_training_loss_wd.csv`)
-        ]);
-        
-        const [textNoWD, textWD] = await Promise.all([
-          responseNoWD.text(),
-          responseWD.text()
-        ]);
-        
-        const historyNoWD = parseCSV(textNoWD);
-        const historyWD = parseCSV(textWD);
-        
-        if (historyNoWD) setTrainingHistory(historyNoWD);
-        if (historyWD) setTrainingHistoryWD(historyWD);
+        // Load training history with weight decay
+        const response = await fetch(`${import.meta.env.BASE_URL}case3/data/reference_training_loss_wd.csv`);
+        const text = await response.text();
+        const history = parseCSV(text);
+        if (history) setTrainingHistory(history);
       } catch (err) {
         console.warn('Training history not available:', err);
       }
@@ -233,157 +221,69 @@ export default function Case3Solutions() {
           </div>
         </section>
 
-        {(trainingHistory || trainingHistoryWD) && (
+        {trainingHistory && (
           <section className="mb-12">
-            <h2 className="text-2xl font-medium text-gray-900 mb-4">Training Progress: Comparing Approaches</h2>
+            <h2 className="text-2xl font-medium text-gray-900 mb-4">Training Results</h2>
             <div className="prose max-w-none text-gray-700 space-y-4 mb-6">
               <p>
-                The plots below compare two training runs of the same neural network architecture 
-                (194→128→128→97 with ReLU, Adam optimizer):
+                The plot below shows real training of a neural network (194→128→128→97 with ReLU) 
+                using AdamW optimizer with weight decay=1.0.
               </p>
-              <ul className="list-disc list-inside space-y-1">
-                <li><strong>Without weight decay:</strong> Shows memorization (100% train accuracy, ~0% test accuracy)</li>
-                <li><strong>With weight decay:</strong> Shows grokking (delayed generalization to test set)</li>
-              </ul>
             </div>
 
-            {/* Side by side comparison */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-white border border-green-200 rounded-lg p-4">
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Training with Weight Decay</h3>
+              <p className="text-sm text-gray-600 mb-4">Network learns to generalize quickly with proper regularization</p>
               
-              {/* No Weight Decay Section */}
-              {trainingHistory && (
-                <div className="bg-white border border-gray-200 rounded-lg p-4">
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">Without Weight Decay (Memorization)</h3>
-                  <p className="text-sm text-gray-600 mb-4">Network memorizes training data but cannot generalize</p>
-                  
-                  <Plot
-                    data={[
-                      {
-                        x: trainingHistory.epochs,
-                        y: trainingHistory.trainAccuracy.map(a => a * 100),
-                        mode: 'lines',
-                        name: 'Train Acc',
-                        line: { color: 'rgba(59, 130, 246, 1)', width: 2 },
-                      },
-                      {
-                        x: trainingHistory.epochs,
-                        y: trainingHistory.testAccuracy.map(a => a * 100),
-                        mode: 'lines',
-                        name: 'Test Acc',
-                        line: { color: 'rgba(239, 68, 68, 1)', width: 2 },
-                      },
-                    ]}
-                    layout={{
-                      title: { text: 'Accuracy (No Weight Decay)', font: { size: 14 } },
-                      xaxis: { title: 'Epoch' },
-                      yaxis: { title: 'Accuracy (%)', range: [0, 105] },
-                      hovermode: 'closest',
-                      showlegend: true,
-                      legend: { x: 0.02, y: 0.98, bgcolor: 'rgba(255,255,255,0.8)' },
-                      autosize: true,
-                      margin: { l: 50, r: 20, t: 40, b: 50 },
-                    }}
-                    style={{ width: '100%', height: '300px' }}
-                    config={{ responsive: true }}
-                    useResizeHandler={true}
-                  />
-                  
-                  <div className="mt-3 text-sm text-gray-600">
-                    <p><strong>Result:</strong> Train accuracy hits 100% quickly, test accuracy stays near 0%.</p>
-                  </div>
-                </div>
-              )}
-
-              {/* With Weight Decay Section */}
-              {trainingHistoryWD && (
-                <div className="bg-white border border-green-200 rounded-lg p-4">
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">With Weight Decay (Grokking)</h3>
-                  <p className="text-sm text-gray-600 mb-4">Network eventually learns to generalize</p>
-                  
-                  <Plot
-                    data={[
-                      {
-                        x: trainingHistoryWD.epochs,
-                        y: trainingHistoryWD.trainAccuracy.map(a => a * 100),
-                        mode: 'lines',
-                        name: 'Train Acc',
-                        line: { color: 'rgba(59, 130, 246, 1)', width: 2 },
-                      },
-                      {
-                        x: trainingHistoryWD.epochs,
-                        y: trainingHistoryWD.testAccuracy.map(a => a * 100),
-                        mode: 'lines',
-                        name: 'Test Acc',
-                        line: { color: 'rgba(34, 197, 94, 1)', width: 2 },
-                      },
-                    ]}
-                    layout={{
-                      title: { text: 'Accuracy (With Weight Decay)', font: { size: 14 } },
-                      xaxis: { title: 'Epoch' },
-                      yaxis: { title: 'Accuracy (%)', range: [0, 105] },
-                      hovermode: 'closest',
-                      showlegend: true,
-                      legend: { x: 0.02, y: 0.98, bgcolor: 'rgba(255,255,255,0.8)' },
-                      autosize: true,
-                      margin: { l: 50, r: 20, t: 40, b: 50 },
-                    }}
-                    style={{ width: '100%', height: '300px' }}
-                    config={{ responsive: true }}
-                    useResizeHandler={true}
-                  />
-                  
-                  <div className="mt-3 text-sm text-gray-600">
-                    <p><strong>Result:</strong> Test accuracy eventually catches up to train accuracy (grokking).</p>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Loss comparison */}
-            {trainingHistory && trainingHistoryWD && (
-              <div className="mt-6 bg-white border border-gray-200 rounded-lg p-4">
-                <h3 className="text-lg font-medium text-gray-900 mb-3">Loss Comparison</h3>
-                <Plot
-                  data={[
-                    {
-                      x: trainingHistory.epochs,
-                      y: trainingHistory.testLoss,
-                      mode: 'lines',
-                      name: 'Test Loss (No WD)',
-                      line: { color: 'rgba(239, 68, 68, 1)', width: 2 },
-                    },
-                    {
-                      x: trainingHistoryWD.epochs,
-                      y: trainingHistoryWD.testLoss,
-                      mode: 'lines',
-                      name: 'Test Loss (With WD)',
-                      line: { color: 'rgba(34, 197, 94, 1)', width: 2 },
-                    },
-                  ]}
-                  layout={{
-                    title: { text: 'Test Loss: Without vs With Weight Decay', font: { size: 16 } },
-                    xaxis: { title: 'Epoch' },
-                    yaxis: { title: 'Cross-Entropy Loss', type: 'log' },
-                    hovermode: 'closest',
-                    showlegend: true,
-                    legend: { x: 0.7, y: 0.98, bgcolor: 'rgba(255,255,255,0.8)' },
-                    autosize: true,
-                    margin: { l: 60, r: 20, t: 50, b: 50 },
-                  }}
-                  style={{ width: '100%', height: '400px' }}
-                  config={{ responsive: true }}
-                  useResizeHandler={true}
-                />
+              <Plot
+                data={[
+                  {
+                    x: trainingHistory.epochs,
+                    y: trainingHistory.trainAccuracy.map(a => a * 100),
+                    mode: 'lines+markers',
+                    name: 'Train Accuracy',
+                    line: { color: 'rgba(59, 130, 246, 1)', width: 2 },
+                    marker: { size: 8 },
+                  },
+                  {
+                    x: trainingHistory.epochs,
+                    y: trainingHistory.testAccuracy.map(a => a * 100),
+                    mode: 'lines+markers',
+                    name: 'Test Accuracy',
+                    line: { color: 'rgba(34, 197, 94, 1)', width: 2 },
+                    marker: { size: 8 },
+                  },
+                ]}
+                layout={{
+                  title: { text: 'Train vs Test Accuracy (Weight Decay=1.0)', font: { size: 16 } },
+                  xaxis: { title: 'Epoch' },
+                  yaxis: { title: 'Accuracy (%)', range: [0, 105] },
+                  hovermode: 'closest',
+                  showlegend: true,
+                  legend: { x: 0.02, y: 0.5, bgcolor: 'rgba(255,255,255,0.8)' },
+                  autosize: true,
+                  margin: { l: 50, r: 20, t: 50, b: 50 },
+                }}
+                style={{ width: '100%', height: '400px' }}
+                config={{ responsive: true }}
+                useResizeHandler={true}
+              />
+              
+              <div className="mt-4 bg-green-50 p-4 rounded-lg">
+                <p className="text-sm text-gray-700">
+                  <strong>Result:</strong> With weight decay=1.0, both train and test accuracy reach 100% 
+                  within ~1500 epochs. The network successfully learns the underlying modular arithmetic 
+                  structure rather than just memorizing the training data.
+                </p>
               </div>
-            )}
+            </div>
               
             <div className="mt-6 prose max-w-none text-gray-700 text-sm bg-blue-50 p-4 rounded-lg">
               <p><strong>Key observations:</strong></p>
               <ul className="list-disc list-inside space-y-1 mt-2">
-                <li><strong>Without weight decay (red):</strong> Test loss increases continuously - pure memorization</li>
-                <li><strong>With weight decay (green):</strong> Test loss eventually drops - the network &quot;groks&quot; the pattern</li>
-                <li>Weight decay acts as a regularizer that prevents memorization and encourages learning generalizable patterns</li>
-                <li>The &quot;grokking&quot; phenomenon shows that generalization can happen suddenly after many epochs of apparent overfitting</li>
+                <li>Weight decay regularization helps the network learn generalizable patterns</li>
+                <li>Both train and test accuracy improve together (no memorization without generalization)</li>
+                <li>The network achieves perfect accuracy on unseen test data</li>
               </ul>
             </div>
           </section>
