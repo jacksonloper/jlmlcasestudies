@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { copyFileSync } from 'fs'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -23,6 +24,16 @@ export default defineConfig({
           }
         }
         return null
+      }
+    },
+    {
+      name: 'copy-index-to-404',
+      closeBundle() {
+        // Copy index.html to 404.html for GitHub Pages SPA routing
+        // GitHub Pages serves 404.html for non-existent routes, enabling client-side routing
+        const distDir = path.resolve(__dirname, 'dist')
+        copyFileSync(path.join(distDir, 'index.html'), path.join(distDir, '404.html'))
+        console.log('✓ Copied index.html to 404.html for GitHub Pages SPA routing')
       }
     }
   ],
