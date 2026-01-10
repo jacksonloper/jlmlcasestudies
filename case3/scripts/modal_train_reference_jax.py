@@ -215,8 +215,8 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
         time_since_last_log = current_time - last_log_time
         
         # Log metrics based on time interval (approximately every log_interval_seconds)
-        # Also always log first and last epoch
-        if should_log_next or time_since_last_log >= log_interval_seconds or epoch == n_epochs:
+        # Also always log first (epoch 0) and last epoch
+        if epoch == 0 or should_log_next or time_since_last_log >= log_interval_seconds or epoch == n_epochs:
             train_loss, train_acc = compute_metrics(params, train_x, train_y)
             test_loss, test_acc = compute_metrics(params, test_x, test_y)
             
@@ -273,7 +273,7 @@ def main(hidden_size: int = 128, n_epochs: int = 50000, learning_rate: float = 0
         learning_rate: Learning rate for Adam
         batch_size: Minibatch size
         log_interval_seconds: Log approximately every N seconds
-        weight_decay: Weight decay for AdamW in second run
+        weight_decay: Weight decay for AdamW in second run (default 1.0 is typical for grokking experiments)
     """
     import csv
     import numpy as np
