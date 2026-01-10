@@ -12,6 +12,11 @@ export default function Landing() {
       title: 'Case Study 2: Distribution Sampling',
       description: 'Generate two samples from the conditional distribution (evaluated with Energy Score)',
     },
+    {
+      id: 'case3',
+      title: 'Case Study 3: Modular Arithmetic',
+      description: 'Learn modular addition mod 97 with one-hot encodings (evaluated with Accuracy)',
+    },
   ];
 
   return (
