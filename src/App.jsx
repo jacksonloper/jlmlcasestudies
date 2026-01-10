@@ -6,6 +6,8 @@ import Case2 from '@case2/Case2';
 import Case2Solutions from '@case2/Case2Solutions';
 import Case3 from '@case3/Case3';
 import Case3Solutions from '@case3/Case3Solutions';
+import Case4 from '@case4/Case4';
+import Case4Solutions from '@case4/Case4Solutions';
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
         <Route path="/case2/solutions" element={<Case2Solutions />} />
         <Route path="/case3" element={<Case3 />} />
         <Route path="/case3/solutions" element={<Case3Solutions />} />
+        <Route path="/case4" element={<Case4 />} />
+        <Route path="/case4/solutions" element={<Case4Solutions />} />
       </Routes>
     </Router>
   );

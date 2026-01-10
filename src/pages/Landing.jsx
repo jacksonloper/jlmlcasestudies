@@ -17,6 +17,11 @@ export default function Landing() {
       title: 'Case Study 3: Modular Arithmetic',
       description: 'Learn modular addition mod 97 with one-hot encodings (evaluated with Accuracy)',
     },
+    {
+      id: 'case4',
+      title: 'Case Study 4: Modular Division',
+      description: 'Learn modular division mod 97 with one-hot encodings (evaluated with Accuracy)',
+    },
   ];
 
   return (

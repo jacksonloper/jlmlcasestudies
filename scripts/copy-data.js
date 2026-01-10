@@ -11,14 +11,17 @@ const dataset1Dir = join(rootDir, 'dataset1', 'data');
 const case1Dir = join(rootDir, 'case1', 'data');
 const case2Dir = join(rootDir, 'case2', 'data');
 const case3Dir = join(rootDir, 'case3', 'data');
+const case4Dir = join(rootDir, 'case4', 'data');
 const targetCase1Dir = join(__dirname, '..', 'public', 'case1', 'data');
 const targetCase2Dir = join(__dirname, '..', 'public', 'case2', 'data');
 const targetCase3Dir = join(__dirname, '..', 'public', 'case3', 'data');
+const targetCase4Dir = join(__dirname, '..', 'public', 'case4', 'data');
 
 // Create target directories if they don't exist
 mkdirSync(targetCase1Dir, { recursive: true });
 mkdirSync(targetCase2Dir, { recursive: true });
 mkdirSync(targetCase3Dir, { recursive: true });
+mkdirSync(targetCase4Dir, { recursive: true });
 
 // Copy dataset1 files to both case1 and case2
 if (existsSync(dataset1Dir)) {
@@ -92,4 +95,22 @@ if (existsSync(case3Dir)) {
   });
   
   console.log('Case3-specific files copied successfully!');
+}
+
+// Copy case4-specific files
+if (existsSync(case4Dir)) {
+  const case4Files = readdirSync(case4Dir).filter(file => 
+    file.endsWith('.npy') || file.endsWith('.json') || file.endsWith('.csv') || file.endsWith('.png')
+  );
+  
+  console.log(`\nCopying ${case4Files.length} case4-specific files to public/case4/data`);
+  
+  case4Files.forEach(file => {
+    const sourcePath = join(case4Dir, file);
+    const targetPath = join(targetCase4Dir, file);
+    copyFileSync(sourcePath, targetPath);
+    console.log(`  ✓ Copied ${file}`);
+  });
+  
+  console.log('Case4-specific files copied successfully!');
 }
