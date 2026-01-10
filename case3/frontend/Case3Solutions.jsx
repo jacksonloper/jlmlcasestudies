@@ -210,11 +210,12 @@ export default function Case3Solutions() {
               <ul className="list-disc list-inside space-y-2">
                 <li>Training loss decreases rapidly (memorization)</li>
                 <li>Test loss remains high for many epochs</li>
-                <li>Suddenly, test loss drops dramatically (generalization)</li>
+                <li>With <strong>weight decay regularization</strong>, test loss suddenly drops (generalization)</li>
               </ul>
               <p className="mt-3 text-sm">
                 This &quot;grokking&quot; behavior suggests the network is learning the underlying
                 algorithmic structure rather than just memorizing the training data.
+                <strong> Note: </strong>Weight decay is critical for grokking to occur.
               </p>
             </div>
           </div>
@@ -222,12 +223,20 @@ export default function Case3Solutions() {
 
         {trainingHistory && (
           <section className="mb-12">
-            <h2 className="text-2xl font-medium text-gray-900 mb-4">Training Progress: Observing Grokking</h2>
+            <h2 className="text-2xl font-medium text-gray-900 mb-4">Training Progress: Real Network Training</h2>
             <div className="prose max-w-none text-gray-700 space-y-4 mb-6">
               <p>
-                The plots below demonstrate the grokking phenomenon. Notice how the training loss
-                drops quickly (the network memorizes the training data), but the test loss remains
-                high for thousands of epochs before suddenly dropping (the network finally generalizes).
+                The plots below show actual training of a neural network (194→128→128→97 with ReLU, Adam optimizer, 
+                <strong> no weight decay</strong>) on this modular arithmetic task for 50,000 epochs.
+              </p>
+              <p>
+                Without weight decay, the network perfectly memorizes the training data (100% train accuracy) 
+                but fails to generalize to the test set. This demonstrates the <strong>memorization phase</strong> - 
+                the network has enough capacity to memorize all training examples as a lookup table.
+              </p>
+              <p className="text-sm bg-yellow-50 p-3 rounded">
+                <strong>To observe grokking:</strong> Add weight decay regularization. The original grokking paper
+                used AdamW with weight decay, which encourages simpler solutions that can generalize.
               </p>
             </div>
             <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6">
@@ -253,7 +262,7 @@ export default function Case3Solutions() {
                   ]}
                   layout={{
                     title: {
-                      text: 'Train vs Test Loss (Grokking Demonstration)',
+                      text: 'Train vs Test Loss (Real Training, No Weight Decay)',
                       font: { size: typeof window !== 'undefined' && window.innerWidth < 640 ? 14 : 16 }
                     },
                     xaxis: { title: 'Epoch' },
@@ -342,9 +351,10 @@ export default function Case3Solutions() {
                   <strong>Key observations:</strong>
                 </p>
                 <ul className="list-disc list-inside space-y-1 mt-2">
-                  <li><strong>Blue line (Training):</strong> Loss drops rapidly in the first few hundred epochs as the network memorizes the training data</li>
-                  <li><strong>Red line (Test):</strong> Loss remains high for thousands of epochs, then suddenly drops around epoch 6000</li>
-                  <li>This delayed generalization is the hallmark of &quot;grokking&quot;</li>
+                  <li><strong>Blue line (Training):</strong> Loss drops rapidly to ~0 in the first few hundred epochs as the network memorizes all training examples</li>
+                  <li><strong>Red line (Test):</strong> Loss increases throughout training, indicating the network is overfitting/memorizing rather than learning the pattern</li>
+                  <li><strong>Train accuracy reaches 100%</strong> while test accuracy stays near 0% - classic memorization without generalization</li>
+                  <li>Without weight decay, the network never &quot;groks&quot; the underlying structure</li>
                 </ul>
               </div>
             </div>
