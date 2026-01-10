@@ -17,6 +17,7 @@ build/
 # Copied data files
 public/case1/
 public/case2/
+public/case3/
 
 # IDE
 .vscode/
