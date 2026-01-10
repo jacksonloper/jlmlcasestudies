@@ -15,7 +15,7 @@ export default function Landing() {
     {
       id: 'case3',
       title: 'Case Study 3: Modular Arithmetic',
-      description: 'Learn modular addition mod 97 with one-hot encodings (evaluated with Cross-Entropy Loss)',
+      description: 'Learn modular addition mod 97 with one-hot encodings (evaluated with Accuracy)',
     },
   ];
 

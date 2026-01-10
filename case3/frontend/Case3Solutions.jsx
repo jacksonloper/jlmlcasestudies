@@ -156,11 +156,9 @@ export default function Case3Solutions() {
                 <li>Without regularization, the network may memorize training data without generalizing</li>
                 <li>Weight decay encourages simpler, more regularized solutions</li>
                 <li>With proper regularization, the network learns patterns that transfer to unseen data</li>
+                <li>The regularized solution captures the underlying mathematical structure
+                of modular arithmetic rather than just memorizing input-output pairs</li>
               </ul>
-              <p className="mt-3 text-sm">
-                The regularized solution captures the underlying mathematical structure
-                of modular arithmetic rather than just memorizing input-output pairs.
-              </p>
             </div>
           </div>
         </section>
@@ -253,8 +251,7 @@ export default function Case3Solutions() {
               <p><strong>Key observations:</strong></p>
               <ul className="list-disc list-inside space-y-1 mt-2">
                 <li>Weight decay regularization helps the network learn generalizable patterns</li>
-                <li>Both train and test accuracy improve together (no memorization without generalization)</li>
-                <li>The network achieves perfect accuracy on unseen test data</li>
+                <li>The network achieves near-perfect accuracy on unseen test data</li>
               </ul>
             </div>
           </section>

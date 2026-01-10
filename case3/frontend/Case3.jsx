@@ -1,32 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { InlineMath, BlockMath } from 'react-katex';
+import { InlineMath } from 'react-katex';
 import npyjs from 'npyjs';
-
-/**
- * Compute softmax of logits
- */
-function softmax(logits) {
-  const maxLogit = Math.max(...logits);
-  const expLogits = logits.map(l => Math.exp(l - maxLogit));
-  const sumExp = expLogits.reduce((a, b) => a + b, 0);
-  return expLogits.map(e => e / sumExp);
-}
-
-/**
- * Compute cross-entropy loss for a single prediction
- * CE = -log(p[true_class])
- */
-function crossEntropyLoss(logits, trueClass) {
-  const probs = softmax(logits);
-  // Clip probability to avoid log(0)
-  const prob = Math.max(probs[trueClass], 1e-10);
-  return -Math.log(prob);
-}
 
 export default function Case3() {
   const [predictionFile, setPredictionFile] = useState(null);
-  const [score, setScore] = useState(null);
   const [accuracy, setAccuracy] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -34,7 +12,6 @@ export default function Case3() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setPredictionFile(file);
-    setScore(null);
     setAccuracy(null);
     setError(null);
   };
@@ -52,7 +29,7 @@ export default function Case3() {
     try {
       const npy = new npyjs();
       
-      // Read the uploaded file (should be n_test × 97 matrix of logits)
+      // Read the uploaded file (should be 1D array of integer predictions)
       const arrayBuffer = await predictionFile.arrayBuffer();
       const predictions = await npy.load(arrayBuffer);
       
@@ -61,50 +38,31 @@ export default function Case3() {
       const trueArrayBuffer = await response.arrayBuffer();
       const trueData = await npy.load(trueArrayBuffer);
 
-      const predictedLogits = predictions.data;
+      const predictedY = predictions.data;
       const trueY = trueData.data;
 
-      // Validate shape: must be 2D with n_test rows and 97 columns
-      if (predictions.shape.length !== 2) {
-        throw new Error(`Expected a 2D matrix, got ${predictions.shape.length}D array`);
+      // Validate shape: must be 1D with n_test elements
+      if (predictions.shape.length !== 1) {
+        throw new Error(`Expected a 1D array of predictions, got ${predictions.shape.length}D array`);
       }
       
       const nTestPoints = predictions.shape[0];
-      const nClasses = predictions.shape[1];
       
       if (nTestPoints !== trueY.length) {
-        throw new Error(`Expected ${trueY.length} test points, got ${nTestPoints}`);
-      }
-      
-      if (nClasses !== 97) {
-        throw new Error(`Expected 97 logits per test point (mod 97), got ${nClasses}`);
+        throw new Error(`Expected ${trueY.length} predictions, got ${nTestPoints}`);
       }
 
-      // Calculate cross-entropy loss
-      let totalLoss = 0;
+      // Calculate accuracy
       let correctPredictions = 0;
       
       for (let i = 0; i < nTestPoints; i++) {
-        // Extract logits for this test point
-        const logits = [];
-        for (let j = 0; j < nClasses; j++) {
-          logits.push(predictedLogits[i * nClasses + j]);
-        }
-        
-        const trueClass = trueY[i];
-        totalLoss += crossEntropyLoss(logits, trueClass);
-        
-        // Check if prediction is correct (argmax of logits)
-        const predictedClass = logits.indexOf(Math.max(...logits));
-        if (predictedClass === trueClass) {
+        const predicted = Math.round(predictedY[i]);
+        if (predicted === trueY[i]) {
           correctPredictions++;
         }
       }
 
-      const avgLoss = totalLoss / nTestPoints;
       const acc = correctPredictions / nTestPoints;
-
-      setScore(avgLoss);
       setAccuracy(acc);
     } catch (err) {
       setError(`Error: ${err.message}`);
@@ -145,19 +103,13 @@ export default function Case3() {
             </p>
 
             <p>
-              Your predictions will be evaluated using <strong>cross-entropy loss</strong>:
-            </p>
-
-            <BlockMath math="\text{CE} = -\frac{1}{N}\sum_{i=1}^{N} \log p_i(y_i)" />
-
-            <p>
-              where <InlineMath math="p_i(y_i)" /> is the predicted probability of the correct 
-              class <InlineMath math="y_i" /> after applying softmax to your 97 logits.
-              Lower scores are better.
+              Your predictions will be evaluated using <strong>accuracy</strong>:
+              the percentage of test examples where your predicted class matches
+              the true answer.
             </p>
 
             <p className="font-medium text-blue-700">
-              🎯 Goal: Try to achieve a cross-entropy loss less than 0.5!
+              🎯 Goal: Try to achieve at least 95% accuracy!
             </p>
           </div>
         </section>
@@ -205,8 +157,9 @@ export default function Case3() {
           <div className="bg-gray-50 p-6 rounded-lg">
             <p className="text-gray-700 mb-4">
               Upload your predictions as a .npy file containing a{' '}
-              <strong>~4704 × 97 matrix of logits</strong> (one row per test point,
-              97 logits per row representing scores for each class).
+              <strong>1D array of ~4704 integers</strong> (one prediction per test point,
+              each value in &#123;0, ..., 96&#125; representing your best guess for{' '}
+              <InlineMath math="(a + b) \mod 97" />).
             </p>
             
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -239,21 +192,16 @@ export default function Case3() {
               </div>
             )}
 
-            {score !== null && (
-              <div className={`mt-4 p-4 border rounded-lg ${score < 0.5 ? 'bg-green-50 border-green-200' : 'bg-yellow-50 border-yellow-200'}`}>
-                <h3 className={`font-medium mb-2 ${score < 0.5 ? 'text-green-900' : 'text-yellow-900'}`}>Your Score:</h3>
-                <p className={`text-2xl font-bold ${score < 0.5 ? 'text-green-700' : 'text-yellow-700'}`}>
-                  Cross-Entropy Loss = {score.toFixed(4)}
+            {accuracy !== null && (
+              <div className={`mt-4 p-4 border rounded-lg ${accuracy >= 0.95 ? 'bg-green-50 border-green-200' : 'bg-yellow-50 border-yellow-200'}`}>
+                <h3 className={`font-medium mb-2 ${accuracy >= 0.95 ? 'text-green-900' : 'text-yellow-900'}`}>Your Score:</h3>
+                <p className={`text-2xl font-bold ${accuracy >= 0.95 ? 'text-green-700' : 'text-yellow-700'}`}>
+                  Accuracy = {(accuracy * 100).toFixed(2)}%
                 </p>
-                {accuracy !== null && (
-                  <p className={`text-lg mt-2 ${score < 0.5 ? 'text-green-700' : 'text-yellow-700'}`}>
-                    Accuracy = {(accuracy * 100).toFixed(2)}%
-                  </p>
-                )}
-                <p className={`text-sm mt-2 ${score < 0.5 ? 'text-green-700' : 'text-yellow-700'}`}>
-                  {score < 0.5 
-                    ? '🎉 Great job! You beat the target of 0.5!' 
-                    : '🎯 Try to get below 0.5! Lower is better.'}
+                <p className={`text-sm mt-2 ${accuracy >= 0.95 ? 'text-green-700' : 'text-yellow-700'}`}>
+                  {accuracy >= 0.95 
+                    ? '🎉 Great job! You achieved at least 95% accuracy!' 
+                    : '🎯 Try to get at least 95% accuracy!'}
                 </p>
               </div>
             )}
