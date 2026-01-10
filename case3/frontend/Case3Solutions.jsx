@@ -140,65 +140,6 @@ export default function Case3Solutions() {
               </ul>
             </div>
 
-            <div className="bg-green-50 p-6 rounded-lg my-6">
-              <h3 className="font-medium text-gray-900 mb-3">Fourier Feature Approach:</h3>
-              <p className="mb-3">
-                Modular arithmetic has a natural representation in terms of complex exponentials.
-                If we embed each number <InlineMath math="k" /> as:
-              </p>
-              <BlockMath math="e^{2\pi i k / 97}" />
-              <p className="mt-3">
-                Then addition mod 97 becomes multiplication of complex numbers!
-                This suggests that networks with periodic activation functions
-                or explicit Fourier features may perform well.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section className="mb-12">
-          <h2 className="text-2xl font-medium text-gray-900 mb-4">Evaluation</h2>
-          <div className="prose max-w-none text-gray-700 space-y-4">
-            <p>
-              The model is evaluated using <strong>cross-entropy loss</strong> on the test set:
-            </p>
-            
-            <BlockMath math="\text{CE} = -\frac{1}{N}\sum_{i=1}^{N} \log p_i(y_i)" />
-            
-            <p>
-              where <InlineMath math="p_i(y_i)" /> is the predicted probability for the correct class
-              after applying softmax to the 97 output logits.
-            </p>
-
-            <div className="bg-yellow-50 p-6 rounded-lg my-6">
-              <h3 className="font-medium text-gray-900 mb-3">Benchmarks:</h3>
-              <table className="min-w-full">
-                <thead>
-                  <tr className="border-b border-gray-300">
-                    <th className="text-left py-2 pr-4">Model</th>
-                    <th className="text-left py-2 pr-4">Cross-Entropy</th>
-                    <th className="text-left py-2">Notes</th>
-                  </tr>
-                </thead>
-                <tbody className="text-sm">
-                  <tr className="border-b border-gray-200">
-                    <td className="py-2 pr-4">Random guessing</td>
-                    <td className="py-2 pr-4">~4.57</td>
-                    <td className="py-2"><InlineMath math="-\log(1/97)" /></td>
-                  </tr>
-                  <tr className="border-b border-gray-200">
-                    <td className="py-2 pr-4">Simple MLP</td>
-                    <td className="py-2 pr-4">~1.0</td>
-                    <td className="py-2">Basic architecture</td>
-                  </tr>
-                  <tr className="border-b border-gray-200">
-                    <td className="py-2 pr-4">Optimal</td>
-                    <td className="py-2 pr-4">~0.0</td>
-                    <td className="py-2">Perfect predictions</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
           </div>
         </section>
 
