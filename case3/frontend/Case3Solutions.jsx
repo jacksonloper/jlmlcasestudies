@@ -203,24 +203,22 @@ export default function Case3Solutions() {
         </section>
 
         <section className="mb-12">
-          <h2 className="text-2xl font-medium text-gray-900 mb-4">Connection to Grokking</h2>
+          <h2 className="text-2xl font-medium text-gray-900 mb-4">The Role of Regularization</h2>
           <div className="prose max-w-none text-gray-700 space-y-4">
             <p>
-              This task is related to the phenomenon of <strong>grokking</strong> discovered
-              by Power et al. (2022). They observed that neural networks trained on modular
-              arithmetic tasks can exhibit delayed generalization:
+              Weight decay regularization plays a crucial role in helping the network find
+              a solution that generalizes well:
             </p>
             
             <div className="bg-purple-50 p-6 rounded-lg my-6">
               <ul className="list-disc list-inside space-y-2">
-                <li>Training loss decreases rapidly (memorization)</li>
-                <li>Test loss remains high for many epochs</li>
-                <li>With <strong>weight decay regularization</strong>, test loss suddenly drops (generalization)</li>
+                <li>Without regularization, the network may memorize training data without generalizing</li>
+                <li>Weight decay encourages simpler, more regularized solutions</li>
+                <li>With proper regularization, the network learns patterns that transfer to unseen data</li>
               </ul>
               <p className="mt-3 text-sm">
-                This &quot;grokking&quot; behavior suggests the network is learning the underlying
-                algorithmic structure rather than just memorizing the training data.
-                <strong>Note:</strong> Weight decay is critical for grokking to occur.
+                The regularized solution captures the underlying mathematical structure
+                of modular arithmetic rather than just memorizing input-output pairs.
               </p>
             </div>
           </div>
