@@ -1,7 +1,64 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { BlockMath, InlineMath } from 'react-katex';
+import Plot from 'react-plotly.js';
 
 export default function Case3Solutions() {
+  const [trainingHistory, setTrainingHistory] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        // Load training history CSV
+        const response = await fetch(`${import.meta.env.BASE_URL}case3/data/reference_training_loss.csv`);
+        const text = await response.text();
+        
+        if (text && text.trim().length > 0 && !text.includes('<!DOCTYPE')) {
+          const lines = text.trim().split('\n').slice(1); // Skip header
+          
+          const epochs = [];
+          const trainLoss = [];
+          const testLoss = [];
+          const trainAccuracy = [];
+          const testAccuracy = [];
+          
+          for (const line of lines) {
+            const parts = line.split(',');
+            if (parts.length >= 5) {
+              const epoch = parseInt(parts[0]);
+              const tl = parseFloat(parts[1]);
+              const tel = parseFloat(parts[2]);
+              const ta = parseFloat(parts[3]);
+              const tea = parseFloat(parts[4]);
+              
+              if (!isNaN(epoch)) {
+                epochs.push(epoch);
+                trainLoss.push(tl);
+                testLoss.push(tel);
+                trainAccuracy.push(ta);
+                testAccuracy.push(tea);
+              }
+            }
+          }
+          
+          setTrainingHistory({
+            epochs,
+            trainLoss,
+            testLoss,
+            trainAccuracy,
+            testAccuracy
+          });
+        }
+      } catch (err) {
+        console.warn('Training history not available:', err);
+      }
+      setLoading(false);
+    }
+    
+    loadData();
+  }, []);
+
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-6xl mx-auto px-6 py-16">
@@ -162,6 +219,145 @@ export default function Case3Solutions() {
             </div>
           </div>
         </section>
+
+        {trainingHistory && (
+          <section className="mb-12">
+            <h2 className="text-2xl font-medium text-gray-900 mb-4">Training Progress: Observing Grokking</h2>
+            <div className="prose max-w-none text-gray-700 space-y-4 mb-6">
+              <p>
+                The plots below demonstrate the grokking phenomenon. Notice how the training loss
+                drops quickly (the network memorizes the training data), but the test loss remains
+                high for thousands of epochs before suddenly dropping (the network finally generalizes).
+              </p>
+            </div>
+            <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6">
+              {/* Loss Plot */}
+              <div className="mb-8">
+                <h3 className="text-lg font-medium text-gray-900 mb-3">Cross-Entropy Loss Over Time</h3>
+                <Plot
+                  data={[
+                    {
+                      x: trainingHistory.epochs,
+                      y: trainingHistory.trainLoss,
+                      mode: 'lines',
+                      name: 'Train Loss',
+                      line: { color: 'rgba(59, 130, 246, 1)', width: 2 },
+                    },
+                    {
+                      x: trainingHistory.epochs,
+                      y: trainingHistory.testLoss,
+                      mode: 'lines',
+                      name: 'Test Loss',
+                      line: { color: 'rgba(239, 68, 68, 1)', width: 2 },
+                    },
+                  ]}
+                  layout={{
+                    title: {
+                      text: 'Train vs Test Loss (Grokking Demonstration)',
+                      font: { size: typeof window !== 'undefined' && window.innerWidth < 640 ? 14 : 16 }
+                    },
+                    xaxis: { title: 'Epoch' },
+                    yaxis: { title: 'Cross-Entropy Loss' },
+                    hovermode: 'closest',
+                    showlegend: true,
+                    legend: {
+                      x: typeof window !== 'undefined' && window.innerWidth < 640 ? 0 : 0.02,
+                      y: typeof window !== 'undefined' && window.innerWidth < 640 ? -0.2 : 0.98,
+                      orientation: typeof window !== 'undefined' && window.innerWidth < 640 ? 'h' : 'v',
+                      xanchor: 'left',
+                      yanchor: typeof window !== 'undefined' && window.innerWidth < 640 ? 'top' : 'top',
+                      bgcolor: 'rgba(255, 255, 255, 0.8)',
+                      bordercolor: 'rgba(0, 0, 0, 0.2)',
+                      borderwidth: 1,
+                    },
+                    autosize: true,
+                    margin: { 
+                      l: typeof window !== 'undefined' && window.innerWidth < 640 ? 40 : 50, 
+                      r: typeof window !== 'undefined' && window.innerWidth < 640 ? 10 : 20, 
+                      t: typeof window !== 'undefined' && window.innerWidth < 640 ? 40 : 50, 
+                      b: typeof window !== 'undefined' && window.innerWidth < 640 ? 90 : 50 
+                    },
+                  }}
+                  style={{ width: '100%', height: typeof window !== 'undefined' && window.innerWidth < 640 ? '300px' : '400px' }}
+                  config={{ responsive: true }}
+                  useResizeHandler={true}
+                />
+              </div>
+              
+              {/* Accuracy Plot */}
+              <div className="mb-6">
+                <h3 className="text-lg font-medium text-gray-900 mb-3">Accuracy Over Time</h3>
+                <Plot
+                  data={[
+                    {
+                      x: trainingHistory.epochs,
+                      y: trainingHistory.trainAccuracy.map(a => a * 100),
+                      mode: 'lines',
+                      name: 'Train Accuracy',
+                      line: { color: 'rgba(59, 130, 246, 1)', width: 2 },
+                    },
+                    {
+                      x: trainingHistory.epochs,
+                      y: trainingHistory.testAccuracy.map(a => a * 100),
+                      mode: 'lines',
+                      name: 'Test Accuracy',
+                      line: { color: 'rgba(239, 68, 68, 1)', width: 2 },
+                    },
+                  ]}
+                  layout={{
+                    title: {
+                      text: 'Train vs Test Accuracy',
+                      font: { size: typeof window !== 'undefined' && window.innerWidth < 640 ? 14 : 16 }
+                    },
+                    xaxis: { title: 'Epoch' },
+                    yaxis: { title: 'Accuracy (%)', range: [0, 105] },
+                    hovermode: 'closest',
+                    showlegend: true,
+                    legend: {
+                      x: typeof window !== 'undefined' && window.innerWidth < 640 ? 0 : 0.02,
+                      y: typeof window !== 'undefined' && window.innerWidth < 640 ? -0.2 : 0.98,
+                      orientation: typeof window !== 'undefined' && window.innerWidth < 640 ? 'h' : 'v',
+                      xanchor: 'left',
+                      yanchor: typeof window !== 'undefined' && window.innerWidth < 640 ? 'top' : 'top',
+                      bgcolor: 'rgba(255, 255, 255, 0.8)',
+                      bordercolor: 'rgba(0, 0, 0, 0.2)',
+                      borderwidth: 1,
+                    },
+                    autosize: true,
+                    margin: { 
+                      l: typeof window !== 'undefined' && window.innerWidth < 640 ? 40 : 50, 
+                      r: typeof window !== 'undefined' && window.innerWidth < 640 ? 10 : 20, 
+                      t: typeof window !== 'undefined' && window.innerWidth < 640 ? 40 : 50, 
+                      b: typeof window !== 'undefined' && window.innerWidth < 640 ? 90 : 50 
+                    },
+                  }}
+                  style={{ width: '100%', height: typeof window !== 'undefined' && window.innerWidth < 640 ? '300px' : '400px' }}
+                  config={{ responsive: true }}
+                  useResizeHandler={true}
+                />
+              </div>
+              
+              <div className="mt-4 prose max-w-none text-gray-700 text-sm">
+                <p>
+                  <strong>Key observations:</strong>
+                </p>
+                <ul className="list-disc list-inside space-y-1 mt-2">
+                  <li><strong>Blue line (Training):</strong> Loss drops rapidly in the first few hundred epochs as the network memorizes the training data</li>
+                  <li><strong>Red line (Test):</strong> Loss remains high for thousands of epochs, then suddenly drops around epoch 6000</li>
+                  <li>This delayed generalization is the hallmark of &quot;grokking&quot;</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {loading && (
+          <section className="mb-12">
+            <div className="text-center py-12">
+              <div className="text-gray-600">Loading training history...</div>
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );
