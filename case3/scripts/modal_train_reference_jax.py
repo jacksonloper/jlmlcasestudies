@@ -1,16 +1,16 @@
 """
 Train reference solution for Case Study 3: Modular Arithmetic using JAX on Modal.com with T4 GPU.
 
-This script trains a neural network to learn modular addition mod 97.
+This script trains neural networks to learn modular addition mod 97.
 Architecture: 194 (input) -> hidden -> hidden -> 97 (output) with ReLU activations
-Optimizer: Adam (no weight decay)
 
-Without weight decay, the network memorizes the training data (100% train accuracy)
-but does not generalize to the test set. To observe grokking (delayed generalization),
-weight decay regularization would need to be added.
+Two training runs are performed:
+1. Adam (no weight decay) - Shows memorization without generalization
+2. AdamW (with weight decay) - Shows grokking phenomenon (delayed generalization)
 
 Outputs:
-- reference_training_loss.csv: Training and test loss/accuracy over epochs
+- reference_training_loss.csv: Training history WITHOUT weight decay (memorization)
+- reference_training_loss_wd.csv: Training history WITH weight decay (grokking)
 """
 
 import modal
@@ -31,11 +31,11 @@ image = (
 @app.function(
     image=image,
     gpu="T4",
-    timeout=60 * 60,  # 60 minute timeout for extended training
+    timeout=90 * 60,  # 90 minute timeout for extended training (both runs)
 )
 def train_model(train_x_list, train_y_list, test_x_list, test_y_list, 
                 hidden_size=128, n_epochs=50000, learning_rate=0.001, batch_size=512,
-                log_every=100):
+                log_interval_seconds=30, weight_decay=0.0, run_name="default"):
     """
     Train a neural network for modular arithmetic using JAX.
     
@@ -48,7 +48,9 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
         n_epochs: Number of training epochs
         learning_rate: Learning rate for Adam optimizer
         batch_size: Minibatch size
-        log_every: Log metrics every N epochs
+        log_interval_seconds: Log metrics approximately every N seconds
+        weight_decay: Weight decay for AdamW (0.0 = no weight decay)
+        run_name: Name for this training run
     
     Returns:
         Dictionary with training history
@@ -72,6 +74,7 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
     input_dim = 194  # 97 * 2 one-hot encoding
     
     # Verify GPU is available
+    print(f"\n=== {run_name} ===")
     print(f"JAX version: {jax.__version__}")
     print(f"JAX devices: {jax.devices()}")
     backend = jax.default_backend()
@@ -82,8 +85,10 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
     
     print(f"✓ GPU backend confirmed")
     print(f"Training for {n_epochs} epochs with lr={learning_rate}, batch_size={batch_size}")
+    print(f"Weight decay: {weight_decay}")
     print(f"Training data: {n_train} samples, Test data: {n_test} samples")
     print(f"Architecture: {input_dim} -> {hidden_size} -> {hidden_size} -> {n_classes}")
+    print(f"Logging approximately every {log_interval_seconds} seconds")
     
     # Set random seed
     key = random.PRNGKey(42)
@@ -140,8 +145,13 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
     key, init_key = random.split(key)
     params = init_network_params(init_key)
     
-    # Initialize Adam optimizer (no weight decay as requested)
-    optimizer = optax.adam(learning_rate=learning_rate)
+    # Initialize optimizer - Adam or AdamW depending on weight_decay
+    if weight_decay > 0:
+        optimizer = optax.adamw(learning_rate=learning_rate, weight_decay=weight_decay)
+        print(f"Using AdamW optimizer with weight_decay={weight_decay}")
+    else:
+        optimizer = optax.adam(learning_rate=learning_rate)
+        print(f"Using Adam optimizer (no weight decay)")
     opt_state = optimizer.init(params)
     
     @jit
@@ -169,6 +179,7 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
     print("-" * 70)
     
     start_time = time.time()
+    last_log_time = start_time
     
     epochs_recorded = []
     train_losses = []
@@ -179,6 +190,9 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
     
     # Number of batches per epoch
     n_batches = max(1, n_train // batch_size)
+    
+    # Always log first epoch
+    should_log_next = True
     
     for epoch in range(n_epochs + 1):
         # Shuffle training data each epoch
@@ -196,10 +210,13 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
             
             params, opt_state, _ = update_step(params, opt_state, x_batch, y_batch)
         
-        # Log metrics
-        if epoch % log_every == 0:
-            elapsed = time.time() - start_time
-            
+        current_time = time.time()
+        elapsed = current_time - start_time
+        time_since_last_log = current_time - last_log_time
+        
+        # Log metrics based on time interval (approximately every log_interval_seconds)
+        # Also always log first and last epoch
+        if should_log_next or time_since_last_log >= log_interval_seconds or epoch == n_epochs:
             train_loss, train_acc = compute_metrics(params, train_x, train_y)
             test_loss, test_acc = compute_metrics(params, test_x, test_y)
             
@@ -217,6 +234,9 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
             
             print(f"{epoch:8d} {train_loss:12.4f} {test_loss:12.4f} {train_acc:10.4f} {test_acc:10.4f} {elapsed:8.1f}s")
             
+            last_log_time = current_time
+            should_log_next = False
+            
             # Early stopping if both train and test are near perfect
             if train_acc > 0.999 and test_acc > 0.999:
                 print(f"\nEarly stopping: Both train and test accuracy > 99.9%")
@@ -233,21 +253,27 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
         'test_accuracies': test_accuracies,
         'times': times_recorded,
         'total_time': total_time,
+        'run_name': run_name,
     }
 
 
 @app.local_entrypoint()
 def main(hidden_size: int = 128, n_epochs: int = 50000, learning_rate: float = 0.001, 
-         batch_size: int = 512, log_every: int = 100):
+         batch_size: int = 512, log_interval_seconds: int = 30, weight_decay: float = 1.0):
     """
     Main entrypoint for running training on Modal.
+    
+    Runs two training configurations:
+    1. Without weight decay (memorization only)
+    2. With weight decay (grokking/generalization)
     
     Args:
         hidden_size: Size of hidden layers
         n_epochs: Number of training epochs
         learning_rate: Learning rate for Adam
         batch_size: Minibatch size
-        log_every: Log every N epochs
+        log_interval_seconds: Log approximately every N seconds
+        weight_decay: Weight decay for AdamW in second run
     """
     import csv
     import numpy as np
@@ -256,6 +282,7 @@ def main(hidden_size: int = 128, n_epochs: int = 50000, learning_rate: float = 0
     print(f"Starting Case 3 training on Modal with T4 GPU...")
     print(f"Architecture: 194 -> {hidden_size} -> {hidden_size} -> 97")
     print(f"Epochs: {n_epochs}, LR: {learning_rate}, Batch size: {batch_size}")
+    print(f"Logging every ~{log_interval_seconds} seconds")
     
     # Load training and test data
     script_dir = Path(__file__).parent
@@ -269,8 +296,34 @@ def main(hidden_size: int = 128, n_epochs: int = 50000, learning_rate: float = 0
     
     print(f"Loaded {len(train_x)} training samples, {len(test_x)} test samples")
     
-    # Run training on Modal
-    result = train_model.remote(
+    # Create output directory
+    output_dir = script_dir / "modal_outputs"
+    output_dir.mkdir(exist_ok=True)
+    
+    def save_result(result, filename):
+        """Save training result to CSV."""
+        csv_path = output_dir / filename
+        with open(csv_path, 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(['epoch', 'train_loss', 'test_loss', 'train_accuracy', 'test_accuracy', 'time_seconds'])
+            for i in range(len(result['epochs'])):
+                writer.writerow([
+                    result['epochs'][i],
+                    result['train_losses'][i],
+                    result['test_losses'][i],
+                    result['train_accuracies'][i],
+                    result['test_accuracies'][i],
+                    result['times'][i],
+                ])
+        print(f"Saved {result['run_name']} to {csv_path}")
+        return csv_path
+    
+    # Run 1: WITHOUT weight decay (memorization)
+    print("\n" + "="*70)
+    print("RUN 1: Training WITHOUT weight decay (shows memorization)")
+    print("="*70)
+    
+    result_no_wd = train_model.remote(
         train_x_list=train_x,
         train_y_list=train_y,
         test_x_list=test_x,
@@ -279,35 +332,44 @@ def main(hidden_size: int = 128, n_epochs: int = 50000, learning_rate: float = 0
         n_epochs=n_epochs,
         learning_rate=learning_rate,
         batch_size=batch_size,
-        log_every=log_every,
+        log_interval_seconds=log_interval_seconds,
+        weight_decay=0.0,
+        run_name="No Weight Decay (Memorization)",
     )
     
-    # Create output directory
-    output_dir = script_dir / "modal_outputs"
-    output_dir.mkdir(exist_ok=True)
+    csv_no_wd = save_result(result_no_wd, "reference_training_loss.csv")
+    print(f"Training time: {result_no_wd['total_time']:.2f}s ({result_no_wd['total_time']/60:.2f} min)")
     
-    print(f"\nSaving results to {output_dir}...")
+    # Run 2: WITH weight decay (grokking)
+    print("\n" + "="*70)
+    print(f"RUN 2: Training WITH weight decay={weight_decay} (shows grokking)")
+    print("="*70)
     
-    # Save training history CSV
-    csv_path = output_dir / "reference_training_loss.csv"
-    with open(csv_path, 'w', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow(['epoch', 'train_loss', 'test_loss', 'train_accuracy', 'test_accuracy', 'time_seconds'])
-        for i in range(len(result['epochs'])):
-            writer.writerow([
-                result['epochs'][i],
-                result['train_losses'][i],
-                result['test_losses'][i],
-                result['train_accuracies'][i],
-                result['test_accuracies'][i],
-                result['times'][i],
-            ])
+    result_wd = train_model.remote(
+        train_x_list=train_x,
+        train_y_list=train_y,
+        test_x_list=test_x,
+        test_y_list=test_y,
+        hidden_size=hidden_size,
+        n_epochs=n_epochs,
+        learning_rate=learning_rate,
+        batch_size=batch_size,
+        log_interval_seconds=log_interval_seconds,
+        weight_decay=weight_decay,
+        run_name=f"Weight Decay={weight_decay} (Grokking)",
+    )
     
-    print(f"Training history saved to {csv_path}")
-    print(f"Total training time: {result['total_time']:.2f} seconds ({result['total_time']/60:.2f} minutes)")
+    csv_wd = save_result(result_wd, "reference_training_loss_wd.csv")
+    print(f"Training time: {result_wd['total_time']:.2f}s ({result_wd['total_time']/60:.2f} min)")
     
     # Copy to data directory for frontend
-    final_csv_path = data_dir / "reference_training_loss.csv"
     import shutil
-    shutil.copy(csv_path, final_csv_path)
-    print(f"Copied to {final_csv_path}")
+    shutil.copy(csv_no_wd, data_dir / "reference_training_loss.csv")
+    shutil.copy(csv_wd, data_dir / "reference_training_loss_wd.csv")
+    print(f"\nCopied results to {data_dir}")
+    
+    print("\n" + "="*70)
+    print("SUMMARY")
+    print("="*70)
+    print(f"Run 1 (No WD): Final test acc = {result_no_wd['test_accuracies'][-1]:.4f}")
+    print(f"Run 2 (WD={weight_decay}): Final test acc = {result_wd['test_accuracies'][-1]:.4f}")

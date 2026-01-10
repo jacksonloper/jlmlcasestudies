@@ -5,51 +5,63 @@ import Plot from 'react-plotly.js';
 
 export default function Case3Solutions() {
   const [trainingHistory, setTrainingHistory] = useState(null);
+  const [trainingHistoryWD, setTrainingHistoryWD] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadData() {
-      try {
-        // Load training history CSV
-        const response = await fetch(`${import.meta.env.BASE_URL}case3/data/reference_training_loss.csv`);
-        const text = await response.text();
+      // Helper function to parse CSV
+      const parseCSV = (text) => {
+        if (!text || text.trim().length === 0 || text.includes('<!DOCTYPE')) {
+          return null;
+        }
+        const lines = text.trim().split('\n').slice(1); // Skip header
         
-        if (text && text.trim().length > 0 && !text.includes('<!DOCTYPE')) {
-          const lines = text.trim().split('\n').slice(1); // Skip header
-          
-          const epochs = [];
-          const trainLoss = [];
-          const testLoss = [];
-          const trainAccuracy = [];
-          const testAccuracy = [];
-          
-          for (const line of lines) {
-            const parts = line.split(',');
-            if (parts.length >= 5) {
-              const epoch = parseInt(parts[0]);
-              const tl = parseFloat(parts[1]);
-              const tel = parseFloat(parts[2]);
-              const ta = parseFloat(parts[3]);
-              const tea = parseFloat(parts[4]);
-              
-              if (!isNaN(epoch)) {
-                epochs.push(epoch);
-                trainLoss.push(tl);
-                testLoss.push(tel);
-                trainAccuracy.push(ta);
-                testAccuracy.push(tea);
-              }
+        const epochs = [];
+        const trainLoss = [];
+        const testLoss = [];
+        const trainAccuracy = [];
+        const testAccuracy = [];
+        
+        for (const line of lines) {
+          const parts = line.split(',');
+          if (parts.length >= 5) {
+            const epoch = parseInt(parts[0]);
+            const tl = parseFloat(parts[1]);
+            const tel = parseFloat(parts[2]);
+            const ta = parseFloat(parts[3]);
+            const tea = parseFloat(parts[4]);
+            
+            if (!isNaN(epoch)) {
+              epochs.push(epoch);
+              trainLoss.push(tl);
+              testLoss.push(tel);
+              trainAccuracy.push(ta);
+              testAccuracy.push(tea);
             }
           }
-          
-          setTrainingHistory({
-            epochs,
-            trainLoss,
-            testLoss,
-            trainAccuracy,
-            testAccuracy
-          });
         }
+        
+        return { epochs, trainLoss, testLoss, trainAccuracy, testAccuracy };
+      };
+
+      try {
+        // Load both training histories in parallel
+        const [responseNoWD, responseWD] = await Promise.all([
+          fetch(`${import.meta.env.BASE_URL}case3/data/reference_training_loss.csv`),
+          fetch(`${import.meta.env.BASE_URL}case3/data/reference_training_loss_wd.csv`)
+        ]);
+        
+        const [textNoWD, textWD] = await Promise.all([
+          responseNoWD.text(),
+          responseWD.text()
+        ]);
+        
+        const historyNoWD = parseCSV(textNoWD);
+        const historyWD = parseCSV(textWD);
+        
+        if (historyNoWD) setTrainingHistory(historyNoWD);
+        if (historyWD) setTrainingHistoryWD(historyWD);
       } catch (err) {
         console.warn('Training history not available:', err);
       }
@@ -221,142 +233,158 @@ export default function Case3Solutions() {
           </div>
         </section>
 
-        {trainingHistory && (
+        {(trainingHistory || trainingHistoryWD) && (
           <section className="mb-12">
-            <h2 className="text-2xl font-medium text-gray-900 mb-4">Training Progress: Real Network Training</h2>
+            <h2 className="text-2xl font-medium text-gray-900 mb-4">Training Progress: Comparing Approaches</h2>
             <div className="prose max-w-none text-gray-700 space-y-4 mb-6">
               <p>
-                The plots below show actual training of a neural network (194→128→128→97 with ReLU, Adam optimizer, 
-                <strong> no weight decay</strong>) on this modular arithmetic task for 50,000 epochs.
+                The plots below compare two training runs of the same neural network architecture 
+                (194→128→128→97 with ReLU, Adam optimizer):
               </p>
-              <p>
-                Without weight decay, the network perfectly memorizes the training data (100% train accuracy) 
-                but fails to generalize to the test set. This demonstrates the <strong>memorization phase</strong> - 
-                the network has enough capacity to memorize all training examples as a lookup table.
-              </p>
-              <p className="text-sm bg-yellow-50 p-3 rounded">
-                <strong>To observe grokking:</strong> Add weight decay regularization. The original grokking paper
-                used AdamW with weight decay, which encourages simpler solutions that can generalize.
-              </p>
+              <ul className="list-disc list-inside space-y-1">
+                <li><strong>Without weight decay:</strong> Shows memorization (100% train accuracy, ~0% test accuracy)</li>
+                <li><strong>With weight decay:</strong> Shows grokking (delayed generalization to test set)</li>
+              </ul>
             </div>
-            <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6">
-              {/* Loss Plot */}
-              <div className="mb-8">
-                <h3 className="text-lg font-medium text-gray-900 mb-3">Cross-Entropy Loss Over Time</h3>
+
+            {/* Side by side comparison */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              
+              {/* No Weight Decay Section */}
+              {trainingHistory && (
+                <div className="bg-white border border-gray-200 rounded-lg p-4">
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">Without Weight Decay (Memorization)</h3>
+                  <p className="text-sm text-gray-600 mb-4">Network memorizes training data but cannot generalize</p>
+                  
+                  <Plot
+                    data={[
+                      {
+                        x: trainingHistory.epochs,
+                        y: trainingHistory.trainAccuracy.map(a => a * 100),
+                        mode: 'lines',
+                        name: 'Train Acc',
+                        line: { color: 'rgba(59, 130, 246, 1)', width: 2 },
+                      },
+                      {
+                        x: trainingHistory.epochs,
+                        y: trainingHistory.testAccuracy.map(a => a * 100),
+                        mode: 'lines',
+                        name: 'Test Acc',
+                        line: { color: 'rgba(239, 68, 68, 1)', width: 2 },
+                      },
+                    ]}
+                    layout={{
+                      title: { text: 'Accuracy (No Weight Decay)', font: { size: 14 } },
+                      xaxis: { title: 'Epoch' },
+                      yaxis: { title: 'Accuracy (%)', range: [0, 105] },
+                      hovermode: 'closest',
+                      showlegend: true,
+                      legend: { x: 0.02, y: 0.98, bgcolor: 'rgba(255,255,255,0.8)' },
+                      autosize: true,
+                      margin: { l: 50, r: 20, t: 40, b: 50 },
+                    }}
+                    style={{ width: '100%', height: '300px' }}
+                    config={{ responsive: true }}
+                    useResizeHandler={true}
+                  />
+                  
+                  <div className="mt-3 text-sm text-gray-600">
+                    <p><strong>Result:</strong> Train accuracy hits 100% quickly, test accuracy stays near 0%.</p>
+                  </div>
+                </div>
+              )}
+
+              {/* With Weight Decay Section */}
+              {trainingHistoryWD && (
+                <div className="bg-white border border-green-200 rounded-lg p-4">
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">With Weight Decay (Grokking)</h3>
+                  <p className="text-sm text-gray-600 mb-4">Network eventually learns to generalize</p>
+                  
+                  <Plot
+                    data={[
+                      {
+                        x: trainingHistoryWD.epochs,
+                        y: trainingHistoryWD.trainAccuracy.map(a => a * 100),
+                        mode: 'lines',
+                        name: 'Train Acc',
+                        line: { color: 'rgba(59, 130, 246, 1)', width: 2 },
+                      },
+                      {
+                        x: trainingHistoryWD.epochs,
+                        y: trainingHistoryWD.testAccuracy.map(a => a * 100),
+                        mode: 'lines',
+                        name: 'Test Acc',
+                        line: { color: 'rgba(34, 197, 94, 1)', width: 2 },
+                      },
+                    ]}
+                    layout={{
+                      title: { text: 'Accuracy (With Weight Decay)', font: { size: 14 } },
+                      xaxis: { title: 'Epoch' },
+                      yaxis: { title: 'Accuracy (%)', range: [0, 105] },
+                      hovermode: 'closest',
+                      showlegend: true,
+                      legend: { x: 0.02, y: 0.98, bgcolor: 'rgba(255,255,255,0.8)' },
+                      autosize: true,
+                      margin: { l: 50, r: 20, t: 40, b: 50 },
+                    }}
+                    style={{ width: '100%', height: '300px' }}
+                    config={{ responsive: true }}
+                    useResizeHandler={true}
+                  />
+                  
+                  <div className="mt-3 text-sm text-gray-600">
+                    <p><strong>Result:</strong> Test accuracy eventually catches up to train accuracy (grokking).</p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Loss comparison */}
+            {trainingHistory && trainingHistoryWD && (
+              <div className="mt-6 bg-white border border-gray-200 rounded-lg p-4">
+                <h3 className="text-lg font-medium text-gray-900 mb-3">Loss Comparison</h3>
                 <Plot
                   data={[
-                    {
-                      x: trainingHistory.epochs,
-                      y: trainingHistory.trainLoss,
-                      mode: 'lines',
-                      name: 'Train Loss',
-                      line: { color: 'rgba(59, 130, 246, 1)', width: 2 },
-                    },
                     {
                       x: trainingHistory.epochs,
                       y: trainingHistory.testLoss,
                       mode: 'lines',
-                      name: 'Test Loss',
+                      name: 'Test Loss (No WD)',
                       line: { color: 'rgba(239, 68, 68, 1)', width: 2 },
+                    },
+                    {
+                      x: trainingHistoryWD.epochs,
+                      y: trainingHistoryWD.testLoss,
+                      mode: 'lines',
+                      name: 'Test Loss (With WD)',
+                      line: { color: 'rgba(34, 197, 94, 1)', width: 2 },
                     },
                   ]}
                   layout={{
-                    title: {
-                      text: 'Train vs Test Loss (Real Training, No Weight Decay)',
-                      font: { size: typeof window !== 'undefined' && window.innerWidth < 640 ? 14 : 16 }
-                    },
+                    title: { text: 'Test Loss: Without vs With Weight Decay', font: { size: 16 } },
                     xaxis: { title: 'Epoch' },
-                    yaxis: { title: 'Cross-Entropy Loss' },
+                    yaxis: { title: 'Cross-Entropy Loss', type: 'log' },
                     hovermode: 'closest',
                     showlegend: true,
-                    legend: {
-                      x: typeof window !== 'undefined' && window.innerWidth < 640 ? 0 : 0.02,
-                      y: typeof window !== 'undefined' && window.innerWidth < 640 ? -0.2 : 0.98,
-                      orientation: typeof window !== 'undefined' && window.innerWidth < 640 ? 'h' : 'v',
-                      xanchor: 'left',
-                      yanchor: typeof window !== 'undefined' && window.innerWidth < 640 ? 'top' : 'top',
-                      bgcolor: 'rgba(255, 255, 255, 0.8)',
-                      bordercolor: 'rgba(0, 0, 0, 0.2)',
-                      borderwidth: 1,
-                    },
+                    legend: { x: 0.7, y: 0.98, bgcolor: 'rgba(255,255,255,0.8)' },
                     autosize: true,
-                    margin: { 
-                      l: typeof window !== 'undefined' && window.innerWidth < 640 ? 40 : 50, 
-                      r: typeof window !== 'undefined' && window.innerWidth < 640 ? 10 : 20, 
-                      t: typeof window !== 'undefined' && window.innerWidth < 640 ? 40 : 50, 
-                      b: typeof window !== 'undefined' && window.innerWidth < 640 ? 90 : 50 
-                    },
+                    margin: { l: 60, r: 20, t: 50, b: 50 },
                   }}
-                  style={{ width: '100%', height: typeof window !== 'undefined' && window.innerWidth < 640 ? '300px' : '400px' }}
+                  style={{ width: '100%', height: '400px' }}
                   config={{ responsive: true }}
                   useResizeHandler={true}
                 />
               </div>
+            )}
               
-              {/* Accuracy Plot */}
-              <div className="mb-6">
-                <h3 className="text-lg font-medium text-gray-900 mb-3">Accuracy Over Time</h3>
-                <Plot
-                  data={[
-                    {
-                      x: trainingHistory.epochs,
-                      y: trainingHistory.trainAccuracy.map(a => a * 100),
-                      mode: 'lines',
-                      name: 'Train Accuracy',
-                      line: { color: 'rgba(59, 130, 246, 1)', width: 2 },
-                    },
-                    {
-                      x: trainingHistory.epochs,
-                      y: trainingHistory.testAccuracy.map(a => a * 100),
-                      mode: 'lines',
-                      name: 'Test Accuracy',
-                      line: { color: 'rgba(239, 68, 68, 1)', width: 2 },
-                    },
-                  ]}
-                  layout={{
-                    title: {
-                      text: 'Train vs Test Accuracy',
-                      font: { size: typeof window !== 'undefined' && window.innerWidth < 640 ? 14 : 16 }
-                    },
-                    xaxis: { title: 'Epoch' },
-                    yaxis: { title: 'Accuracy (%)', range: [0, 105] },
-                    hovermode: 'closest',
-                    showlegend: true,
-                    legend: {
-                      x: typeof window !== 'undefined' && window.innerWidth < 640 ? 0 : 0.02,
-                      y: typeof window !== 'undefined' && window.innerWidth < 640 ? -0.2 : 0.98,
-                      orientation: typeof window !== 'undefined' && window.innerWidth < 640 ? 'h' : 'v',
-                      xanchor: 'left',
-                      yanchor: typeof window !== 'undefined' && window.innerWidth < 640 ? 'top' : 'top',
-                      bgcolor: 'rgba(255, 255, 255, 0.8)',
-                      bordercolor: 'rgba(0, 0, 0, 0.2)',
-                      borderwidth: 1,
-                    },
-                    autosize: true,
-                    margin: { 
-                      l: typeof window !== 'undefined' && window.innerWidth < 640 ? 40 : 50, 
-                      r: typeof window !== 'undefined' && window.innerWidth < 640 ? 10 : 20, 
-                      t: typeof window !== 'undefined' && window.innerWidth < 640 ? 40 : 50, 
-                      b: typeof window !== 'undefined' && window.innerWidth < 640 ? 90 : 50 
-                    },
-                  }}
-                  style={{ width: '100%', height: typeof window !== 'undefined' && window.innerWidth < 640 ? '300px' : '400px' }}
-                  config={{ responsive: true }}
-                  useResizeHandler={true}
-                />
-              </div>
-              
-              <div className="mt-4 prose max-w-none text-gray-700 text-sm">
-                <p>
-                  <strong>Key observations:</strong>
-                </p>
-                <ul className="list-disc list-inside space-y-1 mt-2">
-                  <li><strong>Blue line (Training):</strong> Loss drops rapidly to ~0 in the first few hundred epochs as the network memorizes all training examples</li>
-                  <li><strong>Red line (Test):</strong> Loss increases throughout training, indicating the network is overfitting/memorizing rather than learning the pattern</li>
-                  <li><strong>Train accuracy reaches 100%</strong> while test accuracy stays near 0% - classic memorization without generalization</li>
-                  <li>Without weight decay, the network never &quot;groks&quot; the underlying structure</li>
-                </ul>
-              </div>
+            <div className="mt-6 prose max-w-none text-gray-700 text-sm bg-blue-50 p-4 rounded-lg">
+              <p><strong>Key observations:</strong></p>
+              <ul className="list-disc list-inside space-y-1 mt-2">
+                <li><strong>Without weight decay (red):</strong> Test loss increases continuously - pure memorization</li>
+                <li><strong>With weight decay (green):</strong> Test loss eventually drops - the network &quot;groks&quot; the pattern</li>
+                <li>Weight decay acts as a regularizer that prevents memorization and encourages learning generalizable patterns</li>
+                <li>The &quot;grokking&quot; phenomenon shows that generalization can happen suddenly after many epochs of apparent overfitting</li>
+              </ul>
             </div>
           </section>
         )}
