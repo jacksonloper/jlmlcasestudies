@@ -35,7 +35,7 @@ image = (
 )
 def train_model(train_x_list, train_y_list, test_x_list, test_y_list, 
                 hidden_size=128, n_epochs=50000, learning_rate=0.001, batch_size=512,
-                log_interval_seconds=30, weight_decay=0.0, run_name="default"):
+                log_interval_epochs=10, weight_decay=0.0, run_name="default"):
     """
     Train a neural network for modular arithmetic using JAX.
     
@@ -48,7 +48,7 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
         n_epochs: Number of training epochs
         learning_rate: Learning rate for Adam optimizer
         batch_size: Minibatch size
-        log_interval_seconds: Log metrics approximately every N seconds
+        log_interval_epochs: Log metrics every N epochs (for CSV storage)
         weight_decay: Weight decay for AdamW (0.0 = no weight decay)
         run_name: Name for this training run
     
@@ -88,7 +88,7 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
     print(f"Weight decay: {weight_decay}")
     print(f"Training data: {n_train} samples, Test data: {n_test} samples")
     print(f"Architecture: {input_dim} -> {hidden_size} -> {hidden_size} -> {n_classes}")
-    print(f"Logging approximately every {log_interval_seconds} seconds")
+    print(f"Logging every {log_interval_epochs} epochs")
     
     # Set random seed
     key = random.PRNGKey(42)
@@ -179,7 +179,6 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
     print("-" * 70)
     
     start_time = time.time()
-    last_log_time = start_time
     
     epochs_recorded = []
     train_losses = []
@@ -190,9 +189,6 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
     
     # Number of batches per epoch
     n_batches = max(1, n_train // batch_size)
-    
-    # Always log first epoch
-    should_log_next = True
     
     for epoch in range(n_epochs + 1):
         # Shuffle training data each epoch
@@ -212,11 +208,10 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
         
         current_time = time.time()
         elapsed = current_time - start_time
-        time_since_last_log = current_time - last_log_time
         
-        # Log metrics based on time interval (approximately every log_interval_seconds)
+        # Log metrics every log_interval_epochs epochs (for CSV storage)
         # Also always log first (epoch 0) and last epoch
-        if epoch == 0 or should_log_next or time_since_last_log >= log_interval_seconds or epoch == n_epochs:
+        if epoch == 0 or epoch % log_interval_epochs == 0 or epoch == n_epochs:
             train_loss, train_acc = compute_metrics(params, train_x, train_y)
             test_loss, test_acc = compute_metrics(params, test_x, test_y)
             
@@ -233,9 +228,6 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
             times_recorded.append(elapsed)
             
             print(f"{epoch:8d} {train_loss:12.4f} {test_loss:12.4f} {train_acc:10.4f} {test_acc:10.4f} {elapsed:8.1f}s")
-            
-            last_log_time = current_time
-            should_log_next = False
             
             # Early stopping if both train and test are near perfect
             if train_acc > 0.999 and test_acc > 0.999:
@@ -259,7 +251,7 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
 
 @app.local_entrypoint()
 def main(hidden_size: int = 128, n_epochs: int = 50000, learning_rate: float = 0.001, 
-         batch_size: int = 512, log_interval_seconds: int = 30, weight_decay: float = 0.0,
+         batch_size: int = 512, log_interval_epochs: int = 10, weight_decay: float = 0.0,
          output_suffix: str = ""):
     """
     Main entrypoint for running training on Modal.
@@ -269,7 +261,7 @@ def main(hidden_size: int = 128, n_epochs: int = 50000, learning_rate: float = 0
         n_epochs: Number of training epochs
         learning_rate: Learning rate for Adam
         batch_size: Minibatch size
-        log_interval_seconds: Log approximately every N seconds
+        log_interval_epochs: Log every N epochs (for CSV storage)
         weight_decay: Weight decay for AdamW (0.0 = no weight decay, try 1.0 for grokking)
         output_suffix: Suffix for output filename (e.g., "_wd" for weight decay run)
     """
@@ -281,7 +273,7 @@ def main(hidden_size: int = 128, n_epochs: int = 50000, learning_rate: float = 0
     print(f"Architecture: 194 -> {hidden_size} -> {hidden_size} -> 97")
     print(f"Epochs: {n_epochs}, LR: {learning_rate}, Batch size: {batch_size}")
     print(f"Weight decay: {weight_decay}")
-    print(f"Logging every ~{log_interval_seconds} seconds")
+    print(f"Logging every {log_interval_epochs} epochs")
     
     # Load training and test data
     script_dir = Path(__file__).parent
@@ -320,7 +312,7 @@ def main(hidden_size: int = 128, n_epochs: int = 50000, learning_rate: float = 0
         n_epochs=n_epochs,
         learning_rate=learning_rate,
         batch_size=batch_size,
-        log_interval_seconds=log_interval_seconds,
+        log_interval_epochs=log_interval_epochs,
         weight_decay=weight_decay,
         run_name=run_name,
     )
