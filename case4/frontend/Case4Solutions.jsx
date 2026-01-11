@@ -22,6 +22,9 @@ export default function Case4Solutions() {
         const trainAccuracy = [];
         const testAccuracy = [];
         const weightNorm = [];
+        const weightNormMlp1 = [];
+        const weightNormAttn = [];
+        const weightNormMlp2 = [];
         
         for (const line of lines) {
           const parts = line.split(',');
@@ -32,6 +35,9 @@ export default function Case4Solutions() {
             const ta = parseFloat(parts[3]);
             const tea = parseFloat(parts[4]);
             const wn = parts.length >= 6 ? parseFloat(parts[5]) : null;
+            const wnMlp1 = parts.length >= 7 ? parseFloat(parts[6]) : null;
+            const wnAttn = parts.length >= 8 ? parseFloat(parts[7]) : null;
+            const wnMlp2 = parts.length >= 9 ? parseFloat(parts[8]) : null;
             
             if (!isNaN(epoch)) {
               epochs.push(epoch);
@@ -42,11 +48,20 @@ export default function Case4Solutions() {
               if (wn !== null && !isNaN(wn)) {
                 weightNorm.push(wn);
               }
+              if (wnMlp1 !== null && !isNaN(wnMlp1)) {
+                weightNormMlp1.push(wnMlp1);
+              }
+              if (wnAttn !== null && !isNaN(wnAttn)) {
+                weightNormAttn.push(wnAttn);
+              }
+              if (wnMlp2 !== null && !isNaN(wnMlp2)) {
+                weightNormMlp2.push(wnMlp2);
+              }
             }
           }
         }
         
-        return { epochs, trainLoss, testLoss, trainAccuracy, testAccuracy, weightNorm };
+        return { epochs, trainLoss, testLoss, trainAccuracy, testAccuracy, weightNorm, weightNormMlp1, weightNormAttn, weightNormMlp2 };
       };
 
       try {
@@ -228,13 +243,37 @@ export default function Case4Solutions() {
                       x: trainingHistory.epochs,
                       y: trainingHistory.weightNorm,
                       mode: 'lines+markers',
-                      name: 'Weight Norm',
+                      name: 'Total',
                       line: { color: 'rgba(168, 85, 247, 1)', width: 2 },
-                      marker: { size: 8 },
+                      marker: { size: 6 },
                     },
+                    ...(trainingHistory.weightNormMlp1 && trainingHistory.weightNormMlp1.length > 0 ? [{
+                      x: trainingHistory.epochs,
+                      y: trainingHistory.weightNormMlp1,
+                      mode: 'lines+markers',
+                      name: 'MLP1 (Input)',
+                      line: { color: 'rgba(59, 130, 246, 1)', width: 2 },
+                      marker: { size: 6 },
+                    }] : []),
+                    ...(trainingHistory.weightNormAttn && trainingHistory.weightNormAttn.length > 0 ? [{
+                      x: trainingHistory.epochs,
+                      y: trainingHistory.weightNormAttn,
+                      mode: 'lines+markers',
+                      name: 'Attention',
+                      line: { color: 'rgba(34, 197, 94, 1)', width: 2 },
+                      marker: { size: 6 },
+                    }] : []),
+                    ...(trainingHistory.weightNormMlp2 && trainingHistory.weightNormMlp2.length > 0 ? [{
+                      x: trainingHistory.epochs,
+                      y: trainingHistory.weightNormMlp2,
+                      mode: 'lines+markers',
+                      name: 'MLP2 (Output)',
+                      line: { color: 'rgba(249, 115, 22, 1)', width: 2 },
+                      marker: { size: 6 },
+                    }] : []),
                   ]}
                   layout={{
-                    title: { text: 'Total Weight Norm Over Time', font: { size: 16 } },
+                    title: { text: 'Weight Norm Evolution by Layer', font: { size: 16 } },
                     xaxis: { title: 'Epoch' },
                     yaxis: { title: 'L2 Norm of Weights' },
                     hovermode: 'closest',

@@ -248,10 +248,34 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
             total_norm_sq += jnp.sum(params[key] ** 2)
         return jnp.sqrt(total_norm_sq)
     
+    def compute_weight_norms_by_layer(params):
+        """Compute L2 norms for each layer group separately.
+        
+        Returns:
+            mlp1_norm: Norm of the input MLP layer (w_mlp)
+            attn_norm: Norm of the attention weights (w_q, w_k, w_v)
+            mlp2_norm: Norm of the output projection and final layer (w_o, w_out)
+        """
+        # MLP1: Input MLP layer
+        mlp1_norm_sq = jnp.sum(params['w_mlp'] ** 2)
+        mlp1_norm = jnp.sqrt(mlp1_norm_sq)
+        
+        # Attention: Q, K, V projections
+        attn_norm_sq = (jnp.sum(params['w_q'] ** 2) + 
+                        jnp.sum(params['w_k'] ** 2) + 
+                        jnp.sum(params['w_v'] ** 2))
+        attn_norm = jnp.sqrt(attn_norm_sq)
+        
+        # MLP2: Output projection and final layer
+        mlp2_norm_sq = jnp.sum(params['w_o'] ** 2) + jnp.sum(params['w_out'] ** 2)
+        mlp2_norm = jnp.sqrt(mlp2_norm_sq)
+        
+        return mlp1_norm, attn_norm, mlp2_norm
+    
     # Training loop
     print(f"\nStarting training for {n_epochs} epochs...")
-    print(f"{'Epoch':>8} {'Train Loss':>12} {'Test Loss':>12} {'Train Acc':>10} {'Test Acc':>10} {'W Norm':>10} {'Time':>8}")
-    print("-" * 80)
+    print(f"{'Epoch':>8} {'Train Loss':>12} {'Test Loss':>12} {'Train Acc':>10} {'Test Acc':>10} {'W Norm':>10} {'MLP1':>8} {'Attn':>8} {'MLP2':>8} {'Time':>8}")
+    print("-" * 110)
     
     start_time = time.time()
     
@@ -261,6 +285,9 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
     train_accuracies = []
     test_accuracies = []
     weight_norms = []
+    weight_norms_mlp1 = []
+    weight_norms_attn = []
+    weight_norms_mlp2 = []
     times_recorded = []
     
     # Number of batches per epoch
@@ -291,12 +318,16 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
             train_loss, train_acc = compute_metrics(params, train_x, train_y)
             test_loss, test_acc = compute_metrics(params, test_x, test_y)
             weight_norm = compute_weight_norm(params)
+            mlp1_norm, attn_norm, mlp2_norm = compute_weight_norms_by_layer(params)
             
             train_loss = float(train_loss)
             test_loss = float(test_loss)
             train_acc = float(train_acc)
             test_acc = float(test_acc)
             weight_norm = float(weight_norm)
+            mlp1_norm = float(mlp1_norm)
+            attn_norm = float(attn_norm)
+            mlp2_norm = float(mlp2_norm)
             
             epochs_recorded.append(epoch)
             train_losses.append(train_loss)
@@ -304,9 +335,12 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
             train_accuracies.append(train_acc)
             test_accuracies.append(test_acc)
             weight_norms.append(weight_norm)
+            weight_norms_mlp1.append(mlp1_norm)
+            weight_norms_attn.append(attn_norm)
+            weight_norms_mlp2.append(mlp2_norm)
             times_recorded.append(elapsed)
             
-            print(f"{epoch:8d} {train_loss:12.4f} {test_loss:12.4f} {train_acc:10.4f} {test_acc:10.4f} {weight_norm:10.2f} {elapsed:8.1f}s")
+            print(f"{epoch:8d} {train_loss:12.4f} {test_loss:12.4f} {train_acc:10.4f} {test_acc:10.4f} {weight_norm:10.2f} {mlp1_norm:8.2f} {attn_norm:8.2f} {mlp2_norm:8.2f} {elapsed:8.1f}s")
             
             # Early stopping if both train and test are near perfect
             if train_acc > 0.999 and test_acc > 0.999:
@@ -323,6 +357,9 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
         'train_accuracies': train_accuracies,
         'test_accuracies': test_accuracies,
         'weight_norms': weight_norms,
+        'weight_norms_mlp1': weight_norms_mlp1,
+        'weight_norms_attn': weight_norms_attn,
+        'weight_norms_mlp2': weight_norms_mlp2,
         'times': times_recorded,
         'total_time': total_time,
         'run_name': run_name,
@@ -403,7 +440,7 @@ def main(hidden_size: int = 256, n_heads: int = 4, n_epochs: int = 50000, learni
     csv_path = output_dir / output_filename
     with open(csv_path, 'w', newline='') as f:
         writer = csv.writer(f)
-        writer.writerow(['epoch', 'train_loss', 'test_loss', 'train_accuracy', 'test_accuracy', 'weight_norm', 'time_seconds'])
+        writer.writerow(['epoch', 'train_loss', 'test_loss', 'train_accuracy', 'test_accuracy', 'weight_norm', 'weight_norm_mlp1', 'weight_norm_attn', 'weight_norm_mlp2', 'time_seconds'])
         for i in range(len(result['epochs'])):
             writer.writerow([
                 result['epochs'][i],
@@ -412,6 +449,9 @@ def main(hidden_size: int = 256, n_heads: int = 4, n_epochs: int = 50000, learni
                 result['train_accuracies'][i],
                 result['test_accuracies'][i],
                 result['weight_norms'][i],
+                result['weight_norms_mlp1'][i],
+                result['weight_norms_attn'][i],
+                result['weight_norms_mlp2'][i],
                 result['times'][i],
             ])
     print(f"Saved to {csv_path}")
