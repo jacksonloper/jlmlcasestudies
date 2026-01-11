@@ -23,7 +23,9 @@ export default function Case4Solutions() {
         const testAccuracy = [];
         const weightNorm = [];
         const weightNormMlp1 = [];
-        const weightNormAttn = [];
+        const weightNormQ = [];
+        const weightNormK = [];
+        const weightNormV = [];
         const weightNormMlp2 = [];
         
         for (const line of lines) {
@@ -36,8 +38,10 @@ export default function Case4Solutions() {
             const tea = parseFloat(parts[4]);
             const wn = parts.length >= 6 ? parseFloat(parts[5]) : null;
             const wnMlp1 = parts.length >= 7 ? parseFloat(parts[6]) : null;
-            const wnAttn = parts.length >= 8 ? parseFloat(parts[7]) : null;
-            const wnMlp2 = parts.length >= 9 ? parseFloat(parts[8]) : null;
+            const wnQ = parts.length >= 8 ? parseFloat(parts[7]) : null;
+            const wnK = parts.length >= 9 ? parseFloat(parts[8]) : null;
+            const wnV = parts.length >= 10 ? parseFloat(parts[9]) : null;
+            const wnMlp2 = parts.length >= 11 ? parseFloat(parts[10]) : null;
             
             if (!isNaN(epoch)) {
               epochs.push(epoch);
@@ -51,8 +55,14 @@ export default function Case4Solutions() {
               if (wnMlp1 !== null && !isNaN(wnMlp1)) {
                 weightNormMlp1.push(wnMlp1);
               }
-              if (wnAttn !== null && !isNaN(wnAttn)) {
-                weightNormAttn.push(wnAttn);
+              if (wnQ !== null && !isNaN(wnQ)) {
+                weightNormQ.push(wnQ);
+              }
+              if (wnK !== null && !isNaN(wnK)) {
+                weightNormK.push(wnK);
+              }
+              if (wnV !== null && !isNaN(wnV)) {
+                weightNormV.push(wnV);
               }
               if (wnMlp2 !== null && !isNaN(wnMlp2)) {
                 weightNormMlp2.push(wnMlp2);
@@ -61,7 +71,7 @@ export default function Case4Solutions() {
           }
         }
         
-        return { epochs, trainLoss, testLoss, trainAccuracy, testAccuracy, weightNorm, weightNormMlp1, weightNormAttn, weightNormMlp2 };
+        return { epochs, trainLoss, testLoss, trainAccuracy, testAccuracy, weightNorm, weightNormMlp1, weightNormQ, weightNormK, weightNormV, weightNormMlp2 };
       };
 
       try {
@@ -255,12 +265,28 @@ export default function Case4Solutions() {
                       line: { color: 'rgba(59, 130, 246, 1)', width: 2 },
                       marker: { size: 6 },
                     }] : []),
-                    ...(trainingHistory.weightNormAttn && trainingHistory.weightNormAttn.length > 0 ? [{
+                    ...(trainingHistory.weightNormQ && trainingHistory.weightNormQ.length > 0 ? [{
                       x: trainingHistory.epochs,
-                      y: trainingHistory.weightNormAttn,
+                      y: trainingHistory.weightNormQ,
                       mode: 'lines+markers',
-                      name: 'Attention',
+                      name: 'Query (Q)',
                       line: { color: 'rgba(34, 197, 94, 1)', width: 2 },
+                      marker: { size: 6 },
+                    }] : []),
+                    ...(trainingHistory.weightNormK && trainingHistory.weightNormK.length > 0 ? [{
+                      x: trainingHistory.epochs,
+                      y: trainingHistory.weightNormK,
+                      mode: 'lines+markers',
+                      name: 'Key (K)',
+                      line: { color: 'rgba(234, 179, 8, 1)', width: 2 },
+                      marker: { size: 6 },
+                    }] : []),
+                    ...(trainingHistory.weightNormV && trainingHistory.weightNormV.length > 0 ? [{
+                      x: trainingHistory.epochs,
+                      y: trainingHistory.weightNormV,
+                      mode: 'lines+markers',
+                      name: 'Value (V)',
+                      line: { color: 'rgba(239, 68, 68, 1)', width: 2 },
                       marker: { size: 6 },
                     }] : []),
                     ...(trainingHistory.weightNormMlp2 && trainingHistory.weightNormMlp2.length > 0 ? [{
