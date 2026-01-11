@@ -53,7 +53,12 @@ def get_completion_with_logprobs(prompt, model, provider_config=None, max_tokens
     ]
     
     result = subprocess.run(cmd, capture_output=True, text=True)
-    return json.loads(result.stdout)
+    if result.returncode != 0:
+        return {"error": {"message": f"curl failed: {result.stderr}"}}
+    try:
+        return json.loads(result.stdout)
+    except json.JSONDecodeError as e:
+        return {"error": {"message": f"JSON parse error: {e}"}}
 
 
 def analyze_logprobs(response):
@@ -78,7 +83,7 @@ def analyze_logprobs(response):
     top_logprobs = content.get("top_logprobs", [])
     probs = [math.exp(t["logprob"]) for t in top_logprobs]
     
-    # Entropy calculation (note: this is a lower bound since we only have top 5)
+    # Entropy calculation (note: this is a lower bound since we only have top tokens)
     entropy = -sum(p * math.log2(p) if p > 0 else 0 for p in probs)
     
     return {
