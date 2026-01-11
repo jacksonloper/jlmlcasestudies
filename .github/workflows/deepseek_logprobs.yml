@@ -1,0 +1,105 @@
+name: Get DeepSeek Logprobs
+
+'on':
+  workflow_dispatch:
+    inputs:
+      prompt:
+        description: 'The prompt text to get next-token predictions for'
+        required: true
+        type: string
+      model:
+        description: 'Model to use'
+        required: false
+        default: 'deepseek/deepseek-chat-v3.1'
+        type: string
+
+permissions: {}
+
+jobs:
+  get-logprobs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Get logprobs from DeepSeek
+        env:
+          OPENROUTER_KEY: ${{ secrets.OPENROUTER_KEY }}
+        run: |
+          echo "## DeepSeek Logprobs Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Model**: \`${{ inputs.model }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Prompt** (last 100 chars):" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "${{ inputs.prompt }}" | tail -c 100 >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Make the API call
+          RESPONSE=$(curl -s https://openrouter.ai/api/v1/chat/completions \
+            -H "Authorization: Bearer $OPENROUTER_KEY" \
+            -H "Content-Type: application/json" \
+            -d "$(jq -n \
+              --arg model "${{ inputs.model }}" \
+              --arg prompt "${{ inputs.prompt }}" \
+              '{
+                model: $model,
+                messages: [{role: "user", content: ("Complete this sentence with a single word: " + $prompt)}],
+                max_tokens: 1,
+                temperature: 0,
+                logprobs: true,
+                top_logprobs: 5,
+                provider: {
+                  require_parameters: true,
+                  allow_fallbacks: false
+                }
+              }')")
+
+          echo "### API Response" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Check for errors
+          ERROR=$(echo "$RESPONSE" | jq -r '.error.message // empty')
+          if [ -n "$ERROR" ]; then
+            echo "❌ **Error**: $ERROR" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
+
+          # Extract and display results
+          PROVIDER=$(echo "$RESPONSE" | jq -r '.provider // "unknown"')
+          echo "**Provider**: $PROVIDER" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Extract top 5 logprobs
+          echo "### Top 5 Predictions" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Token | Probability | Log Prob |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|-------------|----------|" >> $GITHUB_STEP_SUMMARY
+
+          echo "$RESPONSE" | jq -r '
+            .choices[0].logprobs.content[0].top_logprobs[]? |
+            "| `\(.token)` | \((100 * (.logprob | exp)) | . * 100 | round / 100)% | \((.logprob * 1000 | round) / 1000) |"
+          ' >> $GITHUB_STEP_SUMMARY
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Calculate entropy
+          ENTROPY=$(echo "$RESPONSE" | jq '
+            [.choices[0].logprobs.content[0].top_logprobs[]? | 
+             (.logprob | exp) as $p | 
+             if $p > 0 then -$p * (($p | log) / (2 | log)) else 0 end
+            ] | add // 0
+          ')
+          
+          echo "**Entropy (lower bound)**: ${ENTROPY} bits" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Also output raw JSON for reference
+          echo "<details>" >> $GITHUB_STEP_SUMMARY
+          echo "<summary>Raw API Response</summary>" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`json" >> $GITHUB_STEP_SUMMARY
+          echo "$RESPONSE" | jq '.' >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "</details>" >> $GITHUB_STEP_SUMMARY
