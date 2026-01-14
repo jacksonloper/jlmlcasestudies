@@ -69,27 +69,28 @@ def download_all_parts():
         print(f"Target: {target_file}")
         print("=" * 60)
 
-        # Use wget with progress
-        result = subprocess.run(
+        # Use wget with progress - stream output to keep Modal from timing out due to idle
+        # Modal has a 10-minute idle timeout; we need to show activity
+        import sys
+        process = subprocess.Popen(
             [
                 "wget",
-                "--progress=dot:mega",  # Show progress every MB
+                "--progress=dot:giga",  # Show progress every GB
                 "-c",  # Continue/resume if interrupted
                 "-O", target_file,
                 url
             ],
-            capture_output=True,
-            text=True,
-            timeout=DOWNLOAD_TIMEOUT,
+            stdout=sys.stdout,
+            stderr=sys.stderr,
         )
+        
+        # Wait for download to complete
+        returncode = process.wait()
 
-        if result.returncode != 0:
+        if returncode != 0:
             print(f"Download failed for {part}")
-            print(f"stdout: {result.stdout}")
-            print(f"stderr: {result.stderr}")
             raise RuntimeError(
-                f"Download failed for {part} with return code {result.returncode}. "
-                f"stderr: {result.stderr}"
+                f"Download failed for {part} with return code {returncode}."
             )
 
         # Check file size
