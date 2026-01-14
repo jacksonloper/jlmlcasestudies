@@ -1,18 +1,17 @@
 """
-Modal script to create the jlmlcasestudies volume and download beyondRGB.zip.005 from Zenodo.
+Modal script to create the jlmlcasestudies volume and download beyondRGB data from OneDrive.
 
 This script:
 1. Creates a Modal volume named 'jlmlcasestudies' (or uses existing one)
-2. Downloads beyondRGB.zip.005 from Zenodo to a 'beyondRGB' subdirectory
-
-Note: beyondRGB.zip.005 is part of a multi-part zip archive, so it's stored as-is.
+2. Downloads the full beyondRGB dataset (~200GB) from OneDrive to a 'beyondRGB' subdirectory
 """
 
 import modal
 
 # Constants
-ZENODO_URL = "https://zenodo.org/records/16848482/files/beyondRGB.zip.005?download=1"
-DOWNLOAD_TIMEOUT = 1800  # 30 minutes timeout for download
+# OneDrive sharing link - converted to direct download format
+ONEDRIVE_SHARE_URL = "https://1drv.ms/u/s!AheBo1Cre0p_gYhXovaSSrG3LNo1Pg?e=V17jcM"
+DOWNLOAD_TIMEOUT = 86400  # 24 hours timeout for large download
 
 # Create Modal app
 app = modal.App("setup-jlmlcasestudies-volume")
@@ -21,56 +20,85 @@ app = modal.App("setup-jlmlcasestudies-volume")
 volume = modal.Volume.from_name("jlmlcasestudies", create_if_missing=True)
 
 # Define the image with required dependencies
-image = modal.Image.debian_slim(python_version="3.11").apt_install("curl")
+image = modal.Image.debian_slim(python_version="3.11").apt_install("curl", "wget")
 
 
 @app.function(
     image=image,
     volumes={"/vol": volume},
-    timeout=30 * 60,  # 30 minute timeout for download
+    timeout=86400,  # 24 hour timeout for large download
 )
 def download_file():
     """
-    Download beyondRGB.zip.005 from Zenodo to the volume.
-    The file is stored as-is since it's part of a multi-part zip archive.
+    Download the full beyondRGB dataset from OneDrive to the volume.
     """
     import subprocess
     import os
+    import shutil
+    import base64
+
+    # Clean up any old files at root level from previous runs
+    for old_file in ["/vol/beyondRGB.zip.005"]:
+        if os.path.exists(old_file):
+            print(f"Removing old file: {old_file}")
+            os.remove(old_file)
 
     # Create the target directory
     target_dir = "/vol/beyondRGB"
+
+    # Clean up existing directory if it exists to avoid mixing old and new files
+    if os.path.exists(target_dir):
+        print(f"Cleaning up existing directory: {target_dir}")
+        shutil.rmtree(target_dir)
+
     os.makedirs(target_dir, exist_ok=True)
 
-    # Download URL
-    output_file = f"{target_dir}/beyondRGB.zip.005"
+    # Convert OneDrive sharing link to direct download URL
+    # OneDrive share links can be converted by changing the base URL and encoding
+    share_url = ONEDRIVE_SHARE_URL
+    
+    # Extract the share ID and convert to direct download format
+    # The format is: https://api.onedrive.com/v1.0/shares/{encoded_url}/root/content
+    encoded_url = base64.urlsafe_b64encode(share_url.encode()).decode().rstrip("=")
+    direct_url = f"https://api.onedrive.com/v1.0/shares/u!{encoded_url}/root/content"
+    
+    print(f"OneDrive share URL: {share_url}")
+    print(f"Direct download URL: {direct_url}")
 
-    print(f"Downloading from {ZENODO_URL}...")
+    # Download the file - use wget for better large file handling
+    target_file = f"{target_dir}/beyondRGB.zip"
+
+    print(f"\nDownloading full beyondRGB dataset (~200GB)...")
+    print("This will take a long time. Progress will be shown below.")
+    
+    # Use wget with progress and resume capability
     result = subprocess.run(
-        ["curl", "-L", "-o", output_file, ZENODO_URL],
-        capture_output=True,
-        text=True,
+        [
+            "wget",
+            "--progress=dot:giga",  # Show progress every GB
+            "-c",  # Continue/resume if interrupted
+            "-O", target_file,
+            direct_url
+        ],
+        capture_output=False,  # Show progress in real-time
         timeout=DOWNLOAD_TIMEOUT,
     )
+    
     if result.returncode != 0:
-        print(f"Download failed: stderr={result.stderr}, stdout={result.stdout}")
-        raise RuntimeError(f"Download failed: stderr={result.stderr}, stdout={result.stdout}")
+        raise RuntimeError(f"Download failed with return code {result.returncode}")
 
     # Check file size
-    file_size = os.path.getsize(output_file)
-    print(f"Downloaded {file_size} bytes to {output_file}")
-
-    # List files in target directory
-    print(f"\nFiles in {target_dir}:")
-    for f in os.listdir(target_dir):
-        full_path = os.path.join(target_dir, f)
-        size = os.path.getsize(full_path)
-        print(f"  {f} ({size} bytes)")
+    if os.path.exists(target_file):
+        file_size = os.path.getsize(target_file)
+        print(f"\nDownloaded {file_size} bytes ({file_size / (1024**3):.2f} GB) to {target_file}")
+    else:
+        raise RuntimeError(f"Download failed - file not found at {target_file}")
 
     # Commit the volume changes
     volume.commit()
     print("\nVolume committed successfully")
 
-    return f"Success: Downloaded {file_size} bytes to {output_file}"
+    return f"Success: Downloaded {target_file} ({file_size / (1024**3):.2f} GB)"
 
 
 @app.local_entrypoint()
@@ -79,7 +107,12 @@ def main():
     Main entrypoint for running the volume setup on Modal.
     """
     print("Setting up jlmlcasestudies volume on Modal...")
-    print("This will download beyondRGB.zip.005 from Zenodo to /beyondRGB/ subdirectory.")
+    print(
+        "This will download the full beyondRGB dataset (~200GB) from OneDrive."
+    )
+    print(
+        "WARNING: This download will take several hours depending on bandwidth."
+    )
 
     result = download_file.remote()
     print(f"Result: {result}")
