@@ -80,12 +80,19 @@ def download_file():
             "-O", target_file,
             direct_url
         ],
-        capture_output=False,  # Show progress in real-time
+        capture_output=True,
+        text=True,
         timeout=DOWNLOAD_TIMEOUT,
     )
     
     if result.returncode != 0:
-        raise RuntimeError(f"Download failed with return code {result.returncode}")
+        print(f"Download failed with return code {result.returncode}")
+        print(f"stdout: {result.stdout}")
+        print(f"stderr: {result.stderr}")
+        raise RuntimeError(
+            f"Download failed with return code {result.returncode}. "
+            f"stderr: {result.stderr}"
+        )
 
     # Check file size
     if os.path.exists(target_file):
