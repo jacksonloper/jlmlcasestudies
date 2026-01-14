@@ -10,6 +10,10 @@ Note: beyondRGB.zip.005 is part of a multi-part zip archive, so it's stored as-i
 
 import modal
 
+# Constants
+ZENODO_URL = "https://zenodo.org/records/16848482/files/beyondRGB.zip.005?download=1"
+DOWNLOAD_TIMEOUT = 1800  # 30 minutes timeout for download
+
 # Create Modal app
 app = modal.App("setup-jlmlcasestudies-volume")
 
@@ -38,18 +42,18 @@ def download_file():
     os.makedirs(target_dir, exist_ok=True)
 
     # Download URL
-    url = "https://zenodo.org/records/16848482/files/beyondRGB.zip.005?download=1"
     output_file = f"{target_dir}/beyondRGB.zip.005"
 
-    print(f"Downloading from {url}...")
+    print(f"Downloading from {ZENODO_URL}...")
     result = subprocess.run(
-        ["curl", "-L", "-o", output_file, url],
+        ["curl", "-L", "-o", output_file, ZENODO_URL],
         capture_output=True,
         text=True,
+        timeout=DOWNLOAD_TIMEOUT,
     )
     if result.returncode != 0:
-        print(f"Download failed: {result.stderr}")
-        raise RuntimeError(f"Download failed: {result.stderr}")
+        print(f"Download failed: stderr={result.stderr}, stdout={result.stdout}")
+        raise RuntimeError(f"Download failed: stderr={result.stderr}, stdout={result.stdout}")
 
     # Check file size
     file_size = os.path.getsize(output_file)
