@@ -1,8 +1,28 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+// Number of spectral bands (400-700nm at 10nm intervals)
+const NUM_BANDS = 31;
+const WAVELENGTH_START = 400;
+const WAVELENGTH_STEP = 10;
+
 export default function Case5() {
   const [showMIS, setShowMIS] = useState(false);
+  const [selectedBand, setSelectedBand] = useState(15); // Default to 550nm (middle of visible spectrum)
+
+  // Calculate wavelength from band index
+  const getWavelength = (bandIndex) => WAVELENGTH_START + bandIndex * WAVELENGTH_STEP;
+  
+  // Get approximate color for wavelength (for visual indicator)
+  const getWavelengthColor = (wavelength) => {
+    if (wavelength < 450) return '#8B00FF'; // Violet
+    if (wavelength < 480) return '#0000FF'; // Blue
+    if (wavelength < 510) return '#00FFFF'; // Cyan
+    if (wavelength < 560) return '#00FF00'; // Green
+    if (wavelength < 590) return '#FFFF00'; // Yellow
+    if (wavelength < 620) return '#FF7F00'; // Orange
+    return '#FF0000'; // Red
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -98,18 +118,53 @@ export default function Case5() {
               ) : (
                 <div>
                   <img 
-                    src={`${import.meta.env.BASE_URL}case5/data/mis_band_00.png`}
-                    alt="MIS Multispectral mosaic image"
+                    src={`${import.meta.env.BASE_URL}case5/data/mis_band_${selectedBand.toString().padStart(2, '0')}.png`}
+                    alt={`MIS Spectral band ${selectedBand} (${getWavelength(selectedBand)}nm)`}
                     className="w-full"
                   />
                   <div className="bg-gray-50 p-4">
-                    <h3 className="font-medium text-gray-900">Multispectral Imaging System (MIS)</h3>
-                    <p className="text-sm text-gray-600">
-                      Grayscale visualization of the multispectral mosaic image. 
-                      The MIS captures 31 spectral bands (400-700nm) in a spatial mosaic pattern.
+                    <h3 className="font-medium text-gray-900">
+                      Multispectral Band: {getWavelength(selectedBand)}nm
+                      <span 
+                        className="inline-block w-4 h-4 ml-2 rounded-full align-middle"
+                        style={{ backgroundColor: getWavelengthColor(getWavelength(selectedBand)) }}
+                      />
+                    </h3>
+                    
+                    {/* Band Slider */}
+                    <div className="mt-4 space-y-2">
+                      <div className="flex justify-between text-xs text-gray-500">
+                        <span>400nm (Violet)</span>
+                        <span>550nm (Green)</span>
+                        <span>700nm (Red)</span>
+                      </div>
+                      <input
+                        type="range"
+                        min="0"
+                        max={NUM_BANDS - 1}
+                        value={selectedBand}
+                        onChange={(e) => setSelectedBand(parseInt(e.target.value))}
+                        className="w-full h-3 rounded-lg appearance-none cursor-pointer"
+                        style={{
+                          background: 'linear-gradient(to right, violet, blue, cyan, green, yellow, orange, red)'
+                        }}
+                      />
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">
+                          Band {selectedBand + 1} of {NUM_BANDS}
+                        </span>
+                        <span className="text-sm font-medium" style={{ color: getWavelengthColor(getWavelength(selectedBand)) }}>
+                          {getWavelength(selectedBand)}nm
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <p className="text-sm text-gray-600 mt-3">
+                      Grayscale image showing reflectance at {getWavelength(selectedBand)}nm wavelength.
+                      Use the slider to explore all 31 spectral bands.
                     </p>
                     <p className="text-xs text-gray-500 mt-1">
-                      Original resolution: 2584 × 1936 pixels
+                      Original resolution: 2584 × 1936 pixels (mosaic demosaiced)
                     </p>
                   </div>
                 </div>
