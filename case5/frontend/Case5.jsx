@@ -1,17 +1,22 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-// Number of spectral bands (400-700nm at 10nm intervals)
-const NUM_BANDS = 31;
-const WAVELENGTH_START = 400;
-const WAVELENGTH_STEP = 10;
+// MIS sensor has 16 spectral channels (4x4 mosaic pattern)
+// Wavelengths span approximately 385-723nm
+const NUM_BANDS = 16;
+const WAVELENGTHS = [
+  385, 407, 430, 453,   // UV-Blue range
+  475, 498, 520, 543,   // Blue-Green range  
+  565, 588, 610, 633,   // Green-Orange range
+  655, 678, 700, 723    // Orange-Red range
+];
 
 export default function Case5() {
   const [showMIS, setShowMIS] = useState(false);
-  const [selectedBand, setSelectedBand] = useState(15); // Default to 550nm (middle of visible spectrum)
+  const [selectedBand, setSelectedBand] = useState(7); // Default to ~543nm (green)
 
-  // Calculate wavelength from band index
-  const getWavelength = (bandIndex) => WAVELENGTH_START + bandIndex * WAVELENGTH_STEP;
+  // Get wavelength for band index
+  const getWavelength = (bandIndex) => WAVELENGTHS[bandIndex] || 550;
   
   // Get approximate color for wavelength (for visual indicator)
   const getWavelengthColor = (wavelength) => {
@@ -51,8 +56,8 @@ export default function Case5() {
               >
                 Beyond RGB dataset
               </a>, which provides paired images from mobile phones (OPPO Find X5 Pro) 
-              and a professional multispectral imaging system (MIS) capturing 31 spectral bands 
-              from 400-700nm at 10nm intervals.
+              and a professional multispectral imaging system (MIS) capturing <strong>16 spectral channels</strong> from 
+              approximately 385-723nm using a 4×4 mosaic filter array.
             </p>
             <p>
               The images below show the same scene captured by both devices under controlled 
@@ -124,7 +129,7 @@ export default function Case5() {
                   />
                   <div className="bg-gray-50 p-4">
                     <h3 className="font-medium text-gray-900">
-                      Multispectral Band: {getWavelength(selectedBand)}nm
+                      Spectral Channel {selectedBand + 1}: {getWavelength(selectedBand)}nm
                       <span 
                         className="inline-block w-4 h-4 ml-2 rounded-full align-middle"
                         style={{ backgroundColor: getWavelengthColor(getWavelength(selectedBand)) }}
@@ -134,9 +139,9 @@ export default function Case5() {
                     {/* Band Slider */}
                     <div className="mt-4 space-y-2">
                       <div className="flex justify-between text-xs text-gray-500">
-                        <span>400nm (Violet)</span>
-                        <span>550nm (Green)</span>
-                        <span>700nm (Red)</span>
+                        <span>385nm (UV/Violet)</span>
+                        <span>543nm (Green)</span>
+                        <span>723nm (Red/NIR)</span>
                       </div>
                       <input
                         type="range"
@@ -151,7 +156,7 @@ export default function Case5() {
                       />
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-600">
-                          Band {selectedBand + 1} of {NUM_BANDS}
+                          Channel {selectedBand + 1} of {NUM_BANDS}
                         </span>
                         <span className="text-sm font-medium" style={{ color: getWavelengthColor(getWavelength(selectedBand)) }}>
                           {getWavelength(selectedBand)}nm
@@ -161,10 +166,10 @@ export default function Case5() {
                     
                     <p className="text-sm text-gray-600 mt-3">
                       Grayscale image showing reflectance at {getWavelength(selectedBand)}nm wavelength.
-                      Use the slider to explore all 31 spectral bands.
+                      Use the slider to explore all 16 spectral channels.
                     </p>
                     <p className="text-xs text-gray-500 mt-1">
-                      Original resolution: 2584 × 1936 pixels (mosaic demosaiced)
+                      Original resolution: 646 × 484 pixels (demosaiced from 4×4 pattern)
                     </p>
                   </div>
                 </div>
@@ -187,16 +192,16 @@ export default function Case5() {
             <ul className="list-disc list-inside space-y-2">
               <li><strong>OPPO:</strong> RGB images from OPPO Find X5 Pro (4096×3072×3, float32)</li>
               <li><strong>Samsung:</strong> RGB images from Samsung Galaxy S21+ (4032×3024×3, float32)</li>
-              <li><strong>MIS:</strong> Multispectral mosaic images (2584×1936, float32) containing 31 bands</li>
+              <li><strong>MIS:</strong> Multispectral mosaic images (2584×1936, float32) with 4×4 filter array → 16 channels at 646×484</li>
               <li><strong>WT (White Target):</strong> Calibrated images with color checker</li>
               <li><strong>NT (No Target):</strong> Scene images without color checker</li>
             </ul>
 
-            <h3 className="text-lg font-medium text-gray-900 mt-6">Spectral Bands</h3>
+            <h3 className="text-lg font-medium text-gray-900 mt-6">Spectral Channels</h3>
             <p>
-              The MIS captures 31 narrow spectral bands from 400nm (violet) to 700nm (red) 
-              at 10nm intervals. This provides detailed spectral information that goes 
-              far beyond what standard RGB cameras can capture.
+              The MIS sensor uses a 4×4 mosaic filter array to capture <strong>16 spectral channels</strong> spanning 
+              approximately 385-723nm. Each channel has a specific spectral response curve that 
+              determines its sensitivity to different wavelengths of light.
             </p>
           </div>
         </section>
