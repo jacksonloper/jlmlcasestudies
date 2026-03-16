@@ -427,7 +427,7 @@ export default function Case5Solutions() {
               the noise point <InlineMath math="z_0" /> and the accumulated log-density change <InlineMath math="\ell_0" />.
               The log-likelihood is then:
             </p>
-            <BlockMath math="\log p(y \mid x) = \log \mathcal{N}(z_0; 0, 1) + \ell_0" />
+            <BlockMath math="\log p(y \mid x) = \log \mathcal{N}(z_0; 0, 1) - \ell_0" />
             <p>
               Since <InlineMath math="z" /> is 1-dimensional, the divergence <InlineMath math="\partial v / \partial z" /> is
               computed exactly via automatic differentiation (no trace estimation needed). We use a high-order
