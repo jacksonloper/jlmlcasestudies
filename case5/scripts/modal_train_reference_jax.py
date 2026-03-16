@@ -1,0 +1,506 @@
+"""
+Train reference solution for Case Study 5: Likelihood Estimation using JAX on Modal.com with T4 GPU.
+
+This script implements rectified flow matching for density estimation. The model learns
+a velocity field v(x, t, z_t) that transforms noise z_0 ~ N(0,1) to conditional samples
+z_1 ~ p(y|x1, x2).
+
+To compute log-likelihoods, we use the continuous normalizing flow (CNF) approach:
+evolve the augmented state (z, log_likelihood) backwards from t=1 (data) to t=0 (noise),
+using the instantaneous change of variables formula:
+
+    dz/dt = v(x, t, z)
+    d(log p)/dt = -div_z v(x, t, z)
+
+Since z is 1-dimensional, div_z v = dv/dz, computed via exact autodiff (not trace estimation).
+
+We integrate from t=1 (data point y) backwards to t=0 (noise), accumulating
+the log-density change. The final log-likelihood is:
+
+    log p(y|x) = log p_0(z_0) - integral_0^1 div_z v(x, t, z_t) dt
+
+where p_0 = N(0, 1) is the base distribution.
+
+Uses Dormand-Prince (dopri5) adaptive solver for accuracy.
+
+Outputs:
+- reference_training_loss.csv: Training loss over time
+- reference_loglik_mse.csv: MSE of log-likelihood estimates over training
+- reference_loglik_scatter.csv: True vs estimated log-likelihoods for scatter plot
+"""
+
+import modal
+
+# Create Modal app
+app = modal.App("case5-reference-jax")
+
+# Define the image with JAX and required dependencies
+image = (
+    modal.Image.debian_slim(python_version="3.11")
+    .pip_install(
+        "jax[cuda12]",
+        "optax",
+        "numpy",
+        "diffrax",
+    )
+)
+
+@app.function(
+    image=image,
+    gpu="T4",
+    timeout=30 * 60,  # 30 minute timeout as backstop
+)
+def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
+                test_true_loglik_list, duration_minutes=5, learning_rate=0.0001,
+                batch_size=4096):
+    """
+    Train rectified flow model and compute log-likelihoods using augmented ODE.
+
+    Args:
+        train_x_list: Training x values as list of [x1, x2] pairs
+        train_y_list: Training y values as list
+        test_x_list: Test x values as list of [x1, x2] pairs
+        test_y_list: Test y values as list
+        test_true_loglik_list: True log-likelihoods for test data
+        duration_minutes: How long to train (in minutes)
+        learning_rate: Learning rate for AdamW optimizer
+        batch_size: Minibatch size for training
+
+    Returns:
+        Dictionary with training history and log-likelihood estimates
+    """
+    import jax
+    import jax.numpy as jnp
+    from jax import random, grad, jit, vmap, jacfwd
+    import optax
+    import diffrax
+    import numpy as np
+    import time
+
+    # Convert input lists to JAX arrays
+    train_x = jnp.array(train_x_list)  # (n_train, 2)
+    train_y = jnp.array(train_y_list)  # (n_train,)
+    test_x = jnp.array(test_x_list)    # (n_test, 2)
+    test_y = jnp.array(test_y_list)    # (n_test,)
+    test_true_loglik = jnp.array(test_true_loglik_list)  # (n_test,)
+    n_train = len(train_y)
+    n_test = len(test_y)
+
+    # Verify GPU is available
+    print(f"JAX version: {jax.__version__}")
+    print(f"JAX devices: {jax.devices()}")
+    backend = jax.default_backend()
+    print(f"JAX backend: {backend}")
+
+    if backend != "gpu" and jax.devices()[0].platform != "gpu":
+        raise RuntimeError(
+            f"Expected GPU backend but got '{backend}'. "
+            f"Device platform: {jax.devices()[0].platform}. "
+            "This script requires GPU acceleration."
+        )
+
+    print(f"✓ GPU backend confirmed")
+    print(f"Training for {duration_minutes} minutes with lr={learning_rate}, batch_size={batch_size}")
+    print(f"Training data: {n_train} samples, Test data: {n_test} samples")
+
+    # Set random seeds
+    key = random.PRNGKey(42)
+    np.random.seed(42)
+
+    # Architecture: (256, 128, 128, 64)
+    # Input: x1, x2, t, zt (4 features)
+    # Output: velocity (1 scalar)
+    hidden_layers = [256, 128, 128, 64]
+    input_dim = 4  # x1, x2, t, zt
+    output_dim = 1  # velocity field
+
+    def init_network_params(layer_sizes, key):
+        """Initialize MLP parameters with Xavier initialization."""
+        params = []
+        keys = random.split(key, len(layer_sizes))
+        for i, (n_in, n_out) in enumerate(zip(layer_sizes[:-1], layer_sizes[1:])):
+            k1, k2 = random.split(keys[i])
+            w = random.normal(k1, (n_in, n_out)) * jnp.sqrt(2.0 / (n_in + n_out))
+            b = jnp.zeros(n_out)
+            params.append((w, b))
+        return params
+
+    def mlp_forward(params, x):
+        """Forward pass through MLP with ReLU activations."""
+        for i, (w, b) in enumerate(params[:-1]):
+            x = jnp.dot(x, w) + b
+            x = jax.nn.relu(x)
+        w, b = params[-1]
+        x = jnp.dot(x, w) + b
+        return x.squeeze()  # Return scalar
+
+    def standardize_data(x, y):
+        """Compute standardization statistics."""
+        x_mean = jnp.mean(x, axis=0)  # (2,) for 2D input
+        x_std = jnp.std(x, axis=0)
+        y_mean = jnp.mean(y)
+        y_std = jnp.std(y)
+        return x_mean, x_std, y_mean, y_std
+
+    def transform_x(x, x_mean, x_std):
+        """Standardize x values."""
+        return (x - x_mean) / (x_std + 1e-8)
+
+    def transform_y(y, y_mean, y_std):
+        """Standardize y values."""
+        return (y - y_mean) / (y_std + 1e-8)
+
+    def inverse_transform_y(y_scaled, y_mean, y_std):
+        """Inverse transform y."""
+        return y_scaled * y_std + y_mean
+
+    def generate_flow_batch(x_data, y_data, n_t_per_sample, key):
+        """
+        Generate flow training batch from finite data.
+
+        For each sample, draws n_t_per_sample independent random t values.
+        Uses linear interpolation: z_t = t*y + (1-t)*eps
+        Target velocity: v = y - eps
+        """
+        n_samples = len(y_data)
+        n_total = n_samples * n_t_per_sample
+
+        # Replicate each sample n_t_per_sample times
+        x_expanded = jnp.repeat(x_data, n_t_per_sample, axis=0)  # (n_total, 2)
+        y_expanded = jnp.repeat(y_data, n_t_per_sample)  # (n_total,)
+
+        # Generate t values from Beta(2, 2)
+        k_eps, k_t = random.split(key)
+        t_values = random.beta(k_t, 2.0, 2.0, shape=(n_total,))
+
+        # Generate random noise
+        eps_values = random.normal(k_eps, (n_total,))
+
+        # Compute z_t = y*t + (1-t)*eps
+        zt_values = y_expanded * t_values + (1 - t_values) * eps_values
+
+        # Target: y - eps
+        targets = y_expanded - eps_values
+
+        # Create features (x1, x2, t, zt)
+        features = jnp.column_stack([x_expanded, t_values[:, None], zt_values[:, None]])
+
+        return features, targets
+
+    @jit
+    def loss_fn(params, features, targets):
+        """MSE loss."""
+        predictions = vmap(lambda x: mlp_forward(params, x))(features)
+        return jnp.mean((predictions - targets) ** 2)
+
+    # --- Log-likelihood computation using augmented ODE ---
+
+    def velocity_fn(params, x1_val, x2_val, t, z):
+        """Compute velocity v(x, t, z) from the network."""
+        features = jnp.array([x1_val, x2_val, t, z])
+        return mlp_forward(params, features)
+
+    def div_velocity_fn(params, x1_val, x2_val, t, z):
+        """Compute dv/dz (exact divergence in 1D) using autodiff."""
+        return grad(lambda z_: velocity_fn(params, x1_val, x2_val, t, z_))(z)
+
+    def compute_loglik_single(params, x1_val, x2_val, y_val, y_mean, y_std):
+        """
+        Compute log p(y|x) for a single data point using the augmented ODE.
+
+        Integrate backwards from t=1 (data) to t=0 (noise):
+            dz/dt = v(x, t, z)
+            d(log_lik_change)/dt = -div_z v(x, t, z)
+
+        Then: log p(y|x) = log p_0(z_0) + log_lik_change - log(y_std)
+        The -log(y_std) term accounts for the change of variables from
+        standardized to original scale.
+        """
+        y_scaled = (y_val - y_mean) / (y_std + 1e-8)
+
+        def augmented_dynamics(t, state, args):
+            z = state[0]
+            params_arg, x1_arg, x2_arg = args
+            v = velocity_fn(params_arg, x1_arg, x2_arg, t, z)
+            div_v = div_velocity_fn(params_arg, x1_arg, x2_arg, t, z)
+            return jnp.array([v, -div_v])
+
+        term = diffrax.ODETerm(augmented_dynamics)
+        solver = diffrax.Dopri5()
+
+        # Integrate from t=1 (data) to t=0 (noise) by going backwards
+        # We reverse: integrate from t=0 to t=1 with reversed dynamics
+        # Or equivalently: set t0=1, t1=0 with dt0=-0.01
+        solution = diffrax.diffeqsolve(
+            term,
+            solver,
+            t0=1.0,
+            t1=0.0,
+            dt0=-0.01,
+            y0=jnp.array([y_scaled, 0.0]),  # [z_1=y_scaled, accumulated_loglik=0]
+            args=(params, x1_val, x2_val),
+            stepsize_controller=diffrax.PIDController(rtol=1e-5, atol=1e-5),
+            saveat=diffrax.SaveAt(t1=True),
+            max_steps=4000,
+        )
+
+        z0 = solution.ys[0, -1]       # Final z value (should be ~N(0,1))
+        loglik_change = solution.ys[1, -1]  # Accumulated log-likelihood change
+
+        # log p(y|x) = log p_0(z_0) + loglik_change - log(y_std)
+        # p_0(z) = N(z; 0, 1) => log p_0(z) = -0.5*z^2 - 0.5*log(2*pi)
+        log_p0 = -0.5 * z0**2 - 0.5 * jnp.log(2.0 * jnp.pi)
+        log_py = log_p0 + loglik_change - jnp.log(y_std + 1e-8)
+
+        return log_py
+
+    # Vectorize over test points
+    compute_loglik_batch = vmap(
+        lambda x1, x2, y: compute_loglik_single(params, x1, x2, y, y_mean, y_std),
+        in_axes=(0, 0, 0)
+    )
+
+    # Initialize model
+    print("Initializing model...")
+    layer_sizes = [input_dim] + hidden_layers + [output_dim]
+    key, init_key = random.split(key)
+    params = init_network_params(layer_sizes, init_key)
+
+    # Initialize optimizer
+    optimizer = optax.chain(
+        optax.clip_by_global_norm(1.0),
+        optax.adamw(learning_rate=learning_rate)
+    )
+    opt_state = optimizer.init(params)
+
+    @jit
+    def update_step(params, opt_state, features, targets):
+        """Single optimization step."""
+        loss = loss_fn(params, features, targets)
+        grads = grad(loss_fn)(params, features, targets)
+        updates, opt_state = optimizer.update(grads, opt_state, params)
+        params = optax.apply_updates(params, updates)
+        return params, opt_state, loss
+
+    # Compute standardization stats
+    print("Computing standardization stats...")
+    x_mean, x_std, y_mean, y_std = standardize_data(train_x, train_y)
+    print(f"Stats: x_mean={x_mean}, x_std={x_std}, y_mean={float(y_mean):.4f}, y_std={float(y_std):.4f}")
+
+    # Scale data
+    train_x_scaled = transform_x(train_x, x_mean, x_std)
+    train_y_scaled = transform_y(train_y, y_mean, y_std)
+    test_x_scaled = transform_x(test_x, x_mean, x_std)
+
+    # Number of t values per sample: 5000 train * 54 = 270,000 flow samples
+    n_t_per_sample = 54
+    print(f"Using n_t_per_sample={n_t_per_sample} ({n_train} * {n_t_per_sample} = {n_train * n_t_per_sample} flow samples per step)")
+
+    # Pre-generate test flow batch for test MSE evaluation
+    test_y_scaled = transform_y(test_y, y_mean, y_std)
+    test_flow_key = random.PRNGKey(9999)
+    test_flow_features, test_flow_targets = generate_flow_batch(
+        test_x_scaled, test_y_scaled, n_t_per_sample, test_flow_key
+    )
+    print(f"Test flow batch size: {len(test_flow_features)} samples")
+
+    # --- Compute log-likelihoods function (uses current params via closure) ---
+    def calc_loglik_mse(current_params, key):
+        """Compute MSE of log-likelihood estimates on test set."""
+        # We need to rebuild the vmap with current params
+        def single_loglik(x1, x2, y):
+            return compute_loglik_single(current_params, x1, x2, y, y_mean, y_std)
+
+        batch_loglik = jit(vmap(single_loglik, in_axes=(0, 0, 0)))
+
+        estimated_loglik = batch_loglik(
+            test_x_scaled[:, 0], test_x_scaled[:, 1], test_y
+        )
+
+        mse = jnp.mean((estimated_loglik - test_true_loglik) ** 2)
+        return float(mse), np.array(estimated_loglik), key
+
+    # Training loop
+    print(f"\nStarting training for {duration_minutes} minutes...")
+    print(f"{'Step':>8}  {'Train Loss':>12}  {'Test MSE':>12}  {'Time':>8}")
+    print("-" * 50)
+
+    start_time = time.time()
+    end_time = start_time + duration_minutes * 60
+
+    step = 0
+    train_losses = []
+    test_mses = []
+    steps_recorded = []
+    times_recorded = []
+    loglik_mse_values = []
+    loglik_mse_steps = []
+    loglik_mse_times = []
+
+    while time.time() < end_time:
+        # Generate flow batch
+        key, batch_key = random.split(key)
+        features, targets = generate_flow_batch(
+            train_x_scaled, train_y_scaled, n_t_per_sample, batch_key
+        )
+
+        # Shuffle
+        key, shuffle_key = random.split(key)
+        perm = random.permutation(shuffle_key, len(features))
+        features = features[perm]
+        targets = targets[perm]
+
+        # Minibatched training
+        n_batches = len(features) // batch_size
+        loss_sum = 0.0
+
+        for batch_idx in range(n_batches):
+            start_idx = batch_idx * batch_size
+            end_idx = start_idx + batch_size
+            batch_features = features[start_idx:end_idx]
+            batch_targets = targets[start_idx:end_idx]
+
+            params, opt_state, batch_loss = update_step(
+                params, opt_state, batch_features, batch_targets
+            )
+            loss_sum += batch_loss
+
+        train_loss = (loss_sum / n_batches).item()
+        step += 1
+
+        # Record every 10 steps
+        if step % 10 == 0:
+            elapsed = time.time() - start_time
+            test_mse = float(loss_fn(params, test_flow_features, test_flow_targets))
+
+            train_losses.append(train_loss)
+            test_mses.append(test_mse)
+            steps_recorded.append(step)
+            times_recorded.append(elapsed)
+
+            print(f"{step:8d}  {train_loss:12.6f}  {test_mse:12.6f}  {elapsed:6.1f}s")
+
+            # Compute log-likelihood MSE every 100 steps
+            if step % 100 == 0:
+                try:
+                    lmse, _, key = calc_loglik_mse(params, key)
+                    loglik_mse_values.append(lmse)
+                    loglik_mse_steps.append(step)
+                    loglik_mse_times.append(elapsed)
+                    print(f"         Log-lik MSE: {lmse:.4f}")
+                except Exception as e:
+                    print(f"         Log-lik MSE computation failed: {e}")
+
+    total_time = time.time() - start_time
+    print(f"\nTraining complete! Total time: {total_time:.2f}s ({total_time/60:.2f} min)")
+
+    # Final log-likelihood computation on all test points
+    print("\nComputing final log-likelihood estimates...")
+    try:
+        final_mse, estimated_logliks, key = calc_loglik_mse(params, key)
+        print(f"Final log-likelihood MSE: {final_mse:.4f}")
+        print(f"Estimated log-liks: mean={np.mean(estimated_logliks):.4f}, std={np.std(estimated_logliks):.4f}")
+        print(f"True log-liks:      mean={float(jnp.mean(test_true_loglik)):.4f}, std={float(jnp.std(test_true_loglik)):.4f}")
+    except Exception as e:
+        print(f"Final log-likelihood computation failed: {e}")
+        estimated_logliks = np.full(n_test, np.nan)
+        final_mse = float('nan')
+
+    return {
+        'steps': steps_recorded,
+        'train_losses': train_losses,
+        'test_mses': test_mses,
+        'times': times_recorded,
+        'loglik_mse_values': loglik_mse_values,
+        'loglik_mse_steps': loglik_mse_steps,
+        'loglik_mse_times': loglik_mse_times,
+        'estimated_logliks': estimated_logliks.tolist(),
+        'true_logliks': np.array(test_true_loglik).tolist(),
+        'test_x1': np.array(test_x[:, 0]).tolist(),
+        'test_x2': np.array(test_x[:, 1]).tolist(),
+        'test_y': np.array(test_y).tolist(),
+        'total_time': total_time,
+        'final_mse': final_mse,
+    }
+
+
+@app.local_entrypoint()
+def main(duration_minutes: float = 5):
+    """
+    Main entrypoint for running training on Modal.
+
+    Args:
+        duration_minutes: How long to train (in minutes)
+    """
+    import csv
+    import numpy as np
+    from pathlib import Path
+
+    print(f"Starting Case 5 reference model training on Modal with T4 GPU for {duration_minutes} minutes...")
+
+    # Load data
+    script_dir = Path(__file__).parent
+    data_dir = script_dir.parent / "data"
+
+    print(f"Loading data from {data_dir}...")
+    train_x = np.load(data_dir / "train_x.npy").astype(np.float32).tolist()
+    train_y = np.load(data_dir / "train_y.npy").astype(np.float32).tolist()
+    test_x = np.load(data_dir / "test_x.npy").astype(np.float32).tolist()
+    test_y = np.load(data_dir / "test_y.npy").astype(np.float32).tolist()
+    test_true_loglik = np.load(data_dir / "test_true_loglik.npy").astype(np.float32).tolist()
+
+    print(f"Loaded {len(train_y)} training samples, {len(test_y)} test samples")
+
+    # Run training on Modal
+    result = train_model.remote(
+        train_x_list=train_x,
+        train_y_list=train_y,
+        test_x_list=test_x,
+        test_y_list=test_y,
+        test_true_loglik_list=test_true_loglik,
+        duration_minutes=duration_minutes
+    )
+
+    # Create output directory
+    output_dir = Path(__file__).parent / "modal_outputs"
+    output_dir.mkdir(exist_ok=True)
+
+    print(f"\nSaving results to {output_dir}...")
+
+    # Training loss CSV
+    with open(output_dir / "reference_training_loss.csv", 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['step', 'train_loss', 'test_mse', 'time_seconds'])
+        for step, loss, test_mse, time_val in zip(
+            result['steps'], result['train_losses'], result['test_mses'], result['times']
+        ):
+            writer.writerow([step, loss, test_mse, time_val])
+
+    # Log-likelihood MSE CSV
+    if len(result['loglik_mse_values']) > 0:
+        with open(output_dir / "reference_loglik_mse.csv", 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(['step', 'loglik_mse', 'time_seconds'])
+            for step, mse, time_val in zip(
+                result['loglik_mse_steps'], result['loglik_mse_values'],
+                result['loglik_mse_times']
+            ):
+                writer.writerow([step, mse, time_val])
+
+    # Log-likelihood scatter CSV (true vs estimated)
+    with open(output_dir / "reference_loglik_scatter.csv", 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['test_x1', 'test_x2', 'test_y', 'true_loglik', 'estimated_loglik'])
+        for x1, x2, y, true_ll, est_ll in zip(
+            result['test_x1'], result['test_x2'], result['test_y'],
+            result['true_logliks'], result['estimated_logliks']
+        ):
+            writer.writerow([x1, x2, y, true_ll, est_ll])
+
+    print("\nAll outputs saved successfully!")
+    print(f"  - reference_training_loss.csv")
+    if len(result['loglik_mse_values']) > 0:
+        print(f"  - reference_loglik_mse.csv")
+    print(f"  - reference_loglik_scatter.csv")
+    print(f"\nFinal log-likelihood MSE: {result['final_mse']:.4f}")
+    print(f"Total training time: {result['total_time']:.2f}s ({result['total_time']/60:.2f} min)")

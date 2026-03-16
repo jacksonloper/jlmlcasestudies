@@ -18,6 +18,8 @@ build/
 public/case1/
 public/case2/
 public/case3/
+public/case4/
+public/case5/
 
 # IDE
 .vscode/
