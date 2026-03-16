@@ -52,7 +52,7 @@ image = (
 )
 def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
                 test_true_loglik_list, duration_minutes=5, learning_rate=0.0001,
-                batch_size=4096):
+                batch_size=4096, weight_decay=1e-4):
     """
     Train rectified flow model and compute log-likelihoods using augmented ODE.
 
@@ -65,6 +65,7 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
         duration_minutes: How long to train (in minutes)
         learning_rate: Learning rate for AdamW optimizer
         batch_size: Minibatch size for training
+        weight_decay: Weight decay for AdamW optimizer
 
     Returns:
         Dictionary with training history and log-likelihood estimates
@@ -100,7 +101,7 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
         )
 
     print(f"✓ GPU backend confirmed")
-    print(f"Training for {duration_minutes} minutes with lr={learning_rate}, batch_size={batch_size}")
+    print(f"Training for {duration_minutes} minutes with lr={learning_rate}, batch_size={batch_size}, weight_decay={weight_decay}")
     print(f"Training data: {n_train} samples, Test data: {n_test} samples")
 
     # Set random seeds
@@ -212,7 +213,7 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
             dz/dt = v(x, t, z)
             d(log_lik_change)/dt = -div_z v(x, t, z)
 
-        Then: log p(y|x) = log p_0(z_0) + log_lik_change - log(y_std)
+        Then: log p(y|x) = log p_0(z_0) - log_lik_change - log(y_std)
         The -log(y_std) term accounts for the change of variables from
         standardized to original scale.
         """
@@ -239,7 +240,7 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
             dt0=-0.01,
             y0=jnp.array([y_scaled, 0.0]),  # [z_1=y_scaled, accumulated_loglik=0]
             args=(params, x1_val, x2_val),
-            stepsize_controller=diffrax.PIDController(rtol=1e-5, atol=1e-5),
+            stepsize_controller=diffrax.PIDController(rtol=1e-5, atol=1e-7),
             saveat=diffrax.SaveAt(t1=True),
             max_steps=4000,
         )
@@ -247,10 +248,14 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
         z0 = solution.ys[0, -1]       # Final z value (should be ~N(0,1))
         loglik_change = solution.ys[1, -1]  # Accumulated log-likelihood change
 
-        # log p(y|x) = log p_0(z_0) + loglik_change - log(y_std)
+        # CNF change of variables: log p(y_scaled) = log p_0(z_0) - ∫_0^1 ∇·v dt
+        # The augmented ODE dℓ/dt = -∇·v integrated from t=1→0 gives:
+        #   ℓ(0) = ∫_0^1 ∇·v dt  (positive)
+        # So: log p(y_scaled) = log p_0(z_0) - ℓ(0)
+        # The -log(y_std) accounts for change of variables from standardized to original scale.
         # p_0(z) = N(z; 0, 1) => log p_0(z) = -0.5*z^2 - 0.5*log(2*pi)
         log_p0 = -0.5 * z0**2 - 0.5 * jnp.log(2.0 * jnp.pi)
-        log_py = log_p0 + loglik_change - jnp.log(y_std + 1e-8)
+        log_py = log_p0 - loglik_change - jnp.log(y_std + 1e-8)
 
         return log_py
 
@@ -266,10 +271,10 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
     key, init_key = random.split(key)
     params = init_network_params(layer_sizes, init_key)
 
-    # Initialize optimizer
+    # Initialize optimizer with weight decay for regularization
     optimizer = optax.chain(
         optax.clip_by_global_norm(1.0),
-        optax.adamw(learning_rate=learning_rate)
+        optax.adamw(learning_rate=learning_rate, weight_decay=weight_decay)
     )
     opt_state = optimizer.init(params)
 
@@ -337,6 +342,12 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
     loglik_mse_steps = []
     loglik_mse_times = []
 
+    # Track the best model based on log-likelihood MSE
+    import copy
+    best_loglik_mse = float('inf')
+    best_params = None
+    best_step = 0
+
     while time.time() < end_time:
         # Generate flow batch
         key, batch_key = random.split(key)
@@ -387,17 +398,26 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
                     loglik_mse_values.append(lmse)
                     loglik_mse_steps.append(step)
                     loglik_mse_times.append(elapsed)
-                    print(f"         Log-lik MSE: {lmse:.4f}")
+
+                    # Track best model
+                    if lmse < best_loglik_mse:
+                        best_loglik_mse = lmse
+                        best_params = jax.tree.map(lambda x: x.copy(), params)
+                        best_step = step
+                        print(f"         Log-lik MSE: {lmse:.4f} *** new best ***")
+                    else:
+                        print(f"         Log-lik MSE: {lmse:.4f} (best: {best_loglik_mse:.4f} at step {best_step})")
                 except Exception as e:
                     print(f"         Log-lik MSE computation failed: {e}")
 
     total_time = time.time() - start_time
     print(f"\nTraining complete! Total time: {total_time:.2f}s ({total_time/60:.2f} min)")
 
-    # Final log-likelihood computation on all test points
-    print("\nComputing final log-likelihood estimates...")
+    # Use best model for final log-likelihood computation
+    eval_params = best_params if best_params is not None else params
+    print(f"\nComputing final log-likelihood estimates using best model (step {best_step}, MSE={best_loglik_mse:.4f})...")
     try:
-        final_mse, estimated_logliks, key = calc_loglik_mse(params, key)
+        final_mse, estimated_logliks, key = calc_loglik_mse(eval_params, key)
         print(f"Final log-likelihood MSE: {final_mse:.4f}")
         print(f"Estimated log-liks: mean={np.mean(estimated_logliks):.4f}, std={np.std(estimated_logliks):.4f}")
         print(f"True log-liks:      mean={float(jnp.mean(test_true_loglik)):.4f}, std={float(jnp.std(test_true_loglik)):.4f}")
@@ -425,18 +445,19 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
 
 
 @app.local_entrypoint()
-def main(duration_minutes: float = 5):
+def main(duration_minutes: float = 5, weight_decay: float = 1e-4):
     """
     Main entrypoint for running training on Modal.
 
     Args:
         duration_minutes: How long to train (in minutes)
+        weight_decay: Weight decay for AdamW optimizer
     """
     import csv
     import numpy as np
     from pathlib import Path
 
-    print(f"Starting Case 5 reference model training on Modal with T4 GPU for {duration_minutes} minutes...")
+    print(f"Starting Case 5 reference model training on Modal with T4 GPU for {duration_minutes} minutes (weight_decay={weight_decay})...")
 
     # Load data
     script_dir = Path(__file__).parent
@@ -458,7 +479,8 @@ def main(duration_minutes: float = 5):
         test_x_list=test_x,
         test_y_list=test_y,
         test_true_loglik_list=test_true_loglik,
-        duration_minutes=duration_minutes
+        duration_minutes=duration_minutes,
+        weight_decay=weight_decay
     )
 
     # Create output directory
