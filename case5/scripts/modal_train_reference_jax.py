@@ -115,15 +115,26 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
     def generate_data_from_process(n_samples, key):
         """
         Generate fresh (x, y) pairs from the true generative model:
-        X1, X2 ~ N(0, 1), Y | X ~ 0.5*N(X1, 1) + 0.5*N(X2, 1)
+        X1, X2 iid ~ 0.5*N(-2, 1) + 0.5*N(2, 1)
+        Y | X ~ 0.5*N(X1, 1) + 0.5*N(X2, 1)
         """
-        k1, k2, k3, k4, k5 = random.split(key, 5)
-        x1 = random.normal(k1, (n_samples,))
-        x2 = random.normal(k2, (n_samples,))
-        # Mixture: flip coin, then sample from component
-        selector = random.uniform(k3, (n_samples,)) < 0.5
-        y1 = random.normal(k4, (n_samples,)) + x1  # N(x1, 1)
-        y2 = random.normal(k5, (n_samples,)) + x2  # N(x2, 1)
+        k1, k2, k3, k4, k5, k6, k7 = random.split(key, 7)
+        # X1 ~ mixture of N(-2, 1) and N(2, 1)
+        x1_selector = random.uniform(k1, (n_samples,)) < 0.5
+        x1_comp1 = random.normal(k2, (n_samples,)) + (-2.0)
+        x1_comp2 = random.normal(k3, (n_samples,)) + 2.0
+        x1 = jnp.where(x1_selector, x1_comp1, x1_comp2)
+        # X2 ~ mixture of N(-2, 1) and N(2, 1)
+        x2_selector = random.uniform(k4, (n_samples,)) < 0.5
+        x2_comp1 = random.normal(k5, (n_samples,)) + (-2.0)
+        x2_comp2 = random.normal(k6, (n_samples,)) + 2.0
+        x2 = jnp.where(x2_selector, x2_comp1, x2_comp2)
+        # Y | X ~ mixture: flip coin, then sample from component
+        k_sel, k_y = random.split(k7)
+        selector = random.uniform(k_sel, (n_samples,)) < 0.5
+        y1 = random.normal(k_y, (n_samples,)) + x1  # N(x1, 1)
+        k_y2 = random.fold_in(k_y, 1)
+        y2 = random.normal(k_y2, (n_samples,)) + x2  # N(x2, 1)
         y = jnp.where(selector, y1, y2)
         x = jnp.column_stack([x1, x2])
         return x, y

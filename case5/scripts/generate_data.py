@@ -2,7 +2,7 @@
 Generate data for Case Study 5: Likelihood Estimation
 
 Generates:
-- X = (X1, X2) in R^2 with X1, X2 ~ N(0, 1)
+- X = (X1, X2) in R^2 with X1, X2 iid ~ 0.5*N(-2, 1) + 0.5*N(2, 1)
 - Y | X=(x1,x2) is an even mixture of N(x1, 1) and N(x2, 1)
 
 The true log likelihood of Y | X is:
@@ -34,9 +34,13 @@ n_total = n_train + n_test
 
 def sample_data(n):
     """Sample n data points from the generative model."""
-    # X = (X1, X2) ~ N(0, 1) each
-    x1 = np.random.normal(0, 1, n)
-    x2 = np.random.normal(0, 1, n)
+    # X = (X1, X2) iid ~ 0.5*N(-2, 1) + 0.5*N(2, 1)
+    # For each Xi: flip a coin, then sample from N(-2,1) or N(2,1)
+    x1_component = (np.random.rand(n) < 0.5).astype(float)
+    x1 = np.where(x1_component, np.random.normal(-2, 1, n), np.random.normal(2, 1, n))
+
+    x2_component = (np.random.rand(n) < 0.5).astype(float)
+    x2 = np.where(x2_component, np.random.normal(-2, 1, n), np.random.normal(2, 1, n))
 
     # Y | X is mixture: 0.5 * N(x1, 1) + 0.5 * N(x2, 1)
     y = np.zeros(n)

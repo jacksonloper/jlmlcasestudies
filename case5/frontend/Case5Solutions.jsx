@@ -366,22 +366,38 @@ export default function Case5Solutions() {
     }
 
     if (selectedView === 'avg_loglik' && trainingHistory && trainingHistory.loglik_mean_values && trainingHistory.loglik_mean_values.length > 0) {
+      const traces = [{
+        x: trainingHistory.loglik_mse_steps,
+        y: trainingHistory.loglik_mean_values,
+        mode: 'lines+markers',
+        name: 'Mean Est. Log-Likelihood',
+        line: { color: 'purple' },
+        marker: { size: 4 },
+      }];
+
+      // Add ground truth mean log-likelihood as a horizontal reference line
+      if (plotData && plotData.trueLogLik && plotData.trueLogLik.length > 0) {
+        const trueMeanLL = plotData.trueLogLik.reduce((a, b) => a + b, 0) / plotData.trueLogLik.length;
+        const steps = trainingHistory.loglik_mse_steps;
+        traces.push({
+          x: [steps[0], steps[steps.length - 1]],
+          y: [trueMeanLL, trueMeanLL],
+          mode: 'lines',
+          name: `True Mean Log-Lik (${trueMeanLL.toFixed(3)})`,
+          line: { color: 'red', dash: 'dash', width: 2 },
+        });
+      }
+
       return (
         <Plot
-          data={[{
-            x: trainingHistory.loglik_mse_steps,
-            y: trainingHistory.loglik_mean_values,
-            mode: 'lines+markers',
-            name: 'Mean Est. Log-Likelihood',
-            line: { color: 'purple' },
-            marker: { size: 4 },
-          }]}
+          data={traces}
           layout={{
             title: 'Average Estimated Log-Likelihood on Test Data',
             xaxis: { title: 'Step' },
             yaxis: { title: 'Mean log p(y|x)' },
             width: 700,
             height: 500,
+            showlegend: true,
             annotations: [{
               text: 'Higher = model assigns more probability to test data',
               showarrow: false,
@@ -426,7 +442,7 @@ export default function Case5Solutions() {
             <p>
               The data is generated from the following model:
             </p>
-            <BlockMath math="X_1, X_2 \sim \mathcal{N}(0, 1) \quad \text{(independent)}" />
+            <BlockMath math="X_1, X_2 \stackrel{\text{iid}}{\sim} \frac{1}{2}\mathcal{N}(-2, 1) + \frac{1}{2}\mathcal{N}(2, 1)" />
             <BlockMath math="Y \mid X_1, X_2 \sim \frac{1}{2}\mathcal{N}(X_1, 1) + \frac{1}{2}\mathcal{N}(X_2, 1)" />
 
             <p>
