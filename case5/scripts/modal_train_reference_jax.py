@@ -279,12 +279,6 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
 
         return log_py
 
-    # Vectorize over test points
-    compute_loglik_batch = vmap(
-        lambda x1, x2, y: compute_loglik_single(params, x1, x2, y, y_mean, y_std),
-        in_axes=(0, 0, 0)
-    )
-
     # Initialize model
     print("Initializing model...")
     layer_sizes = [input_dim] + hidden_layers + [output_dim]
