@@ -87,9 +87,10 @@ export default function Case5Solutions() {
               }
             }
 
-            // Load log-likelihood MSE CSV
+            // Load log-likelihood MSE CSV (may include loglik_mean column)
             let refLoglikMseSteps = [];
             let refLoglikMseValues = [];
+            let refLoglikMeanValues = [];
             try {
               const refLoglikResponse = await fetch(`${import.meta.env.BASE_URL}case5/data/reference_loglik_mse.csv`);
               const refLoglikText = await refLoglikResponse.text();
@@ -103,6 +104,11 @@ export default function Case5Solutions() {
                     if (!isNaN(step) && !isNaN(mse)) {
                       refLoglikMseSteps.push(step);
                       refLoglikMseValues.push(mse);
+                      // Parse optional loglik_mean column (index 2)
+                      if (parts.length >= 3) {
+                        const meanLL = parseFloat(parts[2]);
+                        if (!isNaN(meanLL)) refLoglikMeanValues.push(meanLL);
+                      }
                     }
                   }
                 }
@@ -117,6 +123,7 @@ export default function Case5Solutions() {
               test_mse: refTestMse.length > 0 ? refTestMse : null,
               loglik_mse_steps: refLoglikMseSteps,
               loglik_mse_values: refLoglikMseValues,
+              loglik_mean_values: refLoglikMeanValues.length > 0 ? refLoglikMeanValues : null,
               training_time: refLastTime,
               hardware: 'T4 GPU (Modal)',
               architecture: '(256, 128, 128, 64) MLP',
@@ -358,6 +365,37 @@ export default function Case5Solutions() {
       );
     }
 
+    if (selectedView === 'avg_loglik' && trainingHistory && trainingHistory.loglik_mean_values && trainingHistory.loglik_mean_values.length > 0) {
+      return (
+        <Plot
+          data={[{
+            x: trainingHistory.loglik_mse_steps,
+            y: trainingHistory.loglik_mean_values,
+            mode: 'lines+markers',
+            name: 'Mean Est. Log-Likelihood',
+            line: { color: 'purple' },
+            marker: { size: 4 },
+          }]}
+          layout={{
+            title: 'Average Estimated Log-Likelihood on Test Data',
+            xaxis: { title: 'Step' },
+            yaxis: { title: 'Mean log p(y|x)' },
+            width: 700,
+            height: 500,
+            annotations: [{
+              text: 'Higher = model assigns more probability to test data',
+              showarrow: false,
+              xref: 'paper',
+              yref: 'paper',
+              x: 0.5,
+              y: -0.15,
+              font: { size: 12, color: 'gray' },
+            }],
+          }}
+        />
+      );
+    }
+
     return <p className="text-gray-500 italic">Data not available for this view. Run the Modal training script to generate results.</p>;
   };
 
@@ -367,6 +405,7 @@ export default function Case5Solutions() {
     { key: 'loglik_scatter', label: 'Log-Likelihood Scatter' },
     { key: 'training_loss', label: 'Training Loss' },
     { key: 'loglik_mse_curve', label: 'Log-Lik MSE Curve' },
+    { key: 'avg_loglik', label: 'Avg Log-Likelihood' },
   ];
 
   return (
