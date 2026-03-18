@@ -277,8 +277,9 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
             max_steps=4000,
         )
 
-        z0 = solution.ys[0, -1]       # Final z value (should be ~N(0,1))
-        loglik_change = solution.ys[1, -1]  # Accumulated log-likelihood change
+        final_state = solution.ys[-1]          # shape (2,): [z, loglik_change]
+        z0 = final_state[0]                    # Final z value (should be ~N(0,1))
+        loglik_change = final_state[1]         # Accumulated log-likelihood change
 
         # CNF change of variables: log p(y_scaled) = log p_0(z_0) - ∫_0^1 ∇·v dt
         # The augmented ODE dℓ/dt = -∇·v integrated from t=1→0 gives:
