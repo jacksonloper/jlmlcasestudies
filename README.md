@@ -170,7 +170,7 @@ This achieves Energy Score: ~0.5 (best possible with oracle access to true distr
 Given training data from a conditional distribution, estimate the log-likelihood of held-out test points.
 
 **Data Generation:**
-- X = (X1, X2) with X1, X2 ~ N(0, 1) independently
+- X = (X1, X2) with X1, X2 iid ~ 0.5·N(-2, 1) + 0.5·N(2, 1)
 - Y | X=(x1, x2) is an even mixture of N(x1, 1) and N(x2, 1)
 - 5000 training points, 500 test points
 
