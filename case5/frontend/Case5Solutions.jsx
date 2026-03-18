@@ -168,11 +168,48 @@ export default function Case5Solutions() {
           console.warn('Reference scatter data not available:', err);
         }
 
+        // Load generated samples CSV
+        let genSamplesData = null;
+        try {
+          const genResponse = await fetch(`${import.meta.env.BASE_URL}case5/data/reference_generated_samples.csv`);
+          const genText = await genResponse.text();
+
+          if (genText && genText.trim().length > 0 && !genText.includes('<!DOCTYPE')) {
+            const genLines = genText.trim().split('\n').slice(1);
+            const genX1 = [];
+            const genX2 = [];
+            const genY = [];
+
+            for (const line of genLines) {
+              if (line && line.trim().length > 0) {
+                const parts = line.split(',');
+                if (parts.length >= 3) {
+                  const x1 = parseFloat(parts[0]);
+                  const x2 = parseFloat(parts[1]);
+                  const y = parseFloat(parts[2]);
+                  if (!isNaN(x1) && !isNaN(x2) && !isNaN(y)) {
+                    genX1.push(x1);
+                    genX2.push(x2);
+                    genY.push(y);
+                  }
+                }
+              }
+            }
+
+            if (genX1.length > 0) {
+              genSamplesData = { x1: genX1, x2: genX2, y: genY };
+            }
+          }
+        } catch (err) {
+          console.warn('Generated samples data not available:', err);
+        }
+
         setPlotData({
           trainX1, trainX2, trainY,
           testX1, testX2, testY,
           trueLogLik,
           scatterData,
+          genSamplesData,
         });
 
         setLoading(false);
@@ -205,6 +242,15 @@ export default function Case5Solutions() {
   const renderPlot = () => {
     if (!plotData) return null;
 
+    // Compute shared color range across training, test, and generated data for Y-colored plots
+    const allYValues = [...plotData.trainY, ...plotData.testY];
+    if (plotData.genSamplesData) {
+      allYValues.push(...plotData.genSamplesData.y);
+    }
+    const yMin = Math.min(...allYValues);
+    const yMax = Math.max(...allYValues);
+    const sharedColorscale = 'RdBu';
+
     if (selectedView === 'training') {
       return (
         <Plot
@@ -215,7 +261,9 @@ export default function Case5Solutions() {
             type: 'scatter',
             marker: {
               color: plotData.trainY,
-              colorscale: 'RdBu',
+              colorscale: sharedColorscale,
+              cmin: yMin,
+              cmax: yMax,
               size: 4,
               opacity: 0.6,
               colorbar: { title: 'Y' },
@@ -242,15 +290,47 @@ export default function Case5Solutions() {
             mode: 'markers',
             type: 'scatter',
             marker: {
-              color: plotData.trueLogLik,
-              colorscale: 'Viridis',
+              color: plotData.testY,
+              colorscale: sharedColorscale,
+              cmin: yMin,
+              cmax: yMax,
               size: 6,
-              colorbar: { title: 'True log p(y|x)' },
+              colorbar: { title: 'Y' },
             },
             name: 'Test data',
           }]}
           layout={{
-            title: 'Test Data with True Log-Likelihoods (500 points)',
+            title: 'Test Data (500 points)',
+            xaxis: { title: 'X1' },
+            yaxis: { title: 'X2' },
+            width: 700,
+            height: 500,
+          }}
+        />
+      );
+    }
+
+    if (selectedView === 'generated_samples' && plotData.genSamplesData) {
+      return (
+        <Plot
+          data={[{
+            x: plotData.genSamplesData.x1,
+            y: plotData.genSamplesData.x2,
+            mode: 'markers',
+            type: 'scatter',
+            marker: {
+              color: plotData.genSamplesData.y,
+              colorscale: sharedColorscale,
+              cmin: yMin,
+              cmax: yMax,
+              size: 5,
+              opacity: 0.6,
+              colorbar: { title: 'Y' },
+            },
+            name: 'Generated samples',
+          }]}
+          layout={{
+            title: `Generated Samples from Flow Model (${plotData.genSamplesData.x1.length} points)`,
             xaxis: { title: 'X1' },
             yaxis: { title: 'X2' },
             width: 700,
@@ -418,6 +498,7 @@ export default function Case5Solutions() {
   const viewOptions = [
     { key: 'training', label: 'Training Data' },
     { key: 'test', label: 'Test Data' },
+    { key: 'generated_samples', label: 'Generated Samples' },
     { key: 'loglik_scatter', label: 'Log-Likelihood Scatter' },
     { key: 'training_loss', label: 'Training Loss' },
     { key: 'loglik_mse_curve', label: 'Log-Lik MSE Curve' },

@@ -27,6 +27,7 @@ Outputs:
 - reference_training_loss.csv: Training loss over time
 - reference_loglik_mse.csv: MSE of log-likelihood estimates over training
 - reference_loglik_scatter.csv: True vs estimated log-likelihoods for scatter plot
+- reference_generated_samples.csv: Samples generated from the trained flow model
 """
 
 import modal
@@ -483,6 +484,63 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
         estimated_logliks = np.full(n_test, np.nan)
         final_mse = float('nan')
 
+    # --- Generate samples from the trained flow model ---
+    def generate_sample_single(params, x1_scaled, x2_scaled, z0):
+        """
+        Generate a sample by integrating the ODE forward from t=0 (noise) to t=1 (data).
+        z0 ~ N(0,1) in standardized space, returns y in original space.
+        """
+        def dynamics(t, z, args):
+            params_arg, x1_arg, x2_arg = args
+            return velocity_fn(params_arg, x1_arg, x2_arg, t, z)
+
+        term = diffrax.ODETerm(dynamics)
+        solver = diffrax.Dopri5()
+
+        solution = diffrax.diffeqsolve(
+            term,
+            solver,
+            t0=0.0,
+            t1=1.0,
+            dt0=0.01,
+            y0=z0,
+            args=(params, x1_scaled, x2_scaled),
+            stepsize_controller=diffrax.PIDController(rtol=1e-5, atol=1e-7),
+            saveat=diffrax.SaveAt(t1=True),
+            max_steps=4000,
+        )
+
+        y_scaled = solution.ys[-1]
+        return inverse_transform_y(y_scaled, y_mean, y_std)
+
+    n_gen_samples = 500
+    print(f"\nGenerating {n_gen_samples} samples from the trained flow model...")
+    try:
+        key, gen_key = random.split(key)
+        # Generate fresh x values from the prior
+        gen_x, _ = generate_data_from_process(n_gen_samples, gen_key)
+        gen_x_scaled = transform_x(gen_x, x_mean, x_std)
+
+        # Sample noise z0 ~ N(0,1)
+        key, z0_key = random.split(key)
+        z0_samples = random.normal(z0_key, (n_gen_samples,))
+
+        # Generate y values by integrating ODE forward
+        batch_generate = jit(vmap(
+            lambda x1s, x2s, z0: generate_sample_single(eval_params, x1s, x2s, z0),
+            in_axes=(0, 0, 0)
+        ))
+        gen_y = batch_generate(gen_x_scaled[:, 0], gen_x_scaled[:, 1], z0_samples)
+        gen_y = np.array(gen_y)
+        gen_x_np = np.array(gen_x)
+
+        print(f"Generated samples: y mean={np.mean(gen_y):.4f}, std={np.std(gen_y):.4f}")
+        print(f"Generated samples: x1 mean={np.mean(gen_x_np[:, 0]):.4f}, x2 mean={np.mean(gen_x_np[:, 1]):.4f}")
+    except Exception as e:
+        print(f"Sample generation failed: {e}")
+        gen_x_np = np.zeros((0, 2))
+        gen_y = np.zeros(0)
+
     return {
         'steps': steps_recorded,
         'train_losses': train_losses,
@@ -500,6 +558,9 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
         'total_time': total_time,
         'final_mse': final_mse,
         'true_mean_loglik': true_mean_loglik,
+        'generated_x1': gen_x_np[:, 0].tolist() if len(gen_x_np) > 0 else [],
+        'generated_x2': gen_x_np[:, 1].tolist() if len(gen_x_np) > 0 else [],
+        'generated_y': gen_y.tolist() if len(gen_y) > 0 else [],
     }
 
 
@@ -581,11 +642,23 @@ def main(duration_minutes: float = 5, weight_decay: float = 1e-4, infinite_data:
         ):
             writer.writerow([x1, x2, y, true_ll, est_ll])
 
+    # Generated samples CSV
+    if len(result.get('generated_x1', [])) > 0:
+        with open(output_dir / "reference_generated_samples.csv", 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(['x1', 'x2', 'generated_y'])
+            for x1, x2, y in zip(
+                result['generated_x1'], result['generated_x2'], result['generated_y']
+            ):
+                writer.writerow([x1, x2, y])
+
     print("\nAll outputs saved successfully!")
     print(f"  - reference_training_loss.csv")
     if len(result['loglik_mse_values']) > 0:
         print(f"  - reference_loglik_mse.csv (includes mean estimated log-lik)")
     print(f"  - reference_loglik_scatter.csv")
+    if len(result.get('generated_x1', [])) > 0:
+        print(f"  - reference_generated_samples.csv ({len(result['generated_x1'])} samples)")
     print(f"\nFinal log-likelihood MSE: {result['final_mse']:.4f}")
     print(f"True mean log-likelihood: {result['true_mean_loglik']:.4f}")
     print(f"Total training time: {result['total_time']:.2f}s ({result['total_time']/60:.2f} min)")
