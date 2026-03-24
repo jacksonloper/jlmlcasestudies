@@ -52,7 +52,7 @@ image = (
     timeout=30 * 60,  # 30 minute timeout as backstop
 )
 def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
-                test_true_loglik_list, n_steps=100, learning_rate=0.0001,
+                test_true_loglik_list, n_epochs=100, learning_rate=0.0001,
                 batch_size=4096, weight_decay=1e-4, infinite_data=False):
     """
     Train rectified flow model and compute log-likelihoods using augmented ODE.
@@ -63,7 +63,7 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
         test_x_list: Test x values as list of [x1, x2] pairs
         test_y_list: Test y values as list
         test_true_loglik_list: True log-likelihoods for test data
-        n_steps: Number of training epochs (default 100). Each epoch is a full pass
+        n_epochs: Number of training epochs (default 100). Each epoch is a full pass
                  over the training data with fresh random noise/interpolation times.
         learning_rate: Learning rate for AdamW optimizer
         batch_size: Minibatch size for training
@@ -104,7 +104,7 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
         )
 
     print(f"✓ GPU backend confirmed")
-    print(f"Training for {n_steps} steps with lr={learning_rate}, batch_size={batch_size}, weight_decay={weight_decay}")
+    print(f"Training for {n_epochs} epochs with lr={learning_rate}, batch_size={batch_size}, weight_decay={weight_decay}")
     print(f"Full training data: {n_train} samples, Test data: {n_test} samples")
     if infinite_data:
         print("*** INFINITE DATA MODE: generating fresh training data each step ***")
@@ -412,7 +412,7 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
         return float(mse), float(mean_loglik), np.array(estimated_loglik), key
 
     # Training loop
-    print(f"\nStarting training for {n_steps} epochs...")
+    print(f"\nStarting training for {n_epochs} epochs...")
     print(f"{'Epoch':>8}  {'Train Loss':>12}  {'Val Flow':>12}  {'Time':>8}")
     print("-" * 50)
 
@@ -433,7 +433,7 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
     best_params = None
     best_step = 0
 
-    for step in range(1, n_steps + 1):
+    for step in range(1, n_epochs + 1):
         # Generate flow batch
         key, batch_key = random.split(key)
 
@@ -609,12 +609,12 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
 
 
 @app.local_entrypoint()
-def main(n_steps: int = 100, weight_decay: float = 1e-4, infinite_data: bool = False):
+def main(n_epochs: int = 100, weight_decay: float = 1e-4, infinite_data: bool = False):
     """
     Main entrypoint for running training on Modal.
 
     Args:
-        n_steps: Number of training epochs (default 100)
+        n_epochs: Number of training epochs (default 100)
         weight_decay: Weight decay for AdamW optimizer
         infinite_data: If True, generate fresh training data each step (for debugging)
     """
@@ -623,7 +623,7 @@ def main(n_steps: int = 100, weight_decay: float = 1e-4, infinite_data: bool = F
     from pathlib import Path
 
     mode_str = " [INFINITE DATA]" if infinite_data else ""
-    print(f"Starting Case 5 reference model training on Modal with T4 GPU for {n_steps} epochs (weight_decay={weight_decay}){mode_str}...")
+    print(f"Starting Case 5 reference model training on Modal with T4 GPU for {n_epochs} epochs (weight_decay={weight_decay}){mode_str}...")
 
     # Load data
     script_dir = Path(__file__).parent
@@ -645,7 +645,7 @@ def main(n_steps: int = 100, weight_decay: float = 1e-4, infinite_data: bool = F
         test_x_list=test_x,
         test_y_list=test_y,
         test_true_loglik_list=test_true_loglik,
-        n_steps=n_steps,
+        n_epochs=n_epochs,
         weight_decay=weight_decay,
         infinite_data=infinite_data
     )
