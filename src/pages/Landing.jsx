@@ -22,6 +22,11 @@ export default function Landing() {
       title: 'Case Study 4: Modular Division',
       description: 'Learn modular division mod 97 with one-hot encodings (evaluated with Accuracy)',
     },
+    {
+      id: 'case5',
+      title: 'Case Study 5: Likelihood Estimation',
+      description: 'Estimate log-likelihoods of a conditional distribution (evaluated with MSE)',
+    },
   ];
 
   return (

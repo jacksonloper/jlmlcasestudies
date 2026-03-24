@@ -13,6 +13,10 @@ Main is at https://jacksonloper.github.io/jlmlcasestudies/ and production branch
 - `case2/` - Case Study 2: Distribution Sampling
   - `frontend/` - Case 2 specific frontend pages (Case2.jsx, Case2Solutions.jsx)
   - `scripts/` - Case 2 specific Python scripts (generate_reference.py, generate_groundtruth.py)
+- `case5/` - Case Study 5: Likelihood Estimation
+  - `frontend/` - Case 5 specific frontend pages (Case5.jsx, Case5Solutions.jsx)
+  - `scripts/` - Data generation and Modal training scripts
+  - `data/` - Generated data files (train_x.npy, train_y.npy, test_x.npy, test_y.npy, test_true_loglik.npy)
 - `dataset1/` - Shared dataset for case studies
   - `data/` - Generated data files (train.npy, test_x.npy, test_y.npy)
   - `scripts/` - Data generation script (generate_data.py)
@@ -160,6 +164,39 @@ For comparison, ground truth sampling from the true mixture distribution:
 python case2/scripts/generate_groundtruth.py
 ```
 This achieves Energy Score: ~0.5 (best possible with oracle access to true distribution).
+
+## Case Study 5: Likelihood Estimation
+
+Given training data from a conditional distribution, estimate the log-likelihood of held-out test points.
+
+**Data Generation:**
+- X = (X1, X2) with X1, X2 iid ~ 0.5·N(-2, 1) + 0.5·N(2, 1)
+- Y | X=(x1, x2) is an even mixture of N(x1, 1) and N(x2, 1)
+- 5000 training points, 500 test points
+
+**Evaluation:** Mean Squared Error (MSE) of log-likelihoods
+
+**Files:**
+- `train_x.npy` - 5000×2 matrix of input features (float32)
+- `train_y.npy` - 5000 vector of output values (float32)
+- `test_x.npy` - 500×2 matrix of test input features (float32)
+- `test_y.npy` - 500 vector of test output values (float32)
+- `test_true_loglik.npy` - 500 vector of true log-likelihoods (float32)
+
+**Generate data:**
+```bash
+python case5/scripts/generate_data.py
+```
+
+**Reference Solution - Flow Matching with Augmented ODE:**
+
+The reference solution uses rectified flow matching to learn the conditional distribution, then computes log-likelihoods using the continuous normalizing flow (CNF) change of variables formula with exact divergence computation (since Y is 1D):
+
+```bash
+modal run case5/scripts/modal_train_reference_jax.py --n-epochs 100
+```
+
+The log-likelihood is computed by integrating the augmented ODE backwards from t=1 (data) to t=0 (noise) using Dormand-Prince (dopri5) adaptive solver. The solution page shows a scatter plot of true vs estimated log-likelihoods.
 
 ## Deployment
 
