@@ -52,7 +52,7 @@ image = (
     timeout=30 * 60,  # 30 minute timeout as backstop
 )
 def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
-                test_true_loglik_list, n_steps=500, learning_rate=0.0001,
+                test_true_loglik_list, n_steps=100, learning_rate=0.0001,
                 batch_size=4096, weight_decay=1e-4, infinite_data=False):
     """
     Train rectified flow model and compute log-likelihoods using augmented ODE.
@@ -63,7 +63,8 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
         test_x_list: Test x values as list of [x1, x2] pairs
         test_y_list: Test y values as list
         test_true_loglik_list: True log-likelihoods for test data
-        n_steps: Number of training steps (default 500)
+        n_steps: Number of training epochs (default 100). Each epoch is a full pass
+                 over the training data with fresh random noise/interpolation times.
         learning_rate: Learning rate for AdamW optimizer
         batch_size: Minibatch size for training
         weight_decay: Weight decay for AdamW optimizer
@@ -411,15 +412,15 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
         return float(mse), float(mean_loglik), np.array(estimated_loglik), key
 
     # Training loop
-    print(f"\nStarting training for {n_steps} steps...")
-    print(f"{'Step':>8}  {'Train Loss':>12}  {'Val MSE':>12}  {'Time':>8}")
+    print(f"\nStarting training for {n_steps} epochs...")
+    print(f"{'Epoch':>8}  {'Train Loss':>12}  {'Val Flow':>12}  {'Time':>8}")
     print("-" * 50)
 
     start_time = time.time()
 
     step = 0
     train_losses = []
-    val_mses = []
+    val_flow_losses = []
     steps_recorded = []
     times_recorded = []
     loglik_mse_values = []
@@ -473,41 +474,40 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
 
         train_loss = (loss_sum / n_batches).item()
 
-        # Record every 10 steps
+        # Record flow matching loss every epoch
+        elapsed = time.time() - start_time
+        val_flow_loss = float(loss_fn(params, val_flow_features, val_flow_targets))
+
+        train_losses.append(train_loss)
+        val_flow_losses.append(val_flow_loss)
+        steps_recorded.append(step)
+        times_recorded.append(elapsed)
+
+        print(f"{step:8d}  {train_loss:12.6f}  {val_flow_loss:12.6f}  {elapsed:6.1f}s")
+
+        # Compute log-likelihood metrics on VALIDATION set every 10 epochs
         if step % 10 == 0:
-            elapsed = time.time() - start_time
-            val_mse = float(loss_fn(params, val_flow_features, val_flow_targets))
+            try:
+                lmse, lmean, key = calc_val_loglik_metrics(params, key)
+                loglik_mse_values.append(lmse)
+                loglik_mean_values.append(lmean)
+                loglik_mse_steps.append(step)
+                loglik_mse_times.append(elapsed)
 
-            train_losses.append(train_loss)
-            val_mses.append(val_mse)
-            steps_recorded.append(step)
-            times_recorded.append(elapsed)
-
-            print(f"{step:8d}  {train_loss:12.6f}  {val_mse:12.6f}  {elapsed:6.1f}s")
-
-            # Compute log-likelihood metrics on VALIDATION set every 50 steps
-            if step % 50 == 0:
-                try:
-                    lmse, lmean, key = calc_val_loglik_metrics(params, key)
-                    loglik_mse_values.append(lmse)
-                    loglik_mean_values.append(lmean)
-                    loglik_mse_steps.append(step)
-                    loglik_mse_times.append(elapsed)
-
-                    # Track best model based on validation loglik MSE
-                    if lmse < best_loglik_mse:
-                        best_loglik_mse = lmse
-                        best_params = jax.tree.map(lambda x: x.copy(), params)
-                        best_step = step
-                        print(f"         Val log-lik MSE: {lmse:.4f}, mean est. log-lik: {lmean:.4f} *** new best ***")
-                    else:
-                        print(f"         Val log-lik MSE: {lmse:.4f}, mean est. log-lik: {lmean:.4f} (best: {best_loglik_mse:.4f} at step {best_step})")
-                except Exception as e:
-                    print(f"         Val log-lik metrics computation failed: {e}")
+                # Track best model based on validation loglik MSE
+                if lmse < best_loglik_mse:
+                    best_loglik_mse = lmse
+                    best_params = jax.tree.map(lambda x: x.copy(), params)
+                    best_step = step
+                    print(f"         Val log-lik MSE: {lmse:.4f}, mean est. log-lik: {lmean:.4f} *** new best ***")
+                else:
+                    print(f"         Val log-lik MSE: {lmse:.4f}, mean est. log-lik: {lmean:.4f} (best: {best_loglik_mse:.4f} at epoch {best_step})")
+            except Exception as e:
+                print(f"         Val log-lik metrics computation failed: {e}")
 
     total_time = time.time() - start_time
     print(f"\nTraining complete! Total time: {total_time:.2f}s ({total_time/60:.2f} min)")
-    print(f"Best model selected at step {best_step} (val loglik MSE = {best_loglik_mse:.4f})")
+    print(f"Best model selected at epoch {best_step} (val loglik MSE = {best_loglik_mse:.4f})")
 
     # Compute true mean log-lik for reference
     true_mean_loglik = float(jnp.mean(test_true_loglik))
@@ -586,7 +586,7 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
     return {
         'steps': steps_recorded,
         'train_losses': train_losses,
-        'val_mses': val_mses,
+        'val_flow_losses': val_flow_losses,
         'times': times_recorded,
         'loglik_mse_values': loglik_mse_values,
         'loglik_mean_values': loglik_mean_values,
@@ -609,12 +609,12 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
 
 
 @app.local_entrypoint()
-def main(n_steps: int = 500, weight_decay: float = 1e-4, infinite_data: bool = False):
+def main(n_steps: int = 100, weight_decay: float = 1e-4, infinite_data: bool = False):
     """
     Main entrypoint for running training on Modal.
 
     Args:
-        n_steps: Number of training steps (default 500)
+        n_steps: Number of training epochs (default 100)
         weight_decay: Weight decay for AdamW optimizer
         infinite_data: If True, generate fresh training data each step (for debugging)
     """
@@ -623,7 +623,7 @@ def main(n_steps: int = 500, weight_decay: float = 1e-4, infinite_data: bool = F
     from pathlib import Path
 
     mode_str = " [INFINITE DATA]" if infinite_data else ""
-    print(f"Starting Case 5 reference model training on Modal with T4 GPU for {n_steps} steps (weight_decay={weight_decay}){mode_str}...")
+    print(f"Starting Case 5 reference model training on Modal with T4 GPU for {n_steps} epochs (weight_decay={weight_decay}){mode_str}...")
 
     # Load data
     script_dir = Path(__file__).parent
@@ -656,20 +656,20 @@ def main(n_steps: int = 500, weight_decay: float = 1e-4, infinite_data: bool = F
 
     print(f"\nSaving results to {output_dir}...")
 
-    # Training loss CSV (train loss + validation flow matching MSE)
+    # Training loss CSV (train loss + validation flow matching loss)
     with open(output_dir / "reference_training_loss.csv", 'w', newline='') as f:
         writer = csv.writer(f)
-        writer.writerow(['step', 'train_loss', 'val_mse', 'time_seconds'])
-        for step, loss, val_mse, time_val in zip(
-            result['steps'], result['train_losses'], result['val_mses'], result['times']
+        writer.writerow(['epoch', 'train_flow_loss', 'val_flow_loss', 'time_seconds'])
+        for step, loss, val_fl, time_val in zip(
+            result['steps'], result['train_losses'], result['val_flow_losses'], result['times']
         ):
-            writer.writerow([step, loss, val_mse, time_val])
+            writer.writerow([step, loss, val_fl, time_val])
 
     # Validation log-likelihood MSE CSV (with mean estimated log-likelihood)
     if len(result['loglik_mse_values']) > 0:
         with open(output_dir / "reference_loglik_mse.csv", 'w', newline='') as f:
             writer = csv.writer(f)
-            writer.writerow(['step', 'val_loglik_mse', 'val_loglik_mean', 'time_seconds', 'is_best'])
+            writer.writerow(['epoch', 'val_loglik_mse', 'val_loglik_mean', 'time_seconds', 'is_best'])
             for step, mse, mean_ll, time_val in zip(
                 result['loglik_mse_steps'], result['loglik_mse_values'],
                 result['loglik_mean_values'], result['loglik_mse_times']
@@ -700,11 +700,11 @@ def main(n_steps: int = 500, weight_decay: float = 1e-4, infinite_data: bool = F
     print("\nAll outputs saved successfully!")
     print(f"  - reference_training_loss.csv")
     if len(result['loglik_mse_values']) > 0:
-        print(f"  - reference_loglik_mse.csv (validation loglik MSE, best step = {result['best_step']})")
+        print(f"  - reference_loglik_mse.csv (validation loglik MSE, best epoch = {result['best_step']})")
     print(f"  - reference_loglik_scatter.csv")
     if len(result.get('generated_x1', [])) > 0:
         print(f"  - reference_generated_samples.csv ({len(result['generated_x1'])} samples)")
-    print(f"\nBest model: step {result['best_step']} (val loglik MSE = {result['best_val_loglik_mse']:.4f})")
+    print(f"\nBest model: epoch {result['best_step']} (val loglik MSE = {result['best_val_loglik_mse']:.4f})")
     print(f"Test log-likelihood MSE (held-out): {result['final_test_mse']:.4f}")
     print(f"True mean log-likelihood: {result['true_mean_loglik']:.4f}")
     print(f"Total training time: {result['total_time']:.2f}s ({result['total_time']/60:.2f} min)")
