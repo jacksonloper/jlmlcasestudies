@@ -76,12 +76,12 @@ export default function Case5Solutions() {
               if (parts.length >= 4) {
                 const step = parseInt(parts[0]);
                 const loss = parseFloat(parts[1]);
-                const testMse = parseFloat(parts[2]);
+                const valMse = parseFloat(parts[2]);
                 const time = parseFloat(parts[3]);
                 if (!isNaN(step) && !isNaN(loss)) {
                   refSteps.push(step);
                   refTrainLoss.push(loss);
-                  if (!isNaN(testMse)) refTestMse.push(testMse);
+                  if (!isNaN(valMse)) refTestMse.push(valMse);
                   if (!isNaN(time)) refLastTime = time;
                 }
               }
@@ -91,6 +91,7 @@ export default function Case5Solutions() {
             let refLoglikMseSteps = [];
             let refLoglikMseValues = [];
             let refLoglikMeanValues = [];
+            let refBestStep = null;
             try {
               const refLoglikResponse = await fetch(`${import.meta.env.BASE_URL}case5/data/reference_loglik_mse.csv`);
               const refLoglikText = await refLoglikResponse.text();
@@ -109,8 +110,18 @@ export default function Case5Solutions() {
                         const meanLL = parseFloat(parts[2]);
                         if (!isNaN(meanLL)) refLoglikMeanValues.push(meanLL);
                       }
+                      // Parse optional is_best column (index 4)
+                      if (parts.length >= 5) {
+                        const isBest = parseInt(parts[4]);
+                        if (isBest === 1) refBestStep = step;
+                      }
                     }
                   }
+                }
+                // If no is_best column, find the step with minimum MSE
+                if (refBestStep === null && refLoglikMseValues.length > 0) {
+                  const minIdx = refLoglikMseValues.indexOf(Math.min(...refLoglikMseValues));
+                  refBestStep = refLoglikMseSteps[minIdx];
                 }
               }
             } catch (err) {
@@ -120,10 +131,11 @@ export default function Case5Solutions() {
             refHistory = {
               steps: refSteps,
               train_loss: refTrainLoss,
-              test_mse: refTestMse.length > 0 ? refTestMse : null,
+              val_mse: refTestMse.length > 0 ? refTestMse : null,
               loglik_mse_steps: refLoglikMseSteps,
               loglik_mse_values: refLoglikMseValues,
               loglik_mean_values: refLoglikMeanValues.length > 0 ? refLoglikMeanValues : null,
+              best_step: refBestStep,
               training_time: refLastTime,
               hardware: 'T4 GPU (Modal)',
               architecture: '(256, 128, 128, 64) MLP',
@@ -379,7 +391,7 @@ export default function Case5Solutions() {
             },
           ]}
           layout={{
-            title: `True vs Estimated Log-Likelihoods (MSE = ${mse.toFixed(4)})`,
+            title: `True vs Estimated Log-Likelihoods on Test Set (MSE = ${mse.toFixed(4)})`,
             xaxis: { title: 'True log p(y|x)' },
             yaxis: { title: 'Estimated log p(y|x)' },
             width: 700,
@@ -399,13 +411,35 @@ export default function Case5Solutions() {
         line: { color: 'blue' },
       }];
 
-      if (trainingHistory.test_mse) {
+      if (trainingHistory.val_mse) {
         traces.push({
           x: trainingHistory.steps,
-          y: trainingHistory.test_mse,
+          y: trainingHistory.val_mse,
           mode: 'lines',
-          name: 'Test MSE',
+          name: 'Validation Loss',
           line: { color: 'orange' },
+        });
+      }
+
+      const shapes = [];
+      const annotations = [];
+      if (trainingHistory.best_step) {
+        shapes.push({
+          type: 'line',
+          x0: trainingHistory.best_step,
+          x1: trainingHistory.best_step,
+          yref: 'paper',
+          y0: 0,
+          y1: 1,
+          line: { color: 'red', width: 2, dash: 'dash' },
+        });
+        annotations.push({
+          x: trainingHistory.best_step,
+          yref: 'paper',
+          y: 1.05,
+          text: `Best model (step ${trainingHistory.best_step})`,
+          showarrow: false,
+          font: { size: 11, color: 'red' },
         });
       }
 
@@ -413,33 +447,59 @@ export default function Case5Solutions() {
         <Plot
           data={traces}
           layout={{
-            title: 'Training Loss (Flow Matching MSE)',
-            xaxis: { title: 'Step' },
-            yaxis: { title: 'Loss', type: 'log' },
+            title: 'Flow Matching Loss Over Training',
+            xaxis: { title: 'Training Step' },
+            yaxis: { title: 'Flow Matching MSE Loss', type: 'log' },
             width: 700,
             height: 500,
+            shapes,
+            annotations,
           }}
         />
       );
     }
 
     if (selectedView === 'loglik_mse_curve' && trainingHistory && trainingHistory.loglik_mse_values.length > 0) {
+      const shapes = [];
+      const annotations = [];
+      if (trainingHistory.best_step) {
+        shapes.push({
+          type: 'line',
+          x0: trainingHistory.best_step,
+          x1: trainingHistory.best_step,
+          yref: 'paper',
+          y0: 0,
+          y1: 1,
+          line: { color: 'red', width: 2, dash: 'dash' },
+        });
+        annotations.push({
+          x: trainingHistory.best_step,
+          yref: 'paper',
+          y: 1.05,
+          text: `Best model (step ${trainingHistory.best_step})`,
+          showarrow: false,
+          font: { size: 11, color: 'red' },
+        });
+      }
+
       return (
         <Plot
           data={[{
             x: trainingHistory.loglik_mse_steps,
             y: trainingHistory.loglik_mse_values,
             mode: 'lines+markers',
-            name: 'Log-lik MSE',
+            name: 'Validation Log-Lik MSE',
             line: { color: 'green' },
             marker: { size: 4 },
           }]}
           layout={{
-            title: 'Log-Likelihood MSE Over Training',
-            xaxis: { title: 'Step' },
-            yaxis: { title: 'MSE', type: 'log' },
+            title: 'Validation Log-Likelihood MSE Over Training',
+            xaxis: { title: 'Training Step' },
+            yaxis: { title: 'Log-Likelihood MSE (validation set)', type: 'log' },
             width: 700,
             height: 500,
+            shapes,
+            annotations,
           }}
         />
       );
@@ -468,25 +528,40 @@ export default function Case5Solutions() {
         });
       }
 
+      const shapes = [];
+      const plotAnnotations = [];
+      if (trainingHistory.best_step) {
+        shapes.push({
+          type: 'line',
+          x0: trainingHistory.best_step,
+          x1: trainingHistory.best_step,
+          yref: 'paper',
+          y0: 0,
+          y1: 1,
+          line: { color: 'red', width: 2, dash: 'dash' },
+        });
+        plotAnnotations.push({
+          x: trainingHistory.best_step,
+          yref: 'paper',
+          y: 1.05,
+          text: `Best model (step ${trainingHistory.best_step})`,
+          showarrow: false,
+          font: { size: 11, color: 'red' },
+        });
+      }
+
       return (
         <Plot
           data={traces}
           layout={{
-            title: 'Average Estimated Log-Likelihood on Test Data',
-            xaxis: { title: 'Step' },
+            title: 'Mean Estimated Log-Likelihood on Validation Set',
+            xaxis: { title: 'Training Step' },
             yaxis: { title: 'Mean log p(y|x)' },
             width: 700,
             height: 500,
             showlegend: true,
-            annotations: [{
-              text: 'Higher = model assigns more probability to test data',
-              showarrow: false,
-              xref: 'paper',
-              yref: 'paper',
-              x: 0.5,
-              y: -0.15,
-              font: { size: 12, color: 'gray' },
-            }],
+            shapes,
+            annotations: plotAnnotations,
           }}
         />
       );
@@ -501,8 +576,8 @@ export default function Case5Solutions() {
     { key: 'generated_samples', label: 'Generated Samples' },
     { key: 'loglik_scatter', label: 'Log-Likelihood Scatter' },
     { key: 'training_loss', label: 'Training Loss' },
-    { key: 'loglik_mse_curve', label: 'Log-Lik MSE Curve' },
-    { key: 'avg_loglik', label: 'Avg Log-Likelihood' },
+    { key: 'loglik_mse_curve', label: 'Val Log-Lik MSE' },
+    { key: 'avg_loglik', label: 'Val Avg Log-Lik' },
   ];
 
   return (
@@ -607,6 +682,9 @@ export default function Case5Solutions() {
                 <div><span className="font-medium">Architecture:</span> {trainingHistory.architecture}</div>
                 <div><span className="font-medium">Training time:</span> {(trainingHistory.training_time / 60).toFixed(1)} minutes</div>
                 <div><span className="font-medium">Total steps:</span> {trainingHistory.steps[trainingHistory.steps.length - 1]}</div>
+                {trainingHistory.best_step && (
+                  <div><span className="font-medium">Best model step:</span> {trainingHistory.best_step} (selected by validation log-lik MSE)</div>
+                )}
               </div>
             </div>
           </section>
