@@ -428,7 +428,6 @@ def train_model(train_x_list, train_y_list, test_x_list, test_y_list,
     loglik_mse_times = []
 
     # Track the best model based on VALIDATION log-likelihood MSE
-    import copy
     best_loglik_mse = float('inf')
     best_params = None
     best_step = 0

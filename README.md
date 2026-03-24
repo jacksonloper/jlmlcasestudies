@@ -193,7 +193,7 @@ python case5/scripts/generate_data.py
 The reference solution uses rectified flow matching to learn the conditional distribution, then computes log-likelihoods using the continuous normalizing flow (CNF) change of variables formula with exact divergence computation (since Y is 1D):
 
 ```bash
-modal run case5/scripts/modal_train_reference_jax.py --duration-minutes 5
+modal run case5/scripts/modal_train_reference_jax.py --n-steps 500
 ```
 
 The log-likelihood is computed by integrating the augmented ODE backwards from t=1 (data) to t=0 (noise) using Dormand-Prince (dopri5) adaptive solver. The solution page shows a scatter plot of true vs estimated log-likelihoods.
