@@ -6,7 +6,8 @@ const EXPERIMENTS = {
     label: 'User themes + fact check',
     blurb:
       'Each writer got the same 8 user-style themes ("a wedding in Kerala", "a Tokyo sumo stable", ...). ' +
-      'Every riddle was also fact-checked by Claude Sonnet 5.5: is the real-world mechanism the answer relies on actually real?',
+      'Every riddle was also fact-checked by Claude Sonnet 5.5 (is the real-world mechanism actually real?) and checked for ' +
+      'theme fit by Claude Haiku 5.5. Anthropic and Gemini writers ran at the efforts shown; open-weight writers ran at high effort.',
     factCheck: true,
   },
   exp1: {
@@ -41,6 +42,7 @@ function summarize(rounds) {
       const wins = done.filter((r) => r.result === 'WIN').length;
       const real = done.filter((r) => r.real).length;
       const winReal = done.filter((r) => r.result === 'WIN' && r.real).length;
+      const fit = done.filter((r) => r.fit).length;
       const genCosts = g.rounds.map((r) => r.gen_cost).filter((c) => typeof c === 'number');
       return {
         ...g,
@@ -50,6 +52,7 @@ function summarize(rounds) {
         wins,
         real,
         winReal,
+        fit,
         winRate: done.length ? wins / done.length : 0,
         avgGen: genCosts.length ? genCosts.reduce((a, b) => a + b, 0) / genCosts.length : null,
         avgTotal: g.rounds.reduce((a, r) => a + (r.cost || 0), 0) / g.rounds.length,
@@ -214,6 +217,29 @@ export default function Case5() {
           </div>
         </section>
 
+        <section className="mb-10">
+          <h2 className="text-2xl font-medium text-gray-900 mb-4">Key Findings</h2>
+          <ul className="list-disc pl-6 space-y-2 text-gray-700">
+            <li>
+              <strong>Claude Opus 5.5 at medium effort</strong> was the best value: it won 6 of 8 themed rounds, 5 of
+              which also passed the fact check, for about $0.03 per riddle.
+            </li>
+            <li>
+              <strong>Claude Fable 5.2</strong> won the most rounds but often by leaning on invented mechanisms, which
+              the judge does not penalise.
+            </li>
+            <li>
+              <strong>Cheaper models mostly lost.</strong> Claude Sonnet 5.5 wrote riddles too convoluted to beat the
+              solver&apos;s simpler story, and the best open-weight writer (GLM-5.3) won 3 of 8. Several open-weight
+              models often failed to return a riddle in the required format.
+            </li>
+            <li>
+              A fixed user theme roughly halved Gemini 3.8 Flash&apos;s win rate but did not hurt Fable 5.2: strong
+              writers can find a fitting mechanism for almost any theme.
+            </li>
+          </ul>
+        </section>
+
         <section className="mb-6">
           <h2 className="text-2xl font-medium text-gray-900 mb-4">Results</h2>
           {error && <p className="text-red-600">Could not load results: {error}</p>}
@@ -247,6 +273,7 @@ export default function Case5() {
                       <th className="py-2 pr-4 font-medium">Riddler wins</th>
                       {ex.factCheck && <th className="py-2 pr-4 font-medium">Mechanism real</th>}
                       {ex.factCheck && <th className="py-2 pr-4 font-medium">Won and real</th>}
+                      {ex.factCheck && <th className="py-2 pr-4 font-medium">On theme</th>}
                       <th className="py-2 pr-4 font-medium">Writer $/riddle</th>
                       <th className="py-2 font-medium">Total $/round</th>
                     </tr>
@@ -280,6 +307,7 @@ export default function Case5() {
                             </div>
                           </td>
                         )}
+                        {ex.factCheck && <td className="py-2 pr-4">{row.n ? `${row.fit}/${row.n}` : '–'}</td>}
                         <td className="py-2 pr-4">{row.avgGen != null ? `$${row.avgGen.toFixed(3)}` : '–'}</td>
                         <td className="py-2">${row.avgTotal.toFixed(3)}</td>
                       </tr>
