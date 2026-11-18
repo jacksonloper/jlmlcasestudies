@@ -17,7 +17,7 @@ export default defineConfig({
       enforce: 'pre',
       resolveId(source, importer) {
         // If importing from case directories, resolve dependencies from node_modules
-        if (importer && (importer.includes('/case1/frontend/') || importer.includes('/case2/frontend/') || importer.includes('/case3/frontend/') || importer.includes('/case4/frontend/'))) {
+        if (importer && (importer.includes('/case1/frontend/') || importer.includes('/case2/frontend/') || importer.includes('/case3/frontend/') || importer.includes('/case4/frontend/') || importer.includes('/case5/frontend/'))) {
           if (!source.startsWith('.') && !source.startsWith('/')) {
             // This is a package import, resolve it relative to root's node_modules
             return this.resolve(source, path.join(__dirname, 'src', 'App.jsx'), { skipSelf: true })
@@ -43,6 +43,7 @@ export default defineConfig({
       '@case2': path.resolve(__dirname, 'case2/frontend'),
       '@case3': path.resolve(__dirname, 'case3/frontend'),
       '@case4': path.resolve(__dirname, 'case4/frontend'),
+      '@case5': path.resolve(__dirname, 'case5/frontend'),
     },
   },
   server: {

@@ -1,0 +1,179 @@
+[
+ {
+  "model": "deepseek/deepseek-v4.1-flash-1017",
+  "seed": "a ferry or harbour",
+  "cost": 0.023997940000000002,
+  "riddle": "All cars were aboard by 05:58, but the 06:00 ferry held its ramp down.\nAt 06:15 a man with a silver case crossed without a ticket.\nAt 06:16 the ferry left, and the mate wrote \"two\" beside the boarding card.\nNo one had been refused passage.",
+  "chars": "Elin (ferry master); Ravi (harbour pilot)",
+  "story": "The ticketless man with the silver case was Ravi, a harbour pilot, and the harbour\u2019s compulsory pilotage by-law meant Elin\u2019s ferry could not cross the harbour limit without him. That same by-law allows pilot boarding only in the 20-minute window before high water\u2014high water was 06:35\u2014so Elin held the ramp until 06:15, sailed at 06:16 once Ravi was aboard, and the \u201ctwo\u201d were the pilot and master signatures required on the boarding card; no one was refused because Ravi was never a passenger.",
+  "solver": "**Character 1:** Daniel, a hospital organ-transport courier carrying a donor heart in a silver cooler case.\n\n**Character 2:** Maggie, the ferry's first mate (occupation: ship's mate).\n\n**Story:** The island hospital radioed that a donor heart for a dying child was on its way, so Maggie kept the ramp down past 06:00 and waved Daniel aboard at 06:15 without a ticket, since medical couriers travel free. As the ferry pulled out at 06:16, she wrote \"two\" beside his boarding card in the souls-aboard log: one for the courier and one for the life he carried.",
+  "riddler_pos": "A",
+  "judge": "A\n\nStory A accounts for every detail with concrete mechanics: the pilotage by-law explains the held ramp, the timing window explains 06:15, the pilot's role explains the missing ticket, and the required signatures explain \"two\". Story B relies on a sentimental, non-procedural reading of \"two\" and gives no specific reason for the 06:15 timing.",
+  "result": "WIN"
+ },
+ {
+  "model": "deepseek/deepseek-v4.1-flash-1017",
+  "seed": "a dental surgery",
+  "cost": 0.022732330000000002,
+  "riddle": "At 9:17 the patient is in the dental surgery, but the chair is still empty.\nA porcelain cap sits on the tray while the forceps remain wrapped.\nShe asks the masked figure to finish the cap first and take the tooth next month.",
+  "chars": "Mara; Dr Pell (dentist)",
+  "story": "Mara has a cracked lower molar and a failed porcelain crown on a different tooth; Dr Pell is a dentist. Her dental plan\u2019s annual maximum resets on the first of next month and its same-treatment-plan clause treats an extraction done with the crown as included in the crown fee, so Dr Pell cements the crown now and books the extraction for next month; the 9:17 chair is empty because the cap is still being polished, and the forceps stay wrapped until the extraction is booked.",
+  "solver": "**Character 1:** Mara, a wheelchair user and the patient.\n**Character 2:** Dr. Okafor, her dentist (the masked figure).\n\n**Story:** At 9:17 Mara rolled into the surgery and stayed in her own wheelchair, so the dental chair sat empty while Dr. Okafor worked on her from there. Because her wedding photos were that Saturday, she asked him to fit the porcelain cap on her chipped front tooth today and put off extracting her painful back molar until next month, so she wouldn't be swollen in the pictures.",
+  "riddler_pos": "B",
+  "judge": "A\nStory A naturally explains why the chair is empty while the patient is present (she stays in her wheelchair) and gives a simple, believable reason for wanting the cap now and the extraction later, whereas Story B leans on a convoluted insurance clause and never explains why the chair is empty if the patient is there.",
+  "result": "LOSS"
+ },
+ {
+  "model": "deepseek/deepseek-v4.1-flash-1017",
+  "seed": "a wedding venue",
+  "cost": 0.023151579999999998,
+  "riddle": "At the vineyard wedding venue, the cake arrived at 3:58 with \u201ckeep refrigerated\u201d on its box, but the bride ordered it displayed under cloth. The program said cutting at 9:00; at 7:58 a woman in a black apron began slicing. The bride had specified no refrigeration after delivery.",
+  "chars": "Bride; caterer",
+  "story": "The cake\u2019s icing was cream-cheese-based, making it a TCS food, and the local health code\u2019s time-as-a-public-health-control rule allowed it to stay unrefrigerated only four hours from the 3:58 delivery. Because the bride had forbidden refrigeration after delivery, the caterer had to cut and serve it at 7:58\u2014before the 9:00 program\u2014or discard it at 8:00.",
+  "solver": "**Character 1:** The bride, a devoted cheese lover.\n\n**Character 2:** Marta, a cheesemonger in a black apron.\n\n**Story:** The bride's \"cake\" was really a tower of stacked cheese wheels, so it came labeled \"keep refrigerated,\" but she insisted it sit unrefrigerated under a cloth all evening so the cheese would warm to room temperature without drying out. At 7:58, Marta quietly began pre-slicing the back of the wheels so that when the bride made the ceremonial cut at 9:00, guests could be served at once.",
+  "riddler_pos": "B",
+  "judge": "B\nStory B explains the exact 7:58 slicing time as the four-hour limit on unrefrigerated food after the 3:58 delivery, while Story A leaves that oddly precise timing arbitrary.",
+  "result": "WIN"
+ },
+ {
+  "model": "deepseek/deepseek-v4.1-flash-1017",
+  "seed": "a cemetery or crematorium",
+  "cost": 0.01899082,
+  "riddle": "The chest looked smooth, yet the metal detector chirped once.\nThe hearse waited and the retort stayed cold.\nAt 4:10 the office fax hummed; only then did Quill sign the sheet.\nThe family was told it was \u201cpaperwork,\u201d not a problem with the body.",
+  "chars": "Ada; Mr. Quill (crematorium operator)",
+  "story": "Ada had a pacemaker, and the chest metal-detector chirp was the only outward sign. Quill, the crematorium operator, kept the retort cold until the funeral home faxed the implant-removal certificate that the crematorium\u2019s written policy requires before accepting any battery-powered implant, because such batteries can rupture in the cremator.",
+  "solver": "**Character 1:** Arthur Venn, the deceased, whose pacemaker had been implanted deep beneath the chest muscle, leaving no visible bump.\n\n**Character 2:** Quill, a crematory operator.\n\n**Story:** Quill's routine metal-detector sweep chirped over Arthur's smooth chest, revealing a hidden pacemaker whose battery could explode in the retort, so the cremation was halted with the hearse waiting. Only when the medical examiner's 4:10 fax confirmed the device had been removed did Quill sign the cremation authorization, while the family was gently told the delay was just \"paperwork.\"",
+  "riddler_pos": "B",
+  "judge": "A\n\nStory A accounts for every detail: the smooth chest (a pacemaker implanted deep under the muscle), the waiting hearse, the 4:10 fax, Quill's signature, and the \"paperwork\" explanation given to the family, whereas Story B leaves the smooth chest, the hearse and the family's explanation unaddressed.",
+  "result": "LOSS"
+ },
+ {
+  "model": "qwen/qwen3.8-flash",
+  "seed": "a ferry or harbour",
+  "cost": 0.02096306,
+  "riddle": "The red snake drank while the passenger deck stayed bare; a passenger waited at the plank, not climbing, for five minutes; a voice cleared the air; the ferry opened its mouth.",
+  "chars": "a passenger; the harbourmaster",
+  "story": "The fuel hose was bunkering the ferry, and under the harbourmaster's bunkering order no passenger could board until the hose was secured and a five-minute ventilation/gas-free check was complete. The passenger watched the five-minute countdown, and when the voice pronounced the deck gas-free, the ramp opened.",
+  "solver": "**Character 1:** Mara, a commuter waiting to board.\n**Character 2:** Joe, the ferry's deckhand and fueling attendant.\n\n**Story:** Mara waited at the gangplank for five minutes while Joe pumped diesel through the red fuel hose (the \"red snake\"), because safety rules keep the passenger deck empty and boarding closed during refueling. When the tank was full, Joe disconnected the hose and called \"All clear!\" over the loudspeaker, and the ferry's bow ramp dropped open to let Mara and the cars aboard.",
+  "riddler_pos": "A",
+  "judge": "A\nStory A explains both the precise five-minute wait (a mandated ventilation countdown) and \"a voice cleared the air\" (declaring the deck gas-free), while Story B treats the five minutes as incidental and reads \"cleared the air\" only loosely as \"All clear.\"",
+  "result": "WIN"
+ },
+ {
+  "model": "qwen/qwen3.8-flash",
+  "seed": "a dental surgery",
+  "cost": 0.01875196,
+  "riddle": "The frost-spray numbed her; her lips went brown, not blue; the finger clip stuck at eighty-five while her breathing stayed easy; the drill waited for the blue vial.",
+  "chars": "patient; dental assistant",
+  "story": "The dental assistant sprayed benzocaine as local anesthesia, and the drug oxidized the patient\u2019s hemoglobin into methemoglobin, causing methemoglobinemia and brown lips, which forced a pause for methylene blue. Because methemoglobin absorbs the pulse oximeter\u2019s red and infrared beams almost equally, the screen falsely clamps near eighty-five despite normal breathing.",
+  "solver": "**Character 1:** Maya, a dental patient.\n**Character 2:** Dr. Patel, a dentist.\n\n**Story:** Before drilling, Dr. Patel numbed Maya's gums with a heavy dose of benzocaine spray, which triggered methemoglobinemia: her blood turned chocolate-brown, and the pulse oximeter froze at its signature 85% even though she was breathing easily. Recognizing the reaction, he set down the drill until the paramedics arrived with the antidote, a blue vial of methylene blue.",
+  "riddler_pos": "B",
+  "judge": "A\nStory A explicitly ties together every clue: the numbing spray, the chocolate-brown blood, the oximeter stuck at its signature 85% despite easy breathing, the drill set down, and the blue vial of methylene blue. Story B explains the 85% reading well but never clearly accounts for the waiting drill or the blue vial.",
+  "result": "LOSS"
+ },
+ {
+  "model": "qwen/qwen3.8-flash",
+  "seed": "a wedding venue",
+  "cost": 0.02094188,
+  "riddle": "The bride's candles die before her first vow, though no wind blew; a man moves one chair and shifts the cake table exactly a foot; the aisle opens wide, and the cake is cut in its new place; who stopped the flames, and why was the table moved?",
+  "chars": "the bride; the fire marshal",
+  "story": "The fire marshal extinguished the bride's candles because the venue's contract barred free-standing open flames within reach of combustible drapery. He moved one chair and shifted the cake table exactly one foot because the exit-code aisle must be measured as thirty-six clear inches from the nearest protruding object, not from the wall marking, so that one-foot shift opened the required path without stopping the vows or cake cutting.",
+  "solver": "**Character 1:** The bride's grandfather, who uses a wheelchair and an oxygen tank.\n\n**Character 2:** Dale, the venue's fire-safety coordinator.\n\n**Story:** When Dale saw the grandfather roll in late with his oxygen tank, he quietly snuffed the bride's candles before the first vow, because an open flame beside pure oxygen is a fire hazard. He then removed one chair and nudged the cake table exactly a foot so the aisle was wide enough for the wheelchair, and the grandfather watched the cake being cut in its new spot.",
+  "riddler_pos": "B",
+  "judge": "A\nStory A ties every detail to one cause: the grandfather's oxygen tank explains why the flames had to go, and his wheelchair explains why one chair and the table moved to widen the aisle, while Story B depends on separate, contrived code technicalities that don't link the details together.",
+  "result": "LOSS"
+ },
+ {
+  "model": "qwen/qwen3.8-flash",
+  "seed": "a cemetery or crematorium",
+  "cost": 0.017720020000000003,
+  "riddle": "Daffodils leaned on a sunken turf square; no rain had fallen, yet the man asked for earth money; the pine box lay flat three hundred nights back; now the lawn bowed around her heel.",
+  "chars": "The widow; the sexton",
+  "story": "The sexton recognized the sunken square as a pine-casket grave, and the cemetery's plot rules required a concrete vault liner so that casket roofs would not collapse and settle the turf. Because this burial had no liner, the pine roof failed over three hundred days in dry weather, so the man charged for earth regrading, not stone or headstone work.",
+  "solver": "**Character 1:** A widow\n**Character 2:** The cemetery's gravedigger (sexton)\n\n**Story:** Nearly a year after her husband was buried in a cheap pine coffin, the widow brought daffodils to his grave. The gravedigger asked her to pay for fill dirt, explaining that without rain the sinking could only mean the rotting lid was giving way, and just then the turf collapsed beneath her heel.",
+  "riddler_pos": "A",
+  "judge": "B\nStory B accounts for every detail, including the daffodils, the dry weather, the fill-dirt fee, the pine coffin buried nearly a year ago, and the turf giving way under her heel, while Story A leaves out the daffodils and the heel entirely.",
+  "result": "LOSS"
+ },
+ {
+  "model": "moonshotai/kimi-k2.6",
+  "seed": "a ferry or harbour",
+  "cost": 0.06839435,
+  "result": "PARSE_FAIL",
+  "raw": ""
+ },
+ {
+  "model": "moonshotai/kimi-k2.6",
+  "seed": "a dental surgery",
+  "cost": 0.0328506432,
+  "result": "PARSE_FAIL",
+  "raw": ""
+ },
+ {
+  "model": "moonshotai/kimi-k2.6",
+  "seed": "a wedding venue",
+  "cost": 0.0656929984,
+  "result": "PARSE_FAIL",
+  "raw": ""
+ },
+ {
+  "model": "moonshotai/kimi-k2.6",
+  "seed": "a cemetery or crematorium",
+  "cost": 0.07945152,
+  "riddle": "Forty-nine passed through her arch in March,\nBut the fiftieth hearse she sent to the highway;\nNo ash touched the tray for thirteen cold mornings,\nAnd the carbon bed stayed locked though its gauge burned red.",
+  "chars": "Vernon; Rhea, crematorium operator",
+  "story": "Vernon arrived as the funeral director bearing the fiftieth decedent of the month; because the facility's mercury-abatement carbon filter had reached its legal loading limit after the forty-ninth cremation, Rhea directed his hearse to the county's alternate crematorium. Under Environment Agency PG5/2 guidance and hazardous waste transfer regulations, a saturated carbon bed cannot be stripped without a pre-booked licensed carrier, so she had to leave the retort offline for thirteen days with the filter chamber padlocked despite the red saturation gauge, which is why no ash lined the tray.",
+  "solver": "**Character 1:** Marta Vey, crematorium operator.\n**Character 2:** Mr. Halloran, a deceased retired dentist whose own mouth was full of old mercury amalgam fillings.\n\n**Story:** After forty-nine cremations in March, Marta's mercury-capturing carbon filter bed showed saturation (its gauge glowing red), and regulators sealed it pending inspection, so she couldn't regenerate or replace it. Knowing that burning Halloran's mercury-laden body without filtration would be illegal and toxic, she redirected his hearse down the highway to the next county's crematorium and left her cremator cold for thirteen days until the inspector arrived.",
+  "riddler_pos": "A",
+  "judge": "A\nStory A explains every detail (the forty-nine cremations, the redirected fiftieth hearse, the thirteen cold days, and the locked carbon bed with its red gauge) through one regulatory constraint, while Story B adds an unnecessary dentist-with-fillings detail that the riddle never calls for.",
+  "result": "WIN"
+ },
+ {
+  "model": "anthropic/claude-fable-5.2",
+  "seed": "a ferry or harbour",
+  "cost": 0.09847600000000001,
+  "riddle": "Three identical vans, each worth 40,000, boarded a ferry worth 80,000; in a gale the crew deliberately pushed one van into the sea.\nIn harbour, a woman with a ledger refused to let the two dry vans drive off until each owner had paid her 8,000.\nThe owner of the drowned van received only 32,000, and called it exactly fair.\nNobody was fined, insured, or at fault.",
+  "chars": "Tomas, owner of the jettisoned van; Ingrid (average adjuster)",
+  "story": "The captain ordered Tomas's van jettisoned to stop the ferry capsizing, a deliberate sacrifice for the common safety, so he declared \"general average\" and adjuster Ingrid held the surviving vans under the shipowner's lien until their owners paid their contributions. Under the York-Antwerp Rules the 40,000 loss is spread over everything that was at risk, including the sacrificed van itself (80,000 + 3 \u00d7 40,000 = 200,000, so 20% each), meaning the ferry bears 16,000, each dry van 8,000, and Tomas bears his own 8,000 share, which is why he gets precisely 32,000 and finds it fair.",
+  "solver": "**Character 1:** Marta, owner of the drowned van.\n\n**Character 2 (with occupation):** Mrs. Grey, a maritime average adjuster applying the ancient law of \"general average.\"\n\n**Story:** Because Marta's van was sacrificed to save the whole ship, Mrs. Grey shared the 40,000 loss across everything saved: ferry and three vans, worth 200,000 in total, so each party paid 20% of its own value. She held the two dry vans until their owners paid 8,000 each and collected 16,000 from the ferry owner, then handed Marta 32,000, since Marta's own 8,000 share of the sacrifice was hers to bear, just like everyone else's.",
+  "riddler_pos": "A",
+  "judge": "A\n\nStory A explains every detail more precisely: the lien accounts for holding the vans, and the loss is correctly spread over all property at risk, including the sacrificed van, rather than B's slightly contradictory claim that the drowned van was among the property \"saved.\"",
+  "result": "WIN"
+ },
+ {
+  "model": "anthropic/claude-fable-5.2",
+  "seed": "a dental surgery",
+  "cost": 0.11712399999999999,
+  "riddle": "On the first day of a month's holiday, she gladly took the needle for her upper tooth.\nA week later, for the lower one, she refused it and gripped the chair through the drilling.\nShe has no fear of needles, and nothing to do for weeks.\nHer dentist said that, in her place, he would have chosen the same.",
+  "chars": "Dr. Okafor, her dentist; Mara (professional tea taster and blender)",
+  "story": "Mara earns her living with her tongue as a professional tea taster, so the only thing she guards more than her comfort is her sense of taste. An upper tooth is numbed by a simple infiltration beside the root, but a lower molar needs an inferior alveolar nerve block, placed right next to the lingual nerve that carries taste from the front two-thirds of the tongue, and that injection has a small, recognised risk of permanent taste loss on that side. This is why being on holiday made no difference, and why she took the pain for the lower tooth only.",
+  "solver": "**Character 1:** Maya, a woman on a month's holiday.\n**Character 2:** Dr. Patel, her dentist.\n\n**Story:** Midway through the week after her upper filling, Maya's pregnancy test came back positive, so when the lower tooth was due she refused the anaesthetic to avoid any risk to her baby in its earliest weeks. Dr. Patel, who knows the lower jaw needs a much larger nerve-block dose than an upper tooth, smiled that in her place he'd have chosen the same, even though he himself could never be in her place.",
+  "riddler_pos": "B",
+  "judge": "B\nStory B ties every detail together: the upper tooth needs only a local injection, while the lower one needs a nerve block near the taste nerve, which threatens her livelihood however long her holiday lasts, and the dentist's agreement follows naturally. Story A depends on a newly discovered pregnancy and on a dentist who could never be \"in her place.\"",
+  "result": "WIN"
+ },
+ {
+  "model": "anthropic/claude-fable-5.2",
+  "seed": "a wedding venue",
+  "cost": 0.14628,
+  "riddle": "The band had played softly all evening, one eye on a little green light on the wall.\nIn the hush between two songs, Uncle Leo slipped out the garden door for a smoke,\nand every amp on stage went dead, though the chandeliers burned on.\nMarta touched no fuse: she fetched Leo back in, shut the door, and waited for the green light.",
+  "chars": "Uncle Leo; Marta (the venue's duty manager)",
+  "story": "The venue's premises licence obliges it to run an automatic noise limiter, a wall-mounted unit with a traffic-light display that feeds only the stage sockets and cuts them if the music gets too loud, which is why the band played softly and the chandeliers stayed on. Because the licence condition concerns sound escaping to the neighbours, the limiter is also wired to a magnetic contact on the garden door, so when Leo opened it the stage circuit dropped instantly even in near-silence, and Marta knew the only cure was to shut the door and wait out the unit's automatic reset delay until the light went green.",
+  "solver": "**Character 1:** Uncle Leo, a wedding guest.\n\n**Character 2:** Marta, the venue manager.\n\n**Story:** The hall's noise limiter, whose green light the band had been watching all night, was wired to the garden door so that it cut power to the stage sockets whenever the door opened and music might spill out to the neighbours. When Leo stepped out for his smoke, the amps died while the separately wired chandeliers stayed lit, so Marta simply brought him back inside, closed the door, and waited for the limiter to reset and restore power.",
+  "riddler_pos": "B",
+  "judge": "B\nStory B accounts for every detail, including why the band played softly (the limiter cuts power if music gets too loud), why the cut came during the hush between songs (a door contact, not volume), and why the chandeliers stayed lit (the limiter feeds only the stage sockets), while Story A leaves the soft playing unexplained.",
+  "result": "WIN"
+ },
+ {
+  "model": "anthropic/claude-fable-5.2",
+  "seed": "a cemetery or crematorium",
+  "cost": 0.07420399999999999,
+  "riddle": "Before the fire, a man in gloves taped a ring-shaped magnet to the dead man's chest.\nOnly then did he pick up his scalpel.\n\"He's dead, he can't hurt you,\" said the widow.\n\"This one still can,\" he said, and he would not let the magnet be moved until he had finished.",
+  "chars": "Margaret, the dead man's widow; Owen (mortician preparing the body for cremation)",
+  "story": "Margaret's husband had a battery-powered heart implant, which Owen had to cut out before cremation because such devices explode in the cremator. It was not a plain pacemaker but an implantable defibrillator, which stays armed after death and can read a blade cutting its leads as a fibrillating heart and fire a high-voltage shock into whoever holds the scalpel, and since a magnet suspends its shock function only while it sits over the device, Owen taped it down before cutting and kept it there until the implant was out.",
+  "solver": "**Character 1:** The widow of the deceased man.\n\n**Character 2:** The funeral director (embalmer), preparing the body for cremation.\n\n**Story:** Before the cremation, the funeral director had to remove the dead man's implanted defibrillator, because its battery can explode in the furnace. He taped a ring magnet over the device to switch off its shocks, since the still-live ICD could deliver a painful jolt when his scalpel cut its leads. He would not let the magnet be moved until the device was safely out.",
+  "riddler_pos": "A",
+  "judge": "A\nStory A explains every detail more completely: it says why the device is an armed defibrillator rather than a plain pacemaker, how cutting its leads can trigger a shock, and why the magnet must stay in place throughout, since it suppresses shocks only while it sits over the device.",
+  "result": "WIN"
+ }
+]

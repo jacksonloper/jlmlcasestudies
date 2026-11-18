@@ -1,0 +1,268 @@
+[
+ {
+  "model": "anthropic/claude-haiku-5.5",
+  "seed": "a ferry or harbour",
+  "cost": 0.014166500000000002,
+  "riddle": "The gangway rose at 6:10, twenty minutes before the timetable allowed.\nThe manifest was stamped \"all clear\" while a woman still stood on the pier, waving at the rail.\nWho was she, and why did the boat leave without her?",
+  "chars": "Ines the shipper; Tomas, a ferry purser (occupation)",
+  "story": "Tomas rushed the sailing because the cool box Ines carried was declared as frozen fish but actually held a damaged lithium battery pack, which the carrier must refuse under the IMDG dangerous-goods code and which he had to isolate before the vessel could legally depart. Once he logged the box as a Class 9 hazard, the manifest could no longer list it as passenger baggage, so Ines had no lawful way to board and was left on the quay while the ferry sailed early.",
+  "solver": "**Character 1:** Marguerite Doyle, the harbor's port inspector, who stamped the manifest.\n\n**Character 2:** Captain Tom Doyle, a ferry captain and her son, on his first day in command.\n\n**Story:** Marguerite finished her inspection early and stamped the manifest \"all clear\" herself, so Tom raised the gangway at 6:10 to get ahead of an incoming squall. She was never a passenger: her wave from the pier was both the official signal to depart and a proud mother seeing her son off on his first voyage as captain.",
+  "riddler_pos": "A",
+  "judge": "B\nStory B explains every detail naturally: the woman was the inspector who stamped the manifest and never meant to board, her wave was both a departure signal and a mother's farewell, and the squall accounts for the early sailing, whereas Story A relies on a strained hazmat chain that doesn't explain her waving or how the manifest was stamped clear.",
+  "result": "LOSS"
+ },
+ {
+  "model": "anthropic/claude-haiku-5.5",
+  "seed": "a dental surgery",
+  "cost": 0.0181378,
+  "riddle": "She asked for the mask, then laughed at the drill's whine. She swore she'd fasted since midnight, yet bread crumbs clung to her collar. When the gas started, her left ear popped, and the woman at her side stepped back. Who was she, and why did the gas make her flinch?",
+  "chars": "Lena, a scuba instructor; Priya (dental assistant)",
+  "story": "Lena had dived that morning, so nitrogen was still trapped in her tissues and the air pocket behind her eardrum, and her breakfast explains the bread that betrayed her fasting claim. Nitrous oxide spreads into closed air spaces far faster than nitrogen can escape, so the gas swelled her middle-ear pocket and bulged the eardrum, which is why Priya stepped back and stopped the procedure.",
+  "solver": "**Character 1:** Maggie, a nervous dental patient with a head cold.\n\n**Character 2:** Dr. Ruiz, a dental anesthetist.\n\n**Story:** Maggie begged for the nitrous mask, giggled giddily at the drill's whine, and swore she'd fasted since midnight, though crumbs from her secret breakfast toast still clung to her collar. When the gas flowed, it swelled the trapped air behind her cold-blocked left eardrum until it popped and made her flinch, and Dr. Ruiz, spotting the crumbs, stepped back and shut off the gas, fearing her full stomach might make her vomit and choke.",
+  "riddler_pos": "B",
+  "judge": "A\nStory A accounts for every detail (her asking for the mask, the giggling, the toast crumbs, the cold-blocked left ear popping and the anesthetist stepping back), while Story B ignores the laughter and mask request and leans on a far-fetched scuba backstory.",
+  "result": "LOSS"
+ },
+ {
+  "model": "anthropic/claude-haiku-5.5",
+  "seed": "a wedding venue",
+  "cost": 0.0184808,
+  "riddle": "The shrimp tower arrived at noon and was carted out before the toasts, untouched. The tent thermometer read ninety-six, yet the uncle who signed for the delivery swore it was fine. Who threw it away, and why did the bin go out so early?",
+  "chars": "Uncle Tobias; Nadia (caterer)",
+  "story": "Nadia, the caterer, binned the shrimp tower because the FDA Food Code gives perishable food only two hours out of temperature control, and that limit drops to one hour once the ambient air passes 90\u00b0F, so the tower set out at noon had to go by one o'clock, well before the toasts. Uncle Tobias had signed for the delivery and trusted the ice still visible on the tray, but ice reads as cold while the shrimp inside had already crossed the danger zone.",
+  "solver": "**Character 1:** Uncle Ray, the bride's frugal uncle who signed for the shrimp.\n\n**Character 2:** Dana, the wedding's catering manager (food-safety certified).\n\n**Story:** Uncle Ray had ordered the shrimp tower cheap from a buddy, who dropped it off unrefrigerated at noon, and Ray swore it was fine. Dana saw the tent thermometer at 96\u00b0F and knew seafood can't sit out more than an hour in that heat, so she carted it out untouched before the toasts and rolled the bin to the curb early so neither Ray nor any guest could fish it back out and get food poisoning.",
+  "riddler_pos": "A",
+  "judge": "B\n\nStory B explains every detail, including why the bin itself went to the curb early (so no one could retrieve the shrimp), while Story A only explains why the tower was discarded before the toasts and leaves the early bin unexplained.",
+  "result": "LOSS"
+ },
+ {
+  "model": "anthropic/claude-haiku-5.5",
+  "seed": "a cemetery or crematorium",
+  "cost": 0.0230912,
+  "riddle": "The coffin left the chapel light and the urn came back heavy.\nNobody paid for a second firing, yet the ledger records one.\nThe keeper sealed a brass tag inside, then swore the name was wrong.\nWho was burned, and who was carried home?",
+  "chars": "Ellen Marsh (widow); Tom Reyes (crematorium operator)",
+  "story": "Ellen's husband Dan went into the retort with a titanium hip, and crematorium licence rules require operators to remove metal implants and return them to the family, so Tom, who had been selling those implants as scrap, logged a second firing to explain the unrecovered metal. The brass tag he sealed inside carried Dan's name, but the ash it sat beside belonged to a stranger Tom had cremated under the wrong paperwork, and the extra weight was the implant he had never removed.",
+  "solver": "**Character 1:** Silas Hale, a debt-ridden man who faked his own death.\n\n**Character 2:** Edgar Voss, crematorium keeper (his accomplice).\n\n**Story:** Hale's coffin was carried out of the chapel empty while he fled town, so Edgar logged an unpaid \"second firing\" to burn the body of the blackmailer he had strangled that morning, and the extra bone made the urn heavy. By habit he sealed the dead man's own brass tag inside, then swore it was a clerical mistake as Hale's weeping widow carried the blackmailer home on her mantel.",
+  "riddler_pos": "A",
+  "judge": "B\nStory B explains every detail coherently: the empty coffin is light, the unpaid second firing disposes of the blackmailer, and the wrong tag lets the widow carry him home. Story A leaves the light coffin unexplained and contradicts itself by having Tom sell the implants yet leave the hip in the urn.",
+  "result": "LOSS"
+ },
+ {
+  "model": "openai/gpt-6-luna",
+  "seed": "a ferry or harbour",
+  "cost": 0.0178415,
+  "riddle": "At a fogbound ferry, a passenger takes three pipefuls while the engine-silent vessel makes no way through the water; its horn gives two long blasts, then repeats them exactly two minutes later.\nA voice aboard calls the ferry \u201cunderway,\u201d though it appears motionless\u2014why both the signal and that word?",
+  "chars": "Sherlock Holmes; harbour pilot",
+  "story": "Holmes\u2019s three-pipe habit identifies the passenger, and the two prolonged blasts repeated at intervals of no more than two minutes are the COLREG Rule 35 fog signal for a power-driven vessel underway but not making way. The harbour pilot explains the rule\u2019s less-obvious consequence: \u201cunderway\u201d means not anchored, made fast, or aground, even when a vessel is making no way through the water.",
+  "solver": "**Character 1:** Old Tom, a retired lighthouse keeper riding as a passenger.\n**Character 2:** Captain Mara Quill, the ferry's master (occupation: ship's captain).\n\n**Story:** With fog too thick to see the channel, Captain Quill stopped her engines and drifted, neither anchored nor tied up, so by the rules of the road the ferry was still legally \"underway.\" She therefore sounded the required signal for a power-driven vessel underway but making no way, two long blasts at intervals of no more than two minutes, while Old Tom, who knew the regulations by heart, smoked through three pipefuls and nodded at every pair of blasts until the fog lifted.",
+  "riddler_pos": "A",
+  "judge": "A\n\nStory A explains every odd detail, including the three pipefuls (Holmes's famous \"three-pipe problem\"), and correctly ties the two prolonged blasts at two-minute intervals and the word \"underway\" to COLREG Rule 35, whereas Story B leaves the pipefuls as unexplained colour.",
+  "result": "WIN"
+ },
+ {
+  "model": "openai/gpt-6-luna",
+  "seed": "a dental surgery",
+  "cost": 0.0173109,
+  "riddle": "At the dental surgery, he laid a brass mouthpiece beside the chair and pressed it to the pale groove on his upper lip.  \nThough a front tooth throbbed, he asked to wait until 6:15\u2014after the 5:00 start printed on his card\u2014before injecting anything. Why?",
+  "chars": "Rafi; Dr. Sen (dentist)",
+  "story": "Rafi was a trumpet player, as the mouthpiece and lip groove suggested. Dr. Sen agreed to wait because anesthetic for an upper tooth can numb the lip, dulling the tactile control needed to form a trumpet embouchure, so Rafi couldn\u2019t reliably play his 5:00 performance.",
+  "solver": "**Character 1:** Leo, a professional trumpeter.\n**Character 2:** Dr. Patel, an emergency dentist.\n\n**Story:** Leo arrived with a throbbing front tooth, but his gig card showed he had to play a 5:00 concert. He pressed his mouthpiece to the pale embouchure groove on his lip to show Dr. Patel why a numbing injection would ruin his playing, and asked her to wait until 6:15, after the set ended.",
+  "riddler_pos": "A",
+  "judge": "B\n\nStory B ties every detail together, from the mouthpiece and lip groove to the 5:00 gig card and the 6:15 wait until after his set ends, while Story A never explains why 6:15 specifically and muddles the logic of the delay.",
+  "result": "LOSS"
+ },
+ {
+  "model": "openai/gpt-6-luna",
+  "seed": "a wedding venue",
+  "cost": 0.0145204,
+  "riddle": "She circled him seven times; at the final beat, he crushed a glass inside velvet.\nThe room\u2019s alarm stayed silent.\nWho were they?",
+  "chars": "Leah (the bride); Rabbi Cohen (rabbi)",
+  "story": "Leah was the bride at a Jewish wedding, and Rabbi Cohen officiated it. Because the venue\u2019s acoustic glass-break detector listens for the sharp, high-frequency sound of breaking glass, Cohen used a thick velvet pouch to muffle the ceremonial smash and keep the alarm from triggering.",
+  "solver": "**Character 1:** Miriam, a bride.\n\n**Character 2:** David, the groom, who works as a security-systems technician.\n\n**Story:** At their Jewish wedding, Miriam circled David seven times under the chuppah, and at the ceremony's close he stomped on the traditional glass wrapped in a velvet pouch as everyone shouted \"Mazel tov!\" The hall's glass-break alarm stayed silent because David had installed that very system and switched off its sensor that morning, knowing exactly what sound was coming.",
+  "riddler_pos": "B",
+  "judge": "A\nStory A correctly names the bride and groom as the \"she\" who circles and the \"he\" who breaks the glass, while Story B leaves out the groom and has the rabbi handling the glass, so its characters don't match the riddle.",
+  "result": "LOSS"
+ },
+ {
+  "model": "openai/gpt-6-luna",
+  "seed": "a cemetery or crematorium",
+  "cost": 0.013356600000000001,
+  "riddle": "At a Paris grave, a bronze man lies beside his hat.  \nOne small patch shines gold; the rest has gone dark.  \nWhat keeps that bright mark from aging like the rest?",
+  "chars": "Victor Noir; a cemetery conservator",
+  "story": "Victor Noir\u2019s effigy became a fertility charm, so visitors rubbed it for luck. The conservator knows that repeated rubbing abrades the bronze\u2019s dark patina and exposes brighter metal, explaining the gleaming patch.",
+  "solver": "**Character 1:** Victor Noir, a 19th-century journalist shot dead in 1870 by Prince Pierre Bonaparte, whose life-size bronze effigy lies with its top hat beside it at P\u00e8re Lachaise Cemetery.\n\n**Character 2:** Claire, a young schoolteacher who hopes to have a baby.\n\n**Story:** Legend says that rubbing the conspicuous bulge in the trousers of Victor Noir's statue brings fertility and love, so Claire, like countless women before her, slips into the cemetery and rubs it. Those endless hands keep polishing away the dark patina, so that one spot stays shining gold while the rest of the bronze has gone dark.",
+  "riddler_pos": "B",
+  "judge": "A\nStory A explains the gleaming patch through a concrete, vivid mechanism: the legend draws countless visitors like Claire to rub the statue's trouser bulge, and their hands continually polish away the dark patina. Story B gives the same explanation, but more abstractly and without naming the specific spot.",
+  "result": "LOSS"
+ },
+ {
+  "model": "deepseek/deepseek-v4.1-flash-1017",
+  "seed": "a ferry or harbour",
+  "cost": 0.00291888,
+  "result": "PARSE_FAIL",
+  "raw": ""
+ },
+ {
+  "model": "deepseek/deepseek-v4.1-flash-1017",
+  "seed": "a dental surgery",
+  "cost": 0.00243876,
+  "result": "PARSE_FAIL",
+  "raw": ""
+ },
+ {
+  "model": "deepseek/deepseek-v4.1-flash-1017",
+  "seed": "a wedding venue",
+  "cost": 0.00303876,
+  "result": "PARSE_FAIL",
+  "raw": ""
+ },
+ {
+  "model": "deepseek/deepseek-v4.1-flash-1017",
+  "seed": "a cemetery or crematorium",
+  "cost": 0.0030489,
+  "result": "PARSE_FAIL",
+  "raw": ""
+ },
+ {
+  "model": "qwen/qwen3.8-flash",
+  "seed": "a ferry or harbour",
+  "cost": 0.002874,
+  "result": "PARSE_FAIL",
+  "raw": ""
+ },
+ {
+  "model": "qwen/qwen3.8-flash",
+  "seed": "a dental surgery",
+  "cost": 0.00287385,
+  "result": "PARSE_FAIL",
+  "raw": ""
+ },
+ {
+  "model": "qwen/qwen3.8-flash",
+  "seed": "a wedding venue",
+  "cost": 0.00287385,
+  "result": "PARSE_FAIL",
+  "raw": ""
+ },
+ {
+  "model": "qwen/qwen3.8-flash",
+  "seed": "a cemetery or crematorium",
+  "cost": 0.00287415,
+  "result": "PARSE_FAIL",
+  "raw": ""
+ },
+ {
+  "model": "google/gemini-3.8-flash",
+  "seed": "a ferry or harbour",
+  "cost": 0.03470575,
+  "riddle": "Two hundred ticket holders waited on the pier, but the gangway was pulled.\nOnly a single silver tanker rolled aboard, parking dead center on the empty deck.\nThe tally clicker stopped at exactly twenty-five strangers before the gate clicked shut.\nWith vast open space remaining, the whistle blew and she sailed on time.",
+  "chars": "Roy; Elena (ferry captain)",
+  "story": "Roy\u2019s delivery of liquefied petroleum gas was classified as high-risk hazardous cargo, which maritime safety rules bar from standard passenger sailings. To keep the island supplied, Elena invoked the International Maritime Dangerous Goods (IMDG) Code exemption that allows ferries carrying restricted hazmat to sail as cargo vessels provided the civilian passenger count does not exceed twenty-five.",
+  "solver": "**Character 1:** Dale, a fuel-tanker driver hauling a full load of gasoline to the island.\n\n**Character 2:** Captain Marisol Reyes, the ferry captain.\n\n**Story:** Because Dale's silver tanker was carrying hazardous fuel, maritime rules made this a \"dangerous goods sailing,\" which capped passengers at twenty-five. Captain Reyes had the tanker parked dead center for safety and let exactly twenty-five walk-ons through the gate, then sailed on schedule with the deck nearly empty while the other ticket holders waited for the next regular ferry.",
+  "riddler_pos": "A",
+  "judge": "B\n\nStory B accounts for every detail (the dangerous-goods cap of twenty-five, the tanker parked dead center for safety, the remaining ticket holders waiting, and the on-time sailing with an empty deck), while Story A explains only the passenger limit.",
+  "result": "LOSS"
+ },
+ {
+  "model": "google/gemini-3.8-flash",
+  "seed": "a dental surgery",
+  "cost": 0.040058750000000004,
+  "riddle": "He begged for the drill on a tooth free of pain,\nYet refused the white paste when she opened the drain.\nThough the root canal failed, she smiled at his greed:\nOne breath through his nose was the proof she would need.",
+  "chars": "Arthur Pendelton; Dr. Evelyn Vance (dentist)",
+  "story": "Arthur sought an immediate molar extraction to claim insurance for a staged assault, faking endodontic agony on a healthy upper tooth. Dr. Vance suspected insurance fraud and drilled into the maxillary sinus, using the Valsalva maneuver\u2014where pinched-nose exhalation bubbles air through an open oroantral communication\u2014to clinically confirm his sinus floor was intact and his claimed fracture nonexistent.",
+  "solver": "**Character 1:** Gary, a man hooked on laughing gas.\n**Character 2:** Dr. Lena Ortiz, a dentist.\n\n**Story:** Gary demanded a \"root canal\" on a perfectly healthy tooth and waved away the numbing paste, because all he really wanted was the nitrous mask. Suspicious, Dr. Ortiz opened the valve on pure oxygen instead, and when Gary went instantly giggly after one breath through his nose, she smiled, knowing she had proof he was a gas-seeking faker to report.",
+  "riddler_pos": "A",
+  "judge": "B\n\nStory B coherently covers every line: the painless tooth, the refused numbing paste, the opened valve, and one nasal breath of pure oxygen exposing his craving for gas. Story A leaves the white paste unexplained, and its Valsalva logic is muddled.",
+  "result": "LOSS"
+ },
+ {
+  "model": "google/gemini-3.8-flash",
+  "seed": "a wedding venue",
+  "cost": 0.028803,
+  "riddle": "The sun still blazed above the garden arbor when the wicker latches snapped shut.\nThe bride offered double his fee, but the man checked his watch and shook his head.\nA twenty-minute delay at the altar had cost her the grand spectacle.\nAnd sixty pure-white fliers stayed locked in their cages under the cloudless sky.",
+  "chars": "Clara; Arthur (dove release coordinator)",
+  "story": "The ceremonial \"doves\" were actually trained white homing pigeons that relied on visual solar navigation to return to their home loft forty miles away. Because the breed possesses zero night vision and faces fatal raptor predation if grounded after dark, standard animal welfare release contracts enforce an unbendable curfew exactly two hours before local sunset\u2014a deadline the tardy ceremony had just breached despite the visible daylight.",
+  "solver": "**Character 1:** The bride, whose ceremony started twenty minutes late.\n\n**Character 2:** The dove handler (white homing-pigeon release specialist).\n\n**Story:** The handler's \"doves\" were trained homing pigeons that had to fly many miles back to their loft, and they cannot navigate after dusk, so his strict cutoff for releasing them had passed even though the sun was still shining. When the late ceremony finally ended, he refused the bride's offer of double pay, because releasing them then would leave all sixty birds stranded in the dark, prey for hawks and owls, so he latched the wicker baskets and drove them home instead.",
+  "riddler_pos": "B",
+  "judge": "A\nStory A accounts for every riddle detail, including the refused double fee and the latched wicker baskets, while Story B leaves out the bride's offer and the cages being locked.",
+  "result": "LOSS"
+ },
+ {
+  "model": "google/gemini-3.8-flash",
+  "seed": "a cemetery or crematorium",
+  "cost": 0.033738,
+  "riddle": "Arthur offered triple cash for his mother\u2019s coffin to take the midnight furnace\u2019s final, hottest slot.\nSeeing the ramp\u2019s scale tip past four hundred pounds, Elena took the fee but immediately shut the burners off.\nIgnoring his frantic pleas to ignite the fire, she vented the chamber and locked the intake until dawn.\nMorning light brought the sheriff's warrant, hours before the cold hearth was permitted to spark.",
+  "chars": "Arthur; Elena (crematory operator)",
+  "story": "Arthur had hidden his murdered business partner inside his frail mother's casket to incinerate the evidence during the late-night run. However, crematory safety regulations strictly mandate that cases exceeding three hundred pounds must be processed in a completely cold retort at dawn, because high volumes of adipose tissue loaded into a preheated chamber cause catastrophic, uncontainable grease fires.",
+  "solver": "**Character 1:** Arthur, a man desperate to destroy evidence.\n**Character 2:** Elena, the night-shift crematory operator.\n\n**Story:** Arthur paid triple for an immediate midnight cremation because his mother's coffin also held the body of the business partner he had murdered, and he needed both burned before anyone came looking. Elena knew no frail old woman's coffin should weigh over four hundred pounds, so she pocketed the fee, shut down and locked the cold furnace to preserve the bodies, and stalled him until the sheriff arrived at dawn with a warrant to seize the coffin.",
+  "riddler_pos": "B",
+  "judge": "B\n\nStory B's safety rule (heavy cases must go into a fully cold retort at dawn to avoid grease fires) explains why Elena took the fee but shut the burners off, vented the hot chamber, and locked it until the hearth was \"permitted\" to spark, which leaves time for the warrant to arrive.",
+  "result": "WIN"
+ },
+ {
+  "model": "moonshotai/kimi-k2.6",
+  "seed": "a ferry or harbour",
+  "cost": 0.0098945956,
+  "result": "PARSE_FAIL",
+  "raw": ""
+ },
+ {
+  "model": "moonshotai/kimi-k2.6",
+  "seed": "a dental surgery",
+  "cost": 0.0098916149,
+  "result": "PARSE_FAIL",
+  "raw": ""
+ },
+ {
+  "model": "moonshotai/kimi-k2.6",
+  "seed": "a wedding venue",
+  "cost": 0.0206537,
+  "result": "PARSE_FAIL",
+  "raw": ""
+ },
+ {
+  "model": "moonshotai/kimi-k2.6",
+  "seed": "a cemetery or crematorium",
+  "cost": 0.06797523,
+  "riddle": "The retort took them both at dawn, yet one permit sufficed.\nTwo tags went in together, but the urn was only one.\nThe fire burned its standard course; the ash weighed just the same.\nThe second tag was nameless when the day was done.",
+  "chars": "the mother; the funeral director",
+  "story": "The funeral director placed the mother's unborn child in the retort alongside her. Because state health regulations permit fetal remains under twenty weeks to be cremated concurrently with the mother under a single authorization without a separate death certificate, he logged both stainless tags but filed only one official permit, explaining why the ash weighed no more than a single adult's and the second disc remained nameless in the facility ledger.",
+  "solver": "**Character 1:** Elena, a pregnant violinist who died suddenly in her eighth month.\n\n**Character 2:** Her unborn daughter, who had not yet been named.\n\n**Story:** At dawn, the crematorium operator placed Elena in the retort under a single permit, because her unborn child had no separate legal existence, and he tagged them both: one tag read \"Elena\" and the other was left blank. The fire ran its normal cycle and the tiny, barely formed bones added almost nothing to the ash, so it all went into one urn that weighed the same as any other.",
+  "riddler_pos": "B",
+  "judge": "B\n\nStory B's under-twenty-weeks detail plausibly explains both the single permit and the unchanged ash weight, whereas Story A's eighth-month fetus would normally need its own fetal death record and would not have \"barely formed\" bones.",
+  "result": "WIN"
+ },
+ {
+  "model": "anthropic/claude-fable-5.2",
+  "seed": "a ferry or harbour",
+  "cost": 0.24376,
+  "result": "PARSE_FAIL",
+  "raw": ""
+ },
+ {
+  "model": "anthropic/claude-fable-5.2",
+  "seed": "a dental surgery",
+  "cost": 0.243744,
+  "result": "PARSE_FAIL",
+  "raw": ""
+ },
+ {
+  "model": "anthropic/claude-fable-5.2",
+  "seed": "a wedding venue",
+  "cost": 0.179784,
+  "riddle": "At 1:55 in the Oak Room, Dana watched the best man sip champagne and said nothing.\nAt 2:05 she took his fresh glass of it away, handed him a lemonade herself, and told him champagne was still fine out on the terrace.\nAt 3:00 sharp she took the lemonade too.\nHe wasn't drunk, and she had no quarrel with him.",
+  "chars": "Tom, the best man; Dana (wedding venue manager)",
+  "story": "The Oak Room is the licensed ceremony room of an English \"approved premises\" where the civil wedding began at 3:00, and Dana is the venue's designated \"responsible person\", who must be on site from one hour before the ceremony to enforce the conditions of the venue's marriage approval. Those conditions forbid any food or drink in the ceremony room itself for the hour before and during the proceedings, with a 2021 amendment excepting only non-alcoholic drinks, and only before the ceremony starts. So Tom's champagne was legal at 1:55, banned in that room (but not on the terrace) from 2:00, and his lemonade was allowed until the ceremony began at 3:00, when nothing at all could be drunk.",
+  "solver": "**Character 1:** Dana, the wedding venue's events manager.\n**Character 2:** Tom, the best man (a firefighter by occupation).\n\n**Story:** The venue's liquor license let alcohol be served in the Oak Room only until 2:00, after which it was allowed solely on the terrace. So at 2:05 Dana swapped Tom's fresh champagne for a lemonade she handed him herself, then at 3:00 sharp she took that too, because the ceremony was starting in the Oak Room and the best man needed empty hands for the rings.",
+  "riddler_pos": "B",
+  "judge": "B\nStory B's single rule set (no alcohol in the ceremony room from an hour before, non-alcoholic drinks allowed only until the 3:00 start) neatly explains every timed action, while Story A needs an unrelated \"empty hands for the rings\" excuse for the 3:00 removal.",
+  "result": "WIN"
+ },
+ {
+  "model": "anthropic/claude-fable-5.2",
+  "seed": "a cemetery or crematorium",
+  "cost": 0.243776,
+  "result": "PARSE_FAIL",
+  "raw": ""
+ }
+]
