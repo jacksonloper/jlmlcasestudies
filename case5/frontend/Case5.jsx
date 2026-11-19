@@ -9,6 +9,7 @@ const EXPERIMENTS = {
       'Every riddle was also fact-checked by Claude Sonnet 5.5 (is the real-world mechanism actually real?) and checked for ' +
       'theme fit by Claude Haiku 5.5. Anthropic and Gemini writers ran at the efforts shown; open-weight writers ran at high effort.',
     factCheck: true,
+    costLogged: true,
   },
   exp1: {
     label: 'Setting seeds, no user theme',
@@ -43,7 +44,8 @@ function summarize(rounds) {
       const real = done.filter((r) => r.real).length;
       const winReal = done.filter((r) => r.result === 'WIN' && r.real).length;
       const fit = done.filter((r) => r.fit).length;
-      const genCosts = g.rounds.map((r) => r.gen_cost).filter((c) => typeof c === 'number');
+      const genLogged = g.rounds.every((r) => typeof r.gen_cost === 'number');
+      const genTotal = genLogged ? g.rounds.reduce((a, r) => a + r.gen_cost, 0) : null;
       return {
         ...g,
         key: `${g.model}|${g.effort}`,
@@ -54,8 +56,10 @@ function summarize(rounds) {
         winReal,
         fit,
         winRate: done.length ? wins / done.length : 0,
-        avgGen: genCosts.length ? genCosts.reduce((a, b) => a + b, 0) / genCosts.length : null,
-        avgTotal: g.rounds.reduce((a, r) => a + (r.cost || 0), 0) / g.rounds.length,
+        // Expected writer spend to obtain one riddle that wins: all writer spend
+        // (including attempts that failed to produce a riddle) divided by wins.
+        perWin: genTotal != null && wins ? genTotal / wins : null,
+        perWinReal: genTotal != null && winReal ? genTotal / winReal : null,
       };
     })
     .sort((a, b) => b.winRate - a.winRate || b.winReal - a.winReal);
@@ -222,16 +226,23 @@ export default function Case5() {
           <ul className="list-disc pl-6 space-y-2 text-gray-700">
             <li>
               <strong>Claude Opus 5.5 at medium effort</strong> was the best value: it won 6 of 8 themed rounds, 5 of
-              which also passed the fact check, for about $0.03 per riddle.
+              which also passed the fact check, for an expected $0.054 of writer spend per winning, factually real
+              riddle.
             </li>
             <li>
-              <strong>Claude Fable 5.2</strong> won the most rounds but often by leaning on invented mechanisms, which
-              the judge does not penalise.
+              <strong>Cheap open-weight writers win rarely but are close on cost per win.</strong> GLM-5.3
+              ($0.059) and Qwen 3.7 Plus ($0.065) cost little per attempt, so their expected cost per winning, real
+              riddle is near Opus&apos;s. Those figures rest on only one or two wins each, and Qwen often drifted off
+              the requested theme.
             </li>
             <li>
-              <strong>Cheaper models mostly lost.</strong> Claude Sonnet 5.5 wrote riddles too convoluted to beat the
-              solver&apos;s simpler story, and the best open-weight writer (GLM-5.3) won 3 of 8. Several open-weight
-              models often failed to return a riddle in the required format.
+              <strong>Claude Fable 5.2</strong> won the most rounds, but often by leaning on invented mechanisms,
+              which the judge does not penalise. That makes it the most expensive per winning, real riddle among
+              the strong writers ($0.16).
+            </li>
+            <li>
+              Claude Sonnet 5.5 wrote riddles too convoluted to beat the solver&apos;s simpler story. Several
+              open-weight models often failed to return a riddle in the required format.
             </li>
             <li>
               A fixed user theme roughly halved Gemini 3.8 Flash&apos;s win rate but did not hurt Fable 5.2: strong
@@ -274,8 +285,10 @@ export default function Case5() {
                       {ex.factCheck && <th className="py-2 pr-4 font-medium">Mechanism real</th>}
                       {ex.factCheck && <th className="py-2 pr-4 font-medium">Won and real</th>}
                       {ex.factCheck && <th className="py-2 pr-4 font-medium">On theme</th>}
-                      <th className="py-2 pr-4 font-medium">Writer $/riddle</th>
-                      <th className="py-2 font-medium">Total $/round</th>
+                      {ex.costLogged && <th className="py-2 pr-4 font-medium">$ per winning riddle</th>}
+                      {ex.costLogged && ex.factCheck && (
+                        <th className="py-2 font-medium">$ per winning, real riddle</th>
+                      )}
                     </tr>
                   </thead>
                   <tbody>
@@ -308,16 +321,26 @@ export default function Case5() {
                           </td>
                         )}
                         {ex.factCheck && <td className="py-2 pr-4">{row.n ? `${row.fit}/${row.n}` : '–'}</td>}
-                        <td className="py-2 pr-4">{row.avgGen != null ? `$${row.avgGen.toFixed(3)}` : '–'}</td>
-                        <td className="py-2">${row.avgTotal.toFixed(3)}</td>
+                        {ex.costLogged && (
+                          <td className="py-2 pr-4">
+                            {row.perWin != null ? `$${row.perWin.toFixed(3)}` : <span className="text-gray-400">no wins</span>}
+                          </td>
+                        )}
+                        {ex.costLogged && ex.factCheck && (
+                          <td className="py-2">
+                            {row.perWinReal != null ? `$${row.perWinReal.toFixed(3)}` : <span className="text-gray-400">none</span>}
+                          </td>
+                        )}
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
               <p className="text-xs text-gray-500 mt-2">
-                Click a row to see that writer&apos;s riddles. &quot;Total $/round&quot; includes the Opus solver
-                and judge{ex.factCheck ? ', and the fact and theme checks' : ''}.
+                Click a row to see that writer&apos;s riddles.{' '}
+                {ex.costLogged
+                  ? 'Dollar columns are the expected writer spend to get one riddle that wins: total writer spend, including attempts that produced no riddle, divided by the number of wins. They exclude the solver, judge and checks, which are not needed to serve a riddle.'
+                  : 'This run logged only the total cost of each round (writer, solver and judge together), not the writer on its own, so the cost per winning riddle cannot be computed for it.'}
               </p>
             </>
           )}
