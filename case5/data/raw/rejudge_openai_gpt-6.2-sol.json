@@ -1,0 +1,757 @@
+{
+ "judge_model": "openai/gpt-6.2-sol",
+ "effort": "low",
+ "rounds": {
+  "sweep.json": [
+   {
+    "i": 0,
+    "judge": "B\nIt explains why square hits jammed the contact exploder while the slanted hit worked, without A\u2019s mistaken claim that the firing pin was too light.",
+    "result": "LOSS"
+   },
+   {
+    "i": 1,
+    "judge": "A\nArnar\u2019s full holds explain why he deliberately had every juvenile logged to trigger the immediate fourteen-day closure and force his six rivals to stop fishing, without assuming a precisely timed round trip.",
+    "result": "LOSS"
+   },
+   {
+    "i": 2,
+    "judge": "A\nA explains the vanished smell, the two air packs, and the uphill, upwind rescue without inventing a newly struck sour-gas pocket.",
+    "result": "LOSS"
+   },
+   {
+    "i": 3,
+    "judge": "A\nIt better explains why the glancing hits worked, why the square hits and the drop test failed, and why the crew saved the last torpedo as untampered evidence.",
+    "result": "WIN"
+   },
+   {
+    "i": 4,
+    "judge": "A\nBoth stories explain why the passport didn\u2019t free the slot, but A also explains why the stablemaster sent the boy home that day: the champion announced he would keep competing.",
+    "result": "WIN"
+   },
+   {
+    "i": 5,
+    "judge": "A\nIt explains why she sourced bread from another bakery rather than hiring temporary replacements, and why covering \u201cBoulangerie\u201d left Karim with no misleading sign to photograph.",
+    "result": "WIN"
+   },
+   {
+    "i": 6,
+    "judge": "A\nA explains the crew\u2019s rush to the lit well controls, Earl\u2019s calm walk and prompt payoff, and the decision to stop drilling through a single event: reaching the target reservoir.",
+    "result": "LOSS"
+   },
+   {
+    "i": 7,
+    "judge": "A\nLuc\u2019s loyalty to his late mentor naturally explains why he brings free bread to one door, why the widow leaves it closed, and why he uses her husband\u2019s numbered bag.",
+    "result": "LOSS"
+   },
+   {
+    "i": 8,
+    "judge": "A\nIt ties the crew\u2019s reaction to the already exhausted quota and explains why their shares were calculated on only the 20% the boat kept, despite the tagged fish fetching the week\u2019s best price.",
+    "result": "WIN"
+   },
+   {
+    "i": 9,
+    "judge": "B\nThe pre-mooring certification rule directly links the man\u2019s haste, his taking only the logbook, and the crew\u2019s prompt full pay, though it leaves the skipper\u2019s radio silence unexplained.",
+    "result": "WIN"
+   },
+   {
+    "i": 10,
+    "judge": "B\nThe strike explains the widespread hunger and cheering crowd, while Luc\u2019s mandatory Monday closure explains why Laurent fined him alone despite the shortage.",
+    "result": "WIN"
+   },
+   {
+    "i": 11,
+    "judge": "B\nIt explicitly connects the four-foot lift and the white ring clearing the floor to moving the obstructing tool joint out of the shear rams and putting cuttable pipe in its place.",
+    "result": "LOSS"
+   },
+   {
+    "i": 12,
+    "judge": "A\nBoth stories explain the celebration and the recruitment rule, but A also explains why the wrestler bowed without taking offense: he knew the master was enforcing the rule.",
+    "result": "LOSS"
+   },
+   {
+    "i": 13,
+    "judge": "A\nIt better explains the one-off topknot and why the embroiderer arrived that day: j\u016bry\u014d promotions are announced early so new sekitori can order ceremonial aprons while the full rankings remain secret.",
+    "result": "WIN"
+   },
+   {
+    "i": 14,
+    "judge": "B\nIt connects the hydrometer reading and the \u201c49\u201d labels to Fiona\u2019s gratitude: bottling early spoiled her birthday plan but saved the cask\u2019s contents from falling below the legal minimum strength for Scotch whisky.",
+    "result": "LOSS"
+   },
+   {
+    "i": 15,
+    "judge": "A\nBoth stories explain the low strength, the wait until Thursday, and the discarded age labels, but A also explains why the blend could no longer carry the 1969 vintage.",
+    "result": "WIN"
+   },
+   {
+    "i": 16,
+    "judge": "A\nIt explains how the thimble could strip the vat of its Scotch whisky status and slash its divorce valuation without noticeably changing the taste, and identifies the blender as the person thanked.",
+    "result": "WIN"
+   },
+   {
+    "i": 17,
+    "judge": "A\nThe discard ban explains why Gunnar kept the small cod, and the separate storage and departure at one in ten follow from the quota discount without assuming an imminent closure.",
+    "result": "WIN"
+   },
+   {
+    "i": 18,
+    "judge": "A\nA directly explains the ceremonial dress, tears, gratitude, and respectful silence, while B splits the old man\u2019s role between two people and invokes a venue rule that clashes with the stable setting.",
+    "result": "LOSS"
+   },
+   {
+    "i": 19,
+    "judge": "B\nBoth stories explain the bleeding ears and sudden fog, but B also explains why the veteran ignored the life preservers and grabbed the fuel lever: the boat wasn\u2019t flooding, and cutting the fuel would stop the diesels from drawing down the cabin air.",
+    "result": "LOSS"
+   },
+   {
+    "i": 20,
+    "judge": "A\nIt explains the reversal through the wrestlers\u2019 change in rank, identifies the teen as the veteran\u2019s former attendant, and accounts for the belt and socks without claiming that going sockless was a legal requirement.",
+    "result": "LOSS"
+   },
+   {
+    "i": 21,
+    "judge": "A\nIt directly explains why the cousin could move in that very day: Batbayar\u2019s citizenship let him stay on as a coach, but only his retirement freed the stable\u2019s foreign-born wrestler slot.",
+    "result": "WIN"
+   },
+   {
+    "i": 22,
+    "judge": "A\nA takes the three years of emptiness literally and explains the recorded loss as reduced capacity, whereas B requires the supposedly unfilled cask to have been secretly full.",
+    "result": "LOSS"
+   },
+   {
+    "i": 23,
+    "judge": "A\nIt explains the stillness, the halted baking, and the candle as an effort to conserve and monitor the remaining air, without B\u2019s strained claims about candle-warmed absorbent and early CO\u2082 warning.",
+    "result": "LOSS"
+   },
+   {
+    "i": 24,
+    "judge": "A\nIt ties the clock to the new work hours and explains how thinner loaves baked in time for breakfast without assuming they also rose faster.",
+    "result": "LOSS"
+   },
+   {
+    "i": 25,
+    "judge": "B\nIt explains the continuous observation, the advice to stop drinking, and why the officer sent all three samples to the lab even though only the third met the specific-gravity requirement.",
+    "result": "WIN"
+   },
+   {
+    "i": 26,
+    "judge": "B\nBuying bread from another bakery explains how the shop kept selling baguettes at the same price, while leaving \u201cP\u00e2tisserie\u201d visible made the missing \u201cBoulangerie\u201d both a public sign of the strike and a legally accurate change.",
+    "result": "LOSS"
+   },
+   {
+    "i": 27,
+    "judge": "A\nThe cooper\u2019s tight but absorbent cask explains the dry exterior, the dram, and the fine, while Morag\u2019s cooperage experience explains how she recognized the apparent loss without entering the warehouse.",
+    "result": "LOSS"
+   },
+   {
+    "i": 28,
+    "judge": "B\nIt explains the father\u2019s exclusion and the unused banana leaf through mourning and remembrance, while the ceremony\u2019s scheduled end and the groom\u2019s visa paperwork account for the timing and quiet signing.",
+    "result": "LOSS"
+   },
+   {
+    "i": 29,
+    "judge": "B\nIt directly explains the clean hard hat, muddy clothes, discarded coffee, and silent exit, while making the blackout and eleven-minute pause part of the same emergency response.",
+    "result": "LOSS"
+   },
+   {
+    "i": 30,
+    "judge": "B\nThe hospital\u2019s breakfast shortage explains the predawn baking and free delivery, and Henri\u2019s replenishment of the reserve accounts for why he returned with exactly as much flour as he\u2019d taken.",
+    "result": "LOSS"
+   },
+   {
+    "i": 31,
+    "judge": "A\nThe watch tap explains the groom\u2019s stare and the timing of the vows, while the officer\u2019s undercover role explains why the grateful father had the film burned and why the groom welcomed his quiet departure.",
+    "result": "LOSS"
+   },
+   {
+    "i": 32,
+    "judge": "A\nBoth stories explain the second sample, but A also directly explains why the officer nodded and why the runner was still thirsty at noon.",
+    "result": "LOSS"
+   },
+   {
+    "i": 33,
+    "judge": "A\nA better explains the final snip, which traditionally goes to the wrestler\u2019s stablemaster rather than his hairdresser.",
+    "result": "LOSS"
+   },
+   {
+    "i": 34,
+    "judge": "A\nIt explains the vanished smell, the immediate shut-in order, and why only the bearded worker was sent uphill and upwind, without assuming the earlier smell established a safe concentration.",
+    "result": "LOSS"
+   },
+   {
+    "i": 35,
+    "judge": "A\n\nIt explains both why the torpedoman asked for a glancing shot and why saving the last torpedo mattered: it gave investigators a way to test the suspected defect.",
+    "result": "WIN"
+   },
+   {
+    "i": 36,
+    "judge": "B\nThe dangerous crate explains the urgent call, the cut nets, the stopped engine, and the officer\u2019s focus on timing, while the missing brother explains the skipper\u2019s relief without relying on a dubious legal loophole.",
+    "result": "LOSS"
+   },
+   {
+    "i": 37,
+    "judge": "A\nIt explicitly connects the two 30-day waits to the wedding on day 61, the posted notice to Fathima\u2019s estrangement, and the civil ceremony to the three witnesses and the absence of a priest or muhurtham.",
+    "result": "LOSS"
+   },
+   {
+    "i": 38,
+    "judge": "B\nIt explains why the cask still held plenty of unspoiled spirit, why falling below 40% ABV would cost it its Scotch whisky status, and why bottling fixed its age at 47.",
+    "result": "LOSS"
+   },
+   {
+    "i": 39,
+    "judge": "A\nThe injury explains the favorite\u2019s absence, the paperwork gives the passport a purpose, and the explicit 30 km payment clause explains why the substitute pacer was paid in full without finishing.",
+    "result": "WIN"
+   },
+   {
+    "i": 40,
+    "judge": "B\nIt identifies the actual USS *Tinosa* incident and explains the move to an oblique angle and the return to Pearl Harbor: square hits produced duds, and the last torpedo was saved as evidence.",
+    "result": "LOSS"
+   },
+   {
+    "i": 41,
+    "judge": "B\nIt accounts for the Kaptagat setting, the silicone wedge, and the caliper check while explaining why exactly three millimeters had to come off a brand-new shoe.",
+    "result": "LOSS"
+   },
+   {
+    "i": 42,
+    "judge": "B\nIts lease allows a 60-day gap, so a two-day delay from day 59 would let it expire and free the rancher to sign a more lucrative lease, while the brief drilling is meant only to keep the old lease alive.",
+    "result": "WIN"
+   },
+   {
+    "i": 43,
+    "judge": "A\nIt explains the full shelves and long queue despite the cold ovens and unopened flour, and adds a reason Lenoir brought in bread rather than hiring temporary bakers.",
+    "result": "WIN"
+   },
+   {
+    "i": 44,
+    "judge": "A\nIt ties the old stamp and last-minute flight to the one-year residency threshold and explains the savings through a specific jewellery allowance that covered the chain.",
+    "result": "WIN"
+   },
+   {
+    "i": 45,
+    "judge": "A\nThe crew\u2019s loss of smell ties together the bread test, the ban on competing cooking odors, the cook\u2019s role as the only remaining gas alarm, and the bread\u2019s apparent tastelessness.",
+    "result": "LOSS"
+   },
+   {
+    "i": 46,
+    "judge": "A\nIt preserves the new hand and the veteran beside him, and explains why one mistook the loss of smell for safety while the other dropped his tongs and fled uphill into the wind.",
+    "result": "LOSS"
+   },
+   {
+    "i": 47,
+    "judge": "B\nIt more explicitly explains the constant chaperoning, both latrine visits, and why a sample of sufficient volume could still be too dilute for testing.",
+    "result": "WIN"
+   },
+   {
+    "i": 48,
+    "judge": "A\nIt explains why the skipper couldn\u2019t discard the excess, how the special code let him land it legally, and why the crew accepted a small payout while Sigr\u00fan\u2019s mother benefited through her cod research.",
+    "result": "WIN"
+   },
+   {
+    "i": 49,
+    "judge": "A\nBoth stories explain the shifted deadline and S\u00f3lveig\u2019s Pentecost duties, but A also explains why she spoke over the wreath: as parish priest, she blessed it in memory of drowned sailors.",
+    "result": "LOSS"
+   },
+   {
+    "i": 50,
+    "judge": "B\nIt explains why the mother wore gold just this once, why the groom wore none, and why she never asked for the chain back: it was the bride\u2019s wedding gift all along.",
+    "result": "LOSS"
+   },
+   {
+    "i": 51,
+    "judge": "A\nThe declared whereabouts slot explains the 5 a.m. visit, and continuous observation and the urine concentration requirement explain why Chebet let the stranger follow her, skipped the run, and stopped drinking until the fourth sample passed.",
+    "result": "WIN"
+   },
+   {
+    "i": 52,
+    "judge": "B\nThe visitor\u2019s dual role as registrar and Green Protocol enforcer explains why he carries the marriage form himself and why finding a discarded plastic bottle could cost the couple their flight.",
+    "result": "LOSS"
+   },
+   {
+    "i": 53,
+    "judge": "A\nThe defective stave explains why sealant was an option and why exactly forty gallons remained, while the staged accident explains Arthur\u2019s zero and Callum\u2019s relief.",
+    "result": "WIN"
+   },
+   {
+    "i": 54,
+    "judge": "B\nIt gives the pacer a reason to cry, explains the taped watch and shared prize, and ties his name on the paperwork to the pacing violation.",
+    "result": "LOSS"
+   },
+   {
+    "i": 55,
+    "judge": "A\nIt explains not only the exact weights and Niyas\u2019s lack of a chain, but also why the father split the gold into plain chains: they qualified as jewellery and could be melted down for the bridal set.",
+    "result": "WIN"
+   }
+  ],
+  "sweep_open.json": [
+   {
+    "i": 0,
+    "judge": "A\nThe failed check valve explains why the cement could still U-tube after the plug seated and the pump stopped, dropping the casing fluid level without any loss to the formation.",
+    "result": "WIN"
+   },
+   {
+    "i": 1,
+    "judge": "A\nThe two prior strikes explain why the runner rearranges his training and waits the full hour, while the attendance check fits \u201conly his name\u201d without adding an unmentioned sample.",
+    "result": "WIN"
+   },
+   {
+    "i": 2,
+    "judge": "A\nKip\u2019s vow explains his restraint in training and his eagerness for physio, while the ritual for his twin explains why two cups are poured and neither is touched, a detail B\u2019s fasting explanation only partly covers.",
+    "result": "LOSS"
+   },
+   {
+    "i": 3,
+    "judge": "A\nThe spaniel\u2019s failure to detect whisky vapour from one tightly bunged cask explains why the gauger marked it and why the distiller, who had substituted water for whisky, went pale.",
+    "result": "LOSS"
+   },
+   {
+    "i": 4,
+    "judge": "A\nIt explains why the gauger waits for the spirit to cool and why a warm sample could lead him to tax \u201cphantom\u201d alcohol: heat makes the hydrometer overstate the spirit\u2019s strength.",
+    "result": "WIN"
+   },
+   {
+    "i": 5,
+    "judge": "A\nThe agreed exception explains why the picketers let Henri pass and the gendarme checks his name, while the starter itself accounts for the smell without any bread being baked or the strike ending.",
+    "result": "LOSS"
+   },
+   {
+    "i": 6,
+    "judge": "B\nB ties the dawn mist, the old coach\u2019s counting, the literal wall, and the six o\u2019clock camp bell into one scene, while A leaves the old voice unexplained and relies on an unrelated evening curfew.",
+    "result": "LOSS"
+   },
+   {
+    "i": 7,
+    "judge": "A\nThe stable\u2019s meal hierarchy explains why the master leaves the ladle untouched and the rookie drinks the leftovers, without B\u2019s contrived ordinance and improbable heat transfer.",
+    "result": "LOSS"
+   },
+   {
+    "i": 8,
+    "judge": "A\nSam\u2019s hammering, Edna\u2019s anticipation of his call, and his bolting the gate before leaving explain the details without relying on an implausibly automatic lockdown.",
+    "result": "LOSS"
+   },
+   {
+    "i": 10,
+    "judge": "A\nIt explains the chores, the hairdresser, and \u201cno leaves\u201d through the wrestler\u2019s junior rank without inventing a championship or an unexplained attempt to give him a style reserved for senior wrestlers.",
+    "result": "WIN"
+   },
+   {
+    "i": 11,
+    "judge": "B\nIt directly explains why the uncle\u2019s keys to the town\u2019s only licensed counter were useless and why the duty-free bottles went unpoured, without adding an unsupported Chingam scheduling constraint.",
+    "result": "LOSS"
+   },
+   {
+    "i": 12,
+    "judge": "A\nThe jammed valve explains why no fuse blew, the Comt\u00e9\u2019s AOC label accounts for the legal mark, and the strike march and sabots explain Bastille and the clog-wearer\u2019s role.",
+    "result": "LOSS"
+   },
+   {
+    "i": 15,
+    "judge": "A\nIt better connects the captain\u2019s decision to hold depth, the destroyer\u2019s quiet screws, the shallow charge bursts, and the wait until dusk to surface.",
+    "result": "WIN"
+   },
+   {
+    "i": 16,
+    "judge": "A\nThe runner\u2019s 52% hematocrit exceeded the 50% no-start threshold without proving doping, and Iten\u2019s low air pressure let the kettle whistle near 92\u00b0C before a rolling boil was visible.",
+    "result": "LOSS"
+   },
+   {
+    "i": 17,
+    "judge": "B\nIt explains how a final-bout win could coexist with demotion and ties the scroll and hairstyle change to the loss of salaried rank without adding unsupported claims about exclusive permissions.",
+    "result": "LOSS"
+   },
+   {
+    "i": 18,
+    "judge": "A\nIt explains the flare and preserves the sequence of the three-minute hold, the jump to 4,500 psi, and the thirty-second pause before the driller moves the lever.",
+    "result": "LOSS"
+   },
+   {
+    "i": 19,
+    "judge": "B\nIt explains the lighter casks through evaporation and the contrast in strength through decades of preferential alcohol loss in the oldest cask, without adding an unnecessary re-racking episode.",
+    "result": "LOSS"
+   },
+   {
+    "i": 21,
+    "judge": "B\nThe mock Kasi Yatra explains the staff and the nephew\u2019s coconut-bearing intervention, while April\u2019s heat explains the early schedule without relying on a midday ban that would not require the feast to end before ten.",
+    "result": "LOSS"
+   },
+   {
+    "i": 22,
+    "judge": "A\nBoth explain the inspection, closure, and mandatory landing, but A also explains how an abundant haul could consist entirely of tiny cod and why the skipper hurried east overnight.",
+    "result": "WIN"
+   },
+   {
+    "i": 24,
+    "judge": "B\nIt connects all four details through the wedding ceremony and explains the red tide as a reflection of the fireworks, without relying on implausibly specific marriage regulations.",
+    "result": "LOSS"
+   },
+   {
+    "i": 25,
+    "judge": "B\nIt ties the tube layout, time, eleven heartbeats, lamp flash, hatch hiss, and lone sonar ping to a single evacuation, whereas A leaves the final signals and descent unexplained.",
+    "result": "LOSS"
+   },
+   {
+    "i": 27,
+    "judge": "B\nIt directly accounts for the full cod hold, the untouched haddock school, and the thousand tons of unused quota, all while explaining why one more halibut forced the skipper to stop fishing.",
+    "result": "LOSS"
+   },
+   {
+    "i": 28,
+    "judge": "A\nThe weather-station mission directly explains the 1020 threshold, and dinner cleanup explains the recurring trim adjustment, whereas B assumes that barometric pressure reliably predicts the vibration at the encoder.",
+    "result": "LOSS"
+   },
+   {
+    "i": 29,
+    "judge": "B\nIt explains the ledger entry as the intended filling strength and the bottle as a separately logged excise sample, whereas A\u2019s temperature correction would put the spirit at 63.5% before the water was added.",
+    "result": "LOSS"
+   },
+   {
+    "i": 30,
+    "judge": "B\nIt explains the exact count with one loaf per striker and distinguishes protecting existing stock from refusing new work, without relying on A\u2019s claim that strike misconduct could forfeit wages already earned.",
+    "result": "LOSS"
+   },
+   {
+    "i": 31,
+    "judge": "A\nThe night-work rule explains all three times: mixing was allowed at ten, baking was barred at three, and five marked the end of the ban, not the arrival of fresh bread.",
+    "result": "WIN"
+   },
+   {
+    "i": 33,
+    "judge": "A\nIt explains all four details, including why Ming carries his master\u2019s sandals home, which Story B leaves unexplained.",
+    "result": "LOSS"
+   },
+   {
+    "i": 34,
+    "judge": "B\nIt explains the tears as part of the fake funeral and \u201cblack rock\u201d as the meaning of Cardhu, without inventing a licensing signature to explain why Helen is remembered.",
+    "result": "LOSS"
+   },
+   {
+    "i": 35,
+    "judge": "A\nA softer sand explains the drilling break, and sufficient mud pressure prevented an influx; the 38 minutes was the bottoms-up time, not a delay before an influx could raise the pit level.",
+    "result": "LOSS"
+   },
+   {
+    "i": 36,
+    "judge": "B\nJonah\u2019s role as a pacemaker naturally explains why he matches Mara\u2019s stride without a bib and why his pace sheet sends him off the red track at 800 meters, before the final bend.",
+    "result": "LOSS"
+   },
+   {
+    "i": 37,
+    "judge": "A\nThe workers\u2019 singing fits the strike, and baking exactly twelve loaves in one half-hour firing explains how the bakery met the prefect\u2019s demand without ending the protest.",
+    "result": "LOSS"
+   },
+   {
+    "i": 38,
+    "judge": "A\nShiva explains the seven days of closed shutters and cold ovens, and the single round loaf on the eighth morning marks the end of mourning while the coins tie the sale to the baker\u2019s mother and her act of kindness in 1942.",
+    "result": "LOSS"
+   },
+   {
+    "i": 39,
+    "judge": "B\nThe lack of a pipeline or buyer explains why Hank immediately shut in a strong well, and the expiring lease explains why he raced to mail a royalty check despite selling no oil.",
+    "result": "LOSS"
+   },
+   {
+    "i": 40,
+    "judge": "A\nIt ties the forty-two knots, the 23:58 stall, and the five heartbeats to Gunnar\u2019s drowning, and explains the gull\u2019s stone and the ledger as the settling of his debt.",
+    "result": "LOSS"
+   },
+   {
+    "i": 41,
+    "judge": "A\nThe day-work classification makes the enriched bread, the 3 p.m. bake, and the blank night-shift ledger part of one workaround that keeps the morning queue supplied.",
+    "result": "WIN"
+   },
+   {
+    "i": 42,
+    "judge": "A\nThe sleeping baby explains both the lullaby and the father\u2019s whisper, while the curfew explains why the violinist stopped playing and the uncle in khaki nodded his approval.",
+    "result": "LOSS"
+   },
+   {
+    "i": 44,
+    "judge": "B\nIt naturally explains the foreign teaspoon as a deliberate way to protect the distillery\u2019s name, while accounting for the intact cask, the absence of whisky loss, and the missing name and stamp.",
+    "result": "LOSS"
+   },
+   {
+    "i": 45,
+    "judge": "A\nA ties the second scissors and the hair on the sandanme wrestler\u2019s shoulder to the apprentice\u2019s retirement cut, while also explaining why the juniors go first and who gets each envelope.",
+    "result": "LOSS"
+   },
+   {
+    "i": 46,
+    "judge": "B\nB makes the \u201cmissing ingredient\u201d a specific omission revealed by the log\u2014the cook was never given the order to keep quiet\u2014rather than simply the silence whose absence the clang already makes obvious.",
+    "result": "LOSS"
+   },
+   {
+    "i": 47,
+    "judge": "A\nThe skipper\u2019s nod makes sense as a signal to keep the catch partly submerged while the Baader is down, whereas B has the crew timing processing from when the trawl doors hit bottom rather than when the fish leave the water.",
+    "result": "LOSS"
+   },
+   {
+    "i": 48,
+    "judge": "B\nThe quarantine explains why the oranges specifically were refused, while the flag answers the captain\u2019s suggestion that no one was around to enforce U.S. rules.",
+    "result": "LOSS"
+   },
+   {
+    "i": 49,
+    "judge": "A\nIt explains why the baker had to keep his oven lit, why his name alone was marked open on the required window list, and how he still led the dawn picket without taking a coin.",
+    "result": "WIN"
+   },
+   {
+    "i": 53,
+    "judge": "A\nIt directly explains the sunglasses as an undercover disguise and the final line as a lifetime ban, whereas B leaves the sunglasses unexplained and substitutes a loss of travel credentials.",
+    "result": "LOSS"
+   },
+   {
+    "i": 54,
+    "judge": "A\nThe still\u2019s sigh masks the watchman\u2019s theft after the midnight count, and \u201cno cork\u201d becomes an unwitting clue rather than a contrived regulatory flag.",
+    "result": "LOSS"
+   },
+   {
+    "i": 56,
+    "judge": "B\nThe mermaid\u2019s dawn departure explains the four empty hauls, the lone silver scale, and why the captain curses the time and cuts the cable to keep the net from ever catching her.",
+    "result": "LOSS"
+   },
+   {
+    "i": 57,
+    "judge": "A\nA accounts for the blackened thread and the single trapped bubble without B\u2019s questionable claim that a displacement test can isolate the gold content of a brass-cored pendant.",
+    "result": "LOSS"
+   },
+   {
+    "i": 58,
+    "judge": "B\nThe injector pen and shared silence give the second chirp a lasting emotional weight that the missed-test explanation leaves largely unexplained.",
+    "result": "LOSS"
+   },
+   {
+    "i": 59,
+    "judge": "A\nIt ties the timing, water check, and gold weighing to a single wedding ritual and explains the folded leaf, second conch, and sister\u2019s trunk key, which B leaves unaddressed.",
+    "result": "LOSS"
+   },
+   {
+    "i": 60,
+    "judge": "A\nIt explains the steam, the locked lever, and the missing key, and gives the bell a clear role: announcing the officer\u2019s arrival.",
+    "result": "LOSS"
+   },
+   {
+    "i": 61,
+    "judge": "B\nIt explains the fizzy kicks, lack of sulfur odor, and need for heat tape, while linking the missing extinguisher pin and flat-beer smell to the same brewing mishap.",
+    "result": "LOSS"
+   },
+   {
+    "i": 62,
+    "judge": "A\nThe toddler namesake explains the pushchair and the rotating pacemakers naturally: they pushed him around the course, so the finishing time was not a marathon running record.",
+    "result": "LOSS"
+   },
+   {
+    "i": 63,
+    "judge": "A\nIt explains the under-keel explosions, the hidden magnetic boundary, and the nose sensor\u2019s premature triggering without inventing a repair that the riddle never mentions.",
+    "result": "LOSS"
+   }
+  ],
+  "sweep_frontier.json": [
+   {
+    "i": 0,
+    "judge": "A\nThe injury explains why Kenji was called up for exactly one j\u016bry\u014d bout, and the temporary exception explains his elaborate topknot without changing his rank or chores.",
+    "result": "WIN"
+   },
+   {
+    "i": 1,
+    "judge": "B\nIt explicitly explains why Jo logged 600 rather than 300: the tracer\u2019s 1,200 strokes included 300 down the pipe, while the chip took only the 900-stroke return trip, and lunch added no strokes.",
+    "result": "LOSS"
+   },
+   {
+    "i": 2,
+    "judge": "A\nThe anti-doping rules lower the refractometer specific-gravity minimum from 1.005 to 1.003 at 150 mL, so the same 1.004 reading failed for the first sample but passed for the second.",
+    "result": "WIN"
+   },
+   {
+    "i": 3,
+    "judge": "A\nIt explains why the captain had to land the unwanted catch, why the crew earned nothing from it, and how the avoided quota cost equaled the value of ten tons of golden redfish.",
+    "result": "WIN"
+   },
+   {
+    "i": 4,
+    "judge": "B\nThe injunction directly explains why Marcel took down the sign for exactly eight days while the strike continued.",
+    "result": "WIN"
+   },
+   {
+    "i": 5,
+    "judge": "A\nIt explains why the host welcomed the teaspoon and dismissed the bottlers, and why the whisky could leave in steel but not in its oak cask.",
+    "result": "WIN"
+   },
+   {
+    "i": 6,
+    "judge": "A\nThe foreign-born wrestler quota explains why the boss shelved the recruit\u2019s application despite the new passport and took it out again when the narrator became a coach.",
+    "result": "WIN"
+   },
+   {
+    "i": 7,
+    "judge": "A\nA more directly connects the frost-free winter to the angel\u2019s share, the officer\u2019s ledger, and the distiller\u2019s deliberate pour down the drain, without inventing a ruptured cask.",
+    "result": "LOSS"
+   },
+   {
+    "i": 8,
+    "judge": "A\nThe hallmarking story makes the rod and brass block part of a test and ties the missing receipts and half-gram loss to a reason for handing over every chain.",
+    "result": "WIN"
+   },
+   {
+    "i": 9,
+    "judge": "B\nThe frozen dough explains the rigid white batons and the untouched flour, while French law bars the eleven-letter \u201cBOULANGERIE\u201d label when the dough has been frozen, not the sale of the hot baguette at its posted price.",
+    "result": "WIN"
+   },
+   {
+    "i": 10,
+    "judge": "A\nThe lost-earring setup gives Ravi a natural reason to make an exact match, while the rule that even matching earrings need distinct HUIDs explains why the copied code gave the replacement away.",
+    "result": "WIN"
+   },
+   {
+    "i": 11,
+    "judge": "A\nIt explicitly explains how the same pressure increase frees the hatch and raises the partial pressure of exhaled CO\u2082 enough to knock Davies unconscious even though air remains above the water.",
+    "result": "WIN"
+   },
+   {
+    "i": 12,
+    "judge": "A\nThe burned-in timecode explains why Anu mistook skipped labels for missing footage, and the ten-minute rollover illustrates the exception without claiming it proves no edit was made.",
+    "result": "WIN"
+   },
+   {
+    "i": 13,
+    "judge": "A\nThe planned ring exchange explains the missing thali, and the surprise farewell sign explains the banner removal, the cheers, and the immediate airport trip.",
+    "result": "LOSS"
+   },
+   {
+    "i": 14,
+    "judge": "A\nThe switch from per-foot pay to a daily rate explains why slow drilling motivated Ray to add barite, why he stopped just above 12.0 ppg, and why Dale refused to sign when the pressure was normal.",
+    "result": "WIN"
+   },
+   {
+    "i": 15,
+    "judge": "A\nBoth stories explain the stalled cable and Edda\u2019s wide berth, but A also explains why she sees the two red lights only as she draws closer: they have a shorter visibility range.",
+    "result": "WIN"
+   },
+   {
+    "i": 16,
+    "judge": "A\nIt explains why the pickets summoned the inspector, why even passing a single log would count as illegal work, and why the owner could bake alone until the strikebreaker legally joined him at four.",
+    "result": "WIN"
+   },
+   {
+    "i": 17,
+    "judge": "B\nA free warranty repair explains why Kiptoo mailed only the damaged shoe, enclosed the invoice for both shoes, and wanted the shoe returned rather than a refund.",
+    "result": "WIN"
+   },
+   {
+    "i": 18,
+    "judge": "A\nThe six-foot pup joint explains the closely spaced kicks and gives Ray a known depth from the casing tally at which to reset the counter.",
+    "result": "WIN"
+   },
+   {
+    "i": 19,
+    "judge": "B\nIt explicitly connects the strike to his sleep until dawn and explains why the customer accepts a crooked, unweighed loaf: it bakes quickly and can legally be sold at a fixed price per piece.",
+    "result": "LOSS"
+   },
+   {
+    "i": 22,
+    "judge": "A\nBoth stories explain why the slot stays occupied, but A gives the stablemaster a more concrete reason to smile: the passport makes the veteran eligible to become a sumo elder even though it does not free the slot.",
+    "result": "WIN"
+   },
+   {
+    "i": 23,
+    "judge": "B\nIt explains the timing of Kip\u2019s drinking, the dilute sample, and the officer\u2019s wait without assuming Kip had doped or claiming that WADA required the officer to confiscate his jug.",
+    "result": "LOSS"
+   },
+   {
+    "i": 24,
+    "judge": "B\nThe bottling rule explains the exact date and why a jug from another distillery, unlike one from the next cask, turned the load into blended malt that could be exported in bulk.",
+    "result": "WIN"
+   },
+   {
+    "i": 25,
+    "judge": "A\nIt explains the four-hour repeat and why both headings ended in \u201c00,\u201d the NAVTEX number that bypasses duplicate suppression, without assuming the wreck was drifting.",
+    "result": "WIN"
+   },
+   {
+    "i": 26,
+    "judge": "A\nThe younger drop lowers the batch age to 12 without invalidating the shared 2012 vintage, and moving 2025 beside it puts the two years in the same field of vision.",
+    "result": "WIN"
+   },
+   {
+    "i": 27,
+    "judge": "B\nB explains why warm loaves come in through the alley despite the cold oven and why covering the \u201cBoulangerie\u201d sign gives Nadia a reason to walk away.",
+    "result": "WIN"
+   },
+   {
+    "i": 28,
+    "judge": "A\nIt more fully explains the sequence: hydrogen sulfide blackened the buckle and dulled Clay\u2019s sense of smell, while opening the hatch exposed the dried scale to air, igniting the tank vapors despite the non-sparking wrench.",
+    "result": "LOSS"
+   },
+   {
+    "i": 29,
+    "judge": "A\nA more directly connects the giant\u2019s stopped drills to his brother signing first and explains why the boy ends up cleaning his rival\u2019s topknot instead of wrestling.",
+    "result": "LOSS"
+   },
+   {
+    "i": 31,
+    "judge": "B\nThe buried syringes explain why the acacias were off-limits, and the chai and distant latrine make 5:58 a plausible moment to run out the clock.",
+    "result": "LOSS"
+   },
+   {
+    "i": 32,
+    "judge": "B\nIt explains the unannounced visit and continuous observation, why the officer waits two hours after the run, and why restarting the ten-minute seated period adds exactly five minutes.",
+    "result": "WIN"
+   },
+   {
+    "i": 34,
+    "judge": "A\nA explicitly says Daichi defeated the narrator in the playoff, explaining \u201cI was his eighth\u201d while preserving both official 7\u20130 records.",
+    "result": "WIN"
+   },
+   {
+    "i": 35,
+    "judge": "B\nB connects the smashed union and sacrificed drill string to the averted blowout, which explains why the owner paid a bonus despite losing a fortune in steel.",
+    "result": "LOSS"
+   },
+   {
+    "i": 36,
+    "judge": "B\nIt ties the twenty pips, the two-hole gap, and the peaches together: the turned-up jack gives the dealer two points and the win before either sailor plays a card.",
+    "result": "LOSS"
+   },
+   {
+    "i": 37,
+    "judge": "A\nIt explains all four clues and explicitly matches the skipper\u2019s decision to turn home just after the total catch passed twenty times the haddock\u2019s weight.",
+    "result": "LOSS"
+   },
+   {
+    "i": 39,
+    "judge": "A\nA explains why Alistair chose the younger whisky: a single drop from another distillery stripped the cask of both its single-malt status and its 25-year age claim without noticeably changing the taste.",
+    "result": "WIN"
+   },
+   {
+    "i": 40,
+    "judge": "B\nIt correctly treats sole-employee status as an exception to the collective-strike requirement and explains why Claire needed the neighbor on payroll but not at the ovens.",
+    "result": "WIN"
+   },
+   {
+    "i": 41,
+    "judge": "B\nThe falling flask pressure explains both the seaman\u2019s fear that they couldn\u2019t surface and the engineer\u2019s search for air leaking into the boat, even though its depth was steady and no seawater was entering.",
+    "result": "LOSS"
+   },
+   {
+    "i": 42,
+    "judge": "A\nIt ties the thirty-foot false reading to a nearly one-atmosphere rise in cabin pressure and identifies the brass wheel as the air-line shutoff, without treating a level deck as proof that the submarine hadn\u2019t risen.",
+    "result": "WIN"
+   },
+   {
+    "i": 43,
+    "judge": "A\nThe braces and cold-storage locker explain the sawing despite the wide tube, the displaced food goes into the bunk, and carrying him ashore accounts for both the lack of a wake and his never touching the sea.",
+    "result": "LOSS"
+   },
+   {
+    "i": 44,
+    "judge": "A\nHerring\u2019s swim bladders explain the strong red return on the main sonar, while the higher-frequency display reveals the legal mackerel catch that Einar nearly overlooks.",
+    "result": "WIN"
+   },
+   {
+    "i": 46,
+    "judge": "A\nThe tungsten cores explain why the necklace passed the density test, while a nickel-steel insert explains why the tiny magnet visibly pulled one coin toward it far better than tungsten\u2019s weak paramagnetism does.",
+    "result": "LOSS"
+   }
+  ]
+ }
+}

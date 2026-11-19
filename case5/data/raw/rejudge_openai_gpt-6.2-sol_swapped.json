@@ -1,0 +1,907 @@
+{
+ "judge_model": "openai/gpt-6.2-sol",
+ "effort": "low",
+ "swapped": true,
+ "rounds": {
+  "sweep.json": [
+   {
+    "i": 0,
+    "judge": "A\nIt better explains why square hits clanked but a glancing hit exploded: the abrupt stop jammed the contact firing mechanism, whose pin was too heavy, not too light as B claims.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 1,
+    "judge": "A\nIt explains not only why Arnar wanted every juvenile logged, but also why he grinned at a fourteen-day closure: it gave him time to unload and return before his rivals could fish the grid again.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 2,
+    "judge": "A\nIt explains the sour gas\u2019s source as well as the vanished smell despite the still windsock, the two air packs, and the uphill, upwind rescue.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 3,
+    "judge": "B\nIt explains why the glancing hits detonated but the square hits jammed the firing pin, why the last torpedo was saved as evidence, and why a dud in the drop test was cause for celebration.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 4,
+    "judge": "B\nBoth explain why the passport didn\u2019t free the slot, but B also explains why the stablemaster sent the boy home that very day: the champion announced he would keep wrestling.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 5,
+    "judge": "A\nThe supplier\u2019s delivery explains the fresh bread and cold ovens, while covering \u201cBoulangerie\u201d removes the misleading claim Karim hoped to document, without the extra labor-law subplot.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 6,
+    "judge": "B\nIt explains why the crew ran toward the lights and why Earl calmly got a drink, got paid, and went home: the crew had to shut in the well, but reaching the target depth meant his job was done and there was no need to drill deeper.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 7,
+    "judge": "B\nLuc\u2019s bond with his late master\u2019s widow explains why he brings bread only to her and takes no money, while her agoraphobia explains the closed door and the old numbered bag tells her who sent it.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 8,
+    "judge": "A\nIt explains the cursing, the separately tagged 5%, and the tiny crew payout without implying, as B does, that a 5% exemption could cover the whole haul after the quota was exhausted.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 9,
+    "judge": "A\nA ties the premature boarding, the removal of only the logbook, and the crew\u2019s full pay that week to one certification rule, while B leaves the boarding deadline unexplained.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 10,
+    "judge": "A\nThe strike explains the citywide bread shortage and desperate crowd, while Luc\u2019s mandatory Monday closure explains why Laurent fined the only baker still serving them.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 11,
+    "judge": "A\nIt explains both the exact four-foot lift and the white ring as a positioning mark that told Hoyt the thick tool joint had cleared the shear rams, leaving thinner pipe the blades could cut.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 12,
+    "judge": "B\nBoth stories explain the toast and why the boy must wait until retirement, but B also explains the wrestler\u2019s unoffended bow: he knows the master is enforcing a rule, not slighting the boy.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 13,
+    "judge": "B\nIt more fully explains the three-day timing, how the stable learned of the promotion without seeing the rankings, and why the embroiderer arrived that same day.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 14,
+    "judge": "A\nIt explains the reading, the rush to bottle, and the \u201c49\u201d labels while making Fiona\u2019s thanks natural: Callum spoiled her birthday plan but saved the whisky.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 15,
+    "judge": "B\nIt accounts for the low reading, the wait until the younger spirit qualified as whisky, and why the blend could carry neither the 50-year age statement nor the 1969 vintage.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 16,
+    "judge": "A\nBoth stories explain the legal downgrade and unchanged taste, but A also explains why the laird poured the blender a dram in thanks.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 17,
+    "judge": "B\nIt explains the measuring, separate storage, and departure at exactly one in ten through the discard ban and quota discount, without assuming an imminent closure.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 18,
+    "judge": "B\nThe unwanted retirement explains both the wrestler\u2019s tears and his gratitude, without relying on A\u2019s claim that a ceremony taking place in the stable had to be held at the Kokugikan.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 19,
+    "judge": "A\nBoth stories explain the ear bleeding and white fog through sudden depressurization, but A also explains why the veteran ignored the life preservers and pulled the fuel cutoff to stop the diesels.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 20,
+    "judge": "B\nIt explains the reversal of the attendant roles, the white-to-black practice belt change, and the contrast in footwear without overstating the dress code as a legal prohibition.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 21,
+    "judge": "B\nIt explicitly ties the passport to Batbayar\u2019s eligibility to become an elder and the topknot cutting to his retirement from active wrestling, which freed the stable\u2019s foreign recruit slot for his cousin.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 22,
+    "judge": "A\nThe retroactive ledger entry explains the three-year gap, the 40 gallons written off before any public pour, the grateful toast for averting seizure, and the higher duty based on the cask\u2019s original contents.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 23,
+    "judge": "B\nIt explains the order to conserve air, the candle as a rough warning, and the escape once the enemy moved on without relying on the dubious claim that a single candle could meaningfully warm the CO\u2082 absorbent.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 24,
+    "judge": "A\nIt explains why the strike changed hours rather than wages and why thinner loaves could both rise and bake in time for breakfast.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 25,
+    "judge": "A\nA better explains why Kiprop could never leave the officer\u2019s sight by distinguishing continuous observation after notification from direct witnessing of urination, while also explaining why only the third sample qualified and why all three were sent to the lab.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 26,
+    "judge": "A\nIt explains the covered sign, the striker\u2019s joke, and the lack of fines while also accounting for why customers kept queuing and paying the same price.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 27,
+    "judge": "B\nIt explains the woman\u2019s insight and gives separate reasons for the dram and the fine, while absorption by dry staves fits the sealed, dry-looking cask better than ordinary evaporation of 11 gallons over a weekend.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 28,
+    "judge": "A\nA ties the father\u2019s exclusion and the unused banana leaf to the same bereavement, while the end of the auspicious window explains the music stopping at 11:40 and the signing explains why the marriage was legal by noon.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 29,
+    "judge": "A\nIt explains both the clean hard hat and the muddy clothes, gives the discarded coffee and silent exit a purpose, and makes the shutdown something both men would be grateful for.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 30,
+    "judge": "A\nThe hospital\u2019s need explains the secret bake and unpaid delivery, and Henri\u2019s return with an equal amount of flour before the first bus accounts for the key detail B leaves unexplained.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 31,
+    "judge": "B\nThe wristwatch tap gives the groom a concrete reason to stare, and protecting the officer\u2019s cover explains why the grateful father ordered the film burned.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 32,
+    "judge": "A\nThe whereabouts window explains the dawn visit, and the requirement to keep collecting samples until one is concentrated enough explains both the coach\u2019s intervention and the officer\u2019s wait until noon.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 33,
+    "judge": "A\nThe 30-tournament threshold explains exactly why one more ranking sheet mattered even though he never fought, and the final snip ties the scissors to his retirement ceremony.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 34,
+    "judge": "A\nIt explains why Earl kept drilling at first, why the loss of smell alarmed him, and why only the bearded worker was sent uphill and upwind.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 35,
+    "judge": "B\nIt more naturally explains the torpedoman\u2019s advice through the earlier oblique hits and connects the last torpedo to the tests that confirmed the defect.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 36,
+    "judge": "A\nThe suspected charge makes the urgent radio call, abandoned nets, stopped engine, and officer\u2019s haste fit together more naturally than a salvage loophole that cannot explain away the earlier poaching.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 37,
+    "judge": "A\nIt correctly explains that either partner could satisfy the 30-day residency requirement before filing, which, followed by the 30-day notice period, accounts for the wedding on day 61.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 38,
+    "judge": "A\nIt explains the urgent deadline through falling alcohol strength and explicitly accounts for the 47-year label: whisky stops aging once bottled.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 39,
+    "judge": "A\nThe Berlin invitation gives the favorite a natural reason both to skip Eldoret and to mail his passport for a visa, while the bib swap preserves his appearance fee and lets the pacer complete his paid 30-kilometer assignment.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 40,
+    "judge": "A\nIt matches the historical USS *Tinosa* incident and explains both why Daspit changed angles before firing again and why the workshop engineer wanted the last torpedo intact.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 41,
+    "judge": "A\nIt ties the Kaptagat setting, silicone wedge, and three-millimeter shave together and explains why the cobbler used a caliper to verify the 40 mm limit.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 42,
+    "judge": "A\nIts \u201cno more than 60 days\u201d clause explains exactly why the rig\u2019s afternoon of drilling on day 59 preserves the lease without producing oil, while a two-day delay to day 61 would free the rancher to re-lease for millions.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 43,
+    "judge": "B\nIt explains why Lenoir bought bread rather than hiring replacements, why he proudly pointed to the covered word, and why he could uncover it as soon as on-site baking resumed, before the first sale.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 44,
+    "judge": "B\nIt ties the old stamp and last-minute flight to the one-year residency threshold and explains the savings by placing the thali chain within Anoop\u2019s duty-free allowance.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 45,
+    "judge": "A\nWater rationing explains the tasteless loaf, and the fouled air ties together the cooking ban and the cleanup, whereas B relies on a sealed, flour-dusted galley somehow protecting only the cook from chlorine.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 46,
+    "judge": "B\nBoth explain the vanished smell and the escape route, but B more naturally explains the tongs by making the runner a floorhand rather than a driller.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 47,
+    "judge": "A\nIt explains the constant supervision, both latrine visits, and why a sample of sufficient volume could still be rejected, prompting the bottle removal and wait.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 48,
+    "judge": "A\nBoth stories explain the special landing code and the crew\u2019s small payout, but A more directly explains why Sigr\u00fan\u2019s mother thanked her: the proceeds helped fund her research.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 49,
+    "judge": "B\nBoth explain the holiday shift and Saturday deadline, but B more directly connects S\u00f3lveig\u2019s Pentecost work and her role as Grindav\u00edk\u2019s parish priest to the wreath blessing.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 50,
+    "judge": "A\nIt explains why the mother wore gold despite never doing so, why the groom wore none, and why she gave the chain to the bride without asking for it back: it was the bride\u2019s all along.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 51,
+    "judge": "B\nIt explains the 5 a.m. visit through Chebet\u2019s declared testing window and connects the toilet observation, sealed samples, skipped run, and refused water to the requirement for a sufficiently concentrated sample.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 52,
+    "judge": "A\nIt explains why the groom swats and hides the chilled bottle, why the visitor searches the bins with a registry form in hand, and how a single plastic scrap could derail the Dubai flight without positing a separate clearance process.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 53,
+    "judge": "B\nThe hidden leak explains both why only forty gallons remained and why sealant was an option, while the staged spill explains Arthur\u2019s zero and Callum\u2019s relief.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 54,
+    "judge": "A\nIt explains the tears, taped watch, prize split, and paperwork, whereas B leaves the watch and prize split unexplained and relies on disqualification by association.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 55,
+    "judge": "B\nIt explains why the father split the gold into plain chains of those exact weights, why Niyas wore none, and why the father was delighted when the chains became Shahana\u2019s wedding jewellery.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   }
+  ],
+  "sweep_open.json": [
+   {
+    "i": 0,
+    "judge": "A\nIt explains the thud, the sudden fifty-foot drop after shutdown, and the lack of formation losses through plug seating and U-tubing, without adding an unmentioned valve failure, surface returns, or choke operation.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 1,
+    "judge": "B\nIt better explains why the star waits so punctually and why the stranger leaves satisfied after recording only his name, without adding the unmentioned sample collection in A.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 2,
+    "judge": "B\nKip\u2019s vow and grief connect his restrained training to the two untouched cups, while A\u2019s fasting explanation doesn\u2019t account for the second cup or his mealtime and physio habits.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 3,
+    "judge": "A\nThe spaniel can detect vapour escaping through stave joints even when no liquid leaks and the bung is tight, giving the gauger a reason to mark the cask and the distiller a reason to fear a duty charge.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 4,
+    "judge": "A\nIt makes the Crown\u2019s gauger the one who stops the flow, waits for the sample to cool, and uses the floating hydrometer to assess duty on the spirit\u2019s strength.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 5,
+    "judge": "B\nThe agreement explains why the picketers let Henri pass and why the gendarme checks his list, while the starter explains the smell without anyone baking bread or breaking the strike.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 6,
+    "judge": "A\nStory A ties the dawn mist, the old coach\u2019s counting, the wall at mile twenty-two, and the six o\u2019clock bell into one scene, while B leaves the old voice unexplained and substitutes an evening curfew for the camp bell.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 7,
+    "judge": "B\nThe stable\u2019s pecking order naturally explains why the master only watches and the rookie drinks the leftovers, while the wrestlers who just got up explain the warm tatami more plausibly than heat radiating from the pot.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 8,
+    "judge": "B\nThe hammering, expected phone call, and half-hour spent packing up explain the clues more naturally than an automatic lock-in over a late injury report.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 10,
+    "judge": "B\nIt explains the junior wrestler\u2019s chores and the \u201cno leaves\u201d order through his low rank, without inventing a championship or an unlikely mistake by the veteran hairdresser.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 11,
+    "judge": "A\nA connects the first-of-the-month dry day to the town\u2019s only licensed counter staying shut and explains why even the duty-free bottles went unpoured, without adding an unsupported Chingam scheduling constraint.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 12,
+    "judge": "B\nIt explains the cooling failure without a blown fuse, the loss of the cheese\u2019s protected label, the early march toward Bastille, and the wooden clogs as a clue to sabotage.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 15,
+    "judge": "B\nIt better connects the fading propeller noise, the shallow depth-charge bursts, and the dusk surfacing to the events of the chase.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 16,
+    "judge": "B\nIt identifies the tall runner\u2019s 52% hematocrit as exceeding the 50% no-start limit without implying doping, and explains the kettle\u2019s early whistle through Iten\u2019s lower air pressure.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 17,
+    "judge": "A\nKenji\u2019s losing tournament record explains why the new ranking scroll demotes him despite his final-bout win, and the demotion explains both his tears and the simpler topknot without B\u2019s extra claims about association rules.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 18,
+    "judge": "B\nIt explains the opening flare and ties the three-minute hold, the pressure jump, and the delayed lever movement to the same well-control incident.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 19,
+    "judge": "A\nIt explains the yearly weight loss through evaporation and the older cask\u2019s lower proof through decades of preferential alcohol loss, without adding an unneeded re-racking subplot.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 21,
+    "judge": "A\nThe Palakkad Iyer Kasi Yatra explains the staff and the mock departure, the family match explains why the bride\u2019s brother is also the groom\u2019s nephew, and the April heat accounts for the early schedule without invoking an outdoor ban that starts at eleven.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 22,
+    "judge": "B\nIt explains why the haul was both abundant and uniformly tiny, how the inspector\u2019s sample triggered the two-week closure, and why the skipper had to land every fish before racing east.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 24,
+    "judge": "A\nIt ties the sealed slip, the bell\u2019s cue to silence the drums, and the bridal mangoes into one ceremony, while the fireworks\u2019 reflection explains the red tide without relying on contrived regulations.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 25,
+    "judge": "A\nStory A explains the lamp flash, hissing hatch, lone sonar ping, and final descent, while Story B leaves those details unexplained.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 27,
+    "judge": "A\nIt explains the cod-filled hold, the untouched haddock school, and the exact thousand tons of unused quota, while the accidental halibut catch explains why the skipper had to stop.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 28,
+    "judge": "B\nThe weather-station mission gives the 1020 threshold a purpose and explains the brief transmission, while the disposal of supper waste accounts for the recurring trim adjustment.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 29,
+    "judge": "A\nA more naturally connects the ledger entry to the intended filling strength and the sealed bottle to a separately logged excise sample, although its volumes imply about 64.2% ABV rather than 63.5%.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 30,
+    "judge": "A\nIt explains why he bakes exactly four hundred loaves without mixing new dough\u2014one for each striker\u2014while B explains why he bakes the traditional dough but not why he makes that exact number.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 31,
+    "judge": "A\nThe owner\u2019s concession gives the strikers a concrete victory to cheer at five, whereas the scheduled end of a ban doesn\u2019t explain their celebration as naturally.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 33,
+    "judge": "B\nIt naturally explains all four details, including why the novice carries his master\u2019s sandals home, which Story A leaves unexplained.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 34,
+    "judge": "A\nA directly explains the tears and mourners as part of a staged funeral, while B adds licensing details but never explains why Helen wept.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 35,
+    "judge": "B\nA softer formation explains the drilling break, and sufficient mud pressure explains why the pits stayed flat throughout the 38-minute bottoms-up circulation: an influx could raise the pit level before reaching the surface.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 36,
+    "judge": "A\nJonah matches Mara\u2019s stride without a bib and peels off before the red track bends at the exact distance set by his pace sheet.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 37,
+    "judge": "B\nIt explains why the workers sang outside the shuttered bakery for three dawns and why the noon demand prompted just one half-hour bake before the strike resumed.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 38,
+    "judge": "B\nShiva explains the seven-day closure and eighth-day reopening, while the round loaf marks mourning and the 1942 coins tie the woman to the baker\u2019s mother.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 39,
+    "judge": "A\nThe lack of a pipeline or buyer naturally explains why Hank shut in a strong well without selling any oil, and the midnight lease deadline explains his race to mail the royalty check.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 40,
+    "judge": "B\nB connects the forty-two knots, the 23:58 stall, the five heartbeats, the gull\u2019s stone, and the ledger in one story, while A turns heartbeats into minutes and leaves the stone unexplained.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 41,
+    "judge": "A\nThe midnight sun explains daylight at 3 a.m. and the blank night-shift column, while Liv\u2019s tap tests the golden brioche and the early bake supplies the morning queue with unwrapped bread.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 42,
+    "judge": "B\nIt connects the lullaby and whispered speech to the sleeping baby, explains the khaki-clad uncle\u2019s nod, and ties the snapped string to the approaching curfew without inventing an immediate-confiscation rule.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 44,
+    "judge": "A\nIt explains the foreign teaspoon as a deliberate way to protect the distillery\u2019s name and accounts for the cask leaving bond unmarked without any theft or evaporation.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 45,
+    "judge": "B\nB ties the second scissors to the apprentice and the hair on the sandanme wrestler\u2019s shoulder to his retirement cut, while also explaining the juniors\u2019 priority and the two envelopes.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 46,
+    "judge": "A\nA makes the missing ingredient a specific omission\u2014the cook never received the silent-running order\u2014whereas B\u2019s timestamps only confirm when the clang occurred.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 47,
+    "judge": "B\nIt connects the eighteen-minute tow, the skipper\u2019s nod, and the stalled winch by making the half-submerged net a way to keep the catch alive while the crew clears the Baader jam.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 48,
+    "judge": "A\nThe citrus quarantine explains why the oranges mattered and why the U.S. flag answered the captain\u2019s gesture, whereas the Jones Act does not generally bar direct shipments from foreign ports.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 49,
+    "judge": "A\nA makes the baker himself the dawn picket leader and ties his lone lit name to the mandatory summer rota, while the price-control dispute explains why he gives away the bread rather than selling it.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 53,
+    "judge": "B\nIt explicitly explains the sunglasses and the permanent ban, while A undermines its own explanation by saying the runner received less than the prohibited volume.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 54,
+    "judge": "A\nA ties the sigh, the removal of the fourth cask\u2019s bung, the ledger entry, and the midnight count into one excise procedure, whereas B has Eli pull a bung from a cask he supposedly already left uncorked.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 56,
+    "judge": "A\nThe mermaid\u2019s departure at sunrise explains the five search hauls, the lone silver scale, the captain\u2019s curse at the clock, and his decision to cut the cable so the net could never catch her.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 57,
+    "judge": "B\nIt accounts for the blackened thread, the misleading water test, the needle releasing a single bubble, and the 3:30 wedding without introducing a brass core that would complicate the purity reading.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 58,
+    "judge": "A\nThe clicked pen, the man\u2019s quick departure, and the mutual silence fit a covert exchange, while the second chirp gives the narrator a specific moment to feel haunted by.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 59,
+    "judge": "B\nIt ties the water check, seven-grain weighing, and eastward turn to the 4:17 wedding rite while also explaining the folded leaf and the sister\u2019s trunk key, which A leaves unaddressed.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 60,
+    "judge": "B\nIt accounts for the locked lever, the missing key, and the bell that announces the officer\u2019s arrival, while A sends the cut elsewhere and leaves the bell unexplained.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 61,
+    "judge": "A\nBoth stories link the fizzy kicks and freezing vent line to CO\u2082, but A also explains the approved overtime, the fine for the missing pin, and why the doghouse smells like flat beer.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 62,
+    "judge": "B\nThe toddler namesake explains the pushchair and the seventeen helpers\u2019 turns, while being pushed rather than running explains why his finish time could not count as a marathon record.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 63,
+    "judge": "B\nIt ties the hidden boundary to the magnetic equator and the vanguard\u2019s skyward gaze to the nose sensor\u2019s misreading, explaining the premature blasts without adding an unmentioned repair.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   }
+  ],
+  "sweep_frontier.json": [
+   {
+    "i": 0,
+    "judge": "A\nIt ties the formal topknot to the specific bout rather than a day-long exception, explaining why Kenji returns to his plain knot and chores without any change in rank.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 1,
+    "judge": "A\nIt explains the gas spike as the carbide tracer\u2019s return and explicitly shows why Jo subtracted only the 900-stroke return lag, getting 600 rather than 300, with no strokes added during lunch.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 2,
+    "judge": "B\nAt 150 mL, the refractometer cutoff drops from 1.005 to 1.003, so the same 1.004 reading failed for the first sample but passed for the second.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 3,
+    "judge": "A\nSilver herring and a quota conversion that would cost ten tons of cod explain the catch and the \u201cphantom price\u201d more directly, while the five-percent rule explains why the crew gets nothing.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 4,
+    "judge": "A\nThe injunction directly governs the sign for exactly eight days without requiring Marcel to end his strike, explaining why he takes it down on day six and puts it back on day fourteen.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 5,
+    "judge": "B\nIt explains why the teaspoon made overseas bottling possible and why the spirit had to leave in steel while the oak cask stayed behind.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 6,
+    "judge": "B\nThe toast marks Naran\u2019s naturalization, but only his move from wrestler to coach frees the stable\u2019s foreign-born wrestler slot, explaining why the boss takes the recruit\u2019s application back out just as Naran starts directing practice.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 7,
+    "judge": "B\nIt directly explains the deliberate pouring, the frost-free ledger entry, and the cold-weather counterfactual, whereas A substitutes a leak and summer humidity.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 8,
+    "judge": "A\nThe temple-door demonstration and the con artist\u2019s warning give the family an immediate reason to hand over every chain, whereas B moves the encounter to a hallmarking centre and relies on an unstated honeymoon and customs paperwork.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 9,
+    "judge": "A\nThe rigid batons are frozen dough, and French law bars Luc from displaying the eleven-letter \u201cBOULANGERIE\u201d because he froze it, even though he can still bake the baguettes and sell them at the posted price.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 10,
+    "judge": "A\nBoth stories explain why the copied hallmark exposed the replacement, but A also explains why Meera put on the scratched original: it was her grandmother\u2019s earring, not merely the surviving half of a pair.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 11,
+    "judge": "B\nIt explains both why the hatch opens and why Davies blacks out with air still above him: flooding equalizes the pressure while raising the partial pressure of the carbon dioxide already in the trapped air.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 12,
+    "judge": "A\nIt explains both jumps and why Manu showed Anu the ten-minute rollover instead of replaying the knot: the counter skips labels, not footage.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 13,
+    "judge": "A\nThe visa requirement gives the skipped thali, the banner\u2019s removal before the photo, and the immediate airport trip a single explanation.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 14,
+    "judge": "B\nThe 12.0-ppg cutoff explains why Ray stopped at exactly 12.1 despite slowing the bit: day pay would spare him the cost of slow drilling, but Dale\u2019s checks showed the extra weight wasn\u2019t needed.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 15,
+    "judge": "B\nBoth stories explain the stalled cable and Edda\u2019s wide turn, but B also explains why she sees the red lights only as she draws closer: they have a shorter visibility range.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 16,
+    "judge": "B\nIt explains why the pickets and inspector were there, why even passing a single log would count as work, and why the owner could bake alone until the strikebreaker legally joined him at four.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 17,
+    "judge": "A\nA warranty repair explains why Kiptoo sent only the damaged shoe, included the original bill for the pair as proof of value, and wanted the shoe repaired and returned rather than refunded.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 18,
+    "judge": "B\nThe six-foot pup joint explains the closely spaced kicks and gives Ray a known depth for resetting the counter, whereas a cable splice explains the spacing but doesn\u2019t establish the tool\u2019s depth.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 19,
+    "judge": "A\nStory A more fully explains why he sleeps until dawn and why the customer accepts a crooked loaf at the same price without a weigh-in or a complaint to the guard.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 22,
+    "judge": "B\nThe stablemaster\u2019s smile reflects a concrete benefit of the new passport\u2014eligibility to become a sumo elder\u2014while the foreign-born quota explains why he tears up the ticket despite the veteran\u2019s sacrifice.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 23,
+    "judge": "A\nIt explains the watched sample, the gauge reading, and the wait for a second sample without assuming Kip was doping or that the rules required confiscating his water.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 24,
+    "judge": "A\nThe date matches the single malt bottling rule, and only malt from another distillery\u2014not another cask from the same one\u2014would reclassify the load as blended malt eligible for bulk export.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 25,
+    "judge": "A\nIt ties the four-hour rebroadcast to the station\u2019s deliberate use of serial number 00, which bypassed the receiver\u2019s usual duplicate suppression and looked like spectacles at the end of both headings.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 26,
+    "judge": "B\nThe thimbleful lowers the batch age to 12 without changing the shared 2012 vintage, and moving 2025 beside 2012 puts both years in the same field of vision.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 27,
+    "judge": "A\nThe cold oven and warm loaves point to bread made elsewhere, which explains why covering the \u201cBoulangerie\u201d sign makes a consumer fraud inspector walk away.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 28,
+    "judge": "A\nIt explains how the same gas blackened the buckle, dulled their sense of smell, and reacted with rust to create deposits that ignited without a spark once dry and exposed to air.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 29,
+    "judge": "B\nIt explains why the giant stops training, how the boy\u2019s refusal frees the roster spot, and why he stays to tend his brother\u2019s topknot instead of wrestling.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 31,
+    "judge": "A\nA gives the chai, the forbidden acacias, and the precisely timed latrine trip a coherent purpose, while B relies on a break in chain of custody before any sample exists.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 32,
+    "judge": "A\nIt explains the rolled-up sleeve, continuous observation, and two-hour delay as parts of an unannounced blood test, and shows why restarting the ten-minute seated period adds exactly five minutes.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 34,
+    "judge": "B\nBoth stories explain the undefeated 7\u20130 records, but B also makes the narrator Daichi\u2019s eighth defeated opponent, not merely his eighth opponent.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 35,
+    "judge": "A\nA explains the rookie\u2019s misplaced amusement, the boss\u2019s urgent choice of hammer over brake, and why the owner rewarded the loss of the drill string: it prevented a blowout.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 36,
+    "judge": "A\nIt explicitly accounts for the scrap-wood board, the tin of peaches, and both sailors\u2019 exact positions, while explaining how the jack gave the dealer the two points he needed before anyone played a card.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 37,
+    "judge": "A\nThe discard ban explains why Magn\u00fas keeps the haddock, and the quota exemption explains both why he braves the gale to catch nineteen times its weight in other fish and why he accepts just 20% of its auction price.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 39,
+    "judge": "B\nThe three-year-old drop strips the cask of both its single-malt status and its 25-year age claim, whereas the rival\u2019s 25-year-old whisky would have stripped only the former.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 40,
+    "judge": "A\n\nA explains why hiring the neighbor mattered even though he never touched the flour, whereas B makes the hire unnecessary by requiring a national strike call even for a sole employee.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 41,
+    "judge": "A\nA falling air-flask pressure explains the leak and why the engineer looked for air entering the dry hull, while the seaman\u2019s fear of losing the ability to surface explains his alarm despite the steady depth gauge.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 42,
+    "judge": "B\nIt ties the thirty-foot false reading to a cabin pressure rise of nearly one atmosphere, explaining the hiss, Miller\u2019s ear pressure, and why he shut the overhead valve instead of letting Cole flood the trim tank.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 43,
+    "judge": "B\nStoring the body in the food locker explains why the food went into his bunk and why he was carried ashore without ever touching seawater, while the iron braces give a reason for the sawing despite his short stature.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 44,
+    "judge": "B\nThe contrast between herring\u2019s strong low-frequency echo and mackerel\u2019s weaker one explains the two displays, while the exhausted herring quota explains why the skipper passes up the red school for a legal catch of silvery mackerel.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 46,
+    "judge": "B\nThe near-gold density explains why the necklace passed the water test, while a nickel-steel insert explains why one coin visibly leaned toward the tiny magnet.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   }
+  ]
+ }
+}
