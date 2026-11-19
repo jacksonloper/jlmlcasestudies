@@ -7065,6 +7065,694 @@
    "cost": 0.200676,
    "gen_cost": 0.200676,
    "gen_secs": 306
+  },
+  {
+   "effort": "medium",
+   "theme": "a Texas oil rig",
+   "riddle": "Permian Basin, 1983: all morning the rig floor reeked of rotten eggs. At noon the reek was suddenly gone, and Earl panicked. He ignored the pickup parked down in the low draw and climbed the derrick instead, dragging Luis, who swore he smelled nothing and felt fine.",
+   "chars": "Luis; Earl (derrickman)",
+   "story": "Earl knew the rotten-egg stink was sour gas (hydrogen sulfide) leaking from the well. He also knew that above roughly 100 ppm H2S paralyzes the olfactory nerve, so the smell vanishing at noon meant the gas had spiked to a lethal level, and Luis, already dosed, honestly could smell nothing. Because H2S is heavier than air and flows downhill to pool in low ground like the draw where the pickup sat, Earl hauled Luis up the derrick to the monkeyboard above the settling cloud, where they waited until the wind cleared it.",
+   "solver": "**Character 1:** Earl, a veteran driller on the rig.\n**Character 2:** Luis, a young roughneck (floorhand) in his first week on the job.\n\n**Story:** When the rotten-egg stink of hydrogen sulfide vanished at noon, Earl knew the gas hadn't cleared but had surged high enough to deaden their sense of smell, a level that can kill within a few breaths, even while Luis insisted he felt fine. Because H₂S is heavier than air and was pooling in the low draw around the pickup, Earl hauled Luis up the derrick into cleaner air, where they waited for the wind to clear the gas.",
+   "result": "WIN",
+   "real": true,
+   "fact": "REAL\nH2S does cause olfactory fatigue and paralysis at roughly 100 ppm (smell disappears while the gas becomes more dangerous), and it is denser than air, so it pools in low areas. Moving to elevated positions upwind, such as a derrick's monkeyboard, is a recognized strategy, so the mechanism is accurate.",
+   "fit": true,
+   "gen_cost": 0.033872,
+   "model": "anthropic/claude-opus-5.5",
+   "variant": "3 hidden facts",
+   "verdicts": {
+    "opus": [
+     {
+      "judge": "A\n\nStory A explains every detail more precisely: olfactory paralysis above about 100 ppm accounts for both the vanished smell and Luis honestly smelling nothing, and H2S pooling in low ground explains why Earl shunned the pickup in the draw and climbed to the monkeyboard.",
+      "riddler_pos": "A",
+      "result": "WIN"
+     },
+     {
+      "judge": "B\n\nStory B covers every odd detail more fully: it explains why Luis honestly smelled nothing (olfactory paralysis above roughly 100 ppm), why the low draw with the pickup was deadly (heavier-than-air gas pools there), and why a derrickman would climb to the monkeyboard.",
+      "riddler_pos": "B",
+      "result": "WIN"
+     }
+    ],
+    "sol": [
+     {
+      "judge": "A\nIt more concretely connects the sour-gas leak to Earl’s alarm, Luis’s inability to smell it, and Earl’s choice of the elevated monkeyboard over the pickup in the low draw.",
+      "riddler_pos": "A",
+      "result": "WIN"
+     },
+     {
+      "judge": "A\nIt explains Earl’s panic, Luis’s lack of symptoms, and the climb away from the low-lying pickup without implying that the threshold for losing the ability to smell H₂S is itself a lethal threshold.",
+      "riddler_pos": "B",
+      "result": "LOSS"
+     }
+    ]
+   },
+   "score_opus": 1.0,
+   "score_sol": 0.5
+  },
+  {
+   "effort": "medium",
+   "theme": "a Tokyo sumo stable",
+   "riddle": "In a Ryōgoku stable, a teenage boy swept the ring and carried towels for a year but was never allowed to wrestle. When the senior wrestler's Japanese passport finally arrived, the stablemaster only shook his head: \"Still no.\" The morning the senior's topknot was cut off, the boy was sent for his recruit physical exam. The senior explained that he had quit \"so that I could stay.\"",
+   "chars": "Batbayar, a Mongolian teenager hoping to join the stable; Kyokushō (Mongolian-born sumo wrestler, newly naturalized Japanese)",
+   "story": "Batbayar couldn't be registered because the Japan Sumo Association allows only one foreign-born wrestler per stable, and that seat was Kyokushō's; since 2010 the quota has counted birthplace, not passport, so Kyokushō's naturalization freed nothing and the stablemaster still had to refuse. Kyokushō had naturalized because the JSA lets only Japanese citizens acquire elder stock and remain as coaches after retiring, so his retirement ceremony both let him stay on as an elder and emptied the foreign-born seat, and Batbayar was sent for his recruit exam that same morning.",
+   "solver": "**Character 1:** Batu, a 16-year-old Mongolian boy waiting to join the stable.\n\n**Character 2:** Kaito (born Ganbaatar), a Mongolian-born veteran sumo wrestler, now a naturalized Japanese citizen.\n\n**Story:** Because the Sumo Association allows each stable only one foreign-born wrestler, and counts by birthplace even after naturalization, Batu could not be registered while Ganbaatar was still competing, even once his Japanese passport arrived. Ganbaatar retired at his topknot-cutting ceremony, which freed the stable's single foreign slot for Batu. His new Japanese citizenship qualified him to become a coaching elder, so quitting was how he could stay in the stable for good.",
+   "result": "WIN",
+   "real": true,
+   "fact": "REAL\n\nThe Japan Sumo Association does limit stables to one foreign-born wrestler (a rule set in 2002 and tightened in 2010 to count birthplace rather than nationality), and only Japanese citizens can acquire elder stock and stay on as coaches, which is why foreign-born wrestlers such as Takamiyama and Konishiki-era figures naturalized. The riddle's specific characters appear fictional, but the mechanism works as described.",
+   "fit": true,
+   "gen_cost": 0.043584,
+   "model": "anthropic/claude-opus-5.5",
+   "variant": "3 hidden facts",
+   "verdicts": {
+    "opus": [
+     {
+      "judge": "A\n\nBoth stories rely on the same foreign-born quota, but A covers every detail more completely, explicitly explaining why the naturalization changed nothing and why the boy's physical exam fell on the very morning of the retirement ceremony.",
+      "riddler_pos": "A",
+      "result": "WIN"
+     },
+     {
+      "judge": "B\nStory B covers every detail most completely: the birthplace-based quota explains why the passport freed nothing, citizenship as the requirement for elder stock explains why he naturalized, and the retirement both kept him on as a coach and opened the seat that same morning.",
+      "riddler_pos": "B",
+      "result": "WIN"
+     }
+    ],
+    "sol": [
+     {
+      "judge": "A\nA more fully explains the year-long wait, why the passport changed nothing for the recruit, and why the senior needed both citizenship and retirement to stay on as a coach.",
+      "riddler_pos": "A",
+      "result": "WIN"
+     },
+     {
+      "judge": "B\nIt explains why the passport did not free the foreign-born slot, why the boy’s exam had to wait until the senior retired, and how citizenship let the senior stay as a coaching elder.",
+      "riddler_pos": "B",
+      "result": "WIN"
+     }
+    ]
+   },
+   "score_opus": 1.0,
+   "score_sol": 1.0
+  },
+  {
+   "effort": "medium",
+   "theme": "a submarine crew in 1943",
+   "riddle": "July 1943: the tanker lay dead in the water, unable to shoot back, and we fired fifteen torpedoes into her.\nThe first ones, fired from a clumsy slanting angle, did their job, but every perfect shot after them did nothing.\nThe skipper then sailed for home with our last torpedo still aboard, untouched.\nWeeks later our torpedoes were mended with metal taken from the planes that had bombed Pearl Harbor.",
+   "chars": "Lt. Cmdr. Dan Daspit of USS Tinosa; Chief Walt Kessler (torpedoman)",
+   "story": "Daspit's slanting shots stopped the tanker Tonan Maru No. 3, so he moved to the ideal 90-degree firing position, and Kessler watched hit after hit thud against her hull as duds. The cause was the Mark 6 exploder's contact pistol: a dead-on hit slowed the torpedo so violently that the firing pin jammed in its guide before it could strike the detonator cap, while a glancing hit slowed it more gently and let it fire, so Daspit kept the last torpedo as proof for a Bureau of Ordnance that blamed crews. Admiral Lockwood confirmed the fault by dropping warheads from a crane onto steel plates, and the fix was a lighter, lower-friction firing pin machined from the aluminum propellers of Japanese planes shot down on December 7.",
+   "solver": "**Character 1:** Lt. Cmdr. Lawrence \"Dan\" Daspit, skipper of the submarine USS Tinosa.\n**Character 2:** Charles \"Swede\" Momsen, Navy officer leading the torpedo tests (occupation: naval engineer and tester).\n\n**Story:** Daspit's first oblique shots stopped the huge tanker Tonan Maru No. 3, but his \"perfect\" 90-degree hits were all duds, because a square impact crushed the Mark 6 exploder's firing pin before it could strike. He brought his last torpedo home as evidence, and Momsen's drop tests proved the flaw; the fix used lighter firing pins machined from the aluminum propellers of Japanese planes shot down at Pearl Harbor.",
+   "result": "WIN",
+   "real": false,
+   "fact": "INVENTED\nMost of the story is accurate: Tinosa's Daspit fired dud torpedoes at Tonan Maru No. 3 in July 1943, and the Mark 6 exploder's firing pin did jam in dead-on hits. Lockwood's team tested warheads by dropping them onto steel plates at Pearl Harbor, but those tests were done at Pearl Harbor, and Daspit saved his last torpedo for examination. The ending is wrong, though. The fix was not a lighter pin made from aluminum from Japanese planes shot down on December 7. The contact exploder was modified, in part by lightening the firing pin and using lower-friction materials. Several details are embellished, notably the origin of the pin material.\n\nReconsidering the label: the central mechanism (a firing pin jamming under high-deceleration, dead-on impact) is real. The aluminum-from-Japanese-planes detail is a minor embellishment rather than the core mechanism.\n\nREAL\nThe Mark 6 contact pistol's firing pin did bind under dead-on impact, which the Tinosa duds and Lockwood's drop tests confirmed, and only the aircraft-aluminum detail is dubious.",
+   "fit": true,
+   "gen_cost": 0.03448,
+   "model": "anthropic/claude-opus-5.5",
+   "variant": "3 hidden facts",
+   "verdicts": {
+    "opus": [
+     {
+      "judge": "A\nStory A covers every riddle detail and also explains why the glancing shots detonated while the square hits did not, whereas Story B leaves that contrast unexplained.",
+      "riddler_pos": "A",
+      "result": "WIN"
+     },
+     {
+      "judge": "B\n\nStory B explains every detail most fully: why glancing hits fired while square hits jammed the pin, why the last torpedo was kept as proof against a Bureau of Ordnance that blamed the crews, and how the fix used aluminum from the Pearl Harbor planes.",
+      "riddler_pos": "B",
+      "result": "WIN"
+     }
+    ],
+    "sol": [
+     {
+      "judge": "A\nA more clearly explains why the oblique hits worked while the square hits failed, and why Daspit saved the last torpedo as evidence.",
+      "riddler_pos": "A",
+      "result": "WIN"
+     },
+     {
+      "judge": "B\nIt better explains why oblique hits detonated while square hits jammed the firing pin, and connects the saved torpedo, the drop tests, and the Pearl Harbor propeller metal to the same defect.",
+      "riddler_pos": "B",
+      "result": "WIN"
+     }
+    ]
+   },
+   "score_opus": 1.0,
+   "score_sol": 1.0
+  },
+  {
+   "effort": "medium",
+   "theme": "a wedding in Kerala",
+   "riddle": "Before her Thrissur wedding, the bride flew home from Dubai with six cousins she barely knew.\nEach cousin wore exactly one bangle of fourteen grams, though the Dubai jeweller had offered them far heavier ones.\nAt Kochi airport an officer weighed every wrist and simply smiled.\nOn the wedding morning all six bangles were on the bride's arms.",
+   "chars": "Anjali, the bride; Mr. Varghese (customs officer at Kochi airport)",
+   "story": "Anjali wanted Dubai gold for her wedding, so she recruited six distant cousins who had each worked in the Gulf for over a year to carry it, because India's Baggage Rules 2016 give every woman resident abroad that long her own duty-free jewellery allowance, and splitting the gold across seven travellers multiplied the limit legally. That allowance is \"40 grams\" only on paper, since it is also capped at ₹1,00,000 in value; with gold near ₹7,000 a gram, about fourteen grams per woman was the true duty-free ceiling, so Mr. Varghese weighed each bangle, found every one just under the cap, and waved them through before the cousins handed the bangles back to the bride.",
+   "solver": "**Character 1:** Meera, the bride, a nurse working in Dubai.\n\n**Character 2:** Mr. Varghese, a customs officer at Kochi airport.\n\n**Story:** Gold was far cheaper in Dubai, so Meera split her wedding gold among six distant cousins flying home with her. Each cousin wore one 14-gram bangle, kept under the duty-free jewellery allowance and refusing the heavier pieces that would have made them pay duty. Mr. Varghese weighed each wrist, recognised the perfectly legal trick he saw every wedding season, and smiled as he waved them through. On the wedding morning the cousins handed the bangles back, and Meera walked to the mandapam with all six on her arms.",
+   "result": "WIN",
+   "real": false,
+   "fact": "INVENTED\n\nIndia's Baggage Rules 2016 do give a duty-free jewellery allowance of 20 g (value up to ₹50,000) for a woman resident abroad for over one year, or 40 g (up to ₹1,00,000) for a woman... actually, the 40 g/₹1 lakh limit applies to women who have stayed abroad over one year, while the 20 g/₹50,000 limit applies to men. So the broad mechanism (a per-traveller allowance with a value cap, usable by several eligible travellers) is real. However, the allowance is for a passenger's own personal jewellery, and customs treat jewellery carried for another person, or gold bought for resale or for someone else, as outside the concession. That makes the scheme of carrying the gold for the bride and handing it back an evasion, not a legitimate multiplication of the limit. The riddle's claim that it \"multiplied the limit legally\" is therefore materially wrong, even though the cap figures are roughly right.\n\nINVENTED: the per-person allowance exists, but pooling it through proxies to hand the gold to the bride isn't legal.",
+   "fit": true,
+   "gen_cost": 0.055436,
+   "model": "anthropic/claude-opus-5.5",
+   "variant": "3 hidden facts",
+   "verdicts": {
+    "opus": [
+     {
+      "judge": "B\nStory B explains the oddly specific fourteen grams (the ₹1,00,000 value cap on the 40-gram allowance), why the carriers had to be Gulf-resident cousins, and why heavier bangles were refused, while Story A just asserts an allowance without justifying the exact weight.",
+      "riddler_pos": "B",
+      "result": "WIN"
+     },
+     {
+      "judge": "A\nStory A explains why the limit was exactly fourteen grams (the ₹1,00,000 value cap overriding the nominal 40-gram allowance) and why she needed barely-known cousins (each had to have lived abroad over a year to qualify), while Story B leaves both details unexplained.",
+      "riddler_pos": "A",
+      "result": "WIN"
+     }
+    ],
+    "sol": [
+     {
+      "judge": "B\nThe value cap explains why each cousin wore exactly fourteen grams rather than a heavier bangle, a detail A leaves unexplained.",
+      "riddler_pos": "B",
+      "result": "WIN"
+     },
+     {
+      "judge": "A\nIt explains why the bride recruited distant cousins and why each wore exactly fourteen grams: each cousin had a separate allowance, and the value cap made heavier bangles subject to duty.",
+      "riddler_pos": "A",
+      "result": "WIN"
+     }
+    ]
+   },
+   "score_opus": 1.0,
+   "score_sol": 1.0
+  },
+  {
+   "effort": "medium",
+   "theme": "a Kenyan marathon camp",
+   "riddle": "In Iten, a stranger stood silently at a marathon camp's gate from exactly six until seven one morning. At 6:58 a runner sprinted in, faster than he had ever raced, and the stranger checked her watch and smiled. She then took away his water bottle, though he was parched after 30 km. She followed him into the toilet, and did not leave the camp until noon.",
+   "chars": "Daniel Kiprop; Grace Wanjiru (anti-doping Doping Control Officer)",
+   "story": "Grace was a Doping Control Officer making an unannounced test, which is why she later watched Daniel urinate. Under World Athletics whereabouts rules she had to wait at his declared location through his entire 60-minute daily slot (6–7 a.m.), and Daniel, who already had two whereabouts failures, knew that if he was not there by 7:00 it would be a third in 12 months and an automatic ban, so he sprinted home with two minutes to spare. Once he was notified, a less-known rule took over: a sample with a specific gravity below 1.005 is too dilute and forces further samples. So Grace took his bottle to stop him gulping water, and when his first post-run samples still came out too dilute she had to keep him under observation until a valid sample came near noon.",
+   "solver": "**Character 1:** Kip, an elite Kenyan marathoner who had registered 6–7 a.m. at his Iten camp as his daily anti-doping \"whereabouts\" hour.\n\n**Character 2 (with occupation):** Grace, an anti-doping control officer who arrived unannounced and was required to wait at the gate for that exact 60-minute window.\n\n**Story:** Kip had lost track of time on a 30 km long run and sprinted the last stretch faster than he'd ever raced, because one more missed test would mean a ban. He arrived at 6:58, so Grace smiled at her watch, confiscated his unsealed bottle so nothing could dilute or tamper with the sample, and watched him in the toilet as the rules require. He was too dehydrated to produce enough urine until noon, so she had to stay until then.",
+   "result": "LOSS",
+   "real": true,
+   "fact": "REAL\n\nWhereabouts rules with a 60-minute daily slot, three whereabouts failures (missed tests or filing failures) in 12 months counting as an anti-doping rule violation, and a urine specific gravity threshold (below 1.005 requires further collection) all exist in WADA/World Athletics procedures.",
+   "fit": true,
+   "gen_cost": 0.036584,
+   "model": "anthropic/claude-opus-5.5",
+   "variant": "3 hidden facts",
+   "verdicts": {
+    "opus": [
+     {
+      "judge": "A\n\nStory A's explanation that the parched runner was too dehydrated to give enough urine until noon is natural, whereas Story B's claim that a parched runner after 30 km kept producing overly dilute samples contradicts the riddle's own detail.",
+      "riddler_pos": "B",
+      "result": "LOSS"
+     },
+     {
+      "judge": "B\n\nStory B accounts for every detail, including the 30 km run, and its claim that a parched runner could not give enough urine until noon is more natural than Story A's claim that a dehydrated athlete kept producing overly dilute samples.",
+      "riddler_pos": "A",
+      "result": "LOSS"
+     }
+    ],
+    "sol": [
+     {
+      "judge": "A\nIt ties the exact testing window to the runner’s desperate sprint and explains the wait until noon through dehydration, rather than assuming a parched runner repeatedly produced overly dilute urine.",
+      "riddler_pos": "B",
+      "result": "LOSS"
+     },
+     {
+      "judge": "B\nHis dehydration after 30 km naturally explains the wait until noon, whereas A relies on a parched runner repeatedly producing overly dilute samples even after his water was taken away.",
+      "riddler_pos": "A",
+      "result": "LOSS"
+     }
+    ]
+   },
+   "score_opus": 0.0,
+   "score_sol": 0.0
+  },
+  {
+   "effort": "medium",
+   "theme": "a wedding in Kerala",
+   "riddle": "Six aunts landed in Kochi from Dubai for the Thrissur wedding, each wearing one surprisingly thin chain and nothing else gold. Their sister, the bride's grandmother, on the same flight, wore no gold at all. By the muhurtham the bride wore a single heavy necklace no one had brought. A man had kept his fire lit since dawn.",
+   "chars": "Ammini, the bride's grandmother; Velayudhan (goldsmith)",
+   "story": "To dodge customs duty on the bride's gold, the family split it among the six aunts, because India's Baggage Rules allow a woman who has lived abroad for over a year to bring in jewellery duty-free, and grandmother Ammini, only eight months into her Dubai visit, did not qualify, so she carried none. The aunts' chains were thin because that allowance is capped at 40 grams *and* ₹1 lakh in value, a cap set in 2016 that now covers barely 13 grams of gold, so after they cleared customs, Velayudhan melted the six chains together at his forge before the muhurtham to make the bride's necklace.",
+   "solver": "**Character 1:** The bride's grandmother, a widow who came home from Dubai with her six sisters.\n\n**Character 2:** Velayudhan, a Thrissur goldsmith.\n\n**Story:** To stay within the customs allowance, each sister wore only one thin chain, but all seven wore old silk sarees woven with real gold zari. The grandmother's saree, the heaviest of all, carried the most. Velayudhan had kept his crucible burning since dawn, and by the muhurtham he had melted the gold out of the sarees and cast it into the single heavy necklace the bride wore.",
+   "result": "WIN",
+   "real": false,
+   "fact": "INVENTED\n\nIndia's Baggage Rules do allow jewellery duty-free for those returning after over a year abroad, but the allowance is ₹50,000 for a woman (₹1 lakh for a woman passenger, per the 2016 amendment) and 20 grams for a gentleman or 40 grams for a lady, so the 40g/₹1 lakh cap is roughly right. However, the claim that the one-year residence requirement applies is accurate, and splitting among relatives is a plausible dodge. The problem is that the allowance is per passenger, and each aunt would need to individually qualify, having lived abroad over a year, which the story doesn't clearly establish. The \"barely 13 grams\" figure is also off: ₹1 lakh at current gold prices (~₹7,000-9,000/g) buys roughly 11-14 grams, so that's fine.\n\nConsidering all this, the mechanism as described (the allowance exists, it is capped at 40g and ₹1 lakh, a woman with over a year abroad qualifies, and the cap was set in 2016) matches the real rules, so my first-line verdict is wrong.\n\nREAL\n\nThe Baggage Rules, 2016 do allow a woman who has lived abroad over a year to bring in jewellery duty-free up to 40 grams and ₹1 lakh in value, so splitting the gold among qualifying relatives works roughly as described.",
+   "fit": true,
+   "gen_cost": 0.040396,
+   "model": "anthropic/claude-opus-5.5",
+   "variant": "3 hidden facts",
+   "verdicts": {
+    "opus": [
+     {
+      "judge": "A\nStory A explains every detail: the grandmother wore no gold because she didn't qualify for the allowance, the chains were thin because of the value cap, and the six chains were melted into the necklace. Story B contradicts the riddle by giving the grandmother gold zari and never uses the chains.",
+      "riddler_pos": "A",
+      "result": "WIN"
+     },
+     {
+      "judge": "B\nStory B explains every detail: the thin chains come from the duty-free value cap, the grandmother carries no gold because she doesn't qualify, and the six chains are melted into one necklace. Story A contradicts the riddle by having the grandmother wear a gold-zari saree.",
+      "riddler_pos": "B",
+      "result": "WIN"
+     }
+    ],
+    "sol": [
+     {
+      "judge": "A\nThe customs allowance explains both the aunts’ thin chains and the grandmother’s lack of gold, while the goldsmith’s fire explains how the six chains became one heavy necklace.",
+      "riddler_pos": "A",
+      "result": "WIN"
+     },
+     {
+      "judge": "B\nIt explains why the chains were thin and why the grandmother wore no gold, while the goldsmith’s fire accounts for how six chains became one heavy necklace that no one had brought.",
+      "riddler_pos": "B",
+      "result": "WIN"
+     }
+    ]
+   },
+   "score_opus": 1.0,
+   "score_sol": 1.0
+  },
+  {
+   "effort": "medium",
+   "theme": "a submarine crew in 1943",
+   "riddle": "Off Truk in July 1943, our two clumsy angled shots stopped the big tanker cold, so the skipper eased the boat to a perfect right-angle firing position.\nUntil June our fish had burst before reaching their targets; now every one clanged home and did nothing.\nNine textbook hits later the tanker still floated, and the skipper looked angrier at the perfect angle than at the enemy.\nHe then turned for home with one torpedo deliberately unfired, guarding it like the prize.",
+   "chars": "Lt. Cmdr. Lawrence \"Dan\" Daspit; Chief Hal Reyes (torpedoman)",
+   "story": "Daspit's USS Tinosa was firing duds: Admiral Lockwood's June 24, 1943 order to deactivate the Mark 14's notoriously premature magnetic exploder made the torpedoes rely solely on the Mark 6 contact exploder. Chief Reyes knew its lesser-known flaw: on a perfect 90° impact the violent deceleration jammed and bent the firing pin before it could strike, while glancing hits fired properly, so Daspit saved one torpedo to haul back to Pearl Harbor as evidence, leading to the cliff-drop tests that confirmed the defect.",
+   "solver": "**Character 1:** The last Mark 14 torpedo aboard USS *Tinosa*.\n\n**Character 2:** Lt. Cdr. Lawrence \"Dan\" Daspit, submarine captain of USS *Tinosa*.\n\n**Story:** After his oblique shots crippled the *Tonan Maru No. 3*, Daspit fired nine more from the \"perfect\" 90° angle, and every one was a dud. The magnetic exploder had been deactivated in June because it fired early, but the contact exploder's firing pin was crushed by the force of a square-on impact, so only glancing hits could detonate. Furious at a weapon that failed exactly when aimed best, he carried his final torpedo back to Pearl Harbor as evidence. Tests there proved the flaw and finally got the Navy's torpedo exploder fixed.",
+   "result": "LOSS",
+   "real": false,
+   "fact": "INVENTED\n\nThe Mark 14 contact-exploder flaw was real (the firing pin was impeded by the violent deceleration on a perfect 90° hit), but the details here are wrong. Daspit's Tinosa fired at the whale-catcher/tanker Tonan Maru No. 3 on July 24, 1943, and the duds came after Lockwood's June 1943 deactivation order. Daspit did not \"save one torpedo\" to bring back. The Tinosa returned with the remaining torpedoes, and the Newport and Pearl Harbor cliff-drop tests at Kahoolawe were done with warheads Lockwood's staff had arranged, not with Daspit's evidence. Chief Hal Reyes also appears to be a fabricated figure.",
+   "fit": true,
+   "gen_cost": 0.03608,
+   "model": "anthropic/claude-opus-5.5",
+   "variant": "3 hidden facts",
+   "verdicts": {
+    "opus": [
+     {
+      "judge": "A\nStory A addresses every riddle detail directly: the angled shots that stopped the tanker, the nine square-on duds, the skipper's anger at the \"perfect\" angle, and the saved torpedo. Story B adds an invented character and leaves out the opening angled hits.",
+      "riddler_pos": "B",
+      "result": "LOSS"
+     },
+     {
+      "judge": "B\nStory B covers every riddle detail, including the oblique hits that stopped the tanker, the nine square-on duds, the skipper's anger at the \"perfect\" angle and the saved torpedo, without A's stretch of an invented chief who somehow already knew a flaw that was undiscovered at the time.",
+      "riddler_pos": "A",
+      "result": "LOSS"
+     }
+    ],
+    "sol": [
+     {
+      "judge": "A\nIt explicitly ties the two angled hits that crippled the tanker, the June exploder change, the nine square-on duds, and Daspit’s anger to his decision to save the last torpedo as evidence.",
+      "riddler_pos": "B",
+      "result": "LOSS"
+     },
+     {
+      "judge": "B\nIt ties the nine square-on duds, Daspit’s anger at the supposedly ideal angle, and the last torpedo’s value as evidence to the same defect without assuming the torpedoman already knew the cause.",
+      "riddler_pos": "A",
+      "result": "LOSS"
+     }
+    ]
+   },
+   "score_opus": 0.0,
+   "score_sol": 0.0
+  },
+  {
+   "effort": "medium",
+   "theme": "an Icelandic fishing trawler",
+   "riddle": "On the last night of August, an Icelandic trawler's net came up bursting with cod that nobody aboard wanted. Throwing a single fish back was never discussed. The whole haul was trucked past the owner's own fish plant to be sold to strangers, and the crew cheered when they were paid only a fifth of what it fetched.",
+   "chars": "Sigríður, the vessel's owner; Jón (trawler skipper)",
+   "story": "Jón's trawler had already used up Sigríður's entire cod quota for the fishing year, which ends on 31 August, but Iceland's ban on discarding forced him to land the haul, and the \"VS-afli\" rule in the Fisheries Management Act lets a vessel land a limited share of its catch outside quota, provided 80% of the sale proceeds go to the state fisheries project fund (Verkefnasjóður sjávarútvegsins) and only 20% go to the boat and crew. A lesser-known condition of that rule is that VS catch must be sold on a public fish auction rather than handed to the owner's own processor, so the cod went past Sigríður's plant to the Reykjavík market, where the crew happily took their one-fifth instead of facing quota-overrun penalties.",
+   "solver": "**Character 1:** Gunnar, the trawler's skipper\n**Character 2:** Sigrún, a Directorate of Fisheries inspector (occupation: fisheries inspector)\n\n**Story:** On August 31st, the last day of Iceland's fishing year, Gunnar's crew had already used up their cod quota. Because Icelandic law bans discards, Sigrún had the haul landed as \"VS catch\" and sent it to the public fish auction instead of the owner's plant, where 80% of the price went to the state fisheries fund and 20% went to the boat, so the crew cheered at being paid at all rather than fined for fishing over quota.",
+   "result": "WIN",
+   "real": true,
+   "fact": "REAL\n\nIceland's Fisheries Management Act does have the \"VS-afli\" (verðmætasjóðsafli) rule, which lets vessels land a limited share of catch outside quota, with the sale proceeds mostly going to the Verkefnasjóður sjávarútvegsins (about 80%) and the remainder to the vessel and crew (about 20%), and which requires sale on a fish market, so the described mechanism is essentially accurate.",
+   "fit": true,
+   "gen_cost": 0.034348,
+   "model": "anthropic/claude-opus-5.5",
+   "variant": "3 hidden facts",
+   "verdicts": {
+    "opus": [
+     {
+      "judge": "B\n\nStory B ties every odd detail to the VS-catch rule itself: the discard ban, the required public-auction sale past the owner's plant, and the 80/20 split, whereas Story A leaves the bypassing of the plant as an inspector's unexplained choice.",
+      "riddler_pos": "B",
+      "result": "WIN"
+     },
+     {
+      "judge": "A\nStory A explains every detail through the VS-catch rule itself: the discard ban, the mandatory public auction that bypasses the owner's plant, and the 20% share accepted in place of penalties. Story B relies on an inspector oddly directing the landing and sale, and it explains the mechanism less fully.",
+      "riddler_pos": "A",
+      "result": "WIN"
+     }
+    ],
+    "sol": [
+     {
+      "judge": "B\nIt explains why the quota-exhausted crew had to land the cod, why the haul had to bypass the owner’s plant for a public auction, and why getting one-fifth of the proceeds without a quota penalty was worth cheering.",
+      "riddler_pos": "B",
+      "result": "WIN"
+     },
+     {
+      "judge": "A\nA more fully explains why the unwanted cod had to be landed and sold past the owner’s plant: the limited outside-quota exception required a public auction and let the boat and crew keep one-fifth instead of facing penalties.",
+      "riddler_pos": "A",
+      "result": "WIN"
+     }
+    ]
+   },
+   "score_opus": 1.0,
+   "score_sol": 1.0
+  },
+  {
+   "effort": "medium",
+   "theme": "a Kenyan marathon camp",
+   "riddle": "At an Iten camp, Faith jogged circles inside her own compound gate from 5 to 6 a.m. while her training group left for the Kerio forest roads without her.\nAt 5:52 a stranger with a clipboard walked in, and she stopped mid-lap and followed him indoors.\nDrenched and parched, she waved away every cup of water offered to her for the next hour.\nOnly after the stranger sealed a bottle in a box did she gulp two litres.",
+   "chars": "Faith Jepchirchir; Daniel Otieno (Doping Control Officer for the Anti-Doping Agency of Kenya)",
+   "story": "Faith was in the registered testing pool, and the whereabouts rules require her to name one 60-minute slot each day when she must be at her stated location, so she stayed and jogged inside her own gate through her declared 5–6 a.m. slot, because a tester finding her gone would record a missed test, and three of those in twelve months count as a doping violation. When Daniel arrived unannounced at 5:52 and notified her, she had to stay in his sight until she gave a sample, and she refused water because the testing standard rejects urine below a specific gravity of 1.005 as too dilute, which would have forced her to give more samples and kept her waiting for hours, so she drank only after he had sealed a concentrated sample in its kit.",
+   "solver": "**Character 1:** Faith, an elite Kenyan distance runner.\n\n**Character 2:** A doping control officer from the anti-doping agency.\n\n**Story:** Faith had declared 5–6 a.m. at her own compound as her daily one-hour whereabouts slot, so she had to stay there and jog laps while her group left for the forest roads. When the testing officer arrived at 5:52 she had to stay under his observation until she gave a urine sample, and she refused all water because a diluted sample would fail the specific-gravity check and force a retest; only once her bottle was sealed in the kit box did she finally rehydrate.",
+   "result": "WIN",
+   "real": true,
+   "fact": "REAL\n\nThe WADA whereabouts system requires athletes in the registered testing pool to name a 60-minute daily slot, and three whereabouts failures (missed tests or filing failures) within 12 months count as an anti-doping rule violation. The International Standard for Testing requires a minimum urine specific gravity of 1.005 (1.005 or higher with a refractometer), and a sample below that is rejected as too dilute and must be repeated. Chaperoning rules require the athlete to stay in sight once notified. The scenario is therefore consistent with the real procedures, though a missed test is only recorded if the athlete is not found during the slot, as described.",
+   "fit": true,
+   "gen_cost": 0.035504,
+   "model": "anthropic/claude-opus-5.5",
+   "variant": "3 hidden facts",
+   "verdicts": {
+    "opus": [
+     {
+      "judge": "B\n\nBoth stories give the same explanation, but B accounts for each detail more fully: it explains why she couldn't leave (a missed test, with three in twelve months counting as a violation), and why she refused water (urine below specific gravity 1.005 is rejected, forcing more samples and hours of waiting).",
+      "riddler_pos": "B",
+      "result": "WIN"
+     },
+     {
+      "judge": "A\n\nStory A covers every detail of the riddle and adds the stakes behind them: a missed test, three strikes counting as a violation, and the dilute-sample threshold that would force hours of retesting. Story B covers the same events without those stakes.",
+      "riddler_pos": "A",
+      "result": "WIN"
+     }
+    ],
+    "sol": [
+     {
+      "judge": "A\nThe declared testing slot explains why Faith stayed behind, and the need to avoid diluting her urine sample explains why she waited until it was sealed to drink, without relying on B’s extra assumptions.",
+      "riddler_pos": "B",
+      "result": "LOSS"
+     },
+     {
+      "judge": "A\nIt explains why Faith couldn’t join the forest run by spelling out the consequences of a missed test, and why she waited until the sample was sealed to drink.",
+      "riddler_pos": "A",
+      "result": "WIN"
+     }
+    ]
+   },
+   "score_opus": 1.0,
+   "score_sol": 0.5
+  },
+  {
+   "effort": "medium",
+   "theme": "a Paris bakery strike",
+   "riddle": "When her bakers walked out during a Paris bakery strike, Madame Roux still opened with full shelves. That morning she taped paper over the first word of her shop sign. She also struck one word off the baguette price tag and cut the price by twenty cents. At noon a man with a clipboard looked around, smiled, and left without writing a fine.",
+   "chars": "Madame Roux, owner of a Paris bread shop; Monsieur Delattre (fraud inspector for the DGCCRF)",
+   "story": "With her bakers on strike, Madame Roux stocked her shelves with frozen par-baked baguettes from an industrial supplier. France's 1998 law reserves the word \"Boulangerie\" for shops that knead, shape and bake on site without freezing, so she covered that word on her sign. The lesser-known 1993 \"Décret Pain\" also forbids calling any frozen loaf a \"baguette de tradition française,\" so she struck \"tradition\" off the tag and charged the ordinary-baguette price, and Inspector Delattre found nothing to fine.",
+   "solver": "**Character 1:** Madame Roux, owner of the shop.\n**Character 2:** Monsieur Garnier, a fraud-control inspector for France's DGCCRF.\n\n**Story:** With her bakers on strike, Madame Roux stocked her shelves with bread bought from an outside supplier. French law reserves the word \"Boulangerie\" for shops that knead and bake on site, and the \"tradition\" label for additive-free, never-frozen baguettes, so she taped over \"Boulangerie\" on her sign and crossed \"tradition\" off the \"baguette tradition\" tag, pricing it 20 cents cheaper. When Monsieur Garnier came to inspect, he found every label perfectly legal, smiled at her cleverness, and left without issuing a fine.",
+   "result": "WIN",
+   "real": true,
+   "fact": "REAL\n\nFrance's 1998 law does reserve the \"boulanger/boulangerie\" name for shops that knead, shape and bake on site with no freezing, and the 1993 \"Décret Pain\" does restrict \"pain de tradition française\" to bread made without freezing or additives. The story's \"baguette de tradition française\" wording is slightly loose, since the protected term is \"pain de tradition française\" (usually sold as \"baguette tradition\"), but the mechanism holds.",
+   "fit": true,
+   "gen_cost": 0.038316,
+   "model": "anthropic/claude-opus-5.5",
+   "variant": "3 hidden facts",
+   "verdicts": {
+    "opus": [
+     {
+      "judge": "B\n\nStory B makes the bread frozen and par-baked, which ties directly to both legal restrictions (the \"Boulangerie\" sign and the \"tradition\" label). It also explains the 20-cent cut as switching to the ordinary-baguette price, whereas Story A leaves it unclear why outside bread would fail the \"tradition\" standard.",
+      "riddler_pos": "B",
+      "result": "WIN"
+     },
+     {
+      "judge": "A\nStory A states that the bread was frozen and par-baked, which directly explains why both \"Boulangerie\" and \"tradition\" had to go, whereas Story B never says the supplier's bread was frozen or contained additives, leaving the \"tradition\" removal less clearly justified.",
+      "riddler_pos": "A",
+      "result": "WIN"
+     }
+    ],
+    "sol": [
+     {
+      "judge": "B\nThe frozen par-baked baguettes explain the full shelves, why both labels had to go, and why she charged the lower ordinary-baguette price, leaving the inspector no labeling violation to fine.",
+      "riddler_pos": "B",
+      "result": "WIN"
+     },
+     {
+      "judge": "A\nThe frozen, par-baked baguettes explain not only the full shelves and the covered “Boulangerie” sign, but also why “tradition” had to come off the tag and the baguettes sold at the lower ordinary price.",
+      "riddler_pos": "A",
+      "result": "WIN"
+     }
+    ]
+   },
+   "score_opus": 1.0,
+   "score_sol": 1.0
+  },
+  {
+   "effort": "medium",
+   "theme": "a Scottish whisky distillery",
+   "riddle": "On Islay, Morag sold a cask one night before its third birthday, and the buyer grinned at how little she asked.\nHe had it trucked over the border to Carlisle before dawn.\nYears later it won gold as a fine single malt, yet its label could never say \"Scotch.\"\nWhen bottled it was dozens of litres lighter, yet no one was ever taxed on what had vanished.",
+   "chars": "Morag Campbell; Hugh Rennie (whisky cask broker)",
+   "story": "Morag's cask was one day short of three years old, so under the Scotch Whisky Regulations 2009 it was still only \"new make spirit\" and not yet legally whisky, which is why Hugh got it cheaply. He rushed it into a bonded warehouse in England before it could complete the three years of maturation in Scotland that the regulations require, so it could later win gold only as an English single malt, and because UK excise duty on spirits held in bond is suspended and charged only on the volume finally removed, the \"angel's share\" that evaporated over those years was never taxed.",
+   "solver": "**Character 1:** Morag, an Islay distillery owner.\n\n**Character 2:** Tom, an English independent bottler who keeps a bonded warehouse in Carlisle.\n\n**Story:** Morag sold Tom the cask the night before its third birthday, while it was still legally just \"spirit\" and not yet Scotch whisky, so it was cheap; he rushed it across the border so it would finish maturing in England, and once a spirit leaves Scotland it can never be called \"Scotch,\" however fine it becomes. It aged for years in his bonded warehouse, where dozens of litres evaporated as the \"angels' share,\" and because duty is only charged on what is bottled and released from bond, nobody ever paid tax on the whisky the angels drank.",
+   "result": "WIN",
+   "real": false,
+   "fact": "INVENTED. The answer mixes real elements (the Scotch Whisky Regulations 2009 require three years' maturation, and duty is suspended in bond and charged on the volume removed) with a materially wrong claim: spirit moved to England before reaching three years could not mature there into Scotch, since Scotch must be matured in Scotland. It also would not become \"English single malt\" simply by moving, because a spirit distilled in Scotland cannot become English whisky through relocation. The scheme as described, with its supposed legal loophole, therefore does not work.",
+   "fit": true,
+   "gen_cost": 0.043224,
+   "model": "anthropic/claude-opus-5.5",
+   "variant": "3 hidden facts",
+   "verdicts": {
+    "opus": [
+     {
+      "judge": "B\nStory B correctly ties the loss of \"Scotch\" status to the cask leaving Scotland before completing the three years of maturation there that the regulations require, whereas Story A overstates the rule by claiming any spirit that leaves Scotland can never be called Scotch.",
+      "riddler_pos": "B",
+      "result": "WIN"
+     },
+     {
+      "judge": "A\nStory A gives the accurate legal reason it can't be \"Scotch\" (it never completed the required three years of maturation in Scotland), while Story B overstates the rule by claiming any spirit that leaves Scotland can never be called Scotch.",
+      "riddler_pos": "A",
+      "result": "WIN"
+     }
+    ],
+    "sol": [
+     {
+      "judge": "B\nIt better explains why crossing the border before the third birthday mattered: the spirit fell short of the required three years of maturation in Scotland, and the angel’s share evaporated in bond before excise duty became due.",
+      "riddler_pos": "B",
+      "result": "WIN"
+     },
+     {
+      "judge": "A\nA ties the overnight move to the requirement for three years of maturation in Scotland, rather than claiming that crossing the border alone disqualifies Scotch, and explains why the spirit that evaporated in bond was never taxed.",
+      "riddler_pos": "A",
+      "result": "WIN"
+     }
+    ]
+   },
+   "score_opus": 1.0,
+   "score_sol": 1.0
+  },
+  {
+   "effort": "medium",
+   "theme": "a Paris bakery strike",
+   "riddle": "When his workers walked out, Henri spent one Paris night mixing two days' worth of dough by himself.\nHe chilled it in the cold room but would not let the dial drop below 4°C, even though colder would have kept it longer.\nOn day three he was still selling bread, yet he hung a bedsheet over the first word of his shop sign.\nMargot, on the picket line outside, photographed the sheet and smiled.",
+   "chars": "Margot; Henri (baker and bakery owner)",
+   "story": "When Henri's workers went on strike, he mixed two days of dough alone to keep selling during the walkout. He held it above freezing because France's 1993 bread decree forbids freezing \"baguette de tradition\" dough at any stage, and it allows only a cold, slowed rise. That dough ran out on day three, so he trucked in frozen factory loaves. Under France's 1998 law, a shop selling frozen bread may not call itself a \"Boulangerie,\" since the title is reserved for bakers who knead, shape and bake on site. He had to cover that word on his sign, and Margot photographed it as proof that the strike had stopped him from baking.",
+   "solver": "**Character 1:** Henri, a Paris baker whose shop sign reads \"Boulangerie Henri.\"\n\n**Character 2:** Margot, his head baker and the union organizer leading the strike.\n\n**Story:** French law lets a shop call itself a \"boulangerie\" only if its bread is kneaded, shaped and baked on site and never frozen, so Henri mixed two days of dough alone and kept the cold room just above freezing to stay legal. When that dough ran out on day three, he had to sell bought-in bread and legally covered the word \"Boulangerie,\" and Margot photographed the sheet as public proof that the strike had beaten him.",
+   "result": "LOSS",
+   "real": true,
+   "fact": "REAL\n\nFrance's 1993 \"Décret Pain\" does bar freezing and the use of additives for \"pain de tradition française\" (often marketed as baguette de tradition), and the 1998 law reserves the \"boulangerie\" title for bakers who knead, shape and bake on site (the 1993 decree was in fact the one covering \"pain de tradition\"; the 1998 law protected the \"boulanger\" label), so the mechanism is described roughly correctly.",
+   "fit": true,
+   "gen_cost": 0.042936,
+   "model": "anthropic/claude-opus-5.5",
+   "variant": "3 hidden facts",
+   "verdicts": {
+    "opus": [
+     {
+      "judge": "B\n\nStory B ties each detail to a specific rule, the 1993 decree banning frozen dough and the 1998 law restricting the \"Boulangerie\" title, so the 4°C limit and the covered sign follow more precisely than in Story A's vaguer account.",
+      "riddler_pos": "B",
+      "result": "WIN"
+     },
+     {
+      "judge": "B\nStory B ties every detail to a single law, the \"boulangerie\" title rule that forbids frozen dough, and explicitly makes \"Boulangerie\" the first word of the sign, which ties the cold-room limit, the covered word and Margot's smile together most cleanly.",
+      "riddler_pos": "A",
+      "result": "LOSS"
+     }
+    ],
+    "sol": [
+     {
+      "judge": "A\nThe rules governing the “Boulangerie” sign explain both why Henri kept his dough unfrozen and why he covered the word once he switched to bought-in bread, without assuming he made a specific kind of baguette.",
+      "riddler_pos": "B",
+      "result": "LOSS"
+     },
+     {
+      "judge": "B\nThe rule for using “Boulangerie” explains both why Henri avoided freezing the dough and why he covered the sign once he switched to bought-in bread, without assuming he made a particular kind of baguette.",
+      "riddler_pos": "A",
+      "result": "LOSS"
+     }
+    ]
+   },
+   "score_opus": 0.5,
+   "score_sol": 0.0
+  },
+  {
+   "effort": "medium",
+   "theme": "an Icelandic fishing trawler",
+   "riddle": "Her holds held cod she had no right to catch, yet not one fish went back over the side.\nOne box in twenty got a different label, and the owner smiled though those boxes would earn him almost nothing.\nShe steamed past her own company's fish plant to tie up at a busier harbour farther down the coast.\nThe skipper said the sea had simply been too kind.",
+   "chars": "Einar, the trawler's owner; Guðrún (trawler skipper)",
+   "story": "Off the Westfjords, Guðrún's trawler hit such a rich run of cod that it overshot the vessel's remaining cod quota mid-haul, but Iceland's discard ban forbade throwing the surplus back. So she used the little-known \"VS-afli\" rule of Iceland's fisheries law, which lets a vessel land up to 5% of its catch outside quota on condition that it is sold through a licensed fish auction, with most of the proceeds going to a state fisheries fund. That auction requirement is why she sailed past Einar's own processing plant, which has no fish market, to land at a harbour with an auction hall, and Einar smiled because the over-catch would otherwise have cost him a fine or expensive leased quota.",
+   "solver": "**Character 1:** The trawler *Kari*, a Norwegian fishing vessel (\"her\").\n**Character 2:** Olav, the trawler's skipper (occupation: fishing captain).\n\n**Story:** Targeting haddock, Olav's net came up so full of cod that the catch blew past the *Kari*'s cod quota. Norway's discard ban forbids throwing fish back, so every fish was landed. The over-quota cod, about one box in twenty, was labelled separately to be sold for the fishing authority, with the owner getting only a small handling share. Olav steamed past the company's own small plant to the busy auction harbour with an inspector on hand, where the over-quota catch could be declared legally, and the owner smiled because honest landing meant no fines and the rest of the haul fetched top prices. Asked how they'd broken quota, Olav just shrugged that the sea had been too kind.",
+   "result": "WIN",
+   "real": true,
+   "fact": "REAL\n\nIceland does have a \"VS-afli\" (verðmætaskipting/value-shared catch) rule, under which up to 5% of a vessel's catch beyond quota can be landed, must be sold through a fish market (auction), and most proceeds, after costs, go to a state fund (Verkefnasjóður sjávarútvegsins), while the discard ban applies.",
+   "fit": false,
+   "gen_cost": 0.041488,
+   "model": "anthropic/claude-opus-5.5",
+   "variant": "3 hidden facts",
+   "verdicts": {
+    "opus": [
+     {
+      "judge": "B\n\nStory B ties every detail to one real mechanism: Iceland's VS-afli rule allows exactly 5% (one box in twenty) outside quota, requires auction sale (hence the harbour), and sends most proceeds to a state fund (hence the owner's tiny but fine-avoiding return), whereas Story A's \"one in twenty\" and harbour choice are merely coincidental.",
+      "riddler_pos": "B",
+      "result": "WIN"
+     },
+     {
+      "judge": "A\nStory A ties every detail to one real mechanism, Iceland's VS-afli rule, which allows exactly 5% (one box in twenty) outside quota with auction-only sales and proceeds mostly to a state fund, whereas Story B makes the one-in-twenty figure a mere coincidence.",
+      "riddler_pos": "A",
+      "result": "WIN"
+     }
+    ],
+    "sol": [
+     {
+      "judge": "B\nThe 5% rule explains exactly why one box in twenty was relabelled, and the mandatory auction explains why the skipper bypassed the company plant even though the owner would earn little from those boxes.",
+      "riddler_pos": "B",
+      "result": "WIN"
+     },
+     {
+      "judge": "A\nThe 5% rule explains why exactly one box in twenty was marked separately and earned the owner so little, while the mandatory auction explains why the skipper had to bypass the company’s own plant.",
+      "riddler_pos": "A",
+      "result": "WIN"
+     }
+    ]
+   },
+   "score_opus": 1.0,
+   "score_sol": 1.0
+  },
+  {
+   "effort": "medium",
+   "theme": "a Scottish whisky distillery",
+   "riddle": "On the eve of the Speyside cask's fiftieth birthday, she refused to wait one more year and ordered it emptied at once. The warehouseman reached for his hydrometer, not his nosing glass. Into the vat she then poured something far younger and far stronger. The bottles of her grandfather's last 1975 filling say only \"Aged 12 Years.\"",
+   "chars": "Morag Grant, granddaughter of the distillery's founder; Callum Ross (warehouseman at the family's Speyside distillery)",
+   "story": "Callum's hydrometer showed that the 49-year-old cask had sunk to 40.3% ABV. Under the Scotch Whisky Regulations 2009, nothing below 40% may be sold as Scotch, and in a cool, damp Scottish dunnage warehouse the alcohol evaporates faster than the water, so the strength falls every year rather than rising as it does in Kentucky; one more year would have stripped it of the name, so Morag could not wait for the round-number birthday. To keep a safe margin she vatted it with a 12-year-old cask-strength spirit from the same stills, which kept it a single malt, but the regulations require any age statement to name the youngest whisky in the bottle, so her grandfather's half-century spirit had to be labelled \"Aged 12 Years.\"",
+   "solver": "**Character 1:** Isla, granddaughter of a late Speyside distiller and now the distillery's owner.\n\n**Character 2:** Angus, the distillery's warehouseman.\n\n**Story:** Angus's hydrometer confirmed Isla's fear: after fifty years of the angels' share, her grandfather's last 1975 cask had sunk to just above 40% ABV, and one more year would drop it below the legal minimum for Scotch whisky. She emptied it at once and married it with a younger, higher-strength 12-year-old spirit to rescue it, and because the law requires the age statement to name the youngest whisky in the bottle, his fifty-year legacy must forever be labelled simply \"Aged 12 Years.\"",
+   "result": "WIN",
+   "real": false,
+   "fact": "INVENTED\n\nThe minimum 40% ABV rule under the Scotch Whisky Regulations 2009 and the youngest-component age-statement rule are real, and in damp, cool warehouses alcohol can evaporate faster than water, so strength falls. But the plan fails on its own terms: blending in a 12-year-old cask-strength spirit would make the result a blended malt (or a vatted malt), not a \"single malt\", because a single malt must come from one distillery, and the scenario says \"same stills,\" so that part could actually hold. The central mechanism, however, is materially wrong: a cask-strength 12-year-old would raise the ABV, but the age statement would be 12 years, which makes the vatting pointless from a marketing standpoint, and the story's claim that Morag \"could not wait\" is the weak part. Most importantly, the \"single\" cask labelled 12 years would have been better left as a 49-year-old at a lower-strength bottling, or reduced or rebottled, since Scotch can't be sold below 40% but can be vatted with a stronger whisky, so the vatting solution is plausible and the regulations are real as described.\n\nCorrection: on reflection, the mechanism is REAL.\n\nREAL\n\nThe 40% ABV minimum, the falling strength in damp Scottish warehouses, and the youngest-component age-statement rule all exist and work roughly as described.",
+   "fit": true,
+   "gen_cost": 0.041444,
+   "model": "anthropic/claude-opus-5.5",
+   "variant": "3 hidden facts",
+   "verdicts": {
+    "opus": [
+     {
+      "judge": "B\nStory B covers every detail more fully: it explains the \"eve of the fiftieth birthday\" timing with a 49-year-old cask, why Scottish warehouse conditions make the strength fall year after year, and why the 12-year-old marriage still yields a single malt labelled by its youngest component.",
+      "riddler_pos": "B",
+      "result": "WIN"
+     },
+     {
+      "judge": "A\nStory A accounts for more of the riddle's odd details: it explains why the strength falls in a Scottish warehouse, keeps the cask correctly at 49 years on the eve of its fiftieth birthday, and keeps the blend a single malt, whereas Story B mislabels the cask's age and skips why the strength drops.",
+      "riddler_pos": "A",
+      "result": "WIN"
+     }
+    ],
+    "sol": [
+     {
+      "judge": "B\nIt gets the timing right and connects the hydrometer to the risk of falling below 40% ABV, the stronger 12-year-old whisky to restoring a safe margin, and the youngest whisky in the vat to the label.",
+      "riddler_pos": "B",
+      "result": "WIN"
+     },
+     {
+      "judge": "A\nIt explains why the hydrometer mattered, why she emptied the cask before it turned fifty, and why adding stronger 12-year-old whisky protected the blend’s strength but determined its age statement.",
+      "riddler_pos": "A",
+      "result": "WIN"
+     }
+    ]
+   },
+   "score_opus": 1.0,
+   "score_sol": 1.0
+  },
+  {
+   "effort": "medium",
+   "theme": "a Texas oil rig",
+   "riddle": "On a Permian Basin drilling rig in West Texas, the rotten-egg stink on the floor faded within a minute, and the green hand grinned, \"Good, it's gone.\"\nThe old hand slammed the alarm instead. He glanced at the orange sock on the mast, then dragged the kid past the shady, sheltered cellar pit and up the sandy rise.\nWhy did a vanishing smell scare him more than the smell itself?",
+   "chars": "Cody, a green worker on his first hitch; Earl Haskins (toolpusher)",
+   "story": "Earl knew the smell was hydrogen sulfide from a sour-gas kick, and that above roughly 100–150 ppm H2S paralyzes the olfactory nerve, so the stink \"disappearing\" meant the concentration had jumped to a deadly level, not that the leak had stopped. Following the Texas Railroad Commission's H2S rule (Statewide Rule 36), which requires wind indicators and upwind safe-briefing areas, he read the windsock to run upwind, and he skipped the cool cellar for the higher ground because H2S is heavier than air and pools in low spots like cellar pits, where it would have killed them both.",
+   "solver": "**Character 1:** Danny, a green hand (new roughneck) on his first hitch.\n**Character 2:** Earl, a veteran driller (the old hand).\n\n**Story:** Earl knew that hydrogen sulfide smells like rotten eggs only at low levels, and at deadly concentrations it paralyzes your sense of smell within moments, so the stink \"fading\" meant the gas was getting stronger, not leaving. He hit the alarm, checked the windsock to head crosswind and upwind, and pulled Danny away from the low cellar pit, where the heavier-than-air gas pools, and up the high ground where the air was safe.",
+   "result": "WIN",
+   "real": true,
+   "fact": "REAL\nH2S does deaden the sense of smell at high concentrations (olfactory fatigue/paralysis begins around 100+ ppm), it is heavier than air and pools in low areas like cellars, and Texas Railroad Commission Statewide Rule 36 does govern H2S operations, including wind direction indicators and safe briefing areas.",
+   "fit": true,
+   "gen_cost": 0.031252,
+   "model": "anthropic/claude-opus-5.5",
+   "variant": "3 hidden facts",
+   "verdicts": {
+    "opus": [
+     {
+      "judge": "A\nStory A covers every detail: olfactory paralysis, the windsock for running upwind, and why the tempting cool cellar was a deadly low spot where heavy H2S pools, with the Texas H2S rule adding grounding; Story B is similar but slightly less complete.",
+      "riddler_pos": "A",
+      "result": "WIN"
+     },
+     {
+      "judge": "B\nStory B explains every clue: the sour-gas kick as the source, olfactory paralysis as the reason the smell vanished, the windsock for choosing an upwind escape, and why the tempting shady cellar was a death trap where the heavy gas would pool.",
+      "riddler_pos": "B",
+      "result": "WIN"
+     }
+    ],
+    "sol": [
+     {
+      "judge": "A\nIt more fully explains the old hand’s actions: the fading smell could signal H₂S-induced loss of smell, the windsock showed which way was upwind, and the rise took them away from the cellar where gas could collect.",
+      "riddler_pos": "A",
+      "result": "WIN"
+     },
+     {
+      "judge": "A\nIt explains the fading smell, alarm, windsock, and climb away from the sheltered pit without assuming a specific gas kick or treating the loss of smell as proof that the concentration suddenly spiked.",
+      "riddler_pos": "B",
+      "result": "LOSS"
+     }
+    ]
+   },
+   "score_opus": 1.0,
+   "score_sol": 0.5
+  },
+  {
+   "effort": "medium",
+   "theme": "a Tokyo sumo stable",
+   "riddle": "In a Ryogoku stable, a healthy 31-year-old finally received the new passport he had waited six years for.\nThat same week he quit the ring for good, despite going unbeaten in the tournament he had just finished.\nHis overjoyed master immediately booked a flight to Ulaanbaatar.\nYet the man still eats chanko at the stable every night, now wearing a suit.",
+   "chars": "Batbayar, a Mongolian-born wrestler who has just become a Japanese citizen; Takeda (sumo stablemaster)",
+   "story": "Batbayar was born in Mongolia and spent six years naturalizing as a Japanese citizen, because the Japan Sumo Association lets only Japanese nationals buy elder stock (toshiyori kabu) and become coaches. Since 2010, however, the one-foreigner-per-stable rule has counted wrestlers by birthplace rather than passport, so his new citizenship still filled the stable's only foreign slot; he had to retire into his elder post as a suited coach before Takeda could fly to Ulaanbaatar to sign the next Mongolian recruit.",
+   "solver": "**Character 1:** Batbayar, a Mongolian-born sumo wrestler.\n**Character 2:** Oyakata Tanaka, a sumo stablemaster in Ryogoku.\n\n**Story:** Batbayar waited six years for Japanese citizenship and his new Japanese passport, because only Japanese nationals may become sumo elders. He then retired right after an unbeaten final tournament to become a suited coach at the same stable. With its one-foreigner-per-stable slot now empty, Tanaka joyfully flew to Ulaanbaatar to recruit a new Mongolian prospect.",
+   "result": "WIN",
+   "real": true,
+   "fact": "REAL\n\nThe Japan Sumo Association does require elder stock holders to be Japanese nationals, and since 2010 the one-foreign-wrestler-per-stable rule has counted by origin (birthplace) rather than citizenship, so naturalized wrestlers still count as foreign. The details about Batbayar and Takeda are embellishments, but the mechanism holds up.",
+   "fit": true,
+   "gen_cost": 0.040364,
+   "model": "anthropic/claude-opus-5.5",
+   "variant": "3 hidden facts",
+   "verdicts": {
+    "opus": [
+     {
+      "judge": "B\nStory B explains why gaining citizenship alone didn't free the foreign slot (the rule counts birthplace), so he had to retire despite going unbeaten before the master could recruit in Ulaanbaatar.",
+      "riddler_pos": "B",
+      "result": "WIN"
+     },
+     {
+      "judge": "A\n\nStory A explains why he had to quit despite being unbeaten: the foreign slot counts wrestlers by birthplace, so only his retirement into a coaching post, not his citizenship, freed it for a new Mongolian recruit. Story B leaves that link unexplained.",
+      "riddler_pos": "A",
+      "result": "WIN"
+     }
+    ],
+    "sol": [
+     {
+      "judge": "B\nIt explains why the passport let him become a suited coach who still eats at the stable, but only his retirement freed the foreign-born wrestler slot and prompted his master’s recruiting trip.",
+      "riddler_pos": "B",
+      "result": "WIN"
+     },
+     {
+      "judge": "A\nIt explains why the new passport let him become a suited coach but only his retirement freed the stable’s foreign-recruit slot, making the immediate flight to Ulaanbaatar make sense.",
+      "riddler_pos": "A",
+      "result": "WIN"
+     }
+    ]
+   },
+   "score_opus": 1.0,
+   "score_sol": 1.0
   }
  ]
 }

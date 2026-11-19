@@ -9,6 +9,8 @@ const THEMES_BLURB =
 
 // Re-judging cost, from the rejudge.py run logs (not stored per round).
 const REJUDGE_COST = 1.48;
+// Total cost of the facts_sweep.py run (1, 2 and 3 hidden facts), from its run log.
+const FACTS_RUN_COST = 2.99;
 
 const JUDGES = [
   { key: 'opus', name: 'Claude Opus 5.5' },
@@ -23,8 +25,8 @@ const money = (x) => `$${x.toFixed(3)}`;
 function summarize(rounds) {
   const groups = {};
   for (const r of rounds) {
-    const key = `${r.model}|${r.effort}`;
-    groups[key] = groups[key] || { model: r.model, effort: r.effort, rounds: [] };
+    const key = `${r.model}|${r.effort}|${r.variant || ''}`;
+    groups[key] = groups[key] || { model: r.model, effort: r.effort, variant: r.variant, key, rounds: [] };
     groups[key].rounds.push(r);
   }
   return Object.values(groups)
@@ -40,7 +42,6 @@ function summarize(rounds) {
       const spend = g.rounds.reduce((a, r) => a + (r.gen_cost || 0), 0);
       return {
         ...g,
-        key: `${g.model}|${g.effort}`,
         n: done.length,
         failed: g.rounds.length - done.length,
         opus,
@@ -239,6 +240,14 @@ export default function Case5() {
               cheaper ($0.046), but that rests on half a win.
             </li>
             <li>
+              <strong>A third hidden fact helps.</strong> With the recipe extended to three layered hidden facts,
+              Claude Opus 5.5 (medium) won 13.5 of 16 rounds by the Opus judge and 11.5 by the Sol judge (0.78
+              per round), against about 0.5–0.6 per round with the two-fact recipe. More of its riddles rest on invented mechanisms (10 of 16 passed
+              the fact check), so per winning, real riddle it costs about the same as the two-fact recipe. In the
+              same run, a one-fact recipe won 0.41 per round and two facts 0.47; the 1- and 2-fact riddles are in
+              the raw data file only.
+            </li>
+            <li>
               <strong>Most real wins:</strong> Gemini 4 Hydrogen (4.5 of 8, every one of them fact-checked as real),
               then Claude Fable 5.2 and Claude Opus 5.5 at medium effort (4.25 each). Hydrogen costs about $0.14 per
               such riddle.
@@ -298,7 +307,10 @@ export default function Case5() {
                         }`}
                       >
                         <td className="py-2 pr-3 text-blue-700">{shortModel(row.model)}</td>
-                        <td className="py-2 pr-3 text-gray-600">{row.effort}</td>
+                        <td className="py-2 pr-3 text-gray-600">
+                          {row.effort}
+                          {row.variant && <div className="text-xs text-purple-700 whitespace-nowrap">{row.variant}</div>}
+                        </td>
                         {[row.opus, row.sol].map((s, i) => (
                           <td key={i} className="py-2 pr-3">
                             <div className="flex items-center gap-2">
@@ -350,7 +362,10 @@ export default function Case5() {
         {sel && (
           <section className="mb-12">
             <h3 className="text-xl font-medium text-gray-900 mb-1">
-              {shortModel(sel.model)} <span className="text-gray-500 font-normal">({sel.effort} effort)</span>
+              {shortModel(sel.model)}{' '}
+              <span className="text-gray-500 font-normal">
+                ({sel.effort} effort{sel.variant ? `, ${sel.variant}` : ''})
+              </span>
             </h3>
             <p className="text-sm text-gray-600 mb-4">
               Wins: {fmt(sel.opus)} of {sel.n} by the Opus judge, {fmt(sel.sol)} of {sel.n} by the Sol judge.
@@ -367,7 +382,7 @@ export default function Case5() {
           <h2 className="text-2xl font-medium text-gray-900 mb-4">Caveats</h2>
           <ul className="list-disc pl-6 space-y-2 text-gray-700">
             <li>
-              Samples are small: 8 rounds per writer, one per theme. A score of 6 of 8 is consistent with a true
+              Samples are small: 8 rounds per writer, one per theme (16, two per theme, for the three-fact row). A score of 6 of 8 is consistent with a true
               rate anywhere from about 40% to 95%, and cost-per-win figures resting on one or two wins are very
               noisy.
             </li>
@@ -390,7 +405,8 @@ export default function Case5() {
           {data && (
             <p className="text-sm text-gray-500 mt-4">
               {data.rounds.length} rounds in total, all run through OpenRouter: ${total.toFixed(2)} for writing,
-              solving, checking and first-pass judging, plus ${REJUDGE_COST.toFixed(2)} for the extra judging passes.
+              solving, checking and first-pass judging, plus ${REJUDGE_COST.toFixed(2)} for the extra judging passes
+              and ${FACTS_RUN_COST.toFixed(2)} for the hidden-fact run (all three levels).
             </p>
           )}
         </section>

@@ -11,6 +11,9 @@ Each completed round is judged by two judges, each in both story orders (rejudge
   GPT-6.2 Sol:     raw/rejudge_openai_gpt-6.2-sol.json and raw/rejudge_openai_gpt-6.2-sol_swapped.json
 A judge's score for a round is 1 if it preferred the riddler's story in both orders, 0.5 if it
 split, and 0 if it preferred the solver's both times.
+
+raw/facts_*.json (facts_sweep.py) adds Claude Opus 5.5 riddles written with a three-hidden-fact
+recipe, two per theme, scored the same way; they get variant "3 hidden facts".
 """
 import json
 import os
@@ -62,6 +65,24 @@ def main():
             for jk, vs in verdicts.items():
                 if all(v and v["result"] in ("WIN", "LOSS") for v in vs):
                     out[f"score_{jk}"] = sum(v["result"] == "WIN" for v in vs) / 2
+            rounds.append(out)
+    # Three-hidden-fact riddles from facts_sweep.py (same themes, 2 per theme, already judged by both
+    # judges in both orders). The 1- and 2-fact levels of that run stay in the raw file only.
+    for fn in sorted(os.listdir(RAW)):
+        if not fn.startswith("facts_"):
+            continue
+        for r in json.load(open(os.path.join(RAW, fn))):
+            if r.get("level") != 3:
+                continue
+            out = {k: r[k] for k in KEEP if r.get(k) is not None}
+            out["model"] = r["writer"]
+            out["variant"] = "3 hidden facts"
+            if r.get("result") != "OK" or "score_opus" not in r or "score_sol" not in r:
+                out["result"] = "FAILED"
+            else:
+                out["result"] = "WIN" if (r["score_opus"] + r["score_sol"]) / 2 >= 0.5 else "LOSS"
+                out["verdicts"] = r["verdicts"]
+                out["score_opus"], out["score_sol"] = r["score_opus"], r["score_sol"]
             rounds.append(out)
     json.dump({"rounds": rounds}, open(OUT, "w"), indent=1, ensure_ascii=False)
     print(f"wrote {len(rounds)} rounds to {OUT}")
