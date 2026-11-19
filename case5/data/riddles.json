@@ -16,7 +16,10 @@
    "fit": true,
    "cost": 0.0475752,
    "gen_cost": 0.023688,
-   "gen_secs": 15
+   "gen_secs": 15,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt explains why square hits jammed the contact exploder while the slanted hit worked, without A’s mistaken claim that the firing pin was too light.",
+   "alt_result": "LOSS"
   },
   {
    "model": "google/gemini-3.8-flash",
@@ -34,7 +37,10 @@
    "fit": true,
    "cost": 0.0514236,
    "gen_cost": 0.035634,
-   "gen_secs": 83
+   "gen_secs": 83,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nArnar’s full holds explain why he deliberately had every juvenile logged to trigger the immediate fourteen-day closure and force his six rivals to stop fishing, without assuming a precisely timed round trip.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -52,7 +58,10 @@
    "fit": true,
    "cost": 0.0367848,
    "gen_cost": 0.01972,
-   "gen_secs": 11
+   "gen_secs": 11,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nA explains the vanished smell, the two air packs, and the uphill, upwind rescue without inventing a newly struck sour-gas pocket.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -70,7 +79,10 @@
    "fit": true,
    "cost": 0.0800722,
    "gen_cost": 0.058856,
-   "gen_secs": 18
+   "gen_secs": 18,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt better explains why the glancing hits worked, why the square hits and the drop test failed, and why the crew saved the last torpedo as untampered evidence.",
+   "alt_result": "WIN"
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -88,7 +100,10 @@
    "fit": true,
    "cost": 0.0953837,
    "gen_cost": 0.075904,
-   "gen_secs": 23
+   "gen_secs": 23,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nBoth stories explain why the passport didn’t free the slot, but A also explains why the stablemaster sent the boy home that day: the champion announced he would keep competing.",
+   "alt_result": "WIN"
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -106,7 +121,10 @@
    "fit": true,
    "cost": 0.0765165,
    "gen_cost": 0.059768,
-   "gen_secs": 18
+   "gen_secs": 18,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt explains why she sourced bread from another bakery rather than hiring temporary replacements, and why covering “Boulangerie” left Karim with no misleading sign to photograph.",
+   "alt_result": "WIN"
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -124,7 +142,10 @@
    "fit": true,
    "cost": 0.0242364,
    "gen_cost": 0.00627,
-   "gen_secs": 7
+   "gen_secs": 7,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nA explains the crew’s rush to the lit well controls, Earl’s calm walk and prompt payoff, and the decision to stop drilling through a single event: reaching the target reservoir.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -142,7 +163,10 @@
    "fit": true,
    "cost": 0.025466799999999998,
    "gen_cost": 0.005102,
-   "gen_secs": 6
+   "gen_secs": 6,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nLuc’s loyalty to his late mentor naturally explains why he brings free bread to one door, why the widow leaves it closed, and why he uses her husband’s numbered bag.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -160,7 +184,10 @@
    "fit": true,
    "cost": 0.0398698,
    "gen_cost": 0.019396,
-   "gen_secs": 12
+   "gen_secs": 12,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt ties the crew’s reaction to the already exhausted quota and explains why their shares were calculated on only the 20% the boat kept, despite the tagged fish fetching the week’s best price.",
+   "alt_result": "WIN"
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -178,7 +205,10 @@
    "fit": true,
    "cost": 0.0244237,
    "gen_cost": 0.004518,
-   "gen_secs": 5
+   "gen_secs": 5,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nThe pre-mooring certification rule directly links the man’s haste, his taking only the logbook, and the crew’s prompt full pay, though it leaves the skipper’s radio silence unexplained.",
+   "alt_result": "WIN"
   },
   {
    "model": "google/gemini-3.8-flash",
@@ -196,7 +226,10 @@
    "fit": true,
    "cost": 0.0603184,
    "gen_cost": 0.0414945,
-   "gen_secs": 76
+   "gen_secs": 76,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nThe strike explains the widespread hunger and cheering crowd, while Luc’s mandatory Monday closure explains why Laurent fined him alone despite the shortage.",
+   "alt_result": "WIN"
   },
   {
    "model": "google/gemini-3.8-flash",
@@ -214,7 +247,10 @@
    "fit": true,
    "cost": 0.05002455,
    "gen_cost": 0.03521325,
-   "gen_secs": 83
+   "gen_secs": 83,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt explicitly connects the four-foot lift and the white ring clearing the floor to moving the obstructing tool joint out of the shear rams and putting cuttable pipe in its place.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -232,7 +268,10 @@
    "fit": true,
    "cost": 0.0393601,
    "gen_cost": 0.020992,
-   "gen_secs": 12
+   "gen_secs": 12,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nBoth stories explain the celebration and the recruitment rule, but A also explains why the wrestler bowed without taking offense: he knew the master was enforcing the rule.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -250,7 +289,10 @@
    "fit": true,
    "cost": 0.1267922,
    "gen_cost": 0.106504,
-   "gen_secs": 32
+   "gen_secs": 32,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt better explains the one-off topknot and why the embroiderer arrived that day: jūryō promotions are announced early so new sekitori can order ceremonial aprons while the full rankings remain secret.",
+   "alt_result": "WIN"
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -268,7 +310,10 @@
    "fit": true,
    "cost": 0.0584586,
    "gen_cost": 0.041024,
-   "gen_secs": 13
+   "gen_secs": 13,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt connects the hydrometer reading and the “49” labels to Fiona’s gratitude: bottling early spoiled her birthday plan but saved the cask’s contents from falling below the legal minimum strength for Scotch whisky.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -286,7 +331,10 @@
    "fit": true,
    "cost": 0.0863729,
    "gen_cost": 0.067304,
-   "gen_secs": 21
+   "gen_secs": 21,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nBoth stories explain the low strength, the wait until Thursday, and the discarded age labels, but A also explains why the blend could no longer carry the 1969 vintage.",
+   "alt_result": "WIN"
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -304,7 +352,10 @@
    "fit": true,
    "cost": 0.0438129,
    "gen_cost": 0.025892,
-   "gen_secs": 15
+   "gen_secs": 15,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt explains how the thimble could strip the vat of its Scotch whisky status and slash its divorce valuation without noticeably changing the taste, and identifies the blender as the person thanked.",
+   "alt_result": "WIN"
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -322,7 +373,10 @@
    "fit": true,
    "cost": 0.08271049999999999,
    "gen_cost": 0.063752,
-   "gen_secs": 20
+   "gen_secs": 20,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe discard ban explains why Gunnar kept the small cod, and the separate storage and departure at one in ten follow from the quota discount without assuming an imminent closure.",
+   "alt_result": "WIN"
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -340,7 +394,10 @@
    "fit": true,
    "cost": 0.0360747,
    "gen_cost": 0.006166,
-   "gen_secs": 6
+   "gen_secs": 6,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nA directly explains the ceremonial dress, tears, gratitude, and respectful silence, while B splits the old man’s role between two people and invokes a venue rule that clashes with the stable setting.",
+   "alt_result": "LOSS"
   },
   {
    "model": "google/gemini-3.8-flash",
@@ -358,7 +415,10 @@
    "fit": true,
    "cost": 0.06829635,
    "gen_cost": 0.05067075,
-   "gen_secs": 126
+   "gen_secs": 126,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nBoth stories explain the bleeding ears and sudden fog, but B also explains why the veteran ignored the life preservers and grabbed the fuel lever: the boat wasn’t flooding, and cutting the fuel would stop the diesels from drawing down the cabin air.",
+   "alt_result": "LOSS"
   },
   {
    "model": "google/gemini-3.8-flash",
@@ -376,7 +436,10 @@
    "fit": true,
    "cost": 0.09366034999999999,
    "gen_cost": 0.07293075,
-   "gen_secs": 144
+   "gen_secs": 144,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt explains the reversal through the wrestlers’ change in rank, identifies the teen as the veteran’s former attendant, and accounts for the belt and socks without claiming that going sockless was a legal requirement.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -394,7 +457,10 @@
    "fit": true,
    "cost": 0.0477215,
    "gen_cost": 0.028492,
-   "gen_secs": 15
+   "gen_secs": 15,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt directly explains why the cousin could move in that very day: Batbayar’s citizenship let him stay on as a coach, but only his retirement freed the stable’s foreign-born wrestler slot.",
+   "alt_result": "WIN"
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -412,7 +478,10 @@
    "fit": true,
    "cost": 0.0292192,
    "gen_cost": 0.005426,
-   "gen_secs": 6
+   "gen_secs": 6,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nA takes the three years of emptiness literally and explains the recorded loss as reduced capacity, whereas B requires the supposedly unfilled cask to have been secretly full.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -430,7 +499,10 @@
    "fit": true,
    "cost": 0.0214414,
    "gen_cost": 0.005354,
-   "gen_secs": 5
+   "gen_secs": 5,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt explains the stillness, the halted baking, and the candle as an effort to conserve and monitor the remaining air, without B’s strained claims about candle-warmed absorbent and early CO₂ warning.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -448,7 +520,10 @@
    "fit": true,
    "cost": 0.031207,
    "gen_cost": 0.017664,
-   "gen_secs": 11
+   "gen_secs": 11,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt ties the clock to the new work hours and explains how thinner loaves baked in time for breakfast without assuming they also rose faster.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -466,7 +541,10 @@
    "fit": true,
    "cost": 0.0724735,
    "gen_cost": 0.055584,
-   "gen_secs": 17
+   "gen_secs": 17,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt explains the continuous observation, the advice to stop drinking, and why the officer sent all three samples to the lab even though only the third met the specific-gravity requirement.",
+   "alt_result": "WIN"
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -484,7 +562,10 @@
    "fit": true,
    "cost": 0.0456251,
    "gen_cost": 0.024124,
-   "gen_secs": 14
+   "gen_secs": 14,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nBuying bread from another bakery explains how the shop kept selling baguettes at the same price, while leaving “Pâtisserie” visible made the missing “Boulangerie” both a public sign of the strike and a legally accurate change.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -502,7 +583,10 @@
    "fit": true,
    "cost": 0.0245581,
    "gen_cost": 0.005216,
-   "gen_secs": 5
+   "gen_secs": 5,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe cooper’s tight but absorbent cask explains the dry exterior, the dram, and the fine, while Morag’s cooperage experience explains how she recognized the apparent loss without entering the warehouse.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -520,7 +604,10 @@
    "fit": true,
    "cost": 0.026967900000000003,
    "gen_cost": 0.005862,
-   "gen_secs": 6
+   "gen_secs": 6,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt explains the father’s exclusion and the unused banana leaf through mourning and remembrance, while the ceremony’s scheduled end and the groom’s visa paperwork account for the timing and quiet signing.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -538,7 +625,10 @@
    "fit": true,
    "cost": 0.0250152,
    "gen_cost": 0.00595,
-   "gen_secs": 6
+   "gen_secs": 6,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt directly explains the clean hard hat, muddy clothes, discarded coffee, and silent exit, while making the blackout and eleven-minute pause part of the same emergency response.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -556,7 +646,10 @@
    "fit": true,
    "cost": 0.0281874,
    "gen_cost": 0.005062,
-   "gen_secs": 5
+   "gen_secs": 5,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nThe hospital’s breakfast shortage explains the predawn baking and free delivery, and Henri’s replenishment of the reserve accounts for why he returned with exactly as much flour as he’d taken.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -574,7 +667,10 @@
    "fit": true,
    "cost": 0.0290953,
    "gen_cost": 0.005452,
-   "gen_secs": 5
+   "gen_secs": 5,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe watch tap explains the groom’s stare and the timing of the vows, while the officer’s undercover role explains why the grateful father had the film burned and why the groom welcomed his quiet departure.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -592,7 +688,10 @@
    "fit": true,
    "cost": 0.0384938,
    "gen_cost": 0.021072,
-   "gen_secs": 12
+   "gen_secs": 12,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nBoth stories explain the second sample, but A also directly explains why the officer nodded and why the runner was still thirsty at noon.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -610,7 +709,10 @@
    "fit": true,
    "cost": 0.0462207,
    "gen_cost": 0.024136,
-   "gen_secs": 24
+   "gen_secs": 24,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nA better explains the final snip, which traditionally goes to the wrestler’s stablemaster rather than his hairdresser.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -628,7 +730,10 @@
    "fit": true,
    "cost": 0.0871653,
    "gen_cost": 0.07192,
-   "gen_secs": 21
+   "gen_secs": 21,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt explains the vanished smell, the immediate shut-in order, and why only the bearded worker was sent uphill and upwind, without assuming the earlier smell established a safe concentration.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -646,7 +751,10 @@
    "fit": true,
    "cost": 0.041785199999999995,
    "gen_cost": 0.021008,
-   "gen_secs": 12
+   "gen_secs": 12,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\n\nIt explains both why the torpedoman asked for a glancing shot and why saving the last torpedo mattered: it gave investigators a way to test the suspected defect.",
+   "alt_result": "WIN"
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -664,7 +772,10 @@
    "fit": true,
    "cost": 0.0272944,
    "gen_cost": 0.005328,
-   "gen_secs": 5
+   "gen_secs": 5,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nThe dangerous crate explains the urgent call, the cut nets, the stopped engine, and the officer’s focus on timing, while the missing brother explains the skipper’s relief without relying on a dubious legal loophole.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -682,7 +793,10 @@
    "fit": true,
    "cost": 0.09501209999999999,
    "gen_cost": 0.074088,
-   "gen_secs": 23
+   "gen_secs": 23,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt explicitly connects the two 30-day waits to the wedding on day 61, the posted notice to Fathima’s estrangement, and the civil ceremony to the three witnesses and the absence of a priest or muhurtham.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -700,7 +814,10 @@
    "fit": true,
    "cost": 0.048595000000000006,
    "gen_cost": 0.029712,
-   "gen_secs": 15
+   "gen_secs": 15,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt explains why the cask still held plenty of unspoiled spirit, why falling below 40% ABV would cost it its Scotch whisky status, and why bottling fixed its age at 47.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -718,7 +835,10 @@
    "fit": true,
    "cost": 0.026246900000000004,
    "gen_cost": 0.005696,
-   "gen_secs": 5
+   "gen_secs": 5,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe injury explains the favorite’s absence, the paperwork gives the passport a purpose, and the explicit 30 km payment clause explains why the substitute pacer was paid in full without finishing.",
+   "alt_result": "WIN"
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -736,7 +856,10 @@
    "fit": true,
    "cost": 0.0793993,
    "gen_cost": 0.055416,
-   "gen_secs": 18
+   "gen_secs": 18,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt identifies the actual USS *Tinosa* incident and explains the move to an oblique angle and the return to Pearl Harbor: square hits produced duds, and the last torpedo was saved as evidence.",
+   "alt_result": "LOSS"
   },
   {
    "model": "google/gemini-3.8-flash",
@@ -754,7 +877,10 @@
    "fit": true,
    "cost": 0.05883435,
    "gen_cost": 0.04444575,
-   "gen_secs": 92
+   "gen_secs": 92,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt accounts for the Kaptagat setting, the silicone wedge, and the caliper check while explaining why exactly three millimeters had to come off a brand-new shoe.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -772,7 +898,10 @@
    "fit": true,
    "cost": 0.0707628,
    "gen_cost": 0.05376,
-   "gen_secs": 17
+   "gen_secs": 17,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIts lease allows a 60-day gap, so a two-day delay from day 59 would let it expire and free the rancher to sign a more lucrative lease, while the brief drilling is meant only to keep the old lease alive.",
+   "alt_result": "WIN"
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -790,7 +919,10 @@
    "fit": true,
    "cost": 0.08465550000000002,
    "gen_cost": 0.065528,
-   "gen_secs": 19
+   "gen_secs": 19,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt explains the full shelves and long queue despite the cold ovens and unopened flour, and adds a reason Lenoir brought in bread rather than hiring temporary bakers.",
+   "alt_result": "WIN"
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -808,7 +940,10 @@
    "fit": true,
    "cost": 0.09187270000000002,
    "gen_cost": 0.074384,
-   "gen_secs": 44
+   "gen_secs": 44,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt ties the old stamp and last-minute flight to the one-year residency threshold and explains the savings through a specific jewellery allowance that covered the chain.",
+   "alt_result": "WIN"
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -826,7 +961,10 @@
    "fit": true,
    "cost": 0.028700800000000002,
    "gen_cost": 0.005544,
-   "gen_secs": 5
+   "gen_secs": 5,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe crew’s loss of smell ties together the bread test, the ban on competing cooking odors, the cook’s role as the only remaining gas alarm, and the bread’s apparent tastelessness.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -844,7 +982,10 @@
    "fit": true,
    "cost": 0.0352253,
    "gen_cost": 0.02064,
-   "gen_secs": 11
+   "gen_secs": 11,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt preserves the new hand and the veteran beside him, and explains why one mistook the loss of smell for safety while the other dropped his tongs and fled uphill into the wind.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -862,7 +1003,10 @@
    "fit": true,
    "cost": 0.0454788,
    "gen_cost": 0.030432,
-   "gen_secs": 17
+   "gen_secs": 17,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt more explicitly explains the constant chaperoning, both latrine visits, and why a sample of sufficient volume could still be too dilute for testing.",
+   "alt_result": "WIN"
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -880,7 +1024,10 @@
    "fit": true,
    "cost": 0.0540508,
    "gen_cost": 0.036636,
-   "gen_secs": 20
+   "gen_secs": 20,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt explains why the skipper couldn’t discard the excess, how the special code let him land it legally, and why the crew accepted a small payout while Sigrún’s mother benefited through her cod research.",
+   "alt_result": "WIN"
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -898,7 +1045,10 @@
    "fit": true,
    "cost": 0.0890749,
    "gen_cost": 0.063152,
-   "gen_secs": 20
+   "gen_secs": 20,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nBoth stories explain the shifted deadline and Sólveig’s Pentecost duties, but A also explains why she spoke over the wreath: as parish priest, she blessed it in memory of drowned sailors.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -916,7 +1066,10 @@
    "fit": true,
    "cost": 0.0488623,
    "gen_cost": 0.030324,
-   "gen_secs": 19
+   "gen_secs": 19,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt explains why the mother wore gold just this once, why the groom wore none, and why she never asked for the chain back: it was the bride’s wedding gift all along.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -934,7 +1087,10 @@
    "fit": false,
    "cost": 0.08024659999999999,
    "gen_cost": 0.063064,
-   "gen_secs": 19
+   "gen_secs": 19,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe declared whereabouts slot explains the 5 a.m. visit, and continuous observation and the urine concentration requirement explain why Chebet let the stranger follow her, skipped the run, and stopped drinking until the fourth sample passed.",
+   "alt_result": "WIN"
   },
   {
    "model": "google/gemini-3.8-flash",
@@ -952,7 +1108,10 @@
    "fit": true,
    "cost": 0.0817441,
    "gen_cost": 0.063627,
-   "gen_secs": 157
+   "gen_secs": 157,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nThe visitor’s dual role as registrar and Green Protocol enforcer explains why he carries the marriage form himself and why finding a discarded plastic bottle could cost the couple their flight.",
+   "alt_result": "LOSS"
   },
   {
    "model": "google/gemini-3.8-flash",
@@ -970,7 +1129,10 @@
    "fit": true,
    "cost": 0.05903635,
    "gen_cost": 0.04065075,
-   "gen_secs": 84
+   "gen_secs": 84,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe defective stave explains why sealant was an option and why exactly forty gallons remained, while the staged accident explains Arthur’s zero and Callum’s relief.",
+   "alt_result": "WIN"
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -988,7 +1150,10 @@
    "fit": true,
    "cost": 0.0270984,
    "gen_cost": 0.005396,
-   "gen_secs": 6
+   "gen_secs": 6,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt gives the pacer a reason to cry, explains the taped watch and shared prize, and ties his name on the paperwork to the pacing violation.",
+   "alt_result": "LOSS"
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -1006,7 +1171,10 @@
    "fit": true,
    "cost": 0.1042083,
    "gen_cost": 0.085728,
-   "gen_secs": 26
+   "gen_secs": 26,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt explains not only the exact weights and Niyas’s lack of a chain, but also why the father split the gold into plain chains: they qualified as jewellery and could be melted down for the bridal set.",
+   "alt_result": "WIN"
   },
   {
    "model": "qwen/qwen3.7-plus",
@@ -1024,7 +1192,10 @@
    "fit": false,
    "cost": 0.03272308,
    "gen_cost": 0.01017088,
-   "gen_secs": 127
+   "gen_secs": 127,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe failed check valve explains why the cement could still U-tube after the plug seated and the pump stopped, dropping the casing fluid level without any loss to the formation.",
+   "alt_result": "WIN"
   },
   {
    "model": "z-ai/glm-5.3",
@@ -1042,7 +1213,10 @@
    "fit": true,
    "cost": 0.036637591,
    "gen_cost": 0.014936691,
-   "gen_secs": 342
+   "gen_secs": 342,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe two prior strikes explain why the runner rearranges his training and waits the full hour, while the attendance check fits “only his name” without adding an unmentioned sample.",
+   "alt_result": "WIN"
   },
   {
    "model": "nvidia/nemotron-3-ultra-550b-a55b",
@@ -1060,7 +1234,10 @@
    "fit": true,
    "cost": 0.03196,
    "gen_cost": 0.008344,
-   "gen_secs": 50
+   "gen_secs": 50,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nKip’s vow explains his restraint in training and his eagerness for physio, while the ritual for his twin explains why two cups are poured and neither is touched, a detail B’s fasting explanation only partly covers.",
+   "alt_result": "LOSS"
   },
   {
    "model": "deepseek/deepseek-v4-pro",
@@ -1078,7 +1255,10 @@
    "fit": false,
    "cost": 0.0301910864,
    "gen_cost": 0.0146802864,
-   "gen_secs": 149
+   "gen_secs": 149,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe spaniel’s failure to detect whisky vapour from one tightly bunged cask explains why the gauger marked it and why the distiller, who had substituted water for whisky, went pale.",
+   "alt_result": "LOSS"
   },
   {
    "model": "qwen/qwen3.7-plus",
@@ -1096,7 +1276,10 @@
    "fit": true,
    "cost": 0.028342720000000002,
    "gen_cost": 0.00494752,
-   "gen_secs": 62
+   "gen_secs": 62,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt explains why the gauger waits for the spirit to cool and why a warm sample could lead him to tax “phantom” alcohol: heat makes the hydrometer overstate the spirit’s strength.",
+   "alt_result": "WIN"
   },
   {
    "model": "deepseek/deepseek-v4-pro",
@@ -1114,7 +1297,10 @@
    "fit": true,
    "cost": 0.025718300000000003,
    "gen_cost": 0.0082209,
-   "gen_secs": 54
+   "gen_secs": 54,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe agreed exception explains why the picketers let Henri pass and the gendarme checks his name, while the starter itself accounts for the smell without any bread being baked or the strike ending.",
+   "alt_result": "LOSS"
   },
   {
    "model": "openai/gpt-oss-120b",
@@ -1132,7 +1318,10 @@
    "fit": true,
    "cost": 0.01601666,
    "gen_cost": 0.00070526,
-   "gen_secs": 32
+   "gen_secs": 32,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nB ties the dawn mist, the old coach’s counting, the literal wall, and the six o’clock camp bell into one scene, while A leaves the old voice unexplained and relies on an unrelated evening curfew.",
+   "alt_result": "LOSS"
   },
   {
    "model": "openai/gpt-oss-120b",
@@ -1150,7 +1339,10 @@
    "fit": true,
    "cost": 0.017639000000000002,
    "gen_cost": 0.0022642,
-   "gen_secs": 43
+   "gen_secs": 43,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe stable’s meal hierarchy explains why the master leaves the ladle untouched and the rookie drinks the leftovers, without B’s contrived ordinance and improbable heat transfer.",
+   "alt_result": "LOSS"
   },
   {
    "model": "deepseek/deepseek-v4-pro",
@@ -1168,7 +1360,10 @@
    "fit": true,
    "cost": 0.0388853792,
    "gen_cost": 0.0191655792,
-   "gen_secs": 190
+   "gen_secs": 190,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nSam’s hammering, Edna’s anticipation of his call, and his bolting the gate before leaving explain the details without relying on an implausibly automatic lockdown.",
+   "alt_result": "LOSS"
   },
   {
    "model": "minimax/minimax-m3",
@@ -1195,7 +1390,10 @@
    "fit": true,
    "cost": 0.0265088,
    "gen_cost": 0.0038324,
-   "gen_secs": 9
+   "gen_secs": 9,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt explains the chores, the hairdresser, and “no leaves” through the wrestler’s junior rank without inventing a championship or an unexplained attempt to give him a style reserved for senior wrestlers.",
+   "alt_result": "WIN"
   },
   {
    "model": "z-ai/glm-5.3",
@@ -1213,7 +1411,10 @@
    "fit": true,
    "cost": 0.031611,
    "gen_cost": 0.0151047,
-   "gen_secs": 57
+   "gen_secs": 57,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt directly explains why the uncle’s keys to the town’s only licensed counter were useless and why the duty-free bottles went unpoured, without adding an unsupported Chingam scheduling constraint.",
+   "alt_result": "LOSS"
   },
   {
    "model": "moonshotai/kimi-k2.6",
@@ -1231,7 +1432,10 @@
    "fit": false,
    "cost": 0.08681110000000002,
    "gen_cost": 0.0672742,
-   "gen_secs": 257
+   "gen_secs": 257,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe jammed valve explains why no fuse blew, the Comté’s AOC label accounts for the legal mark, and the strike march and sabots explain Bastille and the clog-wearer’s role.",
+   "alt_result": "LOSS"
   },
   {
    "model": "moonshotai/kimi-k2.6",
@@ -1267,7 +1471,10 @@
    "fit": true,
    "cost": 0.037596288000000005,
    "gen_cost": 0.020573088,
-   "gen_secs": 50
+   "gen_secs": 50,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt better connects the captain’s decision to hold depth, the destroyer’s quiet screws, the shallow charge bursts, and the wait until dusk to surface.",
+   "alt_result": "WIN"
   },
   {
    "model": "mistralai/mistral-large-4-0",
@@ -1285,7 +1492,10 @@
    "fit": true,
    "cost": 0.04139944,
    "gen_cost": 0.02113034,
-   "gen_secs": 232
+   "gen_secs": 232,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe runner’s 52% hematocrit exceeded the 50% no-start threshold without proving doping, and Iten’s low air pressure let the kettle whistle near 92°C before a rolling boil was visible.",
+   "alt_result": "LOSS"
   },
   {
    "model": "qwen/qwen3.7-plus",
@@ -1303,7 +1513,10 @@
    "fit": false,
    "cost": 0.02932556,
    "gen_cost": 0.00747936,
-   "gen_secs": 94
+   "gen_secs": 94,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt explains how a final-bout win could coexist with demotion and ties the scroll and hairstyle change to the loss of salaried rank without adding unsupported claims about exclusive permissions.",
+   "alt_result": "LOSS"
   },
   {
    "model": "openai/gpt-oss-120b",
@@ -1321,7 +1534,10 @@
    "fit": true,
    "cost": 0.0176724,
    "gen_cost": 0.0011854,
-   "gen_secs": 24
+   "gen_secs": 24,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt explains the flare and preserves the sequence of the three-minute hold, the jump to 4,500 psi, and the thirty-second pause before the driller moves the lever.",
+   "alt_result": "LOSS"
   },
   {
    "model": "z-ai/glm-5.3",
@@ -1339,7 +1555,10 @@
    "fit": true,
    "cost": 0.02753835,
    "gen_cost": 0.01062975,
-   "gen_secs": 21
+   "gen_secs": 21,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt explains the lighter casks through evaporation and the contrast in strength through decades of preferential alcohol loss in the oldest cask, without adding an unnecessary re-racking episode.",
+   "alt_result": "LOSS"
   },
   {
    "model": "mistralai/mistral-large-4-0",
@@ -1366,7 +1585,10 @@
    "fit": true,
    "cost": 0.053685171999999996,
    "gen_cost": 0.031557372,
-   "gen_secs": 488
+   "gen_secs": 488,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nThe mock Kasi Yatra explains the staff and the nephew’s coconut-bearing intervention, while April’s heat explains the early schedule without relying on a midday ban that would not require the feast to end before ten.",
+   "alt_result": "LOSS"
   },
   {
    "model": "z-ai/glm-5.3",
@@ -1384,7 +1606,10 @@
    "fit": true,
    "cost": 0.0297552,
    "gen_cost": 0.011799,
-   "gen_secs": 34
+   "gen_secs": 34,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nBoth explain the inspection, closure, and mandatory landing, but A also explains how an abundant haul could consist entirely of tiny cod and why the skipper hurried east overnight.",
+   "alt_result": "WIN"
   },
   {
    "model": "minimax/minimax-m3",
@@ -1411,7 +1636,10 @@
    "fit": false,
    "cost": 0.01984265,
    "gen_cost": 0.00173265,
-   "gen_secs": 29
+   "gen_secs": 29,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt connects all four details through the wedding ceremony and explains the red tide as a reflection of the fireworks, without relying on implausibly specific marriage regulations.",
+   "alt_result": "LOSS"
   },
   {
    "model": "openai/gpt-oss-120b",
@@ -1429,7 +1657,10 @@
    "fit": true,
    "cost": 0.0203748,
    "gen_cost": 0.0025443,
-   "gen_secs": 44
+   "gen_secs": 44,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt ties the tube layout, time, eleven heartbeats, lamp flash, hatch hiss, and lone sonar ping to a single evacuation, whereas A leaves the final signals and descent unexplained.",
+   "alt_result": "LOSS"
   },
   {
    "model": "minimax/minimax-m3",
@@ -1456,7 +1687,10 @@
    "fit": false,
    "cost": 0.02567158,
    "gen_cost": 0.00854848,
-   "gen_secs": 106
+   "gen_secs": 106,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt directly accounts for the full cod hold, the untouched haddock school, and the thousand tons of unused quota, all while explaining why one more halibut forced the skipper to stop fishing.",
+   "alt_result": "LOSS"
   },
   {
    "model": "nvidia/nemotron-3-ultra-550b-a55b",
@@ -1474,7 +1708,10 @@
    "fit": false,
    "cost": 0.0507402,
    "gen_cost": 0.030945,
-   "gen_secs": 123
+   "gen_secs": 123,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe weather-station mission directly explains the 1020 threshold, and dinner cleanup explains the recurring trim adjustment, whereas B assumes that barometric pressure reliably predicts the vibration at the encoder.",
+   "alt_result": "LOSS"
   },
   {
    "model": "mistralai/mistral-large-4-0",
@@ -1492,7 +1729,10 @@
    "fit": true,
    "cost": 0.07304392,
    "gen_cost": 0.04626622,
-   "gen_secs": 455
+   "gen_secs": 455,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt explains the ledger entry as the intended filling strength and the bottle as a separately logged excise sample, whereas A’s temperature correction would put the spirit at 63.5% before the water was added.",
+   "alt_result": "LOSS"
   },
   {
    "model": "qwen/qwen3.7-plus",
@@ -1510,7 +1750,10 @@
    "fit": true,
    "cost": 0.026304720000000004,
    "gen_cost": 0.00743552,
-   "gen_secs": 93
+   "gen_secs": 93,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt explains the exact count with one loaf per striker and distinguishes protecting existing stock from refusing new work, without relying on A’s claim that strike misconduct could forfeit wages already earned.",
+   "alt_result": "LOSS"
   },
   {
    "model": "mistralai/mistral-large-4-0",
@@ -1528,7 +1771,10 @@
    "fit": true,
    "cost": 0.055437719999999996,
    "gen_cost": 0.03597202,
-   "gen_secs": 343
+   "gen_secs": 343,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe night-work rule explains all three times: mixing was allowed at ten, baking was barred at three, and five marked the end of the ban, not the arrival of fresh bread.",
+   "alt_result": "WIN"
   },
   {
    "model": "mistralai/mistral-large-4-0",
@@ -1555,7 +1801,10 @@
    "fit": true,
    "cost": 0.042899980000000004,
    "gen_cost": 0.02384298,
-   "gen_secs": 91
+   "gen_secs": 91,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt explains all four details, including why Ming carries his master’s sandals home, which Story B leaves unexplained.",
+   "alt_result": "LOSS"
   },
   {
    "model": "minimax/minimax-m3",
@@ -1573,7 +1822,10 @@
    "fit": true,
    "cost": 0.049151299999999995,
    "gen_cost": 0.0256086,
-   "gen_secs": 116
+   "gen_secs": 116,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt explains the tears as part of the fake funeral and “black rock” as the meaning of Cardhu, without inventing a licensing signature to explain why Helen is remembered.",
+   "alt_result": "LOSS"
   },
   {
    "model": "mistralai/mistral-large-4-0",
@@ -1591,7 +1843,10 @@
    "fit": true,
    "cost": 0.05228511999999999,
    "gen_cost": 0.03424092,
-   "gen_secs": 314
+   "gen_secs": 314,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nA softer sand explains the drilling break, and sufficient mud pressure prevented an influx; the 38 minutes was the bottoms-up time, not a delay before an influx could raise the pit level.",
+   "alt_result": "LOSS"
   },
   {
    "model": "qwen/qwen3.7-plus",
@@ -1609,7 +1864,10 @@
    "fit": false,
    "cost": 0.020357280000000005,
    "gen_cost": 0.00786848,
-   "gen_secs": 102
+   "gen_secs": 102,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nJonah’s role as a pacemaker naturally explains why he matches Mara’s stride without a bib and why his pace sheet sends him off the red track at 800 meters, before the final bend.",
+   "alt_result": "LOSS"
   },
   {
    "model": "openai/gpt-oss-120b",
@@ -1627,7 +1885,10 @@
    "fit": true,
    "cost": 0.01733805,
    "gen_cost": 0.00297065,
-   "gen_secs": 53
+   "gen_secs": 53,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe workers’ singing fits the strike, and baking exactly twelve loaves in one half-hour firing explains how the bakery met the prefect’s demand without ending the protest.",
+   "alt_result": "LOSS"
   },
   {
    "model": "minimax/minimax-m3",
@@ -1645,7 +1906,10 @@
    "fit": true,
    "cost": 0.03229266,
    "gen_cost": 0.01675986,
-   "gen_secs": 57
+   "gen_secs": 57,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nShiva explains the seven days of closed shutters and cold ovens, and the single round loaf on the eighth morning marks the end of mourning while the coins tie the sale to the baker’s mother and her act of kindness in 1942.",
+   "alt_result": "LOSS"
   },
   {
    "model": "z-ai/glm-5.3",
@@ -1663,7 +1927,10 @@
    "fit": true,
    "cost": 0.0290415,
    "gen_cost": 0.0079343,
-   "gen_secs": 14
+   "gen_secs": 14,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nThe lack of a pipeline or buyer explains why Hank immediately shut in a strong well, and the expiring lease explains why he raced to mail a royalty check despite selling no oil.",
+   "alt_result": "LOSS"
   },
   {
    "model": "openai/gpt-oss-120b",
@@ -1681,7 +1948,10 @@
    "fit": true,
    "cost": 0.0235876,
    "gen_cost": 0.0055515,
-   "gen_secs": 20
+   "gen_secs": 20,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt ties the forty-two knots, the 23:58 stall, and the five heartbeats to Gunnar’s drowning, and explains the gull’s stone and the ledger as the settling of his debt.",
+   "alt_result": "LOSS"
   },
   {
    "model": "nvidia/nemotron-3-ultra-550b-a55b",
@@ -1699,7 +1969,10 @@
    "fit": false,
    "cost": 0.028682000000000003,
    "gen_cost": 0.0072594,
-   "gen_secs": 54
+   "gen_secs": 54,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe day-work classification makes the enriched bread, the 3 p.m. bake, and the blank night-shift ledger part of one workaround that keeps the morning queue supplied.",
+   "alt_result": "WIN"
   },
   {
    "model": "deepseek/deepseek-v4-pro",
@@ -1717,7 +1990,10 @@
    "fit": true,
    "cost": 0.0270204,
    "gen_cost": 0.00991,
-   "gen_secs": 70
+   "gen_secs": 70,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe sleeping baby explains both the lullaby and the father’s whisper, while the curfew explains why the violinist stopped playing and the uncle in khaki nodded his approval.",
+   "alt_result": "LOSS"
   },
   {
    "model": "minimax/minimax-m3",
@@ -1744,7 +2020,10 @@
    "fit": true,
    "cost": 0.08480330000000001,
    "gen_cost": 0.0667935,
-   "gen_secs": 232
+   "gen_secs": 232,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt naturally explains the foreign teaspoon as a deliberate way to protect the distillery’s name, while accounting for the intact cask, the absence of whisky loss, and the missing name and stamp.",
+   "alt_result": "LOSS"
   },
   {
    "model": "nvidia/nemotron-3-ultra-550b-a55b",
@@ -1762,7 +2041,10 @@
    "fit": false,
    "cost": 0.0391865,
    "gen_cost": 0.0133534,
-   "gen_secs": 87
+   "gen_secs": 87,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nA ties the second scissors and the hair on the sandanme wrestler’s shoulder to the apprentice’s retirement cut, while also explaining why the juniors go first and who gets each envelope.",
+   "alt_result": "LOSS"
   },
   {
    "model": "deepseek/deepseek-v4-pro",
@@ -1780,7 +2062,10 @@
    "fit": false,
    "cost": 0.031183600000000002,
    "gen_cost": 0.0088657,
-   "gen_secs": 60
+   "gen_secs": 60,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nB makes the “missing ingredient” a specific omission revealed by the log—the cook was never given the order to keep quiet—rather than simply the silence whose absence the clang already makes obvious.",
+   "alt_result": "LOSS"
   },
   {
    "model": "nvidia/nemotron-3-ultra-550b-a55b",
@@ -1798,7 +2083,10 @@
    "fit": false,
    "cost": 0.029645200000000003,
    "gen_cost": 0.0063918,
-   "gen_secs": 46
+   "gen_secs": 46,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe skipper’s nod makes sense as a signal to keep the catch partly submerged while the Baader is down, whereas B has the crew timing processing from when the trawl doors hit bottom rather than when the fish leave the water.",
+   "alt_result": "LOSS"
   },
   {
    "model": "deepseek/deepseek-v4-pro",
@@ -1816,7 +2104,10 @@
    "fit": false,
    "cost": 0.0338398776,
    "gen_cost": 0.0145879776,
-   "gen_secs": 156
+   "gen_secs": 156,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nThe quarantine explains why the oranges specifically were refused, while the flag answers the captain’s suggestion that no one was around to enforce U.S. rules.",
+   "alt_result": "LOSS"
   },
   {
    "model": "z-ai/glm-5.3",
@@ -1834,7 +2125,10 @@
    "fit": true,
    "cost": 0.055966699999999994,
    "gen_cost": 0.0322266,
-   "gen_secs": 138
+   "gen_secs": 138,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt explains why the baker had to keep his oven lit, why his name alone was marked open on the required window list, and how he still led the dawn picket without taking a coin.",
+   "alt_result": "WIN"
   },
   {
    "model": "moonshotai/kimi-k2.6",
@@ -1879,7 +2173,10 @@
    "fit": true,
    "cost": 0.07346629999999998,
    "gen_cost": 0.0551642,
-   "gen_secs": 172
+   "gen_secs": 172,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt directly explains the sunglasses as an undercover disguise and the final line as a lifetime ban, whereas B leaves the sunglasses unexplained and substitutes a loss of travel credentials.",
+   "alt_result": "LOSS"
   },
   {
    "model": "openai/gpt-oss-120b",
@@ -1897,7 +2194,10 @@
    "fit": true,
    "cost": 0.0197057,
    "gen_cost": 0.0021812,
-   "gen_secs": 37
+   "gen_secs": 37,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe still’s sigh masks the watchman’s theft after the midnight count, and “no cork” becomes an unwitting clue rather than a contrived regulatory flag.",
+   "alt_result": "LOSS"
   },
   {
    "model": "moonshotai/kimi-k2.6",
@@ -1924,7 +2224,10 @@
    "fit": false,
    "cost": 0.0380129,
    "gen_cost": 0.0202138,
-   "gen_secs": 176
+   "gen_secs": 176,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nThe mermaid’s dawn departure explains the four empty hauls, the lone silver scale, and why the captain curses the time and cuts the cable to keep the net from ever catching her.",
+   "alt_result": "LOSS"
   },
   {
    "model": "qwen/qwen3.7-plus",
@@ -1942,7 +2245,10 @@
    "fit": true,
    "cost": 0.03085302,
    "gen_cost": 0.00762752,
-   "gen_secs": 103
+   "gen_secs": 103,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nA accounts for the blackened thread and the single trapped bubble without B’s questionable claim that a displacement test can isolate the gold content of a brass-cored pendant.",
+   "alt_result": "LOSS"
   },
   {
    "model": "deepseek/deepseek-v4-pro",
@@ -1960,7 +2266,10 @@
    "fit": false,
    "cost": 0.028601700000000004,
    "gen_cost": 0.0074815,
-   "gen_secs": 56
+   "gen_secs": 56,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nThe injector pen and shared silence give the second chirp a lasting emotional weight that the missed-test explanation leaves largely unexplained.",
+   "alt_result": "LOSS"
   },
   {
    "model": "nvidia/nemotron-3-ultra-550b-a55b",
@@ -1978,7 +2287,10 @@
    "fit": true,
    "cost": 0.0402985,
    "gen_cost": 0.0207141,
-   "gen_secs": 74
+   "gen_secs": 74,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt ties the timing, water check, and gold weighing to a single wedding ritual and explains the folded leaf, second conch, and sister’s trunk key, which B leaves unaddressed.",
+   "alt_result": "LOSS"
   },
   {
    "model": "nvidia/nemotron-3-ultra-550b-a55b",
@@ -1996,7 +2308,10 @@
    "fit": true,
    "cost": 0.0228129,
    "gen_cost": 0.0057882,
-   "gen_secs": 30
+   "gen_secs": 30,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt explains the steam, the locked lever, and the missing key, and gives the bell a clear role: announcing the officer’s arrival.",
+   "alt_result": "LOSS"
   },
   {
    "model": "nvidia/nemotron-3-ultra-550b-a55b",
@@ -2014,7 +2329,10 @@
    "fit": true,
    "cost": 0.023662000000000002,
    "gen_cost": 0.0041371,
-   "gen_secs": 17
+   "gen_secs": 17,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt explains the fizzy kicks, lack of sulfur odor, and need for heat tape, while linking the missing extinguisher pin and flat-beer smell to the same brewing mishap.",
+   "alt_result": "LOSS"
   },
   {
    "model": "minimax/minimax-m3",
@@ -2032,7 +2350,10 @@
    "fit": true,
    "cost": 0.034716944,
    "gen_cost": 0.012847344,
-   "gen_secs": 188
+   "gen_secs": 188,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe toddler namesake explains the pushchair and the rotating pacemakers naturally: they pushed him around the course, so the finishing time was not a marathon running record.",
+   "alt_result": "LOSS"
   },
   {
    "model": "qwen/qwen3.7-plus",
@@ -2050,7 +2371,975 @@
    "fit": false,
    "cost": 0.0300776,
    "gen_cost": 0.0110864,
-   "gen_secs": 140
+   "gen_secs": 140,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt explains the under-keel explosions, the hidden magnetic boundary, and the nose sensor’s premature triggering without inventing a repair that the riddle never mentions.",
+   "alt_result": "LOSS"
+  },
+  {
+   "model": "google/gemini-4-hydrogen",
+   "effort": "medium",
+   "theme": "a Tokyo sumo stable",
+   "riddle": "In our Tokyo sumo stable, Kenji scrubs the communal floor and eats last.\nOn Tuesday morning, Takeshi spends an extra hour shaping Kenji's hair into the grand ginkgo-leaf fan of the top ranks.\nThat afternoon, Kenji steps onto the clay for a single bout.\nOn Wednesday morning, Kenji scrubs the floor again, and Takeshi ties his hair back into a plain knot.",
+   "chars": "Kenji; Takeshi (sumo hairdresser)",
+   "story": "Kenji is a lower-ranked makushita wrestler in a Tokyo sumo stable, and Takeshi is the stable's hairdresser (tokoyama), who normally styles the grand oicho-mage topknot only for salaried top-division sekitori. When an injury in the second-highest division (Juryo) leaves an odd number of competitors on Tuesday, Japan Sumo Association rules tap top-ranked makushita Kenji to fill in for one Juryo bout—the single day he is permitted to wear the sekitori topknot before returning to his plain chonmage and chores on Wednesday.",
+   "solver": "**Character 1:** Kenji, a low-ranked makushita wrestler.\n**Character 2:** Takeshi, the stable's tokoyama (sumo hairdresser).\n\n**Story:** On Tuesday Kenji was called up to fill a gap on the jūryō schedule, and sumo rules require a lower-ranked wrestler fighting a salaried sekitori to wear the ōichō-mage ginkgo topknot, so Takeshi styled it for that one bout. With the bout done, Kenji went back to being an ordinary apprentice on Wednesday, scrubbing floors and wearing his plain chonmage again.",
+   "judge": "A\n\nStory A explains why Kenji was called up (an injury left an odd number of jūryō wrestlers) and correctly makes him a top-ranked makushita, whereas Story B calls him \"low-ranked\" and gives no cause for the vacancy.",
+   "riddler_pos": "A",
+   "result": "WIN",
+   "real": true,
+   "fact": "REAL\n\nSumo does have this mechanism: when a Juryo wrestler is injured and the day's bouts come out uneven, the JSA can call up a top-ranked makushita wrestler to fill in, and tokoyama do style the oicho-mage for sekitori while lower ranks wear a plain chonmage. The details are embellished, but the core process is real. Wrestlers in the makushita division can wear the oicho-mage for special occasions, such as when fighting a Juryo wrestler, and a makushita wrestler called up this way does fight in a Juryo bout.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is set in a Tokyo sumo stable, with wrestlers scrubbing the communal floor, eating last, bouting on the clay, and a stable hairdresser styling topknots.",
+   "cost": 0.10557720000000001,
+   "gen_cost": 0.085152,
+   "gen_secs": 73,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe injury explains why Kenji was called up for exactly one jūryō bout, and the temporary exception explains his elaborate topknot without changing his rank or chores.",
+   "alt_result": "WIN"
+  },
+  {
+   "model": "openai/gpt-6.2-sol",
+   "effort": "medium",
+   "theme": "a Texas oil rig",
+   "riddle": "On a Texas oil rig, Cal dropped a pinch of grit into the drillpipe at stroke zero.\nAt stroke 1,200, a gas spike flashed on Jo’s screen.\nAt stroke 1,500, a fossil chip came over the shaker; Jo penciled in 600, not 300.\nShe didn’t correct for the hour the pumps sat idle at lunch.",
+   "chars": "Cal; Jo (mud logger)",
+   "story": "Cal’s grit was calcium carbide, a tracer that releases acetylene on contact with water, and Jo used its return to estimate when the bit had cut the fossil chip. The tracer’s 1,200-stroke trip included 300 strokes down the drillpipe, but the chip started at the bit and only had to come back up, so Jo subtracted 900 from 1,500 and ignored lunch because idle pumps add no strokes.",
+   "solver": "**Character 1:** Cal, a roughneck on the drill floor.\n\n**Character 2:** Jo, a mud logger.\n\n**Story:** Cal dropped calcium carbide \"grit\" into the drillpipe as a lag test. It fizzed into acetylene gas when it hit the mud, and when the spike showed up at stroke 1,200 Jo subtracted the known 300 strokes it takes to pump down the pipe, giving 900 strokes for cuttings to ride up from the bit. So when the fossil chip crossed the shaker at stroke 1,500, she logged it as rock cut at stroke 600 (1,500 − 900), not 300, and she ignored the idle lunch hour because cuttings only move when the pumps stroke, so lag is counted in strokes, not clock time.",
+   "judge": "B\n\nStory B explicitly works through how the 1,200-stroke total minus the known 300 down-pipe strokes gives a 900-stroke lag, how 1,500 − 900 yields 600 (not the naive 300), and why the idle lunch hour doesn't matter, while Story A reaches the same answer less clearly.",
+   "riddler_pos": "A",
+   "result": "LOSS",
+   "real": true,
+   "fact": "REAL\n\nCalcium carbide is a documented tracer in mud logging: it reacts with water to release acetylene, which is detected at the surface to measure lag time. Counting pump strokes to compute lag, by subtracting the downward trip through the drillpipe and counting only the annulus return, is standard practice, and idle pumps add no strokes.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle opens by explicitly setting the scene on a Texas oil rig, and its characters, drillpipe, shaker, pumps, and mud logging all belong to that setting.",
+   "cost": 0.030347,
+   "gen_cost": 0.007434,
+   "gen_secs": 16,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt explicitly explains why Jo logged 600 rather than 300: the tracer’s 1,200 strokes included 300 down the pipe, while the chip took only the 900-stroke return trip, and lunch added no strokes.",
+   "alt_result": "LOSS"
+  },
+  {
+   "model": "openai/gpt-6.2-astra",
+   "effort": "medium",
+   "theme": "a Kenyan marathon camp",
+   "riddle": "At our marathon camp in Iten, Kenya, I handed the same woman two warm cups an hour apart.\nShe read 1.004 both times; the second cup held just one millilitre more than the first.\nShe sealed what I’d given her both times. Why did she make me stay after 149 millilitres but not after 150?",
+   "chars": "Kiptoo; Wanjiku (doping control officer)",
+   "story": "Wanjiku was collecting urine for a doping test, so she sealed Kiptoo’s first sample but kept him there to provide another because the first was too dilute. Under anti-doping rules, the minimum specific gravity measured by refractometer drops from 1.005 to 1.003 when a single sample reaches 150 millilitres, so the extra millilitre let him leave without his urine getting any more concentrated.",
+   "solver": "**Character 1:** Me, a marathon runner training at the Iten camp.\n**Character 2:** The woman, a doping control officer conducting surprise out-of-competition urine tests.\n\n**Story:** Both of my warm urine samples read 1.004 on her refractometer, below the specific-gravity threshold for a properly concentrated sample. She sealed each one anyway, but the 149 mL sample fell under the volume line she treated as enough for the lab to work with a dilute sample, so I had to stay and keep giving more. The 150 mL sample met that line, so she sealed it and let me go back to training.",
+   "judge": "A\n\nStory A cites the actual anti-doping rule: the specific-gravity threshold drops to 1.003 once a sample reaches 150 mL, which explains exactly why 1.004 failed at 149 mL but passed at 150 mL. Story B only gestures at a vague volume line \"she treated as\" sufficient.",
+   "riddler_pos": "A",
+   "result": "WIN",
+   "real": false,
+   "fact": "INVENTED\n\nWADA's rules require a suitable specific gravity of at least 1.005 by refractometer (or 1.010 by lab), and a sample volume of at least 90 mL. There is no provision lowering the threshold to 1.003 once a sample reaches 150 mL, so the described mechanism is fabricated.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle explicitly places the scene at \"our marathon camp in Iten, Kenya,\" and the story about athletes giving urine samples for a doping test happens in that setting.",
+   "cost": 0.0469484,
+   "gen_cost": 0.022736,
+   "gen_secs": 19,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe anti-doping rules lower the refractometer specific-gravity minimum from 1.005 to 1.003 at 150 mL, so the same 1.004 reading failed for the first sample but passed for the second.",
+   "alt_result": "WIN"
+  },
+  {
+   "model": "google/gemini-4-argon",
+   "effort": "medium",
+   "theme": "an Icelandic fishing trawler",
+   "riddle": "Off the Westfjords, the trawler nets five tons of fine silver, yet the man at the wheel groans in dismay.\nHe orders the deckhand to ice the unwanted guests in the five-percent bin and steam out of the fjord.\nCome harbor, the crew receives not a single króna when the silver is weighed on the scales.\nYet they smile, knowing the phantom price would have eaten ten tons of their prized golden quarry.",
+   "chars": "An Icelandic trawler captain; a deckhand",
+   "story": "Fishing for golden redfish without a cod quota, the captain accidentally catches five tons of cod, which Iceland's rigorous discard ban forces him to keep and land rather than throw back. By stowing it under the strict five-percent \"VS-catch\" rule—which forfeits all proceeds from the cod to a state marine research fund—he avoids having to lease exorbitant last-minute quota that would have wiped out the value of ten tons of his redfish.",
+   "solver": "**Character 1:** Gunnar, a trawler skipper out of Ísafjörður\n\n**Character 2:** Siggi, his deckhand\n\n**Story:** When the net came up bursting with five tons of herring his boat held no quota for, Gunnar groaned and had Siggi ice it as \"VS catch,\" the Icelandic rule that lets up to 5% of a landing go uncounted against quota, with the sale proceeds going to a state fisheries fund instead of the crew. At the harbor scales the crew earned no krónur for the herring, but they grinned anyway, because landing it the normal way would have been charged against their quota at a conversion rate that ate about ten tons of their precious cod allowance.",
+   "judge": "A\nStory A matches the \"golden quarry\" to golden redfish and the \"phantom price\" to costly last-minute quota leasing, while Story B's cod is hardly \"golden\" and its \"conversion rate\" explanation is more strained.",
+   "riddler_pos": "A",
+   "result": "WIN",
+   "real": true,
+   "fact": "REAL. Iceland has a discard ban with landing obligations, and \"VS-afli\" (VS-catch) lets vessels land unintended catch beyond their quota, up to a limit (about 5% of the catch), with the proceeds, after costs, going to a state fund (Verkefnasjóður sjávarútvegsins) for marine research, so the mechanism broadly works as described.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is set on a trawler off Iceland's Westfjords, with a captain, a deckhand, a fjord, and payment in króna, so it clearly fits the requested subject.",
+   "cost": 0.0237181,
+   "gen_cost": 0.002788,
+   "gen_secs": 8,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt explains why the captain had to land the unwanted catch, why the crew earned nothing from it, and how the avoided quota cost equaled the value of ten tons of golden redfish.",
+   "alt_result": "WIN"
+  },
+  {
+   "model": "openai/gpt-6.2-sol",
+   "effort": "medium",
+   "theme": "a Paris bakery strike",
+   "riddle": "On day six of the Paris bakery strike, Lucie handed Marcel a slip, and he took down his picket sign.\nOn day fourteen, with the ovens still cold, he put it back.\nBoth times he was obeying the same instruction on the slip.",
+   "chars": "Lucie; Marcel (baker)",
+   "story": "Lucie, a court bailiff, had served Marcel with an emergency injunction ordering him to remove his sign for eight days, not to end his strike. A French emergency injunction is provisionally enforceable even during the time allowed for appeal, but its obligations can be time-limited, so Marcel had to take the sign down immediately and could put it back on day fourteen without getting the order overturned.",
+   "solver": "**Character 1:** Lucie, a doctor at the clinic near the picket line.\n\n**Character 2:** Marcel, a striking baker.\n\n**Story:** On day six of the strike, Marcel twisted his ankle on the picket line, and Dr. Lucie handed him a prescription slip reading \"Complete rest, no standing, for eight days,\" so he took down his sign and went home. On day fourteen the eight days were up, the strike was still on, and, following the same slip's time limit, he went back to picketing.",
+   "judge": "A\n\nStory A explains both actions naturally through a doctor's eight-day rest prescription handed over as a simple slip, while Story B leans on a legal digression about French injunction enforceability to reach the same eight-day result less directly.",
+   "riddler_pos": "B",
+   "result": "LOSS",
+   "real": false,
+   "fact": "INVENTED\n\nFrench référé orders are indeed provisionally enforceable (exécution provisoire de droit) even during the appeal period, and a judge can set time-limited obligations, but the described scenario is internally inconsistent: a bailiff (commissaire de justice) only serves orders, and an eight-day removal ending on \"day fourteen\" doesn't match how the time limit and re-posting would work, and the \"not to end his strike\" framing is garbled and unsupported.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is explicitly set during a Paris bakery strike, with a baker on a picket line and ovens out of use, so it matches the requested topic.",
+   "cost": 0.0201112,
+   "gen_cost": 0.002194,
+   "gen_secs": 4,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nThe injunction directly explains why Marcel took down the sign for exactly eight days while the strike continued.",
+   "alt_result": "WIN"
+  },
+  {
+   "model": "google/gemini-4-neon",
+   "effort": "medium",
+   "theme": "a Scottish whisky distillery",
+   "riddle": "At a Speyside distillery, the visitor poured one teaspoon from a rival's sample into his prized cask.\nInstead of protesting, the host signed the manifest and waved the bottling crew away.\nBefore the port-bound lorry arrived, they pumped the amber spirit into a plain steel tank.\nThe empty oak cask never left the yard.",
+   "chars": "an overseas buyer; the host (warehouse manager)",
+   "story": "The overseas buyer adds a teaspoon of another distillery's whisky to his cask—an industry practice called \"teaspooning\"—to legally reclassify it from a Single Malt to a Blended Malt. Under the Scotch Whisky Regulations 2009, Single Malt must be bottled in Scotland and no Scotch may be exported in wooden casks, so reclassifying the spirit and pumping it into a steel tank lets the warehouse manager legally ship it abroad for the buyer to bottle himself.",
+   "solver": "**Character 1:** Fiona, the distillery's own master blender (visiting from head office)\n**Character 2:** Hamish, the distillery manager\n\n**Story:** The prized cask was being sold in bulk to an overseas buyer, so Fiona \"teaspooned\" it with a spoonful of a neighbouring distillery's whisky. That legally made it a blended malt, so the buyer could never bottle or market it under the distillery's famous name. Satisfied, Hamish signed the export manifest and sent the bottling crew away, then had the spirit pumped into a steel bulk tank for shipping to port while the empty oak cask stayed behind for refilling.",
+   "judge": "A\nStory A explains every detail: the visitor owns \"his\" cask, teaspooning reclassifies the whisky so it can legally leave Scotland unbottled, and the ban on exporting Scotch in wood explains both the steel tank and why the oak cask stays. Story B makes the visitor a woman, which clashes with \"his,\" and gives only a weak reason for leaving the cask behind.",
+   "riddler_pos": "A",
+   "result": "WIN",
+   "real": false,
+   "fact": "INVENTED\n\n\"Teaspooning\" is a real practice, but it is used to stop a malt being sold as \"single malt\" (for example, to avoid brand association), and the 2009 regulations do not ban exporting Scotch in casks. They require Single Malt Scotch Whisky to be bottled in Scotland, but blended malt can be exported in bulk, and the claim that no Scotch may be exported in wooden casks is wrong. So the mechanism is partly based on real rules but is materially wrong as described.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is set at a Speyside distillery and centers on whisky casks, spirit, bottling, and a warehouse manager, all of which fit the requested topic.",
+   "cost": 0.1302321,
+   "gen_cost": 0.107664,
+   "gen_secs": 62,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt explains why the host welcomed the teaspoon and dismissed the bottlers, and why the whisky could leave in steel but not in its oak cask.",
+   "alt_result": "WIN"
+  },
+  {
+   "model": "openai/gpt-6.2-sol",
+   "effort": "medium",
+   "theme": "a Tokyo sumo stable",
+   "riddle": "At our Tokyo sumo stable, the boss raised a toast to my new passport, then put the application back in his drawer.\nThe morning he took it out again, I was still at the same practice ring.\nOnly this time, I was telling the men when to get in.",
+   "chars": "Naran; Shiba (sumo stablemaster)",
+   "story": "Naran, a Mongolian-born former sekiwake, had acquired the Japanese citizenship he needed to become a sumo elder, so when he retired from wrestling he stayed at the stable as a coach. Shiba held the overseas recruit’s application until Naran switched jobs because the Japan Sumo Association’s one-per-stable quota counts foreign-born wrestlers even after they naturalize, but doesn’t count coaches.",
+   "solver": "**Character 1:** Me, a foreign-born sumo wrestler who became a naturalized Japanese citizen.\n\n**Character 2:** The Oyakata, my stablemaster (occupation: sumo stable boss).\n\n**Story:** Sumo rules say only Japanese citizens can become elders and run a stable, so when my naturalization came through, the Oyakata toasted me and then locked away the stable-succession paperwork naming me his heir, to wait until his mandatory retirement at 65. Years later, on the morning he turned 65, he filed it, and I stood at the same practice ring where I once trained, now as stablemaster, calling my wrestlers in for their bouts.",
+   "judge": "A\nStory A explains why the boss shelved an application right after the toast: the foreign-born quota still counted the naturalized wrestler until he became a coach. Story B's succession paperwork waiting years for a retirement birthday is a looser fit for \"put the application back.\"",
+   "riddler_pos": "A",
+   "result": "WIN",
+   "real": false,
+   "fact": "INVENTED\n\nThe JSA's one-foreign-wrestler-per-stable rule is real, but it counts foreign-born wrestlers even after naturalization only in the sense that they were counted as foreign-born (actually, naturalized wrestlers are treated as Japanese and not counted), and the claim that a retired coach's status frees up a slot while the quota \"counts naturalized wrestlers\" is materially wrong, as is the apparent \"Naran/Shiba\" scenario.\n\nActually, to be precise: since 2010 the rule counts wrestlers by foreign origin, and naturalized wrestlers stay counted until they retire. Stablemasters, though, must be Japanese citizens, which is why Naran naturalized. So the quota's treatment of naturalized wrestlers is plausibly real, but the specific scenario of Naran as a former sekiwake in a stable with a pending recruit is unverified, and Naran (Mongolian-born Hakuba? no) does not match a known figure. The mechanism is partly real but the story is fabricated.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is set at a Tokyo sumo stable and centers on its stablemaster and wrestlers, matching the requested topic.",
+   "cost": 0.0374415,
+   "gen_cost": 0.013116,
+   "gen_secs": 16,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe foreign-born wrestler quota explains why the boss shelved the recruit’s application despite the new passport and took it out again when the narrator became a coach.",
+   "alt_result": "WIN"
+  },
+  {
+   "model": "google/gemini-4-argon",
+   "effort": "medium",
+   "theme": "a Scottish whisky distillery",
+   "riddle": "Beside the silent Highland stills, he smiles as thirty years of amber meets the drain;\nShe checks her ledger, satisfied no winter frost had kissed the warehouse pane.\nHad the mercury plunged in that bonded stone room, he'd be facing ruin today,\nYet because the oak breathed a thirstier ghost, not a penny of ransom they'll pay.",
+   "chars": "Callum (Scottish distillery owner); Fiona (HMRC excise officer)",
+   "story": "While inspecting a leaky thirty-year-old whisky cask that had completely emptied into the floor, Fiona waives the massive tax penalty by verifying that high summer humidity had pushed the alcohol concentration of the remaining droplets down below forty percent. While spirits normally evaporate faster than water in dry air, damp Scottish warehouses draw out alcohol while retaining water, and under HMRC excise regulations, once a ruptured cask's residual liquid naturally drops below the minimum statutory strength for Scotch whisky, the vanished spirit is legally reclassified as non-taxable waste rather than an untaxed discrepancy.",
+   "solver": "**Character 1:** Angus, an elderly Highland distiller.\n**Character 2:** Morag, an HM Customs excise officer who keeps the bonded-warehouse ledger.\n\n**Story:** Angus owed a crippling duty bill (the \"ransom\") on a thirty-year-old cask held in bond, and a cold winter would have preserved its strength and left him facing ruin. Instead, Morag's ledger shows the warehouse stayed frost-free, so the warm air let the oak breathe a greedier angel's share that dragged the spirit below 40% ABV, legally no longer Scotch and owed no duty, and Angus grins as he pours the worthless liquid down the drain.",
+   "judge": "A\nStory A ties every clue together: the drain, the frost-free ledger, the thirstier angel's share that drops the spirit below 40%, and the avoided duty. Story B relies on a contrived leaking cask and dubious invented regulations, and it ignores the winter frost detail.",
+   "riddler_pos": "B",
+   "result": "LOSS",
+   "real": false,
+   "fact": "INVENTED\n\nThe scenario gets the physics backwards, since high humidity actually makes water evaporate less and cask contents tend to lose alcohol more slowly in damp warehouses, and HMRC has no rule that reclassifies lost spirit as non-taxable waste because the residue fell below 40% ABV (angel's share losses are handled through warehouse loss allowances and remission rules, not this mechanism).",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is clearly about a Scottish whisky distillery: it references Highland stills, thirty years of amber spirit, warehouses, casks, and a bonded stone room. It also centers on an excise-related situation, which fits the user's request.",
+   "cost": 0.024369800000000004,
+   "gen_cost": 0.002806,
+   "gen_secs": 9,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nA more directly connects the frost-free winter to the angel’s share, the officer’s ledger, and the distiller’s deliberate pour down the drain, without inventing a ruptured cask.",
+   "alt_result": "LOSS"
+  },
+  {
+   "model": "google/gemini-4-argon",
+   "effort": "medium",
+   "theme": "a wedding in Kerala",
+   "riddle": "Beneath the jasmine canopy, the bride displays her gleaming tiers of sovereign gold,\nWhile at the temple door a stranger holds a silver rod against a polished block of brass.\nThough every chain upon her throat was purchased decades past and has no bill of sale,\nThey gladly hand him every link today, just to prevent the loss of half a gram tomorrow.",
+   "chars": "A Kerala bride; a Bureau of Indian Standards (BIS) assaying technician",
+   "story": "Before flying out of Cochin airport for her honeymoon after her Kerala temple wedding, the bride takes her ancestral gold jewelry to an authorized BIS Hallmarking Centre, where a technician uses an X-ray fluorescence probe on a brass calibration block before scanning her heirloom chains. Because Indian customs regulations allow returning travelers to bring back unmarked heirloom jewelry duty-free only via a formal Export Certificate—which requires either original purchase receipts or modern BIS hallmarking—and because the mandatory 2021 BIS consumer walk-in standard uses non-destructive XRF testing rather than the traditional fire-assay method that melts and destroys half a gram of gold per ornament, the family willingly hands over her unbilled dowry for laser stamping today.",
+   "solver": "**Character 1:** Meena, the bride's grandmother, keeper of the family's decades-old wedding gold.\n\n**Character 2:** Raju, a travelling \"gold polisher\" who is actually a con artist.\n\n**Story:** At the temple door Raju makes a brass block and a silver rod gleam with his \"magic\" powder, then warns Meena that her old, unbilled chains have worn thin and will shed half a gram more if left unpolished, so she gladly hands him every link before the ceremony. He dips them in an acid bath that quietly dissolves several grams of gold into his solution, returns the dazzling but lighter jewellery, and vanishes before anyone thinks to weigh it.",
+   "judge": "B\nStory B naturally explains the stranger at the temple door, the rod-and-brass \"magic\" demonstration, why lacking bills matters (no proof of weight), and the ironic handover to avoid losing half a gram, while Story A moves the scene to a hallmarking centre and relies on convoluted customs and assay details.",
+   "riddler_pos": "A",
+   "result": "LOSS",
+   "real": false,
+   "fact": "INVENTED\n\nThe core mechanism is fabricated: India's customs rules don't require an \"Export Certificate\" or BIS hallmarking for returning travelers to bring back heirloom jewelry duty-free, and BIS hallmarking is not a consumer walk-in requirement tied to flying out. XRF and laser marking at hallmarking centers do exist, but the claimed legal link to airport travel and customs is wrong.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is about a wedding, with a bride, a temple door, and jasmine, which are strongly associated with Kerala. \"Sovereign gold\" is also a term common in Indian jewelry markets. The riddle never names Kerala directly, but the answer does, so the setting is clear.",
+   "cost": 0.027229700000000003,
+   "gen_cost": 0.003126,
+   "gen_secs": 9,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe hallmarking story makes the rod and brass block part of a test and ties the missing receipts and half-gram loss to a reason for handing over every chain.",
+   "alt_result": "WIN"
+  },
+  {
+   "model": "openai/gpt-6.2-astra",
+   "effort": "medium",
+   "theme": "a Paris bakery strike",
+   "riddle": "On the fourth morning of the Paris bakery strike, no van came to Luc’s door and his flour sack stayed tied.  \nInès watched him wait for a tray of rigid white batons to soften, then bought a baguette too hot to hold.  \nWhy had he taped over exactly eleven letters on the awning but left the price in the window?",
+   "chars": "Inès; Luc (bakery owner)",
+   "story": "Before the walkout, Luc had shaped baguette dough in his shop and frozen it; Inès watched the last batch thaw before he baked it. French law lets him sell those loaves but bars the shop from displaying BOULANGERIE—even when the dough is made and baked on site, freezing it at any stage costs him those eleven letters.",
+   "solver": "**Character 1:** Luc, a Paris baker cut off from his flour and yeast deliveries by the strike.\n**Character 2:** Inès, a consumer-fraud inspector (DGCCRF) checking bakeries during the strike.\n\n**Story:** With no van bringing fresh supplies, Luc couldn't knead from scratch, so he thawed and baked frozen par-baked baguettes (the rigid white batons). French law reserves the word \"BOULANGERIE\" (exactly eleven letters) for shops that make their bread on site, so he honestly taped it over while leaving the price in the window. Inès, satisfied that he wasn't misleading anyone, simply bought one straight from the oven.",
+   "judge": "A\n\nStory A ties together the missing van, the untouched flour sack, the frozen par-baked batons, and the eleven-letter \"BOULANGERIE\" taped over to stay honest, while Story B leaves the van, the strike, and the price in the window largely unexplained.",
+   "riddler_pos": "B",
+   "result": "LOSS",
+   "real": true,
+   "fact": "REAL\n\nFrance's 1998 \"Décret pain\" (codified in the Code de la consommation/Code rural) reserves the term \"boulangerie\" for establishments that knead, shape, and bake bread on site, and it bars freezing or deep-freezing at any stage of production for the \"pain maison\"/boulanger label, so a shop that freezes its dough can't legally use the name \"boulangerie\" (though it can still sell the bread).",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is set during a Paris bakery strike (the \"fourth morning of the Paris bakery strike\") and centers on a bakery owner, Luc, and his bread, so it clearly addresses the requested topic.",
+   "cost": 0.0508656,
+   "gen_cost": 0.029896,
+   "gen_secs": 21,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nThe frozen dough explains the rigid white batons and the untouched flour, while French law bars the eleven-letter “BOULANGERIE” label when the dough has been frozen, not the sale of the hot baguette at its posted price.",
+   "alt_result": "WIN"
+  },
+  {
+   "model": "openai/gpt-6.2-sol",
+   "effort": "medium",
+   "theme": "a wedding in Kerala",
+   "riddle": "Just before her thaali was tied at Guruvayur, Meera handed Ravi back the flawless earring and put on the scratched one.\nBoth were 22-karat, and Ravi had matched the design and weight exactly.\nIt was the six tiny characters he’d also matched that made her give it back.",
+   "chars": "Meera; Ravi (jeweller)",
+   "story": "Meera had lost one of her wedding earrings and given Ravi the scratched survivor as a model for a replacement. Under India’s BIS hallmarking rules, even the two earrings in a matching pair get different six-character Hallmark Unique Identification codes, so the identical code gave away the counterfeit hallmark even though the gold was genuine.",
+   "solver": "**Character 1:** Meera, a bride.\n**Character 2:** Ravi, a goldsmith.\n\n**Story:** When Meera scratched one of her late grandmother's earrings, Ravi made a flawless 22-karat replacement, copying even the six-character HUID hallmark code stamped inside. Since every HUID is unique to one genuine piece, Meera realised the \"perfect\" earring was effectively a forgery, so at Guruvayur she gave it back and wore her grandmother's scratched original.",
+   "judge": "B\n\nStory B explains everything cleanly: the copied HUID made the replacement a forgery, so she wore her grandmother's scratched original. Story A leaves her with a single surviving earring and doesn't make clear why giving back the copy solves anything.",
+   "riddler_pos": "A",
+   "result": "LOSS",
+   "real": true,
+   "fact": "REAL\nIndia's BIS hallmarking requires a six-character alphanumeric HUID that is unique to each individual jewellery article, so two items, even a matching pair, get different codes, and an identical HUID on two pieces would indicate a copied or fake hallmark.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is set at a wedding in Guruvayur, a temple town in Kerala, and it refers to the thaali being tied, a central rite of South Indian weddings.",
+   "cost": 0.0391075,
+   "gen_cost": 0.018914,
+   "gen_secs": 22,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe lost-earring setup gives Ravi a natural reason to make an exact match, while the rule that even matching earrings need distinct HUIDs explains why the copied code gave the replacement away.",
+   "alt_result": "WIN"
+  },
+  {
+   "model": "google/gemini-4-hydrogen",
+   "effort": "medium",
+   "theme": "a submarine crew in 1943",
+   "riddle": "Depth-charged to the Atlantic floor in '43, two crewmen sit in stale air, talking calmly.\nThen they deliberately open the sea valve, letting freezing water pour into their dry room.\nWhen the water reaches only their chests—with plenty of air still above—\none of them suddenly gasps and drops unconscious just as the hatch swings free.",
+   "chars": "Harris; Davies (Torpedoman)",
+   "story": "Trapped in a sunken submarine in 1943, Harris and Torpedoman Davies flood their compartment to compress the trapped air until it matches the outside water pressure so the escape hatch can open. However, compressing the stale air to several atmospheres multiplies the partial pressure of the carbon dioxide they had already exhaled, knocking Davies unconscious from acute CO2 narcosis the moment the pressure equalizes.",
+   "solver": "**Character 1:** Hans, a young seaman on his first patrol.\n\n**Character 2:** Kurt, the U-boat's chief engineer (occupation: submarine engineer).\n\n**Story:** Trapped in the sunken U-boat, Kurt calmly explained that the escape hatch could only open once they flooded the compartment and the trapped air was squeezed to match the crushing sea pressure outside. As the water rose and the stale air compressed, the carbon dioxide they had been breathing for hours became concentrated enough to poison them, and Hans gasped and blacked out just as the pressure equalized and the hatch swung free.",
+   "judge": "A\nStory A names the precise mechanism, rising CO2 partial pressure as the stale air is compressed, while Story B loosely calls it \"concentration,\" which is less accurate even though the plots are otherwise nearly identical.",
+   "riddler_pos": "A",
+   "result": "WIN",
+   "real": true,
+   "fact": "REAL\n\nFlooding a sunken submarine compartment to equalize pressure so the hatch can open is a genuine escape procedure (as in the 1943 USS Tang-type or Squalus-era escapes), and compressing the air does raise the partial pressure of CO2 proportionally, so exhaled CO2 can reach toxic, narcotic levels at several atmospheres.",
+   "fit": true,
+   "fit_reason": "YES\n\nThe riddle is set in 1943 (\"Depth-charged to the Atlantic floor in '43\") and centers on two crewmen trapped in a sunken submarine, which matches the requested subject.",
+   "cost": 0.14372179999999998,
+   "gen_cost": 0.1264245,
+   "gen_secs": 111,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt explicitly explains how the same pressure increase frees the hatch and raises the partial pressure of exhaled CO₂ enough to knock Davies unconscious even though air remains above the water.",
+   "alt_result": "WIN"
+  },
+  {
+   "model": "openai/gpt-6.2-astra",
+   "effort": "medium",
+   "theme": "a wedding in Kerala",
+   "riddle": "In the film of her Thrissur wedding, Anu saw 29 turn straight to 02 just as the thali touched her neck.\n“What did you cut, Manu?”\nInstead of replaying the knot, he showed her 29 turning to 00 exactly ten minutes in.",
+   "chars": "Anu, the bride; Manu (wedding videographer)",
+   "story": "Anu had spotted a gap in the frame numbers burned into Manu’s review copy, not a gap in the footage of her wedding. To keep time at 29.97 frames per second, his drop-frame timecode skipped labels 00 and 01 at the start of every minute except every tenth, when 00 duly appeared without a single picture having been lost at the knot.",
+   "solver": "**Character 1:** Anu, the bride.\n\n**Character 2:** Manu, the wedding videographer and editor.\n\n**Story:** Watching her wedding film, Anu saw the frame counter jump from ;29 to ;02 right at the thali-tying and accused Manu of cutting out part of the moment. Manu explained that the footage uses NTSC drop-frame timecode, which skips frame numbers 00 and 01 at the start of every minute except every tenth minute, so he showed her the 10-minute mark, where ;29 rolls to ;00, proving no actual frames were lost.",
+   "judge": "A\nStory A also explains why frame numbers appeared in a wedding film at all (burned-in timecode on Manu's review copy), while both stories give the same drop-frame explanation for the 29-to-02 skip and the 00 at the ten-minute mark.",
+   "riddler_pos": "A",
+   "result": "WIN",
+   "real": true,
+   "fact": "REAL\n\nDrop-frame timecode for 29.97 fps video skips frame labels 00 and 01 at the start of each minute except every tenth minute, and no actual frames are dropped, only the numbering, so the described mechanism is accurate.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is set in a Thrissur wedding, and Thrissur is in Kerala, so it fits the requested setting of a wedding in Kerala.",
+   "cost": 0.0510234,
+   "gen_cost": 0.029736,
+   "gen_secs": 21,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe burned-in timecode explains why Anu mistook skipped labels for missing footage, and the ten-minute rollover illustrates the exception without claiming it proves no edit was made.",
+   "alt_result": "WIN"
+  },
+  {
+   "model": "google/gemini-4-neon",
+   "effort": "medium",
+   "theme": "a wedding in Kerala",
+   "riddle": "At a grand Thrissur hall, four hundred guests ate sadya as the bride stepped onstage in a golden kasavu saree.\nYet at the auspicious minute, the groom skipped the thali and slipped a plain ring onto her finger instead.\nJust before the photographer clicked, the groom's sister rushed up and tore down the floral banner behind them.\nNobody protested; both families cheered and drove the couple straight to Kochi airport.",
+   "chars": "The groom; His sister (immigration lawyer)",
+   "story": "The bride is flying to the United States on a K-1 fiancé(e) visa—which requires her to enter legally unmarried—so the families held a Kerala send-off celebration where the groom deliberately skipped the thali, since tying it creates a legally binding Hindu marriage in India even without civil registration. Spotting that the decorators had mistakenly hung a \"Wedding\" banner, the groom's sister, an immigration lawyer, tore it down before any photos were taken because US Customs and Border Protection officers inspect travelers' phones and can revoke a K-1 visa at the border if photos make a couple appear \"too married,\" even without a legal ceremony.",
+   "solver": "**Character 1:** Meera, the bride, a Hindu from Thrissur.\n\n**Character 2:** Joel, the groom, a Christian airline pilot based in Dubai.\n\n**Story:** Because Meera and Joel were an interfaith couple marrying under the Special Marriage Act, both families had agreed beforehand on a neutral ring exchange instead of the thali, so nobody objected when he skipped it. Just before the photo, Joel's sister tore down the floral banner to reveal the surprise hidden behind it, a \"Just Married – Bon Voyage!\" sign, and everyone cheered as the families rushed the couple to Kochi airport, where Joel's crew had arranged for him to fly his new bride to Dubai.",
+   "judge": "B\nStory B ties every odd detail to one motive: protecting the bride's K-1 visa explains skipping the thali, the plain ring, tearing down the banner right before the photo, the calm approval and the airport dash, while Story A's \"reveal a surprise sign\" is a weaker reason for urgently tearing a banner down.",
+   "riddler_pos": "B",
+   "result": "WIN",
+   "real": false,
+   "fact": "INVENTED\nThe K-1 requirement that the couple be unmarried at entry is real, and a thali-tying ceremony can create a valid Hindu marriage in India, but the claim that CBP inspects phones and revokes a K-1 visa because photos make a couple look \"too married\" is not an actual rule or practice, since a K-1 problem arises from actual legal marriage, not wedding-like photos.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is clearly set at a Kerala wedding. It names Thrissur, a sadya feast, a kasavu saree, the thali, and Kochi airport, and its events (the ring instead of the thali, the banner, the send-off) all take place within that wedding.",
+   "cost": 0.31081499999999995,
+   "gen_cost": 0.283224,
+   "gen_secs": 160,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe planned ring exchange explains the missing thali, and the surprise farewell sign explains the banner removal, the cheers, and the immediate airport trip.",
+   "alt_result": "LOSS"
+  },
+  {
+   "model": "google/gemini-4-neon",
+   "effort": "medium",
+   "theme": "a Texas oil rig",
+   "riddle": "On a West Texas rig crawling through hard rock, the pressure gauges stayed flat and calm all morning.\nStill, Ray quietly dumped extra sacks of heavy barite into the mud pit—even though thicker mud slows the bit.\nHe stopped the instant the mud scale tipped to 12.1 pounds per gallon, and marched to the trailer for a signature.\nDale checked the flat gauge, weighed a cup of mud himself, and refused to sign a thing.",
+   "chars": "Dale; Ray (drilling contractor)",
+   "story": "Ray was drilling Dale's well under a footage contract—paid per foot rather than per day—so crawling through hard rock was bleeding him dry, and he secretly weighted up the mud with barite to manufacture an abnormal-pressure condition. Under a standard IADC footage-to-daywork contract clause, exceeding a 12.0-pounds-per-gallon mud-weight cap automatically converts the rig to a guaranteed daily rate, but Dale saw the well's pressure was completely normal and refused to sign the daywork conversion sheet.",
+   "solver": "**Character 1:** Ray, the mud engineer, who works for a mud-supply company and is paid on the barite he sells.\n\n**Character 2:** Dale, the company man, the operator's on-site drilling supervisor who signs every delivery ticket.\n\n**Story:** With the gauges showing no sign of a kick, Ray quietly dumped barite into the pit until the mud hit 12.1 ppg, the exact weight that justified a pricey \"weight-up\" ticket. Dale saw the flat gauge, weighed the mud himself, and realized Ray had slowed the bit for nothing but his own sales commission, so he refused to sign the invoice.",
+   "judge": "A\nStory A explains every odd detail: the hard-rock slog bleeds a footage contractor, crossing a 12.0 ppg cap explains why he stopped at exactly 12.1, and the flat gauges show Dale why the daywork conversion isn't justified. Story B leaves the precise 12.1 cutoff and the hard-rock detail only vaguely motivated.",
+   "riddler_pos": "A",
+   "result": "WIN",
+   "real": true,
+   "fact": "REAL\n\nFootage-to-daywork conversion is a genuine feature of IADC drilling contracts: when specified conditions such as abnormal pressure, hole problems, or excessive mud weight arise, compensation switches from per-foot to a daily rate. The specific 12.0 ppg trigger and the \"automatic\" conversion requiring a signed sheet are plausible contract details rather than a fixed standard.",
+   "fit": true,
+   "fit_reason": "YES\n\nThe riddle is explicitly set on a West Texas rig drilling through hard rock, and its central elements (mud, barite, pressure gauges, drilling contract) all concern an oil drilling operation.",
+   "cost": 0.2420879,
+   "gen_cost": 0.221394,
+   "gen_secs": 128,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe switch from per-foot pay to a daily rate explains why slow drilling motivated Ray to add barite, why he stopped just above 12.0 ppg, and why Dale refused to sign when the pressure was normal.",
+   "alt_result": "WIN"
+  },
+  {
+   "model": "openai/gpt-6.2-sol",
+   "effort": "medium",
+   "theme": "an Icelandic fishing trawler",
+   "riddle": "Off Iceland, a trawler’s winch groans, but the same patch of yellow paint stays at the stern roller.\nFrom the next boat, Edda can make out green over white; only as she draws closer does she see two reds stacked below them.\nShe swings wide of the stern.",
+   "chars": "Edda; Jón (trawler skipper)",
+   "story": "Jón’s net has snagged on the seabed, so the winch is straining without bringing the painted section of cable over the roller, and Edda steers clear of the taut cable trailing astern. Under Annex II of the international collision regulations, a trawler of at least 20 metres working near other fishing vessels shows two vertical red lights when its net is fast on an obstruction; the reds go below the regular green-over-white fishing lights and have a shorter visibility range, which is why Edda sees them only as she closes in.",
+   "solver": "**Character 1:** Edda, skipper of a neighbouring fishing boat.\n**Character 2:** Gunnar, a trawler skipper.\n\n**Story:** Gunnar's net snagged on a seabed wreck, so his winch strained while the yellow paint mark on the warp never moved past the stern roller. He hoisted the two vertical red lights that signal \"nets fast upon an obstruction\" beneath his green-over-white trawling lights, and Edda, reading the signal, gave his stern and its taut, tangled warps a wide berth.",
+   "judge": "A\nStory A explains every detail, including why Edda sees the two reds only as she closes in (they have a shorter visibility range), which Story B leaves unexplained.",
+   "riddler_pos": "A",
+   "result": "WIN",
+   "real": false,
+   "fact": "INVENTED\n\nAnnex II of COLREGs does provide extra signals for vessels trawling close to one another (e.g., two yellow lights flashing for pair trawlers, and searchlight/alternating signals for hauling nets), but it has no signal of two vertical red lights for a net fast on an obstruction: that signal is a mix-up with two all-round red lights meaning \"not under command\" and with the red-over-white of fishing lights. The \"net fast\" signal in Annex II is actually two vertical yellow lights flashing or a specific sound/light combination, not reds, and the lights also would not be below the fishing lights with shorter visibility as described.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle opens with \"Off Iceland, a trawler's winch,\" so it is clearly set off Iceland and centres on a trawler, which matches the request. The answer's characters and setting also stay with that trawler.",
+   "cost": 0.0245131,
+   "gen_cost": 0.00923,
+   "gen_secs": 17,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nBoth stories explain the stalled cable and Edda’s wide berth, but A also explains why she sees the two red lights only as she draws closer: they have a shorter visibility range.",
+   "alt_result": "WIN"
+  },
+  {
+   "model": "google/gemini-4-carbon",
+   "effort": "medium",
+   "theme": "a Paris bakery strike",
+   "riddle": "Before dawn in the Paris bakery strike, pickets crowd a lit cellar grate at half past three,\nWatching one frail man down below knead dough and pull hot loaves alone.\nBeside them waits a burly man in a fresh apron; though pickets dare him to hand down a single log, his hands stay pocketed,\nAnd my pen stays capped—until the church bells toll four and he vaults below to help.",
+   "chars": "Auguste; Lucien (labor inspector)",
+   "story": "During a 1920s Paris bakery strike, striking workers summoned labor inspector Lucien before dawn hoping to catch shop proprietor Auguste violating France's 1919 night-baking ban. However, because Article 20 of Book II of the French Labor Code only prohibited employing workers—even for indirect tasks like passing firewood—between 10 PM and 4 AM while leaving solo proprietors free to bake overnight, Lucien could issue no citation so long as Auguste's hired strikebreaker resisted the pickets' bait until four o'clock.",
+   "solver": "**Character 1:** The frail master baker, who owns the bakery.\n\n**Character 2 (with occupation):** The narrator, a government labor inspector. (The burly man in the fresh apron is the baker's hired journeyman.)\n\n**Story:** France's 1919 law banned bakery employees from working between 10 p.m. and 4 a.m., though an owner could still bake alone. So I stood at the grate with my citation book while the striking pickets goaded the journeyman to hand down even one log, hoping to get his boss fined. He kept his hands in his pockets until the bells struck four, when his work became legal, and then he jumped down to help, leaving me with nothing to write.",
+   "judge": "B\n\nStory B makes the narrator the inspector, which explains \"my pen stays capped,\" and it accounts for every detail, including the journeyman vaulting down at four once his work became legal, whereas Story A is told in the third person and never explains the jump.",
+   "riddler_pos": "A",
+   "result": "LOSS",
+   "real": true,
+   "fact": "REAL. France's 1919 law (the loi of 23 April 1919 on night work in bakeries, codified in Livre II of the Code du travail) banned employing bakery workers at night, roughly 10 PM to 4 AM, while owners working alone could still bake, and the details given are plausible embellishments around that mechanism.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle opens by naming \"the Paris bakery strike,\" and its imagery (pickets, a cellar grate, a baker kneading dough before dawn, a strikebreaker) stays within that setting.",
+   "cost": 0.2063777,
+   "gen_cost": 0.185946,
+   "gen_secs": 404,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt explains why the pickets summoned the inspector, why even passing a single log would count as illegal work, and why the owner could bake alone until the strikebreaker legally joined him at four.",
+   "alt_result": "WIN"
+  },
+  {
+   "model": "openai/gpt-6.2-sol",
+   "effort": "medium",
+   "theme": "a Kenyan marathon camp",
+   "riddle": "At a marathon camp in Iten, Kiptoo paid to send one shoe to Paris.\nHe left the matching shoe on his bunk.\nHe tucked a bill for the price of both shoes into the parcel.\nHe wanted the shoe back, but not a refund.",
+   "chars": "Kiptoo; Amina (customs broker)",
+   "story": "Kiptoo’s new racing shoe had split, and Amina arranged to send only the damaged shoe back to the French maker for a free warranty repair. She enclosed the original invoice because Kenya’s outward-processing procedure can grant duty relief when temporarily exported goods return after repair, and the invoice helped establish the shoe’s original value even though the repair itself cost nothing.",
+   "solver": "**Character 1:** Kiptoo, a marathon runner training in Iten.\n**Character 2:** Madame Laurent, a custom shoemaker in Paris.\n\nKiptoo's only racing shoes were perfectly worn to his stride, so he mailed one to Madame Laurent as a template (keeping its twin on his bunk), with cash covering the full price of a new handmade pair. He needed the original shoe returned with the new pair so he could keep wearing his trusted old shoes until the replacements were broken in, which is why he wanted the shoe back, not a refund.",
+   "judge": "B\n\nStory B reads \"bill\" naturally as the invoice for the pair, and it explains why sending a damaged item with that invoice might look like a refund request when he only wants a repair. Story A gives no reason a refund would ever come up.",
+   "riddler_pos": "B",
+   "result": "WIN",
+   "real": false,
+   "fact": "INVENTED\n\nKenya's customs regime (EAC Customs Management Act) does have outward processing relief, but it generally covers goods exported for processing and returned with duty charged only on the value added, and it requires prior approval, while repairs under warranty are usually handled as re-imports of \"goods returned\" or with the foreign repair value being nil. Here the shoe was a French-made item being sent back for repair, so the described relief based on the original invoice establishing value is not an accurate depiction of how the mechanism works.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is set at a marathon camp in Iten, which is a well-known Kenyan training center, so it clearly matches the requested \"Kenyan marathon camp\" setting.",
+   "cost": 0.0246254,
+   "gen_cost": 0.002114,
+   "gen_secs": 2,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nA free warranty repair explains why Kiptoo mailed only the damaged shoe, enclosed the invoice for both shoes, and wanted the shoe returned rather than a refund.",
+   "alt_result": "WIN"
+  },
+  {
+   "model": "openai/gpt-6.2-astra",
+   "effort": "medium",
+   "theme": "a Texas oil rig",
+   "riddle": "On a Texas oil rig, Nell watched a pen kick once for every forty feet of line Ray reeled in.\nWhen it kicked twice just six feet apart, she tapped the pen.\n“Not the pen,” said Ray, and reset the depth counter.",
+   "chars": "Nell; Ray (wireline logging engineer)",
+   "story": "Ray was hauling a magnetic collar locator up the well, and the extra steel at each casing coupling made Nell’s pen kick. A six-foot pup joint had been installed at a depth recorded on the casing tally, so its two close kicks gave Ray what none of the evenly spaced kicks could: an unmistakable depth at which to correct his counter.",
+   "solver": "**Character 1:** Nell, a trainee mud logger watching the depth recorder.\n\n**Character 2:** Ray, a wireline operator reeling the logging cable out of the well.\n\n**Story:** Ray's wireline carries a magnetic depth mark every forty feet, and each mark passing the sensor kicks Nell's chart pen. When two kicks came only six feet apart, Ray knew the pen was fine: they had reached the spot where the cable had once snapped and been spliced back together, so the marks on either side no longer matched up, and he reset the depth counter to keep the well's depth readings accurate.",
+   "judge": "A\nStory A uses real wireline practice: a collar locator kicks at each ~40-foot casing coupling, and a six-foot pup joint logged on the casing tally gives an exact known depth to correct the counter. Story B's spliced-cable explanation is more contrived and gives a weaker reason why that spot would justify a reset.",
+   "riddler_pos": "A",
+   "result": "WIN",
+   "real": true,
+   "fact": "REAL\n\nA casing collar locator (CCL) detects the extra steel at each casing coupling as a magnetic anomaly, and short pup joints placed at known depths are routinely used as depth markers to correlate and correct wireline depth against the casing tally.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle opens with \"On a Texas oil rig,\" so it is explicitly set where the user asked, and its details (a well, reeling line, a depth counter) are consistent with an oil rig setting.",
+   "cost": 0.044056500000000005,
+   "gen_cost": 0.026616,
+   "gen_secs": 18,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe six-foot pup joint explains the closely spaced kicks and gives Ray a known depth from the casing tally at which to reset the counter.",
+   "alt_result": "WIN"
+  },
+  {
+   "model": "google/gemini-4-argon",
+   "effort": "medium",
+   "theme": "a Paris bakery strike",
+   "riddle": "At dawn in Paris, he thanks the striking crowd for his sudden freedom to sleep.\nHe walks out the back to knead a fresh batch of dough before ten.\nWhen she storms in demanding a standard loaf, he refuses to touch the scale.\nHe hands her a crooked rod for the identical price, and she leaves without calling the guard.",
+   "chars": "An angry customer; A Parisian baker",
+   "story": "After the 1919 Paris strike led to a law banning bakery work between 10 PM and 4 AM, the baker could no longer wake at midnight to prepare slow-fermenting round loaves in time for morning customers. Because the city's strict bread price-fixing regulations required traditional loaves to be weighed and sold per kilogram, he baked thin sticks that fermented rapidly after 4 AM and were legally exempt from being weighed as unregulated \"fantasy bread.\"",
+   "solver": "**Character 1:** Madame Duval, a Parisian housewife who expects her usual weighed round loaf.\n**Character 2:** Lucien, a Paris baker in 1920, the year France's new labour law (won after bakers' strikes) banned bakery work between 10 p.m. and 4 a.m.\n\n**Story:** Freed from the night shift by the strikers' victory, Lucien slept until dawn and then had time to make only a quick-rising dough that bakes fast as long, thin sticks. When Madame Duval demanded her big round loaf weighed out on the scale, he sold her a slightly crooked baguette instead, a loaf priced by the piece rather than by weight, so it was perfectly legal and she had no reason to call the guard.",
+   "judge": "B\n\nStory B explains more of the riddle's details in a natural way: the dawn sleep won by the strikers, the quick dough, the refused scale, the crooked baguette sold by the piece, and why she has no reason to call the guard.",
+   "riddler_pos": "A",
+   "result": "LOSS",
+   "real": false,
+   "fact": "INVENTED\n\nThe 1919 law banning bakery work before 4 AM is a real part of the baguette origin story, but the claims that bakers switched from round loaves because of it and that baguettes were exempt from weighing as \"fantasy bread\" are unsupported. Historians (e.g., Kaplan) note that long loaves existed earlier, and the price-fixing and weighing rules applied to such loaves, with the pain de fantaisie exemption being a different matter.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is set in Paris, centers on a baker, and opens with him thanking a \"striking crowd\" for freeing him from night work. That ties the scene to a strike affecting bakery labor, which matches the requested topic.",
+   "cost": 0.0243581,
+   "gen_cost": 0.002556,
+   "gen_secs": 8,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt explicitly connects the strike to his sleep until dawn and explains why the customer accepts a crooked, unweighed loaf: it bakes quickly and can legally be sold at a fixed price per piece.",
+   "alt_result": "LOSS"
+  },
+  {
+   "model": "google/gemini-4-carbon",
+   "effort": "medium",
+   "theme": "a Scottish whisky distillery",
+   "result": "FAILED",
+   "cost": 0.200676,
+   "gen_cost": 0.200676,
+   "gen_secs": 424
+  },
+  {
+   "model": "google/gemini-4-carbon",
+   "effort": "medium",
+   "theme": "a wedding in Kerala",
+   "result": "FAILED",
+   "cost": 0.200676,
+   "gen_cost": 0.200676,
+   "gen_secs": 322
+  },
+  {
+   "model": "google/gemini-4-neon",
+   "effort": "medium",
+   "theme": "a Tokyo sumo stable",
+   "riddle": "At a Tokyo sumo stable, the veteran laid his new passport beside a teenager's one-way ticket from Ulaanbaatar.\nThe older man smiled at the passport, then tore the ticket in half.\n\"I gave up my homeland for that seat,\" the veteran said.\n\"It stays locked,\" the older man replied, \"until the day you cut your topknot.\"",
+   "chars": "the veteran; the older man (sumo stablemaster)",
+   "story": "The Mongolian-born wrestler had renounced his citizenship to naturalize as a Japanese citizen, believing this would vacate his stable's single foreign-wrestler slot for a teenage recruit from Ulaanbaatar. Although the stablemaster was pleased the new passport secured the veteran's future eligibility to become a sumo elder, the Japan Sumo Association's 2010 rule limits each stable to one foreign-born wrestler regardless of current citizenship, meaning the slot stays locked until the veteran retires and cuts his topknot.",
+   "solver": "**Character 1:** A veteran Mongolian-born rikishi (sumo wrestler) who has just become a naturalized Japanese citizen.\n\n**Character 2:** The aging stablemaster (oyakata) who runs the Tokyo sumo stable.\n\n**Story:** The veteran gave up his Mongolian citizenship believing his new Japanese passport would free the stable's single \"foreigner slot\" for his teenage cousin from Ulaanbaatar, so he bought the boy a one-way ticket. The stablemaster smiled at his loyalty but tore up the ticket, because the Sumo Association counts wrestlers as *foreign-born* for life, regardless of passport. That means the slot stays occupied until the veteran retires at his topknot-cutting ceremony.",
+   "judge": "A\nStory A explains why the stablemaster smiled specifically at the passport (it secures the veteran's eligibility to become a sumo elder), and it covers the foreign-born rule and the topknot retirement just as well as Story B.",
+   "riddler_pos": "A",
+   "result": "WIN",
+   "real": true,
+   "fact": "REAL\n\nThe Japan Sumo Association limits each stable to one foreign-born wrestler (a 2010 rule), and it counts wrestlers by birthplace rather than current citizenship, so naturalized wrestlers still occupy the slot. Becoming a Japanese citizen is also required to become an elder (toshiyori), so the scenario fits how the rules work.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is clearly set at a Tokyo sumo stable, with a veteran wrestler, a stablemaster, and a teenage recruit from Ulaanbaatar, so it fits the requested subject.",
+   "cost": 0.20642999999999997,
+   "gen_cost": 0.188544,
+   "gen_secs": 108,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nBoth stories explain why the slot stays occupied, but A gives the stablemaster a more concrete reason to smile: the passport makes the veteran eligible to become a sumo elder even though it does not free the slot.",
+   "alt_result": "WIN"
+  },
+  {
+   "model": "google/gemini-4-hydrogen",
+   "effort": "medium",
+   "theme": "a Kenyan marathon camp",
+   "riddle": "Kip limps into the Iten camp after thirty-five kilometers at altitude, drenched in sweat.\nSeeing the unannounced visitor's case, he chugs two liters of water before they've even met.\nUnder watchful eyes he fills a cup, yet the visitor frowns at a gauge and stays seated,\nconfiscating Kip's water jug for hours until a second round is completed.",
+   "chars": "Kip; the visitor (doping control officer)",
+   "story": "Kip, a marathoner who had been doping, recognized the Anti-Doping Agency officer's testing kit and chugged two liters of water to dilute his urine before providing the observed sample. When the officer's refractometer showed the sample's specific gravity was below WADA's 1.005 minimum, regulations required him to keep Kip under continuous observation and forbid him from drinking any more fluids—despite his post-run dehydration—until he produced a concentrated second sample.",
+   "solver": "**Character 1:** Kip, an elite Kenyan marathon runner training in Iten.\n\n**Character 2:** An anti-doping Doping Control Officer, arriving unannounced with a sample-collection kit case.\n\n**Story:** Thirsty after his long run and nervous at the sight of the testing case, Kip gulped two liters of water, and the urine sample he gave under observation came out too dilute on the officer's refractometer (specific-gravity gauge). The officer stayed put and took away Kip's water jug so he couldn't dilute himself further, waiting hours until Kip could give a second, valid sample.",
+   "judge": "A\nStory A gives a clear reason for chugging water the moment he sees the testing case (deliberately diluting his urine), and it fits every other detail: the observed sample, the refractometer reading, the officer staying put, the confiscated jug and the second sample.",
+   "riddler_pos": "A",
+   "result": "WIN",
+   "real": true,
+   "fact": "REAL\n\nWADA's testing rules require a suitable specific gravity (at least 1.005 by refractometer, or 1.005 or higher by lab strip), and if a sample is too dilute the doping control officer collects further samples until one is suitable. During that time the athlete is kept under continuous observation and is advised not to hydrate excessively, so the mechanism works roughly as described.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is set at Iten, the Kenyan highland training camp for marathon runners, and centers on a runner named Kip at that camp.",
+   "cost": 0.075919,
+   "gen_cost": 0.058572,
+   "gen_secs": 48,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt explains the timing of Kip’s drinking, the dilute sample, and the officer’s wait without assuming Kip had doped or claiming that WADA required the officer to confiscate his jug.",
+   "alt_result": "LOSS"
+  },
+  {
+   "model": "openai/gpt-6.2-astra",
+   "effort": "medium",
+   "theme": "a Scottish whisky distillery",
+   "riddle": "At a Speyside distillery on 23 November 2012, our full steel tanker couldn’t leave for France.\nI took a jugful out and offered to top it up from the next cask; she shook her head.\nI fetched a jugful from the stills’ neighbours across the burn instead, and she signed it out.",
+   "chars": "Iona; Mairi (distillery dispatch manager)",
+   "story": "The tanker held single malt Scotch, all distilled on our side of the burn, and the rule taking effect that morning required single malt leaving Scotland to be in bottles labelled for retail sale. The neighbours’ jug held mature single malt from their own distillery, so stirring it in made the load blended malt, which could legally leave in bulk in steel; another cask of our own malt would have changed nothing.",
+   "solver": "**Character 1:** The distillery manager.\n**Character 2:** Fiona, the HMRC excise officer (occupation: customs officer).\n\n**Story:** Fiona's hydrometer showed our tanker of new-make spirit was a fraction over the strength written on the French export papers, so she wouldn't sign the release. Topping it up from the next cask would only have put the same strong spirit back in, so I drew a jugful of soft spring water from the source across the burn, which brought it down to the declared strength, and she signed it out.",
+   "judge": "B\nStory B explains the exact date, when the rule took effect that single malt must leave Scotland bottled, and the jug from the neighbouring distillery, which turns the load into blended malt that can ship in bulk; Story A leaves both the date and \"the stills' neighbours\" unexplained.",
+   "riddler_pos": "B",
+   "result": "WIN",
+   "real": false,
+   "fact": "INVENTED\n\nThe Scotch Whisky Regulations 2009 do require that Scotch labelled \"single malt\" be bottled in Scotland, so bulk export of single malt is banned, but the answer gets the key point wrong: mixing single malts from two different distilleries produces a \"blended malt,\" which is a different category that is still subject to the Scotland-bottling requirement, so it could not legally leave in bulk.\n\nAlso, the rule mentioned (single malt must be in retail bottles to leave Scotland) is not what the regulation says. The actual requirement is that single malt Scotch be bottled in Scotland, and it applies to the category label, not to blended malt being exempt.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is set at a Speyside distillery, a Scottish whisky producer, and it centers on whisky production and export logistics (tankers, casks, stills, blending malt), so it clearly fits the requested subject.",
+   "cost": 0.051347500000000004,
+   "gen_cost": 0.025664,
+   "gen_secs": 20,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nThe bottling rule explains the exact date and why a jug from another distillery, unlike one from the next cask, turned the load into blended malt that could be exported in bulk.",
+   "alt_result": "WIN"
+  },
+  {
+   "model": "openai/gpt-6.2-astra",
+   "effort": "medium",
+   "theme": "an Icelandic fishing trawler",
+   "riddle": "Off the Westfjords, the paper roll on our Icelandic trawler usually spared us anything we'd read before.\nFour hours apart it told us twice, word for word, where a dark wreck lay.\nWhy did both headings end in a pair of spectacles?",
+   "chars": "Edda; Jón (trawler skipper)",
+   "story": "Edda found two identical warnings about an unlit wreck on Jón’s NAVTEX roll because the coastal station had repeated its bulletin in its next four-hourly transmission slot. Jón recognized the spectacles as message number 00: NAVTEX receivers suppress repeats by remembering message identifiers, but a vital warning numbered 00 must print even if it has already been received.",
+   "solver": "**Character 1:** Jón, the skipper of an Icelandic trawler.\n\n**Character 2:** Sigga, a coastguard radio operator at the Icelandic NAVTEX station.\n\n**Story:** Sigga broadcast a warning about an unlit (\"dark\") wreck drifting off the Westfjords, and she gave it the serial number 00, because NAVTEX receivers always print 00 messages even though they normally skip any message they have already logged. So when the warning went out again at the next scheduled broadcast four hours later, Jón's paper roll printed it a second time word for word, and both headings ended in \"00\", a little pair of spectacles.",
+   "judge": "B\nStory B explicitly links every detail: the vital warning was numbered 00, receivers always print 00 messages despite normally skipping repeats, the bulletin was rebroadcast four hours later, and \"00\" at the end of each heading looks like a pair of spectacles. Story A gives only a terse, less natural account of that visual connection.",
+   "riddler_pos": "A",
+   "result": "LOSS",
+   "real": true,
+   "fact": "REAL\nNAVTEX messages carry a B1B2B3B4 header (station identifier, subject indicator, two-digit serial number), and receivers suppress repeats of already-received messages by that identifier, while serial number 00 is reserved for vital/urgent messages that are always printed regardless of prior receipt. Stations also broadcast in assigned four-hour time slots, so the described scenario is consistent.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle explicitly places the narrator aboard \"our Icelandic trawler,\" and it is set off the Westfjords, a region of Iceland, with the crew reading a navigation warning printout.",
+   "cost": 0.0436241,
+   "gen_cost": 0.025,
+   "gen_secs": 24,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt explains the four-hour repeat and why both headings ended in “00,” the NAVTEX number that bypasses duplicate suppression, without assuming the wreck was drifting.",
+   "alt_result": "WIN"
+  },
+  {
+   "model": "openai/gpt-6.2-sol",
+   "effort": "medium",
+   "theme": "a Scottish whisky distillery",
+   "riddle": "At a Speyside distillery, Euan adds a thimbleful and Morag changes 13 to 12 on the batch sheet.\nShe leaves 2012 on the front label but peels 2025 off the back and sticks it beside 2012.",
+   "chars": "Euan; Morag (bottling manager)",
+   "story": "Every drop was distilled in 2012, but Euan’s thimbleful came from a cask still a week shy of thirteen years in oak, and a Scotch whisky’s declared age is that of its youngest component. Morag could keep 2012 on the bottle because it was the sole distillation year, but since the age was only on the batch sheet, Scotch whisky labelling rules required the bottling year, 2025, to be visible in the same field of vision as 2012.",
+   "solver": "**Character 1:** Euan, a cellar hand at a Speyside distillery.\n**Character 2:** Morag, the distillery's blender and label compliance officer.\n\n**Story:** Euan topped up a cask of 13-year-old single-vintage 2012 whisky with a thimbleful of 12-year-old spirit, and because Scotch law says the age statement must reflect the youngest drop, Morag had to change \"13\" to \"12\" on the batch sheet. The bottle could no longer claim a single vintage year, so she kept \"2012\" on the front but moved the \"2025\" bottling date from the back to sit beside it (\"2012 – 2025\"), honestly stating distillation and bottling years instead.",
+   "judge": "A\n\nStory A explains every detail consistently: all the spirit is from 2012, so the vintage stands. The age drops to 12 only because of time in oak. Labelling rules require the bottling year beside a vintage when no age is stated. Story B contradicts itself by saying the single vintage is lost while still keeping \"2012\" on the front.",
+   "riddler_pos": "A",
+   "result": "WIN",
+   "real": false,
+   "fact": "INVENTED\nScotch whisky rules do make the age statement reflect the youngest component, but there is no requirement that the bottling year appear in the same field of vision as a distillation year; a distillation or vintage year may be shown without a bottling year, provided it's the sole distillation year (the rules require the bottling year only for certain vintage statements if... actually not mandated that way), and an age statement being \"only on the batch sheet\" doesn't trigger such a rule.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is set at a Speyside distillery and centers on Scotch whisky, with references to casks, oak aging, batch sheets, and bottle labels.",
+   "cost": 0.0367834,
+   "gen_cost": 0.011986,
+   "gen_secs": 12,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe younger drop lowers the batch age to 12 without invalidating the shared 2012 vintage, and moving 2025 beside it puts the two years in the same field of vision.",
+   "alt_result": "WIN"
+  },
+  {
+   "model": "google/gemini-4-hydrogen",
+   "effort": "medium",
+   "theme": "a Paris bakery strike",
+   "riddle": "In Paris, workers in flour-dusted aprons wave picket signs outside a cold, dark oven.\nAt dawn, Marc slips crates of warm, from-scratch loaves through the alley door,\nthen tapes black paper over the gold letters on his front window.\nAcross the street, Nadia caps her pen, lowers her clipboard, and walks away.",
+   "chars": "Marc; Nadia (consumer fraud inspector)",
+   "story": "With his Paris bakers on strike and French labor law barring him from hiring temporary replacements, Marc buys warm, from-scratch loaves from another bakery at dawn. Because France's 1998 boulangerie law forbids displaying the \"Boulangerie\" sign unless bread is kneaded, fermented, and baked on the premises—even if it is fresh and never frozen—taping over the gold letters prevents consumer fraud inspector Nadia from fining him.",
+   "solver": "**Character 1:** Marc, a small-shop baker.\n**Character 2:** Nadia, a bakers'-union strike steward who tours Paris with a clipboard, listing bakeries that break the strike.\n\n**Story:** During the citywide bakers' strike, Marc secretly fires his oven before dawn and slips the loaves out the back door to the picketers' families and soup kitchen, then blacks out his gilded \"Boulangerie\" sign so his shop looks shut and no one mistakes it for a strikebreaker's. Nadia, who knows exactly whose bread is feeding her strikers, watches the window go dark, caps her pen without writing his name, and walks on.",
+   "judge": "B\nStory B explains every detail without strain: the strike leaves Marc's own oven cold, so he brings in fresh loaves from elsewhere, and the 1998 law forces him to cover the \"Boulangerie\" letters, which satisfies inspector Nadia. Story A has Marc firing his oven, which contradicts the cold, dark oven in the riddle.",
+   "riddler_pos": "B",
+   "result": "WIN",
+   "real": true,
+   "fact": "REAL\n\nFrance's 1998 decree (Loi/décret of 1998 on \"boulanger\" and \"boulangerie\" appellation) does restrict the name to establishments that knead, ferment, shape, and bake the bread on-site, with penalties enforced by consumer fraud inspectors (DGCCRF). The labor-law claim that strikes bar hiring temporary replacements is also real: the French Labor Code (L1242-6) prohibits fixed-term contracts to replace striking workers.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is set in Paris and centers on a bakery strike, with striking workers on picket lines outside a closed oven, matching the requested topic.",
+   "cost": 0.07468949999999999,
+   "gen_cost": 0.0528795,
+   "gen_secs": 44,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nB explains why warm loaves come in through the alley despite the cold oven and why covering the “Boulangerie” sign gives Nadia a reason to walk away.",
+   "alt_result": "WIN"
+  },
+  {
+   "model": "google/gemini-4-hydrogen",
+   "effort": "medium",
+   "theme": "a Texas oil rig",
+   "riddle": "On a West Texas rig, Clay’s silver buckle blackened, though the air smelled clean.\nHe yelled, \"Keep the water on!\" as Boone reached for the steel hatch with a brass wrench.\nToo late—Boone had already drained the tank dry in the midday heat.\nWithout a spark, a match, or a live wire near, the tank erupted into flame.",
+   "chars": "Boone; Clay (oil rig toolpusher)",
+   "story": "The West Texas rig had hit lethal sour gas (hydrogen sulfide), which tarnished Clay’s silver buckle black and paralyzed their noses so the air smelled clean. Hydrogen sulfide also reacts with rust inside steel tanks to form pyrophoric iron sulfide—a compound that spontaneously ignites without a spark when dried out and exposed to oxygen, which is why draining the water before opening the hatch with a non-sparking brass wrench caused the tank to erupt.",
+   "solver": "**Character 1:** Clay, the rig's H₂S safety officer.\n**Character 2:** Boone, a roustabout (tank hand).\n\n**Story:** Clay's silver buckle tarnished black because the \"clean\" air was full of hydrogen sulfide, a gas that deadens your sense of smell at high levels, so he knew the sour-crude tank was coated inside with iron sulfide scale. Boone carefully used a non-sparking brass wrench, but he had already drained the tank and let the scale dry in the hot sun, so when he opened the hatch, the air rushing in made the pyrophoric iron sulfide ignite by itself and set off the vapors.",
+   "judge": "A\n\nStory A accounts for every detail, including the midday heat drying the scale, the hatch letting in air, and why Clay as H₂S safety officer would know to keep the water on, while B leaves the heat and Clay's warning less explicitly tied in.",
+   "riddler_pos": "B",
+   "result": "LOSS",
+   "real": true,
+   "fact": "REAL\n\nH2S tarnishes silver black, causes olfactory fatigue at high concentrations, and reacts with rust in steel tanks to form pyrophoric iron sulfide that can spontaneously ignite when dried and exposed to air, so the described mechanism is accurate.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is clearly set on a West Texas oil rig, with clear references to the rig, a steel tank, a hatch, and a brass wrench, so it matches the requested subject.",
+   "cost": 0.0976264,
+   "gen_cost": 0.078807,
+   "gen_secs": 69,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt more fully explains the sequence: hydrogen sulfide blackened the buckle and dulled Clay’s sense of smell, while opening the hatch exposed the dried scale to air, igniting the tank vapors despite the non-sparking wrench.",
+   "alt_result": "LOSS"
+  },
+  {
+   "model": "google/gemini-4-argon",
+   "effort": "medium",
+   "theme": "a Tokyo sumo stable",
+   "riddle": "In the Ryōgoku dirt, the giant stops his morning drills because his brother signed the ledger first.\nThe small clerk offers to burn the new application, until the groom takes a tape measure to the boy's bare scalp.\nFour silicon millimeters short of the mark, the boy declines the clinic's syringe and turns to go.\nYet he stays in the quarters, forbidden the clay, to comb the clay from his rival's oiled crown.",
+   "chars": "An undersized sumo applicant; a tokoyama (sumo hairdresser)",
+   "story": "Because Japan Sumo Association regulations strictly limit each stable to one foreign-born wrestler, the undersized applicant's signing would have permanently blocked his larger foreign brother from joining, and he lacks the four millimeters of height previously faked via banned scalp silicone injections to pass the physical exam anyway. However, because the one-foreigner quota applies only to active wrestlers on the clay, the tokoyama recruits the rejected boy as an apprentice hairdresser so both brothers can legally enter the same Tokyo stable together.",
+   "solver": "**Character 1:** The boy, a small foreign teenager and the younger brother of a giant sumo hopeful.\n\n**Character 2:** The stable's *tokoyama* (topknot hairdresser), who serves as the \"groom.\"\n\n**Story:** The boy signed the Ryōgoku stable's ledger before his giant brother, and since the stable may take only one foreign recruit, his brother stopped training, his hopes seemingly ended. But the tokoyama's tape measure showed the boy 4 mm under the height minimum, and he refused the silicone scalp injection that some recruits use to cheat the measurement, which freed the slot for his brother. So the boy stayed on, barred from ever wrestling, as an apprentice tokoyama, combing the dirt from the oiled topknot of the brother who became his rival for that one place.",
+   "judge": "A\nStory A explains more of the riddle's details: the brother signing first halts the giant's drills, the boy is 4 mm short and refuses the silicone syringe, and he stays on as a hairdresser combing his rival-brother's topknot, whereas Story B skips the refused syringe and the rivalry.",
+   "riddler_pos": "B",
+   "result": "LOSS",
+   "real": false,
+   "fact": "INVENTED\n\nThe one-foreign-wrestler-per-stable rule is real, and the scalp-silicone height trick has real precedent (Japan banned it after the 1970s case of Kitao/Akinoshima? actually the Kasugao-style silicone cases), but the mechanism as described has problems. Tokoyama are employed by the Association and are not recruited by a stable to sidestep the quota. Hiring the rejected brother as a hairdresser would not let him enter the same stable \"together\" as a wrestler, and the elaborate scheme isn't a documented procedure.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is clearly set in a Tokyo sumo stable (Ryōgoku, the sumo district, with dirt ring, quarters, and clay) and centers on sumo life, including the tokoyama hairdresser role. The answer also matches the riddle's sumo-stable setting.",
+   "cost": 0.0280003,
+   "gen_cost": 0.002896,
+   "gen_secs": 11,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nA more directly connects the giant’s stopped drills to his brother signing first and explains why the boy ends up cleaning his rival’s topknot instead of wrestling.",
+   "alt_result": "LOSS"
+  },
+  {
+   "model": "google/gemini-4-carbon",
+   "effort": "medium",
+   "theme": "a Kenyan marathon camp",
+   "result": "FAILED",
+   "cost": 0.0,
+   "gen_cost": 0,
+   "gen_secs": 463
+  },
+  {
+   "model": "google/gemini-4-argon",
+   "effort": "medium",
+   "theme": "a Kenyan marathon camp",
+   "riddle": "At his Iten dorm, the runner serves the stranger cup after cup of sweet chai,\nYet fiercely forbids him from stepping behind the acacia trees.\nAt 5:58 a.m., the runner smiles at his watch and points toward the latrine,\nSo the stranger walks away empty-handed, leaving his sealed glass vials in the red dirt.",
+   "chars": "A Kenyan marathoner; a World Athletics Doping Control Officer",
+   "story": "The runner realized the unannounced Doping Control Officer had arrived before his declared 6:00 a.m. whereabouts window, meaning the runner was legally required to stay in sight and be tested, so he plied the officer with tea while refusing to let him step out of view to relieve himself. Under WADA International Standards for Testing, a sample cannot be collected until at least 90 milliliters of urine is produced, and by forcing the officer to abandon the observation post for the latrine two minutes before the mandatory 6:00 a.m. window opened, the runner legally broke the chain of custody and voided the pre-dawn test attempt.",
+   "solver": "**Character 1:** Kip, an elite distance runner who is secretly doping.\n\n**Character 2:** Mr. Otieno, an anti-doping control officer who arrived unannounced during Kip's declared 5:00–6:00 a.m. testing window.\n\n**Story:** Kip, deliberately dehydrated so he couldn't produce a sample, kept the officer drinking sweet chai and wouldn't let him relieve himself behind the acacias, where Kip's syringes were buried. At 5:58, with Mr. Otieno desperate, Kip pointed him to the distant latrine, and by the time he returned the window had closed, so he left with his sealed collection vials still empty in the red dirt.",
+   "judge": "B\nStory B coherently explains every detail: the runner is dehydrated so he cannot give a sample, the chai fills the officer's bladder, buried syringes explain the forbidden acacias, and the 5:58 latrine trip runs out the 6:00 window. Story A's logic is muddled and self-contradictory.",
+   "riddler_pos": "A",
+   "result": "LOSS",
+   "real": false,
+   "fact": "INVENTED\n\nThe scenario muddles real rules: the 60-minute whereabouts slot is a window in which the athlete must be available, and the 90 mL minimum is real, but a DCO leaving to use the latrine doesn't void a test or \"break chain of custody\" in a way that nullifies an attempt. Under WADA rules the DCO and athlete both stay accountable, and an athlete who dodges or delays testing risks a failure-to-comply violation, not a legal escape.",
+   "fit": true,
+   "fit_reason": "YES\n\nThe riddle is set at Iten, the well-known Kenyan highland training town, in a runner's dorm, and it features a marathoner and his camp routine, including the chai and the early-morning schedule.",
+   "cost": 0.0264265,
+   "gen_cost": 0.003046,
+   "gen_secs": 8,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nThe buried syringes explain why the acacias were off-limits, and the chai and distant latrine make 5:58 a plausible moment to run out the clock.",
+   "alt_result": "LOSS"
+  },
+  {
+   "model": "google/gemini-4-neon",
+   "effort": "medium",
+   "theme": "a Kenyan marathon camp",
+   "riddle": "Jogging back through the red dust of Iten after a thirty-kilometer run, Kibet finds a stranger waiting by the camp dormitory.\nKibet rolls up his sleeve to get it over with, but the stranger shakes his head, keeps him in sight, and sets a timer for two hours.\nWith five minutes left on the timer, Kibet rises from his plastic chair to stretch his stiff legs.\nThe stranger sighs, points back at the chair, and tells him he has just added five more minutes to the wait.",
+   "chars": "Kibet; Samuel (doping control officer)",
+   "story": "Samuel is a doping control officer conducting an unannounced Athlete Biological Passport blood test at the Kenyan marathon camp, which under WADA rules requires keeping Kibet under continuous observation and waiting at least two hours after intense exercise so post-run plasma shifts do not distort hemoglobin readings. WADA's blood-collection protocol also requires the athlete to remain seated for ten uninterrupted minutes immediately before the draw, so when Kibet stands to stretch with five minutes left, the ten-minute seated requirement resets and pushes the draw five minutes past the two-hour mark.",
+   "solver": "**Character 1:** Kibet, an elite Kenyan distance runner.\n**Character 2:** A Doping Control Officer collecting blood for the Athlete Biological Passport.\n\n**Story:** Anti-doping rules forbid drawing a passport blood sample within two hours of intense training, so after Kibet's 30 km run the officer keeps him under observation and starts a two-hour timer. The rules also require the athlete to stay seated for the final ten minutes before the draw so his blood volume settles, so when Kibet stands with five minutes left, that seated period restarts and the wait grows by five minutes.",
+   "judge": "B\n\nBoth stories give the same mechanism, but B explains it more fully: it ties the two-hour wait to post-exercise plasma shifts distorting hemoglobin readings, makes the continuous observation part of the protocol, and spells out how the ten-minute seated reset pushes the draw five minutes past the timer.",
+   "riddler_pos": "B",
+   "result": "WIN",
+   "real": true,
+   "fact": "REAL\nWADA's Athlete Biological Passport guidelines do require the athlete to be seated for at least 10 minutes before a blood draw, and they advise avoiding training or exercise for about two hours beforehand because of plasma volume shifts. The scenario's details are embellished, but the mechanism holds.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is clearly set in a Kenyan marathon camp (Iten, red dust, camp dormitory, runners returning from training) and is about the camp's world, specifically an anti-doping blood test that athletes there would face.",
+   "cost": 0.1693383,
+   "gen_cost": 0.151989,
+   "gen_secs": 87,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt explains the unannounced visit and continuous observation, why the officer waits two hours after the run, and why restarting the ten-minute seated period adds exactly five minutes.",
+   "alt_result": "WIN"
+  },
+  {
+   "model": "google/gemini-4-carbon",
+   "effort": "medium",
+   "theme": "a submarine crew in 1943",
+   "result": "FAILED",
+   "cost": 0.200686,
+   "gen_cost": 0.200686,
+   "gen_secs": 462
+  },
+  {
+   "model": "openai/gpt-6.2-astra",
+   "effort": "medium",
+   "theme": "a Tokyo sumo stable",
+   "riddle": "For a fortnight I watched the man from the next futon beat seven men who weren’t me.\nOn the last Sunday I was his eighth.\nBack at our Tokyo stable we pinned up the results: seven wins apiece, both undefeated.",
+   "chars": "Ren; his stablemate Daichi (sumo wrestler)",
+   "story": "Ren and Daichi were the only two men to finish the seven-bout makushita schedule unbeaten, since stablemates cannot be paired in regulation bouts. That bar lifts for a title playoff, but the playoff decides only the title: Daichi put Ren down on Sunday without adding a win to his own record or a loss to Ren’s.",
+   "solver": "**Character 1:** Kenta, a young makushita-division sumo wrestler (the narrator).\n\n**Character 2:** Daiki, a fellow sumo wrestler (occupation: professional rikishi) who sleeps on the next futon in the same Tokyo stable.\n\n**Story:** In the lower divisions each wrestler fights only seven bouts across the fifteen-day tournament, and stablemates are never paired in regular bouts, so Kenta and Daiki each finished a perfect 7–0 and met only in the final-Sunday playoff for the division title. Playoff bouts don't count toward the official record, so whoever won that eighth match, both men still pinned up an undefeated 7–0 back at the stable.",
+   "judge": "A\nStory A states outright that the stablemate beat the narrator in the playoff, which matches \"I was his eighth,\" whereas Story B leaves the winner ambiguous, even though it does better cover the futon and fortnight details.",
+   "riddler_pos": "A",
+   "result": "WIN",
+   "real": true,
+   "fact": "REAL\n\nIn professional sumo, wrestlers from the same stable don't fight each other in regular honbasho bouts, but they can meet in playoffs for a title, and playoff results are not counted in the official win-loss records. The seven-bout schedule for makushita and lower divisions is also accurate.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is clearly about a Tokyo sumo stable. It refers to a stable in Tokyo, wrestlers training and competing in bouts, and a fortnight-long tournament schedule, all within a sumo setting.",
+   "cost": 0.0750568,
+   "gen_cost": 0.056424,
+   "gen_secs": 58,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nA explicitly says Daichi defeated the narrator in the playoff, explaining “I was his eighth” while preserving both official 7–0 records.",
+   "alt_result": "WIN"
+  },
+  {
+   "model": "google/gemini-4-argon",
+   "effort": "medium",
+   "theme": "a Texas oil rig",
+   "riddle": "Under the Permian sun, the greenhorn laughs when the scale shows his returning mud is suddenly two pounds lighter.\nBeside the spinning iron, the boss grabs a sledgehammer instead of the brake.\nHe shatters a brass union to flood the deck with heavy barite before the boy can finish his sentence.\nThey lose a fortune in steel by sunset, yet the owner wires a bonus for the broken pipe.",
+   "chars": "A rookie roughneck; a veteran toolpusher (oil rig supervisor)",
+   "story": "Realizing that drilling mud returning two pounds per gallon lighter meant stealthy hydrocarbon gas was cutting the mud's density toward a catastrophic blowout, the toolpusher instantly hammered open the brass wing-union on the emergency weighting line to pump heavy barite downhole. He struck the pipe rather than pulling the draw-works brake because stopping the drill string's rotation while pumping heavy barite causes differential sticking, which permanently cements the drill pipe against the borehole wall and forces the crew to sever and abandon the expensive steel string to save the rig.",
+   "solver": "**Character 1:** Jimmy, a greenhorn roughneck on his first hitch.\n\n**Character 2:** Hank, the veteran toolpusher (drilling-rig boss) running the West Texas rig.\n\n**Story:** When Jimmy laughed that the returning mud had suddenly gone two pounds lighter, Hank knew it was gas-cut mud from a kick, a blowout seconds away. There was no time to stop the spinning pipe, so he smashed the brass union to dump the heavy barite kill mud straight down the hole. That stuck and buried the whole drill string, losing a fortune in steel, but the well never blew, so the owner happily paid a bonus for the lost pipe instead of burying a crew and a rig.",
+   "judge": "B\nStory B explains every detail coherently: the laugh, the urgency that made the hammer faster than the brake, the lost pipe and the owner's bonus for saving the rig. Story A never accounts for the bonus, and its reasoning for skipping the brake contradicts its own outcome of losing the string anyway.",
+   "riddler_pos": "A",
+   "result": "LOSS",
+   "real": false,
+   "fact": "INVENTED\nGas cutting does lower returning mud density and barite is used to weight mud, but the described logic is wrong: differential sticking comes from stationary pipe held against a permeable formation under overbalanced pressure, not from stopping rotation while pumping barite. Hammering a wing union is a union-connection practice, not a way to avoid pulling a brake, and the whole \"strike the pipe rather than brake\" rationale is incoherent.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is clearly set on a Texas-style oil rig: it references the Permian basin, drilling mud, a spinning drill string, a brake, barite, a brass union, deck, pipe, and a rig owner, all of which fit the requested subject.",
+   "cost": 0.0235728,
+   "gen_cost": 0.002876,
+   "gen_secs": 11,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nB connects the smashed union and sacrificed drill string to the averted blowout, which explains why the owner paid a bonus despite losing a fortune in steel.",
+   "alt_result": "LOSS"
+  },
+  {
+   "model": "openai/gpt-6.2-astra",
+   "effort": "medium",
+   "theme": "a submarine crew in 1943",
+   "riddle": "In 1943 a submarine crew crowded round a board drilled from scrap wood.\nOne sailor was a hole from home, with twenty pips in his fist, five to a card.\nHis mate was two holes from home. A face turned up between them.\nThe mate collected the tin of peaches without playing a card.",
+   "chars": "Eddie; Lou (submarine cook)",
+   "story": "Eddie held all four fives in the crew’s cribbage game, a hand worth twenty-eight points with the jack he cut for the starter. But Lou had dealt, and cribbage awards the dealer two points for a jack starter the instant it turns up, so Lou pegged out before Eddie could play a five, let alone count his hand.",
+   "solver": "**Character 1:** Seaman Joe Kowalski, holding four fives (twenty pips, five to a card) and needing just one point to win.\n\n**Character 2:** Torpedoman's Mate Eddie Reyes, the dealer, needing two points.\n\n**Story:** Playing cribbage on a homemade board for the crew's last tin of peaches, Joe sat on four fives, a hand worth at least 20 and possibly 29, and needed only one peg to win. But Eddie, as dealer, cut the starter card and turned up a jack, scoring \"two for his heels\" and pegging out before a single card was played, so Joe's monster hand never got counted.",
+   "judge": "B\n\nStory B explicitly accounts for every riddle detail: the homemade board, the one-hole versus two-hole positions, the twenty pips in four fives, and the tin of peaches as the stake, while Story A leaves the hole counts and the peaches unexplained.",
+   "riddler_pos": "A",
+   "result": "LOSS",
+   "real": false,
+   "fact": "INVENTED\n\nThe cribbage rule is real (the dealer scores 2 points \"for his heels\" when a jack is turned as the starter), but the scenario has a fatal flaw: Eddie couldn't have \"cut\" the jack and also held all four fives plus that jack, since the starter would be a different card from his hand's jack, and a 28-point hand requires three fives plus the jack of the starter's suit... actually, a 28 hand is three fives plus a jack of the same suit as the starter five, with the starter being the fifth card, so it's four fives with a jack starter being 29 at best, not matching the described hand. Specifically, four fives plus a jack starter is a 29 hand, not 28, and the jack-starter \"nobs\" doesn't apply. Also, \"Lou pegged out\" from 2 points implies he was already at 119 or so, which is not stated, so the mechanism is materially wrong in its details.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle opens with \"In 1943 a submarine crew,\" which matches the requested setting and subject. It then builds the scene around the crew's cribbage game, with sailors, a cook, and a tin of peaches.",
+   "cost": 0.0652107,
+   "gen_cost": 0.04108,
+   "gen_secs": 30,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt ties the twenty pips, the two-hole gap, and the peaches together: the turned-up jack gives the dealer two points and the win before either sailor plays a card.",
+   "alt_result": "LOSS"
+  },
+  {
+   "model": "google/gemini-4-hydrogen",
+   "effort": "medium",
+   "theme": "an Icelandic fishing trawler",
+   "riddle": "Out of Ísafjörður, Jón watches their nets spill tonnes of unquoted haddock onto the deck, yet Magnús forbids him to shovel a single fish back into the sea.\nA gale is rising and Jón begs to steam for port, but Magnús orders the trawl dropped again and again through the freezing spray.\nWith space still left in the hold, Magnús turns the bow toward home the instant their total catch passes twenty times that unwanted haul's weight.\nAt the dock, Magnús sells the unquoted haddock for a fifth of its market price without a single complaint.",
+   "chars": "Jón; Magnús (trawler skipper)",
+   "story": "Because Iceland strictly prohibits discarding fish at sea, Magnús cannot dump the unquoted haddock overboard and must land every kilo at port. Under Iceland's VS-afli (VS-catch) rule, a trawler may land unquoted bycatch without quota penalties—receiving 20% of the auction price while 80% goes to a marine research fund—only if it stays at or below 5% of the trip's total weight, so Magnús braves the gale to catch nineteen times that haul in legal fish before heading home.",
+   "solver": "**Character 1:** Jón, a young deckhand.\n**Character 2:** Magnús, a trawler skipper who knows Iceland's fisheries law.\n\n**Story:** Iceland bans throwing fish back, so Magnús must land the unquoted haddock. The law lets a boat land such \"VS-catch\" only if it is at most 5% of the trip's total, with the boat keeping 20% of its value and the rest going to a state fund. So he braved the gale until the total catch passed twenty times the haddock's weight, which made the haddock legal instead of a heavy fine, and he happily took his fifth at the dock.",
+   "judge": "A\nBoth stories rest on the same VS-catch rule, but Story A explicitly ties every detail together, including why Magnús turns home the moment the total passes twenty times the haddock and why he accepts the fifth without complaint (it beats a heavy fine), while Story B leaves the calm acceptance of the price less directly explained.",
+   "riddler_pos": "B",
+   "result": "LOSS",
+   "real": true,
+   "fact": "REAL: Iceland does have a discard ban and a VS-afli (Verðmætasjóður/\"value-based\" catch) rule under which landed catch not covered by quota is sold at auction, with the vessel keeping about 20% of the proceeds and the rest going to a marine research fund (Verkefnasjóður sjávarútvegsins).\n\nThe main inaccuracy is the cap: the VS-afli allowance is not exactly 5% of the trip's total weight (it is generally tied to a percentage of catch, around 5% of the total catch by species, with some variation), but the overall mechanism is correct enough.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is set on an Icelandic fishing trawler. It names Ísafjörður, a real Icelandic town, and describes a trawl net, a deck, a hold, a skipper, and a dock, all typical of a trawler's operations.",
+   "cost": 0.084725,
+   "gen_cost": 0.063846,
+   "gen_secs": 53,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt explains all four clues and explicitly matches the skipper’s decision to turn home just after the total catch passed twenty times the haddock’s weight.",
+   "alt_result": "LOSS"
+  },
+  {
+   "model": "google/gemini-4-carbon",
+   "effort": "medium",
+   "theme": "a Texas oil rig",
+   "result": "FAILED",
+   "cost": 0.200676,
+   "gen_cost": 0.200676,
+   "gen_secs": 328
+  },
+  {
+   "model": "google/gemini-4-hydrogen",
+   "effort": "medium",
+   "theme": "a Scottish whisky distillery",
+   "riddle": "Callum bought a prized twenty-five-year-old cask from a Speyside distillery, his bespoke labels already printed.\nBefore sealing it, Alistair ignored an open twenty-five-year-old bottle from across the valley and tipped a single drop from a three-year-old one inside.\nThe whisky tasted unchanged, yet Callum burned his labels and abandoned his fortune.",
+   "chars": "Callum; Alistair (distillery manager)",
+   "story": "To stop Callum from bottling the cask under the distillery's prestigious name, Alistair \"teaspooned\" it—adding a drop from a neighbouring distillery so it legally became a Blended Malt rather than a Single Malt. Alistair deliberately skipped the rival's 25-year-old bottle in favour of the 3-year-old because Scotch Whisky Regulations require any age statement to reflect the youngest spirit in the cask, stripping Callum's investment of both its distillery name and its 25-year age claim.",
+   "solver": "**Character 1:** Callum, a buyer who planned to bottle and sell the cask as a premium \"25-Year-Old Single Malt.\"\n\n**Character 2 (with occupation):** Alistair, the distillery's spiteful cellar master, who knew Scotch whisky law: an age statement must reflect the *youngest* whisky in the bottle, and \"single malt\" means the whisky came from one distillery only.\n\n**Story:** Before sealing the cask, Alistair ignored the 25-year-old from the rival distillery across the valley, since that would only have cost the cask its \"single malt\" status, and instead added one drop of the distillery's own three-year-old spirit. The whisky tasted exactly the same, but it was now legally only a \"3-Year-Old,\" so Callum's printed 25-year labels became fraudulent and his fortune vanished.",
+   "judge": "A\nStory A uses real \"teaspooning\" practice to strip both the single-malt status and the 25-year age claim, and it gives a clear motive for choosing the 3-year-old over the 25-year-old, whereas Story B depends on unexplained spite.",
+   "riddler_pos": "A",
+   "result": "WIN",
+   "real": true,
+   "fact": "REAL\n\nUnder the Scotch Whisky Regulations 2009, a single malt must come from one distillery, so adding even a drop from another distillery makes it a blended malt (\"teaspooning\" is a known practice). Any age statement must also reflect the youngest spirit in the blend, so adding 3-year-old whisky would legally remove the 25-year claim.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is clearly about a Scottish whisky distillery: it is set at a Speyside distillery, involves a distillery manager, a cask, bottling, and whisky age statements, so it fits the requested theme.",
+   "cost": 0.0873064,
+   "gen_cost": 0.0642045,
+   "gen_secs": 54,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nA explains why Alistair chose the younger whisky: a single drop from another distillery stripped the cask of both its single-malt status and its 25-year age claim without noticeably changing the taste.",
+   "alt_result": "WIN"
+  },
+  {
+   "model": "google/gemini-4-neon",
+   "effort": "medium",
+   "theme": "a Paris bakery strike",
+   "riddle": "In Paris, Henri vows to leave the ovens cold at dawn unless his pay is raised, certain he cannot be fired.\nThat evening, Claire puts a neighbor on the payroll, yet keeps the shutters locked all morning while paying him to read at the empty counter.\nNo union has called a national strike, and not a pinch of flour is touched.\nBy dusk, Henri is legally dismissed.",
+   "chars": "Claire; Henri (baker)",
+   "story": "Henri had been the sole employee at Claire's Paris bakery, where French labor law uniquely allows a lone worker to strike alone, whereas in any workplace with two or more employees a solo walkout without a national union strike call is an illegal absence. By putting a neighbor on the payroll the night before—without needing to open the shop or have him replace Henri at the ovens—Claire stripped Henri of his sole-employee status so she could legally fire him the moment he refused to work.",
+   "solver": "**Character 1:** Henri, the lone baker at a small Paris bakery.\n\n**Character 2:** Claire, the bakery's owner (an employer who knows French labor law).\n\n**Story:** Henri was sure his dawn walkout was a protected strike, because French law lets a sole employee strike, but only when joining a national strike call. That evening Claire hired a neighbor, so the shop now had two workers; at dawn the neighbor stayed at the empty counter and kept working by reading, which made Henri's stoppage a one-man refusal rather than a collective strike, and with no national strike to join, Claire lawfully fired him for unjustified absence by dusk.",
+   "judge": "B\n\nStory B gives a coherent legal mechanism: hiring the neighbor ends Henri's lone-employee right to strike alone, and with no national strike call his walkout becomes an unjustified absence. Story A's version of the law is self-contradictory, since it says a sole employee may strike only by joining a national call, which makes hiring the neighbor pointless.",
+   "riddler_pos": "B",
+   "result": "WIN",
+   "real": false,
+   "fact": "INVENTED\n\nFrench law does protect the right to strike, and a single-employee company can lawfully strike, but it does not work as described: in the private sector a strike needs a collective work stoppage with professional demands, and hiring a neighbor would not strip the right to strike or make firing a striker lawful (dismissing someone for striking is void, barring serious misconduct \"faute lourde\").",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is clearly about a Paris bakery strike: Henri threatens to stop work at the ovens unless his pay rises, and the plot centers on the strike and his dismissal at a Paris bakery.",
+   "cost": 0.1493294,
+   "gen_cost": 0.128424,
+   "gen_secs": 102,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nIt correctly treats sole-employee status as an exception to the collective-strike requirement and explains why Claire needed the neighbor on payroll but not at the ovens.",
+   "alt_result": "WIN"
+  },
+  {
+   "model": "openai/gpt-6.2-sol",
+   "effort": "medium",
+   "theme": "a submarine crew in 1943",
+   "riddle": "In the North Atlantic in 1943, two men aboard a submerged U-boat watched the same needle fall.\nOne said, “We’re sinking”; the other said, “No, we’re leaking.”\nWith the depth gauge steady and the sea shut out, the second man went looking for air coming in.",
+   "chars": "Emil; Otto (submarine engineer)",
+   "story": "Emil had mistaken the control-room barometer for a depth gauge, but Otto was watching it because the crew had raised the air pressure inside the boat slightly to check its seals. The barometer measured cabin pressure, not water pressure, so its falling needle betrayed air escaping from the pressurized compartment, and Otto checked the next compartment for air leaking into it.",
+   "solver": "**Character 1:** A young seaman (Matrosengefreiter) on his first patrol.\n\n**Character 2:** The Leitender Ingenieur, the U-boat's chief engineer.\n\n**Story:** The falling needle was not the depth gauge but the pressure gauge on the boat's high-pressure air flasks. The seaman thought losing blow-air meant they could never surface, but the chief, seeing the depth gauge steady and the hull dry, knew the air was escaping from a cracked fitting into the boat itself, so he went listening for the hiss of air coming in.",
+   "judge": "B\nStory B fits most naturally: a falling HP-air flask gauge reads as \"we can't surface,\" the steady depth gauge and dry hull rule out sinking, and air escaping into the boat is exactly the \"air coming in\" he goes looking for.",
+   "riddler_pos": "A",
+   "result": "LOSS",
+   "real": true,
+   "fact": "REAL\n\nSubmarines can be slightly pressurized to test hull and compartment seals, and a falling air-pressure reading on a barometer (or manometer) indicates leakage, so the described mechanism works roughly as stated.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is set in 1943 aboard a submerged U-boat, a submarine with a crew, which matches the request. It also centers on two crew members and their shared problem, so it is clearly about a submarine crew in that year.",
+   "cost": 0.0297514,
+   "gen_cost": 0.00221,
+   "gen_secs": 2,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "B\nThe falling flask pressure explains both the seaman’s fear that they couldn’t surface and the engineer’s search for air leaking into the boat, even though its depth was steady and no seawater was entering.",
+   "alt_result": "LOSS"
+  },
+  {
+   "model": "google/gemini-4-neon",
+   "effort": "medium",
+   "theme": "a submarine crew in 1943",
+   "riddle": "Deep under a 1943 depth-charge run, a fierce hiss filled the sealed control room as the depth needle climbed thirty feet shallower.\nThough the deck stayed dead level, Cole reached for the flood valve to drive the submarine back down.\nSwallowing hard to clear his ears, Miller slapped Cole's hand away and spun a brass wheel overhead.\n\"Keep her level,\" Miller barked. \"We haven't risen an inch.\"",
+   "chars": "Cole; Miller (chief machinist's mate)",
+   "story": "The depth-charge concussion ruptured a high-pressure air line in the sealed control room, raising the cabin air pressure by nearly one atmosphere and popping Miller's ears before he shut the overhead isolation valve. Because WWII submarine Bourdon-tube depth gauges measure the difference between outside seawater pressure and inside cabin air pressure, that excess cabin pressure fooled the needle into reading thirty feet shallower, so Miller stopped Cole from flooding the trim tank and driving their level boat deeper toward crush depth.",
+   "solver": "**Character 1:** Cole, a young planesman on his first war patrol.\n**Character 2:** Miller, the submarine's veteran Chief of the Boat.\n\n**Story:** A depth charge cracked a high-pressure air line, so air hissed into the sealed control room and raised its pressure. The depth gauge measures sea pressure against cabin pressure, so it falsely showed the boat rising. Miller felt that rise in his ears and saw the deck stay level, so he knew they hadn't moved; he stopped Cole from flooding the boat toward crush depth and spun the overhead valve shut to stop the leak.",
+   "judge": "A\nStory A ties every detail together most precisely: about one atmosphere of extra cabin pressure, roughly 33 feet of seawater, explains the exact thirty-foot false reading, while the ruptured air line covers the hiss, Miller's ears and the overhead isolation valve.",
+   "riddler_pos": "A",
+   "result": "WIN",
+   "real": false,
+   "fact": "INVENTED\nWWII submarine depth gauges did read the difference between sea pressure and internal pressure, so raised cabin pressure would make them read shallower, but a ~1 atm rise would shift the reading by about 33 feet, so that part is roughly right. The problem is that a depth-charge-ruptured high-pressure air line raising pressure by nearly a full atmosphere in a control room is implausible, and the described sequence is not an established mechanism. Also, the actual depth gauges were typically referenced to the boat's internal pressure only loosely, and the scenario's details are embellished beyond what the real mechanism supports.",
+   "fit": true,
+   "fit_reason": "YES\n\nThe riddle is clearly set in 1943, with the opening line naming a \"1943 depth-charge run.\" It is also clearly about a submarine crew, with a sealed control room, a depth needle, a flood valve, a trim tank, and two named crewmen, Cole and Miller.",
+   "cost": 0.2381664,
+   "gen_cost": 0.219984,
+   "gen_secs": 123,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nIt ties the thirty-foot false reading to a nearly one-atmosphere rise in cabin pressure and identifies the brass wheel as the air-line shutoff, without treating a level deck as proof that the submarine hadn’t risen.",
+   "alt_result": "WIN"
+  },
+  {
+   "model": "google/gemini-4-argon",
+   "effort": "medium",
+   "theme": "a submarine crew in 1943",
+   "riddle": "Beneath the waves of forty-three, we had to lose the dead man's weight;\nI packed our food into his bunk to balance out his iron fate.\nI took a saw to his cold shins, though he was short and the tube was wide;\nHe left our boat without a wake, and never touched the sea outside.",
+   "chars": "A submarine sailor; his commander (U-boat captain)",
+   "story": "While submerged in 1943, the crew had to load a dead sailor and heavy iron ballast into a torpedo tube—reclaiming his bunk from food storage—just to conduct a secret burial without leaving floating debris that would betray their position. Because standard German G7e torpedoes were launched by an internal tail-piston that struck a 22-inch-long rear guide-trough, the captain ordered the corpse's lower legs sawed off so the steel ram could seat behind the body without crushing it and jamming the firing valve.",
+   "solver": "**Character 1:** The narrator, a WWII submarine crewman.\n**Character 2:** Petty Officer Harris, the boat's cook, a short man with iron leg braces, who died on patrol.\n\n**Story:** In 1943, when Harris died at sea, we couldn't fire him from the torpedo tube without giving away our position, so I unbolted his iron braces (sawing through his frozen trouser shins) to fit him into the cold-storage locker, and I stacked the displaced food in his empty bunk to keep the boat's trim balanced. He rode home that way and was carried ashore at port, leaving no burial wake and never touching the sea.",
+   "judge": "A\n\nStory A keeps the body aboard, which explains \"never touched the sea outside\" and \"without a wake,\" while Story B fires the corpse out of the tube, contradicting that line and relying on a contrived piston explanation for the sawing.",
+   "riddler_pos": "B",
+   "result": "LOSS",
+   "real": false,
+   "fact": "INVENTED\nBurials at sea from U-boats did sometimes use torpedo tubes, but the G7e was an electric torpedo launched by compressed air (not an internal tail-piston striking a guide-trough), and the claim of sawing off a corpse's legs to seat a \"steel ram\" is fabricated.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle explicitly places itself in 1943 with \"Beneath the waves of forty-three,\" and its imagery (a boat, a torpedo tube, bunks, a crew leaving \"without a wake\" and never touching \"the sea outside\") clearly describes a submarine crew.",
+   "cost": 0.0262608,
+   "gen_cost": 0.002806,
+   "gen_secs": 10,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe braces and cold-storage locker explain the sawing despite the wide tube, the displaced food goes into the bunk, and carrying him ashore accounts for both the lack of a wake and his never touching the sea.",
+   "alt_result": "LOSS"
+  },
+  {
+   "model": "google/gemini-4-neon",
+   "effort": "medium",
+   "theme": "an Icelandic fishing trawler",
+   "riddle": "Off east Iceland, the main screen blazes red to port, while starboard shows only a pale gray mist.\nEinar points port, but the older man checks a second display where the mist glows brighter, and steers straight into it.\n\"Land that red cloud in Neskaupstaður and we're ruined,\" he mutters, lowering the net.\nAn hour later, the trawler's hold is brimming with silver.",
+   "chars": "Einar; the older man (skipper)",
+   "story": "The trawler has exhausted its herring quota, so under Iceland's strict quota and no-discard laws, catching the dense herring shoal to port would bring ruinous penalties at Neskaupstaður. Because Atlantic mackerel lack the air-filled swim bladders that make herring blaze red on standard low-frequency (38 kHz) sonar, the skipper confirms the faint starboard mist is a massive mackerel school on the high-frequency (200 kHz) display—where bladderless mackerel reflect far more strongly—and hauls in a legal catch.",
+   "solver": "**Character 1:** Einar, a young deckhand on his first season.\n\n**Character 2:** Gunnar, the veteran skipper of the trawler (occupation: fishing captain).\n\n**Story:** The main sonar showed a huge red school to port, but Gunnar's second echo-sounder, set to a different frequency, revealed it as mackerel, a species whose quota they had already used up, so landing it at the Neskaupstaður processing plant would bring ruinous fines and confiscation. The faint gray \"mist\" to starboard glowed bright on that second screen, which marked it as a dense herring school, so he shot the net there and filled the hold with silver herring.",
+   "judge": "A\n\nStory A's acoustics are correct: swim-bladdered herring glow red at 38 kHz while bladderless mackerel appear faint there but brighter at 200 kHz. Story B reverses this, having the mackerel blaze red and the herring look faint, which contradicts the physics the riddle depends on.",
+   "riddler_pos": "A",
+   "result": "WIN",
+   "real": false,
+   "fact": "INVENTED\n\nMackerel lack swim bladders, so they reflect weakly at 38 kHz, but that doesn't make them reflect more strongly at 200 kHz; bladderless fish are weak targets at all frequencies, and the claim that herring \"blaze red\" because of their swim bladders while mackerel show up better at high frequency is backwards or materially wrong, even though Iceland's quota and discard rules are real.",
+   "fit": true,
+   "fit_reason": "YES\nThe riddle is set on an Icelandic fishing trawler off east Iceland, near Neskaupstaður, and centers on the fishing activity the user requested.",
+   "cost": 0.2526651,
+   "gen_cost": 0.232047,
+   "gen_secs": 127,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nHerring’s swim bladders explain the strong red return on the main sonar, while the higher-frequency display reveals the legal mackerel catch that Einar nearly overlooks.",
+   "alt_result": "WIN"
+  },
+  {
+   "model": "google/gemini-4-carbon",
+   "effort": "medium",
+   "theme": "an Icelandic fishing trawler",
+   "result": "FAILED",
+   "cost": 0.200678,
+   "gen_cost": 0.200678,
+   "gen_secs": 474
+  },
+  {
+   "model": "google/gemini-4-hydrogen",
+   "effort": "medium",
+   "theme": "a wedding in Kerala",
+   "riddle": "At a Kochi wedding hall, a guest weighs the groom's heavy *kasumala*, dips it in a brimming bowl, and nods at the spill.\nThen he holds a tiny silver cylinder beside the hanging gold coins and watches one subtly lean toward his hand.\nBefore the *thali* can be tied next to the *nilavilakku*, he pockets the necklace and halts the ceremony.\n\"It passed the water,\" he tells the stunned crowd, \"but real gold never leans.\"",
+   "chars": "the groom; the bride's uncle (goldsmith)",
+   "story": "Hoping to pass off cheap counterfeits at his Kochi wedding, the groom gifted a *kasumala* made of gold-plated tungsten, whose density (19.25 g/cm³) closely matches pure gold (19.3 g/cm³) and fooled the scale and water-displacement test. However, the bride's uncle, a goldsmith, knew that while gold is diamagnetic and weakly repelled by a magnetic field, tungsten is paramagnetic—so when he held a strong neodymium magnet near the hanging coins and saw one lean toward it, he exposed the fraud and halted the ceremony.",
+   "solver": "**Character 1:** Ravi, the groom's uncle, who supplied the \"heirloom\" kasumala.\n\n**Character 2:** Thomas, a gold assayer at a Kochi bank and the bride's cousin.\n\n**Story:** Ravi had secretly pawned the family's real kasumala and replaced it with a forgery: dense tungsten cores, which displace water like true gold, plated in gold, but with a few coins padded out with cheap nickel-steel. Thomas's displacement test came out right, yet when his tiny neodymium magnet made one coin lean, he knew that non-magnetic gold would never move and halted the wedding before the bride's family could be cheated.",
+   "judge": "A\nStory A's nickel-steel padding in a few coins explains why only one coin leaned toward the magnet, while Story B relies on tungsten's paramagnetism, which is far too weak to make a coin visibly lean.",
+   "riddler_pos": "B",
+   "result": "LOSS",
+   "real": true,
+   "fact": "REAL\n\nTungsten's density (19.25 g/cm³) really does nearly match gold's (19.3 g/cm³), so gold-plated tungsten is a known counterfeiting method. Gold is diamagnetic and tungsten is weakly paramagnetic, so a strong magnet can distinguish them, though the effect is very small and a coin \"leaning\" toward a magnet would be a dramatic embellishment.",
+   "fit": true,
+   "fit_reason": "YES\n\nThe riddle is set at a \"Kochi wedding hall\" and uses Kerala-specific wedding elements: the *kasumala* (a gold necklace), the *thali* (the tied wedding pendant), and the *nilavilakku* (a traditional lamp). Together these clearly place it at a Kerala wedding.",
+   "cost": 0.11657799999999999,
+   "gen_cost": 0.098532,
+   "gen_secs": 80,
+   "alt_judge_model": "openai/gpt-6.2-sol",
+   "alt_judge": "A\nThe tungsten cores explain why the necklace passed the density test, while a nickel-steel insert explains why the tiny magnet visibly pulled one coin toward it far better than tungsten’s weak paramagnetism does.",
+   "alt_result": "LOSS"
+  },
+  {
+   "model": "google/gemini-4-carbon",
+   "effort": "medium",
+   "theme": "a Tokyo sumo stable",
+   "result": "FAILED",
+   "cost": 0.200676,
+   "gen_cost": 0.200676,
+   "gen_secs": 306
   }
  ]
 }

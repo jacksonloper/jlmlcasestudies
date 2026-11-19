@@ -11,9 +11,9 @@ import os
 import sys
 from concurrent.futures import ThreadPoolExecutor
 
-import sweep
-
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+import sweep  # noqa: E402
 RAW = os.path.join(HERE, "..", "data", "raw")
 FILES = ["sweep.json", "sweep_open.json", "sweep_frontier.json"]
 
