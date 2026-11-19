@@ -1,18 +1,24 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const EX = {
-  blurb:
-    'Every writer got the same 8 user-style themes: a wedding in Kerala, a submarine crew in 1943, a Tokyo sumo stable, ' +
-    'a Scottish whisky distillery, a Kenyan marathon camp, a Paris bakery strike, a Texas oil rig and an Icelandic fishing trawler. ' +
-    'Each riddle was fact-checked by Claude Sonnet 5.5 (is the real-world mechanism actually real?) and checked for theme fit ' +
-    'by Claude Haiku 5.5.',
-  factCheck: true,
-  costLogged: true,
-};
+const THEMES_BLURB =
+  'Every writer got the same 8 user-style themes: a wedding in Kerala, a submarine crew in 1943, a Tokyo sumo stable, ' +
+  'a Scottish whisky distillery, a Kenyan marathon camp, a Paris bakery strike, a Texas oil rig and an Icelandic fishing ' +
+  'trawler. Each riddle was fact-checked by Claude Sonnet 5.5 (is the real-world mechanism actually real?) and checked for ' +
+  'theme fit by Claude Haiku 5.5.';
+
+// Re-judging cost, from the rejudge.py run logs (not stored per round).
+const REJUDGE_COST = 1.48;
+
+const JUDGES = [
+  { key: 'opus', name: 'Claude Opus 5.5' },
+  { key: 'sol', name: 'GPT-6.2 Sol' },
+];
 
 const shortModel = (m) => m.split('/')[1];
-const pct = (x) => `${Math.round(100 * x)}%`;
+// Scores are multiples of 0.25 (two judges x two orders), e.g. 4, 4.5, 4.25.
+const fmt = (x) => (Number.isInteger(x) ? `${x}` : x.toFixed(2).replace(/0$/, ''));
+const money = (x) => `$${x.toFixed(3)}`;
 
 function summarize(rounds) {
   const groups = {};
@@ -23,76 +29,91 @@ function summarize(rounds) {
   }
   return Object.values(groups)
     .map((g) => {
-      const done = g.rounds.filter((r) => r.result === 'WIN' || r.result === 'LOSS');
-      const wins = done.filter((r) => r.result === 'WIN').length;
-      const real = done.filter((r) => r.real).length;
-      const winReal = done.filter((r) => r.result === 'WIN' && r.real).length;
-      const fit = done.filter((r) => r.fit).length;
-      const genLogged = g.rounds.every((r) => typeof r.gen_cost === 'number');
-      const genTotal = genLogged ? g.rounds.reduce((a, r) => a + r.gen_cost, 0) : null;
+      const done = g.rounds.filter((r) => r.result !== 'FAILED');
+      const sum = (f) => done.reduce((a, r) => a + f(r), 0);
+      const opus = sum((r) => r.score_opus);
+      const sol = sum((r) => r.score_sol);
+      const avgWin = (opus + sol) / 2;
+      const avgWinReal = sum((r) => (r.real ? (r.score_opus + r.score_sol) / 2 : 0));
+      // Expected writer spend to obtain one riddle that wins: all writer spend
+      // (including attempts that failed to produce a riddle) divided by expected wins.
+      const spend = g.rounds.reduce((a, r) => a + (r.gen_cost || 0), 0);
       return {
         ...g,
         key: `${g.model}|${g.effort}`,
         n: done.length,
         failed: g.rounds.length - done.length,
-        wins,
-        real,
-        winReal,
-        fit,
-        winRate: done.length ? wins / done.length : 0,
-        // Expected writer spend to obtain one riddle that wins: all writer spend
-        // (including attempts that failed to produce a riddle) divided by wins.
-        perWin: genTotal != null && wins ? genTotal / wins : null,
-        perWinReal: genTotal != null && winReal ? genTotal / winReal : null,
+        opus,
+        sol,
+        avgWinReal,
+        real: done.filter((r) => r.real).length,
+        fit: done.filter((r) => r.fit).length,
+        perWin: avgWin ? spend / avgWin : null,
+        perWinReal: avgWinReal ? spend / avgWinReal : null,
       };
     })
-    .sort((a, b) => b.winRate - a.winRate || b.winReal - a.winReal);
+    .sort((a, b) => b.avgWinReal - a.avgWinReal || b.opus + b.sol - (a.opus + a.sol));
 }
 
 function Bar({ value, color = 'bg-blue-500' }) {
   return (
-    <div className="w-24 h-2 bg-gray-200 rounded">
+    <div className="w-16 h-2 bg-gray-200 rounded shrink-0">
       <div className={`h-2 rounded ${color}`} style={{ width: `${Math.round(100 * value)}%` }} />
     </div>
   );
 }
 
-function ResultBadge({ result }) {
-  const styles = {
-    WIN: 'bg-green-100 text-green-800',
-    LOSS: 'bg-red-100 text-red-800',
-    FAILED: 'bg-gray-100 text-gray-600',
-  };
-  const label = { WIN: 'Riddler won', LOSS: 'Solver won', FAILED: 'No riddle produced' }[result];
-  return <span className={`text-xs font-medium px-2 py-1 rounded ${styles[result]}`}>{label}</span>;
+function Score({ label, score }) {
+  const style = score === 1 ? 'bg-green-100 text-green-800' : score === 0 ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800';
+  const text = score === 1 ? 'riddler won' : score === 0 ? 'solver won' : 'split';
+  return (
+    <span className={`text-xs font-medium px-2 py-1 rounded ${style}`}>
+      {label}: {text}
+    </span>
+  );
 }
 
-function RiddleCard({ r, factCheck }) {
+function Verdict({ v, order }) {
+  if (!v) return null;
+  const pick = (v.judge || '').trim().slice(0, 1);
+  const won = v.result === 'WIN';
+  return (
+    <li>
+      <span className="text-gray-500">
+        Order {order}: riddler&apos;s story shown as {v.riddler_pos}; judge picked {pick}{' '}
+      </span>
+      <span className={won ? 'text-green-700' : 'text-red-700'}>({won ? 'riddler' : 'solver'})</span>.{' '}
+      {(v.judge || '').trim().slice(1).trim()}
+    </li>
+  );
+}
+
+function RiddleCard({ r }) {
   const [open, setOpen] = useState(false);
   if (r.result === 'FAILED') {
     return (
       <div className="border border-gray-200 rounded-lg p-4">
-        <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-500">{r.prompt}</span>
-          <ResultBadge result={r.result} />
+        <div className="flex justify-between items-center gap-2">
+          <span className="text-sm text-gray-500">{r.theme}</span>
+          <span className="text-xs font-medium px-2 py-1 rounded bg-gray-100 text-gray-600">No riddle produced</span>
         </div>
         <p className="text-sm text-gray-500 mt-2">The writer did not return a riddle in the required format.</p>
       </div>
     );
   }
-  const judgePick = (r.judge || '').trim().slice(0, 1);
   return (
     <div className="border border-gray-200 rounded-lg p-4">
-      <div className="flex justify-between items-center mb-3 gap-2">
-        <span className="text-sm text-gray-500">{r.prompt}</span>
-        <ResultBadge result={r.result} />
+      <div className="flex flex-wrap justify-between items-center mb-3 gap-2">
+        <span className="text-sm text-gray-500">{r.theme}</span>
+        <span className="flex flex-wrap gap-1">
+          {JUDGES.map((j) => (
+            <Score key={j.key} label={j.name} score={r[`score_${j.key}`]} />
+          ))}
+        </span>
       </div>
       <p className="text-gray-900 whitespace-pre-line font-serif text-lg leading-relaxed">{r.riddle}</p>
-      <button
-        onClick={() => setOpen(!open)}
-        className="mt-3 text-sm text-blue-600 hover:text-blue-800"
-      >
-        {open ? 'Hide answers ▲' : 'Show answers, solver and judge ▼'}
+      <button onClick={() => setOpen(!open)} className="mt-3 text-sm text-blue-600 hover:text-blue-800">
+        {open ? 'Hide answers ▲' : 'Show answers, solver and judges ▼'}
       </button>
       {open && (
         <div className="mt-4 space-y-4 text-sm text-gray-700">
@@ -105,13 +126,19 @@ function RiddleCard({ r, factCheck }) {
             <h4 className="font-medium text-gray-900 mb-1">Solver&apos;s answer (Claude Opus 5.5, low effort)</h4>
             <p className="whitespace-pre-line">{(r.solver || '').replaceAll('**', '')}</p>
           </div>
-          <div>
-            <h4 className="font-medium text-gray-900 mb-1">
-              Blind judge (Claude Opus 5.5): picked {judgePick}; riddler&apos;s story was {r.riddler_pos}
-            </h4>
-            <p className="whitespace-pre-line">{(r.judge || '').trim().slice(1).trim()}</p>
-          </div>
-          {factCheck && r.fact && (
+          {JUDGES.map((j) => (
+            <div key={j.key}>
+              <h4 className="font-medium text-gray-900 mb-1">
+                Blind judge: {j.name} (score {fmt(r[`score_${j.key}`])})
+              </h4>
+              <ul className="space-y-1">
+                {(r.verdicts?.[j.key] || []).map((v, i) => (
+                  <Verdict key={i} v={v} order={i + 1} />
+                ))}
+              </ul>
+            </div>
+          ))}
+          {r.fact && (
             <div>
               <h4 className="font-medium text-gray-900 mb-1">
                 Fact check (Claude Sonnet 5.5):{' '}
@@ -120,10 +147,9 @@ function RiddleCard({ r, factCheck }) {
               <p className="whitespace-pre-line">{r.fact.trim().split('\n').slice(1).join(' ').trim()}</p>
             </div>
           )}
-          <p className="text-xs text-gray-400">
-            Total cost of this round: ${(r.cost || 0).toFixed(3)}
-            {typeof r.gen_cost === 'number' && ` (writer: $${r.gen_cost.toFixed(3)})`}
-          </p>
+          {typeof r.gen_cost === 'number' && (
+            <p className="text-xs text-gray-400">Writer cost for this riddle: {money(r.gen_cost)}</p>
+          )}
         </div>
       )}
     </div>
@@ -144,12 +170,11 @@ export default function Case5() {
 
   const rows = useMemo(() => (data ? summarize(data.rounds) : []), [data]);
   const sel = rows.find((r) => r.key === selected);
-  const ex = EX;
   const total = useMemo(() => (data ? data.rounds.reduce((a, r) => a + (r.cost || 0), 0) : 0), [data]);
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-5xl mx-auto px-6 py-16">
+      <div className="max-w-6xl mx-auto px-6 py-16">
         <Link to="/" className="text-blue-600 hover:text-blue-800 mb-8 inline-block">
           ← Back to all case studies
         </Link>
@@ -170,9 +195,11 @@ export default function Case5() {
               likes.
             </p>
             <p>
-              A <strong>blind judge</strong> (also Claude Opus 5.5) sees the riddle and both stories as A and B, in
-              random order, and picks the one that explains the riddle better. The riddler wins if the judge
-              prefers the riddler&apos;s story.
+              Two <strong>blind judges</strong>, Claude Opus 5.5 and GPT-6.2 Sol (both at low effort), each see the
+              riddle and both stories as A and B and pick the one that explains the riddle better. Both judges
+              prefer whichever story is shown first, so each judges every round twice, once in each order. A
+              judge scores a round 1 if it preferred the riddler&apos;s story both times, 0.5 if it split, and 0 if
+              it preferred the solver&apos;s both times.
             </p>
           </div>
         </section>
@@ -207,28 +234,34 @@ export default function Case5() {
           <h2 className="text-2xl font-medium text-gray-900 mb-4">Key Findings</h2>
           <ul className="list-disc pl-6 space-y-2 text-gray-700">
             <li>
-              <strong>Claude Opus 5.5 at medium effort</strong> was the best value: it won 6 of 8 themed rounds, 5 of
-              which also passed the fact check, for an expected $0.054 of writer spend per winning, factually real
-              riddle.
+              <strong>Best value:</strong> Claude Opus 5.5 (about $0.05–0.06 of writer spend per riddle that wins and
+              passes the fact check, at low or medium effort) and GLM-5.3 ($0.052). Gemini 4 Argon is nominally
+              cheaper ($0.046), but that rests on half a win.
             </li>
             <li>
-              <strong>Cheap open-weight writers win rarely but are close on cost per win.</strong> GLM-5.3
-              ($0.059) and Qwen 3.7 Plus ($0.065) cost little per attempt, so their expected cost per winning, real
-              riddle is near Opus&apos;s. Those figures rest on only one or two wins each, and Qwen often drifted off
-              the requested theme.
+              <strong>Most real wins:</strong> Gemini 4 Hydrogen (4.5 of 8, every one of them fact-checked as real),
+              then Claude Fable 5.2 and Claude Opus 5.5 at medium effort (4.25 each). Hydrogen costs about $0.14 per
+              such riddle.
             </li>
             <li>
-              <strong>Claude Fable 5.2</strong> won the most rounds, but often by leaning on invented mechanisms,
-              which the judge does not penalise. That makes it the most expensive per winning, real riddle among
-              the strong writers ($0.16).
+              <strong>Winning by invention:</strong> Gemini 4 Neon won 7.75 of 8 and GPT-6.2 Sol 5 of 8, but few of
+              their winning riddles rest on a real mechanism (3 and 0.25). The judges reward a story that explains
+              every detail whether or not its rule exists.
+            </li>
+            <li>
+              <strong>Judges mostly agree, with a hint of self-preference.</strong> Their scores match exactly on 106
+              of 149 rounds. Opus scores Claude writers 0.53 per round against Sol&apos;s 0.45; Sol scores GPT-6.2
+              writers 0.72 against Opus&apos;s 0.59. The samples are too small to call that a firm effect.
+            </li>
+            <li>
+              <strong>Position bias is large.</strong> In the original single-order judging, Opus picked story A in
+              60% of rounds and Sol in 64%, so a writer&apos;s luck in the coin flip mattered more than most
+              differences between writers. Judging both orders removes it.
             </li>
             <li>
               Claude Sonnet 5.5 wrote riddles too convoluted to beat the solver&apos;s simpler story. Several
-              open-weight models often failed to return a riddle in the required format.
-            </li>
-            <li>
-              A fixed user theme roughly halved Gemini 3.8 Flash&apos;s win rate but did not hurt Fable 5.2: strong
-              writers can find a fitting mechanism for almost any theme.
+              open-weight models (Kimi K2.6, MiniMax M3, Mistral Large 4) and Gemini 4 Carbon often failed to
+              return a riddle at all.
             </li>
           </ul>
         </section>
@@ -239,22 +272,20 @@ export default function Case5() {
           {!data && !error && <p className="text-gray-500">Loading…</p>}
           {data && (
             <>
-              <p className="text-gray-600 text-sm mb-4">{ex.blurb}</p>
-
+              <p className="text-gray-600 text-sm mb-4">{THEMES_BLURB}</p>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="text-left text-gray-500 border-b border-gray-200">
-                      <th className="py-2 pr-4 font-medium">Riddle writer</th>
-                      <th className="py-2 pr-4 font-medium">Effort</th>
-                      <th className="py-2 pr-4 font-medium">Riddler wins</th>
-                      {ex.factCheck && <th className="py-2 pr-4 font-medium">Mechanism real</th>}
-                      {ex.factCheck && <th className="py-2 pr-4 font-medium">Won and real</th>}
-                      {ex.factCheck && <th className="py-2 pr-4 font-medium">On theme</th>}
-                      {ex.costLogged && <th className="py-2 pr-4 font-medium">$ per winning riddle</th>}
-                      {ex.costLogged && ex.factCheck && (
-                        <th className="py-2 font-medium">$ per winning, real riddle</th>
-                      )}
+                    <tr className="text-left text-gray-500 border-b border-gray-200 align-bottom">
+                      <th className="py-2 pr-3 font-medium">Riddle writer</th>
+                      <th className="py-2 pr-3 font-medium">Effort</th>
+                      <th className="py-2 pr-3 font-medium">Wins, Opus judge</th>
+                      <th className="py-2 pr-3 font-medium">Wins, Sol judge</th>
+                      <th className="py-2 pr-3 font-medium">Mechanism real</th>
+                      <th className="py-2 pr-3 font-medium">Won and real (both judges)</th>
+                      <th className="py-2 pr-3 font-medium">On theme</th>
+                      <th className="py-2 pr-3 font-medium">$ per winning riddle</th>
+                      <th className="py-2 font-medium">$ per winning, real riddle</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -266,47 +297,51 @@ export default function Case5() {
                           row.key === selected ? 'bg-blue-50' : ''
                         }`}
                       >
-                        <td className="py-2 pr-4 text-blue-700">{shortModel(row.model)}</td>
-                        <td className="py-2 pr-4 text-gray-600">{row.effort}</td>
-                        <td className="py-2 pr-4">
+                        <td className="py-2 pr-3 text-blue-700">{shortModel(row.model)}</td>
+                        <td className="py-2 pr-3 text-gray-600">{row.effort}</td>
+                        {[row.opus, row.sol].map((s, i) => (
+                          <td key={i} className="py-2 pr-3">
+                            <div className="flex items-center gap-2">
+                              <Bar value={row.n ? s / row.n : 0} />
+                              <span className="whitespace-nowrap">
+                                {fmt(s)}/{row.n}
+                              </span>
+                            </div>
+                          </td>
+                        ))}
+                        <td className="py-2 pr-3 whitespace-nowrap">
+                          {row.real}/{row.n}
+                          {row.failed > 0 && <span className="text-gray-400"> ({row.failed} failed)</span>}
+                        </td>
+                        <td className="py-2 pr-3">
                           <div className="flex items-center gap-2">
-                            <Bar value={row.winRate} />
-                            <span>
-                              {row.wins}/{row.n}
-                              {row.failed > 0 && <span className="text-gray-400"> ({row.failed} failed)</span>}
+                            <Bar value={row.n ? row.avgWinReal / row.n : 0} color="bg-green-500" />
+                            <span className="whitespace-nowrap">
+                              {fmt(row.avgWinReal)}/{row.n}
                             </span>
                           </div>
                         </td>
-                        {ex.factCheck && <td className="py-2 pr-4">{row.n ? `${row.real}/${row.n}` : '–'}</td>}
-                        {ex.factCheck && (
-                          <td className="py-2 pr-4">
-                            <div className="flex items-center gap-2">
-                              <Bar value={row.n ? row.winReal / row.n : 0} color="bg-green-500" />
-                              <span>{row.n ? `${row.winReal}/${row.n}` : '–'}</span>
-                            </div>
-                          </td>
-                        )}
-                        {ex.factCheck && <td className="py-2 pr-4">{row.n ? `${row.fit}/${row.n}` : '–'}</td>}
-                        {ex.costLogged && (
-                          <td className="py-2 pr-4">
-                            {row.perWin != null ? `$${row.perWin.toFixed(3)}` : <span className="text-gray-400">no wins</span>}
-                          </td>
-                        )}
-                        {ex.costLogged && ex.factCheck && (
-                          <td className="py-2">
-                            {row.perWinReal != null ? `$${row.perWinReal.toFixed(3)}` : <span className="text-gray-400">none</span>}
-                          </td>
-                        )}
+                        <td className="py-2 pr-3">
+                          {row.fit}/{row.n}
+                        </td>
+                        <td className="py-2 pr-3">
+                          {row.perWin != null ? money(row.perWin) : <span className="text-gray-400">no wins</span>}
+                        </td>
+                        <td className="py-2">
+                          {row.perWinReal != null ? money(row.perWinReal) : <span className="text-gray-400">none</span>}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
               <p className="text-xs text-gray-500 mt-2">
-                Click a row to see that writer&apos;s riddles.{' '}
-                {ex.costLogged
-                  ? 'Dollar columns are the expected writer spend to get one riddle that wins: total writer spend, including attempts that produced no riddle, divided by the number of wins. They exclude the solver, judge and checks, which are not needed to serve a riddle.'
-                  : 'This run logged only the total cost of each round (writer, solver and judge together), not the writer on its own, so the cost per winning riddle cannot be computed for it.'}
+                Click a row to see that writer&apos;s riddles. Win counts are the sum of each judge&apos;s per-round
+                scores. &quot;Won and real&quot; averages the two judges over riddles that passed the fact check. The
+                dollar columns are the expected writer spend to get one such riddle: total writer spend, including
+                attempts that produced no riddle, divided by the expected wins (averaged over both judges). They
+                exclude the solver, judges and checks, which are not needed to serve a riddle. Rows are sorted by
+                &quot;won and real&quot;.
               </p>
             </>
           )}
@@ -318,11 +353,11 @@ export default function Case5() {
               {shortModel(sel.model)} <span className="text-gray-500 font-normal">({sel.effort} effort)</span>
             </h3>
             <p className="text-sm text-gray-600 mb-4">
-              {sel.wins} of {sel.n} riddles beat the solver ({pct(sel.winRate)}).
+              Wins: {fmt(sel.opus)} of {sel.n} by the Opus judge, {fmt(sel.sol)} of {sel.n} by the Sol judge.
             </p>
             <div className="space-y-4">
               {sel.rounds.map((r, i) => (
-                <RiddleCard key={i} r={r} factCheck={ex.factCheck} />
+                <RiddleCard key={i} r={r} />
               ))}
             </div>
           </section>
@@ -332,16 +367,20 @@ export default function Case5() {
           <h2 className="text-2xl font-medium text-gray-900 mb-4">Caveats</h2>
           <ul className="list-disc pl-6 space-y-2 text-gray-700">
             <li>
-              Samples are small: 8 rounds per writer, one per theme. A 6/8 win rate is consistent with anything from
-              about 40% to 95%, and cost-per-win figures resting on one or two wins are very noisy.
+              Samples are small: 8 rounds per writer, one per theme. A score of 6 of 8 is consistent with a true
+              rate anywhere from about 40% to 95%, and cost-per-win figures resting on one or two wins are very
+              noisy.
             </li>
             <li>
-              The judge does not check facts. Some winning riddles rest on invented regulations, which is why a
+              The judges do not check facts. Some winning riddles rest on invented regulations, which is why a
               separate fact check runs on every riddle and the table reports &quot;won and real&quot;.
             </li>
             <li>
               The fact checker is itself a model at low effort and can be wrong in either direction; expand a riddle
               to read its reasoning.
+            </li>
+            <li>
+              The solver is always Claude Opus 5.5, so the results say which writers beat that particular solver.
             </li>
             <li>
               The solver&apos;s &quot;10 seconds&quot; is approximated by low reasoning effort and a token cap, not a
@@ -350,7 +389,8 @@ export default function Case5() {
           </ul>
           {data && (
             <p className="text-sm text-gray-500 mt-4">
-              {data.rounds.length} rounds in total, all run through OpenRouter, for ${total.toFixed(2)}.
+              {data.rounds.length} rounds in total, all run through OpenRouter: ${total.toFixed(2)} for writing,
+              solving, checking and first-pass judging, plus ${REJUDGE_COST.toFixed(2)} for the extra judging passes.
             </p>
           )}
         </section>

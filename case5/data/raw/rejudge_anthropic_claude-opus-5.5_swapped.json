@@ -1,0 +1,907 @@
+{
+ "judge_model": "anthropic/claude-opus-5.5",
+ "effort": "low",
+ "swapped": true,
+ "rounds": {
+  "sweep.json": [
+   {
+    "i": 0,
+    "judge": "B\n\nStory B accounts for both of the torpedoman's precautions (disabling the magnetic trigger and setting the torpedoes to run shallow) and explains why the captain deliberately chose the sloppy angle, while Story A ignores the shallow-running detail.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 1,
+    "judge": "B\nStory B explains the grin without any stretch: Arnar's holds were already full, so the closure cost him nothing and left his rivals empty-handed, whereas Story A invents a contrived timing plan to return before rivals fish, even though the ban would bind him just as much as them.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 2,
+    "judge": "A\nStory A explains every clue more fully, including why the gas appeared (the bit cut into a sour-gas pocket), the specific mechanism by which H2S above about 100 ppm deadens smell, and why the second air pack was needed for a rescue. Story B covers the same points only in summary.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 3,
+    "judge": "B\n\nStory B explains the mechanism more fully, showing why the square hits jammed the firing pin while the glancing \"bad\" shots fired, and it ties the saved torpedo and the cheering to the crew's need to prove the weapon was at fault.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 4,
+    "judge": "B\nStory B explains more cleanly why passport day ended the boy's hopes: the birthplace-based quota means naturalization frees nothing, and the champion's choice to keep fighting keeps the slot filled for years, whereas Story A muddles why his later retirement wouldn't open the slot.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 5,
+    "judge": "B\nStory B explains more of the riddle's details: the labour-law ban on replacing strikers shows why the ovens stayed cold, and bread from a friend's shop accounts for the \"fresh bread\" more naturally than an industrial supplier.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 6,
+    "judge": "B\nStory B covers every detail simply (the crew runs to shut in the well, Earl stays calm because his prediction came true, he gets paid, and the well is completed at that depth), while Story A depends on contrived sabotage and lease-law twists and never explains why Earl was paid in full.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 7,
+    "judge": "B\n\nStory B explains every detail simply: the agoraphobic widow never opens her door, the bread is a free gift from her husband's former apprentice, and the numbered bag tells her who sent it. Story A relies on an invented legal loophole and a coded ledger scheme, and it never explains why she won't open the door.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 8,
+    "judge": "B\nStory B ties every detail together more fully: the quota was already used up, so the crew cursed knowing the big haul would bring little, and their share was figured on only the 20% the boat kept after the state fund's cut.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 9,
+    "judge": "B\nStory B naturally explains every odd detail: the radio silence (so the British couldn't dispute the account), the suited official, the seized logbook (proof of position for negotiations) and the full pay, whereas Story A leaves the radio silence unexplained and relies on an invented certification rule.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 10,
+    "judge": "B\nStory B explains everything with one cause: a mandated shared Monday rest day accounts for the thirty dark shops, the single open oven, and the labor inspector fining the only rule-breaker, whereas Story A awkwardly mixes a strike with a rest-day decree.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 11,
+    "judge": "A\nStory A covers every riddle detail (Travis's panicked plea, the four-foot lift, the white ring marking the thin pipe body, and the clean shear and seal), while Story B leaves out Travis's role and the four-foot measure.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 12,
+    "judge": "B\nBoth stories rest on the same foreign-born-slot rule, but B also explains the final odd detail: the top wrestler bowed without offense because he knew the rule, not the master, had shut the door.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 13,
+    "judge": "B\nStory B explains every odd detail: the single mid-tournament topknot (a makushita wrestler facing a j\u016bry\u014d opponent must wear it), the early announcement of j\u016bry\u014d promotions alone, why no one needed the secret list, and why the embroiderer came that same day.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 14,
+    "judge": "A\n\nBoth stories explain the falling strength and the \"49\" label, but only A accounts for Fiona's mixed thanks for \"ruining\" her plan, while B leaves that final line unexplained.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 15,
+    "judge": "B\nStory B accounts for every detail: why the young spirit could not be added before Thursday, why no age was printed, and why the vintage year was also left off, which Story A never explains.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 16,
+    "judge": "B\nStory B makes the act deliberate: the laird asked for it before the valuer arrived. It also pins the drop in value on the three-year legal rule and the youngest-drop age statement, which explains both why the laird was grateful and why the taste stayed the same.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 17,
+    "judge": "B\n\nStory B ties every detail to one coherent mechanism: the inspector's presence enforces the discard ban, and the half-weight quota allowance applies only to small cod stowed separately and only up to 10%. Story A adds a closure trigger that muddies its explanation.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 18,
+    "judge": "B\nStory B naturally explains every detail: the hidden scissors stop a forced retirement, he weeps with relief while in ceremonial dress, no one dares ask when he'll retire, and the stablemaster's wife reties the belt. Story A relies on contrived, inaccurate rules and a muddled account of the noon belt-retying.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 19,
+    "judge": "A\nStory A explains every detail, including why the veteran skipped the life preservers (nothing was flooding) and pulled the fuel lever to stop the diesels, while Story B gives the same vacuum mechanism but never covers the veteran's final actions.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 20,
+    "judge": "B\nStory B explicitly explains that the teen was the veteran's attendant until yesterday (scrubbing his back and serving chanko) and ties every detail to the rank reversal, whereas Story A skips that prior relationship and adds an overstated \"legally prohibited\" dress-code claim.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 21,
+    "judge": "B\n\nB explains every detail: the passport was needed for elder stock, the birthplace-based foreign-slot rule kept the cousin waiting, and retirement freed the slot on the very day the topknot was cut.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 22,
+    "judge": "B\nStory B explains every detail consistently (the empty cask's shrinking staves, capacity logged as \"lost\" before filling, the toast, and the higher duty from reduced evaporation), whereas Story A contradicts the \"unfilled\" cask with a secretly full one and rests on a convoluted, dubious tax mechanism.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 23,
+    "judge": "B\nStory B explains every detail cleanly: stilled men and no baking to save oxygen, the candle as an air gauge, and surfacing once it guttered and the enemy had left. Story A adds a confused, unnecessary claim about warming the CO2 absorbent near the candle.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 24,
+    "judge": "A\nStory A explains why the master paid no extra wage (the strike won shorter hours, not higher pay), while Story B merely asserts it; both explain the clock, thin loaves and breakfast equally well.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 25,
+    "judge": "A\nStory A explicitly says both of the first two samples failed the specific-gravity threshold, which accounts for why only the third satisfied the officer, and it grounds each odd detail in the specific rule that requires it; Story B leaves the second sample's failure implied.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 26,
+    "judge": "A\nStory A accounts for every detail (the taped word, the striker's joke, the unchanged price and queue, and the inspectors finding nothing), while Story B never explains why customers kept paying the same price for factory-frozen bread.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 27,
+    "judge": "B\nStory B accounts for every detail: the cooper was rewarded for a leak-proof cask and fined for using unseasoned wood that soaked up 11 gallons over a weekend while looking dry, and the cooperage-raised mother explains the advice without ever entering the warehouse, whereas Story A leaves the woman's identity, the \"honoured\" dram, and the implausibly large weekend evaporation unexplained.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 28,
+    "judge": "A\nStory A explains every detail coherently: mourning pollution keeps the father outside, the empty leaf honours the deceased grandmother, the music ends with the muhurtham, and signing the certificate makes the marriage legal. Story B is internally contradictory (the father stays outside yet must be fetched from elsewhere), invents implausible legal rules, and leaves the empty banana leaf unexplained.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 29,
+    "judge": "A\nStory A explains every detail directly: the clean hard hat, the mud from the kick, the coffee and cigarette tossed to avoid ignition, the silent walk to the muster point, and the gratitude for the idle minutes. Story B mismatches the characters (the mud-covered man is never clearly identified), never explains who gave the thanks, and pads its account with technical asides that stretch the coffee and silence details.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 30,
+    "judge": "A\n\nStory A covers the night firing, the bedsheet, the refused payment and the return with exactly the flour taken in through one simple motive (charity without breaking the strike), while Story B relies on a contrived lease clause and inspector and never explains him coming back with the flour.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 31,
+    "judge": "B\nStory B ties every detail together cleanly (the watch-tap signal, the quick vows, the film burned to protect the undercover officer's face, the grateful father, and the blessed early departure), while Story A makes the \"stranger\" a cousin and rests on duty evasion, which strains \"nobody was cheated.\"",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 32,
+    "judge": "A\nStory A grounds every detail in a concrete mechanism: an unannounced test in her whereabouts window, and WADA's specific-gravity rule forcing the officer to stay until a sample qualifies. That explains both why her post-run drinking backfired and why he was still at the gate at noon, while B covers the same points with less grounding.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 33,
+    "judge": "A\nStory A gives the precise mechanism: the 30-sekitori-tournament threshold counts banzuke listings rather than bouts fought, which explains why sitting out still earned the needed \"one more sheet.\" Story B only vaguely gestures at \"rank or service time.\"",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 34,
+    "judge": "A\n\nBoth stories share the same core explanation, but A also accounts for why the old man kept drilling through the stink (low-ppm H2S is only a nuisance), which B leaves unexplained.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 35,
+    "judge": "B\n\nStory B more fully explains every detail: the torpedoman noticed the earlier oblique hits exploded, the square impact jammed the firing pin, and the saved torpedo was used in drop tests that led to the fix and the admirals' thanks.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 36,
+    "judge": "A\nStory A covers every odd detail naturally: relief that the haul was not his brother's body, cutting the nets and stopping the engine so as not to jolt a bomb, and the officer refusing coffee and noting only the detonation time. Story B depends on invented legal clauses and never explains why the skipper wept or why the officer glanced at the crate only once.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 37,
+    "judge": "B\nStory B accounts for every riddle detail: the civil Special Marriage Act wedding with no priest or auspicious hour, the three witnesses, the noticeboard that alerted her family, and the 30-day residency plus 30-day notice that ends on day 61. Story A gives the same legal mechanism but leaves the no-priest and no-muhurtham details only implied.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 38,
+    "judge": "B\nBoth stories rest on the same mechanism, but B is more complete: it explains why the cask's falling strength can't be reversed (only water or caramel may be added), which makes bottling at 47 the only way to keep it legally Scotch.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 39,
+    "judge": "A\nStory A ties every detail together naturally: the secret Berlin deal explains the quiet passport mailing for a visa, the midnight bib swap, the pacer stopping at 30 km and being paid as usual, and the favorite's shoes never appearing. Story B leans on invented rules and gives a strained reason for the passport.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 40,
+    "judge": "B\nStory B better explains why the tanker was already stopped and why the \"worse\" oblique angle was the better shot, giving a clear firing-pin mechanism that the last torpedo's drop tests then confirmed.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 41,
+    "judge": "B\n\nStory B explains every clue, from leaving camp at Kaptagat to the insert counting toward the 40 mm limit and the shoe needing to pass pre-race inspection, without adding A's unexplained stretch about a record being disqualified.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 42,
+    "judge": "A\nStory A's rule that the lease survives only if \"no more than 60 days\" pass makes day 61, exactly two days late, the first lapse, whereas Story B's \"dies if no drilling happens for 60 days\" implies one day late would already free the rancher.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 43,
+    "judge": "B\nBoth stories share the same core, but B more fully explains why the ovens stayed cold: French labour law bars hiring replacement workers during a strike, so he had to truck bread in. B also ties the single covered word to the 1998 law and the risk of a misleading-practice fine.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 44,
+    "judge": "B\nStory B grounds the rebooking in the actual Baggage Rules (the one-year residency requirement and the 20 g allowance for men) and explains why he wore the chain home himself, so it accounts for the riddle's details more precisely and completely.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 45,
+    "judge": "B\nStory B ties every detail (the bread, the cooking ban, the cook kept below, the tasteless bread) to one cause, chlorine gas from the battery dulling the crew's smell. Story A piles up convoluted and contradictory explanations, such as baking to \"use CO2 early\" while CO2 absorbent ran out.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 46,
+    "judge": "B\n\nB explicitly makes the griping, relieved man an untrained new hand and the runner a veteran who recognized that losing the smell meant a lethal H2S spike, which maps every riddle detail more cleanly than A's less clearly assigned roles.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 47,
+    "judge": "A\n\nStory A covers more of the riddle's details: the sample had sufficient volume (\"exactly what was asked for\") but failed the specific-gravity check, the gulped water after the long run explains the pale sample, and the second latrine trip comes from the required wait.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 48,
+    "judge": "B\n\nStory B explains every odd detail more completely: the discard ban accounts for why the skipper didn't dump the fish, the specific VS-afli rule and its 80/20 split account for the special code and the crew's tiny earnings, and the research fund that pays for the mother's cod-stock project accounts for her gratitude.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 49,
+    "judge": "A\nBoth stories hinge on the same Whitsunday shift of Seamen's Day, but Story A pins it to the actual statute (law 20/1987) and explicitly covers the noon-Saturday harbour rule, the move to 12 June 2022, and S\u00f3lveig's Pentecost duties, so it accounts for every detail slightly more precisely.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 50,
+    "judge": "A\n\nStory A accounts for every odd detail: the customs allowance explains why she, not her son, wore the chain, and because the chain was always the bride's, it explains why she never asked for it back. Story B explains the customs logic but leaves her never wearing gold and never reclaiming the chain unaddressed.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 51,
+    "judge": "B\nStory B explains the same dilute-sample scenario but also accounts for details Story A leaves out: the 5 a.m. visit (the declared whereabouts slot), the continuous observation, and the exact specific-gravity rule that required sealing each sample and collecting more.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 52,
+    "judge": "A\n\nStory A covers every detail: the groom swats away and hides the plastic bottle because the registrar holding the form will sign only if the bins are plastic-free, while Story B never explains the swatting or hiding and adds a stretch about a separate inspector's clearance.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 53,
+    "judge": "B\n\nStory B's sixty-gallon leak leaves exactly the forty gallons that spill in the riddle, and it explains why sealant was useless: the deficit already existed, and only a certified \"unavoidable accident\" could erase the back-duty.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 54,
+    "judge": "A\n\nStory A naturally explains every detail (the tears, the taped watch, ignoring the 30 km stop, the shared prize, the unratified record, and the pacer's name on the paperwork), while Story B leaves the taped watch and the split prize unexplained and depends on invented anti-doping rules.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 55,
+    "judge": "B\n\nStory B explains every odd detail: the father bought the gold and split it among relatives, the chains were plain because only jewellery (not bars) qualifies, and Niyas carried none because of the one-year residency rule, whereas Story A leaves the plain-chain detail and the gold's origin unexplained.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   }
+  ],
+  "sweep_open.json": [
+   {
+    "i": 0,
+    "judge": "A\nStory A explains every line directly (cement down the casing, plug bump, pump shutdown, a sudden fifty-foot drop with no losses to the formation, U-tubing) without B's extra failed valve and choke details or its claim that fluid returned to the surface pits, which clashes with \"before a drop could spill.\"",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 1,
+    "judge": "B\nStory B better explains the odd idleness: with two whereabouts strikes already, a third would mean a ban, so he dares not miss his window, and it matches the officer \"writing only his name\" more faithfully than Story A's sample collection.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 2,
+    "judge": "B\nStory B accounts for every detail, especially the two steaming cups poured for both twins, while Story A leaves the two cups, the slow eating, and the physio visits unexplained.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 3,
+    "judge": "B\nStory B explains every odd detail: the spaniel ignoring the fresh-filled butt even though all oak breathes, the tight bung, and the distiller's fear that water had been swapped for smuggled spirit. Story A depends on an invented regulation and never explains why a cask that \"never leaked a drop\" would be flagged.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 4,
+    "judge": "A\nStory A has the crowned watcher himself halt the flow until the sample cools, which fits the riddle. Story B hands the cooling to the distiller, though its thermal-expansion reading of \"phantom heat\" is clever.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 5,
+    "judge": "B\nStory B accounts for every detail naturally: the picket line parts by agreement, the gendarme checks a list, no bread is sold so the strike holds, and the levain smell is explained. Story A relies on a stretched legal-asset framing and has the child, rather than an adult, grasp the explanation.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 6,
+    "judge": "A\nStory A covers every element: the dawn mist, the old voice counting heartbeats (a blind elder coach listening to runners), the wall, and the six o'clock camp bell. Story B ignores the mist and the old voice, swaps the bell for a 6 pm lights-out, and so clashes with the riddle's \"first light\" setting.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 7,
+    "judge": "B\nStory B explains every detail through real sumo-stable custom: seniors eat first, the tatami stays warm from their bodies, and the lowest rookie eats last from the pot, whereas Story A depends on an invented fire ordinance and an implausible claim that heat radiates from the pot through the tatami and into the bath.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 8,
+    "judge": "B\nStory B explains every detail plainly: the hammering stops at 5:30, Edna watches the clock and phone waiting for Sam's call, and he bolts the gate from outside to keep her from wandering. Story A depends on an invented, implausible JSA rule that has officials lock the gate.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 10,
+    "judge": "A\n\nStory A explains why the tokoyama reached to style the ginkgo-leaf topknot at all (the lower-division championship), while Story B never explains why he tried.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 11,
+    "judge": "B\nStory B covers more of the riddle's details (the five hundred guests, the Gulf uncles flying in, the bar owner's planned counter) and ties the first-of-month dry day to the shut shutters without A's shaky claim that private duty-free bottles couldn't legally be served.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 12,
+    "judge": "B\n\nStory B accounts for every clue: the wooden clogs (sabots, the root of \"sabotage\"), a jammed valve rather than a blown fuse, golden Comt\u00e9 losing its AOC \"legal mark,\" and the strikers marching to the Bastille before the evening rally, while Story A omits the clogs and the Bastille entirely.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 15,
+    "judge": "B\n\nStory B accounts for more of the riddle's odd details with concrete causes: the screws slowed so the escorts could listen on their own hydrophones, the charges burst above because their pistols were set to the last contact taken above the layer, and dusk mattered because darkness blinded the aircraft and let the boat surface to clear CO2 and recharge its batteries.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 16,
+    "judge": "B\nStory B accounts for every detail: the tall runner, the finger-prick hematocrit of 52% against the 50% no-start limit, and blood thickened naturally by a lifetime at altitude rather than doping, whereas Story A's 17 g/dL \"World Athletics\" rule is a stretch and anachronistic, since the body was still called the IAAF in 2012.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 17,
+    "judge": "A\n\nStory A explains why a final-bout win still ends in demotion (his overall losing record), and its \"newly brushed banzuke\" fits the ink-drawn scroll. Story B leaves the win-versus-demotion contradiction unexplained and adds questionable claims about tokoyama licensing.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 18,
+    "judge": "B\nStory B explains every detail naturally: the gas kick and flare account for the well \"breathing fire,\" the closed BOP is the \"iron heart\" holding for three minutes, and the half-minute wait for the shut-in pressure to stabilize is standard well-control practice before the driller moves the choke. Story A is a routine pressure test with no fire, and it needs an invented interlock lockout to explain the delay.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 19,
+    "judge": "A\nStory A explains every detail (lighter casks, no thief, the old cask weakening while young ones keep their strength) through the angel's share, with nothing extra, while Story B adds a re-racking subplot the riddle never hints at, and re-racking wouldn't restore lost strength anyway.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 21,
+    "judge": "A\nStory A explains why the groom's own nephew stops the Kasi Yatra: the bride is the groom's niece in a traditional Palakkad Iyer uncle-niece match, so her brother is his sister's son. Story B leaves that odd detail unexplained and leans on a dubious invented heatwave order.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 22,
+    "judge": "A\nStory A accounts for every detail cleanly: the radioed closure, the legally forced landing of the catch, the overnight steam east, and the cursing. Story B's \"over a quarter\" undersized clashes with \"not one cod longer than a hand,\" it never explains the cursing, and its race to beat the closure announcement sits awkwardly with the inspector already having radioed it in.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 24,
+    "judge": "A\nStory A ties every detail together naturally: the astrologer's sealed auspicious time, the mangoes as a sign of consent, and the fireworks' glow on the tide. Story B leans on invented legal rules and stretches like turning mango leaves into mangoes and adding a red lantern or flag.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 25,
+    "judge": "A\nStory A accounts for every detail (the six tubes, the 02:13 time, the eleven counted survivors, the lamp flicker, the hissing hatch, the single ping and the deeper dive), while Story B leaves the lamp, hatch, ping and dive unexplained and stretches the \"eleven heartbeats\" into an arming delay.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 27,
+    "judge": "A\nStory A covers every clue directly: the hold full of cod, the ignored haddock, the thousand tons of unused quota, and the halibut bycatch that ends the season, while Story B leaves out the full cod hold and the specific unused quota.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 28,
+    "judge": "B\nStory B ties both details to one coherent situation: a weather-reporting U-boat that compensates for weight lost at meals and transmits only when high pressure gives Berlin useful news, while staying hidden from direction-finders. Story A's claim that the encoder's governor fails in rough seas is a mechanical stretch.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 29,
+    "judge": "A\n\nStory A coherently links the 68.2 reading, the dilution with volume contraction, and the 63.5% cask strength, whereas in Story B the spirit is already 63.5% before water is added, so adding 7.3 litres could not leave the cask at 63.5%.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 30,
+    "judge": "B\nStory B explains why the traditional dough must be baked while the ordinary dough is frozen: French law forbids freezing *pain de tradition*. It also shows that avoiding deliberate spoilage keeps his strike protections intact, whereas Story A's \"feeding the strikers\" leaves the traditional/ordinary distinction unexplained.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 31,
+    "judge": "B\n\nStory B explains every time in the riddle through one rule: mixing was allowed at ten, baking was forbidden at three, and the ban lifted at five. Story A's capitulation at five is arbitrary and leaves the specific hours unexplained.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 33,
+    "judge": "B\nStory B accounts for every line, including the sandals carried home after the barefoot river rite, while Story A never explains the sandals and depends on a stretch about the master's beard.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 34,
+    "judge": "A\n\nStory A naturally covers every line (the weeping over the coffin at a fake funeral, the toasting exciseman missing the mourners' load, the husband refusing London's papers, and her name living on at Cardhu), while Story B omits the weeping and mourners and leans on speculative legal and archival details.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 35,
+    "judge": "B\n\nStory B explains the flat pits correctly: mud weight exceeded pore pressure, so no influx occurred. Story A wrongly claims an influx wouldn't raise pit level until bottoms-up, when in reality a pit gain shows immediately as formation fluid displaces mud.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 36,
+    "judge": "A\nStory A naturally covers every clue: a pacemaker who matches the runner's stride, wears no race number, peels off before the final bend of the red track, and follows a pace sheet's math. Story B ignores the bib and stride details and stretches \"math\" into a convoluted GPS-error workaround.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 37,
+    "judge": "B\nStory B explains every detail naturally (the singing strike, the noon note, and a half-hour fire just long enough to bake the twelve loaves before resuming the strike), while Story A leans on an invented \"yeast rule\" and contradicts itself by having the fire lit every sunrise even though the ovens stayed cold.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 38,
+    "judge": "B\nStory B explains every detail: shiva accounts for the seven days with shutters shut and no fire, the round loaf is a mourning symbol, and the coins from '42 are the ones his mother gave the woman when she fled. Story A rests on an invented strike and decree, and it never explains why the woman paid with 1942 coins.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 39,
+    "judge": "A\nStory A explains every detail with one character: the year of dry holes, the shut-in because there was no buyer, and the shut-in royalty check for unsold crude mailed before the lease expired. Story B leaves the \"year of Permian dust\" unexplained, adds a speculative motive about spring prices, and splits the actions awkwardly between a landman and an onlooker.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 40,
+    "judge": "B\nStory B accounts for every odd detail (the forty-two knots, the 23:58 stall, the five heartbeats, the gull's stone and the ledger) in one coherent tale, while Story A ignores the gull and stone and turns five heartbeats into five minutes.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 41,
+    "judge": "B\nStory B accounts for every detail more naturally: the union delegate, the enriched \"fantaisie\" bread, ovens lit at 3 PM under a high sun, and an empty night-shift column caused by the strike's legal rules, whereas Story A must stretch to explain why the 3 a.m. hours would not count as night shift.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 42,
+    "judge": "B\n\nStory B accounts for every detail, including why a lullaby was sung, why the father whispered, and why the khaki-clad uncle approved, while Story A relies on an invented permit rule and leaves the lullaby unexplained.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 44,
+    "judge": "A\nStory A explains every line naturally, including the motive for the foreign teaspoon, while Story B leaves the cooper's motive unexplained and adds an irrelevant price-drop subplot.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 45,
+    "judge": "B\nStory B accounts for every clue: the apprentice's first scissors, the brushed hair on the sandanme shoulder, the yokozuna's wait, and both envelopes. Story A never explains the apprentice or the sandanme detail.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 46,
+    "judge": "B\nStory B ties every line together: the hydrophone operator's sound log explains how they \"heard\" their doom returning, and its time stamps explain how \"only the log\" exposes silence as the missing ingredient, whereas Story A's claim that a patrol log records Petey never being told is a stretch.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 47,
+    "judge": "B\nStory B coherently explains the deliberate winch stop (keeping the catch alive in the water), the skipper's nod, the jammed Baader, and the twenty-minute deadline, whereas Story A contradicts itself by relying on a jammed machine to process fish.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 48,
+    "judge": "A\n\nStory A naturally explains the captain's \"who's checking?\" gesture and the flag-pointing as U.S. jurisdiction enforcing a real fruit-fly quarantine on Mexican citrus, while Story B misapplies the Jones Act, which governs shipments between two U.S. points, not from a foreign port.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 49,
+    "judge": "A\n\nStory A ties every detail together tightly (the lone lit name on the legal rota, the all-night oven, the free loaves so no coin crosses the counter) without B's extra character, whose role as picket leader conflicts with the baker leading the picket.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 53,
+    "judge": "B\nStory B explains every line simply (the 42 km run, the IV bag on the acacia, the journalist filming, and the doctor's lifetime ban), while Story A contradicts itself with a one-litre bag of which only seventy millilitres was given and loosely turns \"never stamp another team ledger\" into losing travel credentials.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 54,
+    "judge": "B\nStory B ties every detail into one coherent theft: the still's sigh masks the sound, the \"no cork\" note becomes the only trace of the crime, and the midnight count explains the timing gap. Story A leans on invented regulations and leaves the details only loosely linked.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 56,
+    "judge": "A\nStory A accounts for the empty hauls (searching for her), the single silver scale (all that remained of her), the cursed clock (sunrise ending their night), and the cut cable (so the net could never catch her), while Story B relies on a contrived legal premise, leaves the four empty hauls unexplained, and stretches \"clock\" to mean dock-time.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 57,
+    "judge": "B\n\nStory B accounts for every clue coherently: the blackened thread, the failed water test, the needle releasing the trapped \"phantom\" bubble, and the 3:30 wedding. Story A never mentions the thread, and its brass core muddles the purity logic.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 58,
+    "judge": "A\n\nStory A accounts for every detail: the silver pen as a disguised injector, the two chirps, the doctor's quick exit, the mutual silence of a shared secret, and the lingering guilt. Story B leaves the pen and the silence unexplained, and it contradicts the narrator being present to witness the scene.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 59,
+    "judge": "B\nStory B accounts for all four details, including the folded plantain leaf and the brass key that fits no door, while Story A never explains the leaf or the key and relies on invented calendar drift and guild regulations.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 60,
+    "judge": "B\nStory B explains every element, including the copper swan neck, the climbing steam, the ready lever, the locked glass safe, the overdue officer and the bell announcing his arrival, while Story A leaves out the bell and steam and has the cut diverted rather than held \"until the bell rings.\"",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 61,
+    "judge": "A\n\nStory A accounts for every clue, including the company man's fine for the missing pin and the flat-beer smell in the doghouse, while Story B never explains the pin or the fine.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 62,
+    "judge": "B\n\nStory B accounts for every odd detail, including the pushchair, the seventeen pacers, and the unofficial camp setting. Story A relies on invented rules and misplaces the INEOS challenge, which actually took place in Vienna in 2019.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 63,
+    "judge": "B\nStory B maps every line directly (torpedoes working under keels in the North, crossing the magnetic equator, the nose sensor reading the reversed upward field and exploding early), while Story A adds an unrequested fix and an odd \"upward-looking antenna.\"",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   }
+  ],
+  "sweep_frontier.json": [
+   {
+    "i": 0,
+    "judge": "B\nStory B explains more of the riddle: an injury leaves an odd number of J\u016bry\u014d wrestlers, so a top makushita fills in for one bout, which accounts for the single bout and the one-day topknot. Story A just asserts a \"gap\" without saying why it arose.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 1,
+    "judge": "A\n\nStory A spells out the full chain: carbide producing acetylene, subtracting the 300 pipe strokes to get a 900-stroke annular lag, the 1,500 \u2212 900 = 600 result, and why idle lunch time doesn't matter. Story B makes the same points more tersely.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 2,
+    "judge": "B\nStory B cites the actual anti-doping rule, under which the minimum specific gravity drops from 1.005 to 1.003 at 150 mL, so a reading of 1.004 fails at 149 mL but passes at 150 mL; Story A relies on a vague, invented \"volume line.\"",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 3,
+    "judge": "A\nStory A fits \"fine silver\" best with herring, the classic \"silver of the sea,\" and its quota-conversion mechanism directly explains how a \"phantom price\" could \"eat\" ten tons of the crew's prized cod allowance, though calling cod \"golden\" is a looser fit than Story B's golden redfish.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 4,
+    "judge": "A\nStory A's slip is a court order about the picket sign itself, so taking the sign down and putting it back after eight days follow directly from one time-limited instruction. In Story B, the sign coming down is only a side effect of a medical rest order.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 5,
+    "judge": "B\nStory B matches the riddle's \"visitor\" pouring into \"his\" cask with the overseas buyer, and its regulatory logic explains every step: the teaspoon, the host's approval, the bottling crew sent away, the steel tank, and the cask staying behind. Story A's female in-house blender doesn't fit \"his prized cask.\"",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 6,
+    "judge": "B\n\nStory B explains why the boss toasted the passport yet shelved the application: the foreign-wrestler quota still counted the narrator after naturalization, so the slot opened only when he retired and began coaching at the same ring.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 7,
+    "judge": "B\nStory B links every detail together: the frost-free ledger, the danger a cold winter posed, the thirstier angel's share dropping the spirit below 40%, and the smiling pour down the drain. Story A swaps the riddle's temperature clue for summer humidity and adds a leaky-cask scenario that strays from the verses.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 8,
+    "judge": "A\nStory A naturally explains the stranger at the temple door, the polished brass demonstration, the unbilled old chains (hard to prove any loss) and the ironic handover to \"prevent\" a half-gram loss, while Story B leans on a convoluted chain of regulations and moves the scene away from the temple.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 9,
+    "judge": "A\nStory A explains every clue (the untied flour sack, the stiff thawing batons, and the eleven-letter BOULANGERIE loss under the frozen-dough rule) without inventing an unnecessary inspector or leaving unexplained where pre-made par-baked stock came from during a supply strike.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 10,
+    "judge": "A\n\nStory A explains the whole riddle: Ravi copied the six-character HUID hallmark, which belongs to only one genuine piece, so Meera returned the forged duplicate and wore her grandmother's scratched original. Story B never says why she gave it back or what she wore, and it would leave her with only one earring.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 11,
+    "judge": "A\nStory A fits the '43 Atlantic depth-charge setting with a U-boat crew, and it explains the calm conversation, why they flooded the room, and the timing of the collapse just as the hatch frees.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 12,
+    "judge": "A\nStory A ties every detail together, from Anu's accusation of a cut at the thali-tying to Manu showing her the ten-minute mark, through drop-frame timecode skipping labels 00 and 01 every minute except each tenth.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 13,
+    "judge": "A\nStory A ties every odd detail to one cause: the skipped thali, the banner torn down just before the photo, the calm cheering and the airport rush all follow from protecting her K-1 visa. Story B relies on stretches, such as tearing down a banner to reveal a surprise sign and the groom piloting his own honeymoon flight.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 14,
+    "judge": "B\nStory B ties every odd detail together: the slow hard-rock drilling hurts a footage contractor, 12.1 ppg is just past a 12.0 cap that triggers daywork pay, and the flat gauges show Dale the weight-up was manufactured, whereas Story A's commission motive leaves the exact 12.1 threshold and the hard-rock detail unexplained.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 15,
+    "judge": "B\nStory B explains why Edda sees the two reds only as she draws closer, because they have a shorter visibility range under Annex II, while Story A never accounts for that delayed sighting.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 16,
+    "judge": "A\nStory A explains every detail, including the first-person narrator's capped pen and the man's leap below at four, while Story B tells it in third person and leaves the final jump implied.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 17,
+    "judge": "A\nStory A explains every detail most naturally: only the damaged shoe goes for a free warranty repair, the \"bill\" is the original invoice for the pair (used for customs duty relief), and he wants a repair rather than a refund.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 18,
+    "judge": "B\n\nStory B explains both the kicks and the reset: casing collars sit about every forty feet, a short pup joint at a known tallied depth gives a distinctive six-foot pair, and Ray uses that pair to correct his counter, which is real wireline practice. Story A's splice explanation leaves unclear why the mismatch would tell Ray the true depth to reset to.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 19,
+    "judge": "A\n\nStory A covers more of the riddle's details: the strikers' gift of sleep, the crooked loaf, its by-the-piece price that needs no scale, and why she has no grounds to call the guard. Story B explains the weighing exemption well but leaves the price, the crookedness and the guard unaddressed.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 22,
+    "judge": "B\n\nStory B gives a concrete reason for the smile at the passport (naturalization makes the veteran eligible to become a sumo elder), and it ties the locked slot to the foreign-born rule, while Story A attributes the smile only vaguely to \"loyalty.\"",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 23,
+    "judge": "B\n\nStory B better explains why Kip chugs water the moment he sees the case: he is deliberately trying to dilute his urine to mask doping, whereas Story A's mix of thirst and nervousness accounts for that timing less convincingly.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 24,
+    "judge": "A\nStory A explains the specific date, the day the rule requiring single malt to leave Scotland bottled took effect, and why only malt from the neighbouring distillery (making the load a blended malt) worked; Story B leaves the date unexplained and stretches \"the stills' neighbours\" to mean spring water.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 25,
+    "judge": "A\nStory A explains every detail more directly: the unlit \"dark\" wreck, the four-hour rebroadcast, why the usual duplicate suppression failed, and that each heading ended in \"00\", which looks like a pair of spectacles.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 26,
+    "judge": "B\n\nStory B keeps every drop distilled in 2012, so the front vintage stays valid, and it uses the real Scotch rule requiring the bottling year in the same field of vision as the distillation year; Story A adds younger 2013 spirit, which contradicts keeping \"2012\" as a vintage.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 27,
+    "judge": "A\nStory A fits the cold, dark oven (Marc's own bakers are on strike and the loaves come from elsewhere) and gives a precise legal reason for covering the \"Boulangerie\" letters that explains why the inspector leaves, whereas Story B contradicts the cold oven by having Marc secretly bake.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 28,
+    "judge": "B\nStory B ties every detail together, including the midday heat drying the scale, the air rushing in when the hatch opened, and Clay's reason for shouting, while Story A leaves the heat and the timing of the eruption less fully explained.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 29,
+    "judge": "B\n\nStory B coherently explains each beat: the giant stops because his brother took the single foreign slot, the boy is measured short, he refuses the silicone fix and so frees the slot, and he stays on as a hairdresser to his brother. Story A muddles that causal chain with a \"previously faked\" height and a vague quota workaround.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 31,
+    "judge": "A\n\nStory A coherently ties every detail together: the chai, the syringes hidden behind the acacias, the 5:58 latrine trip and the closing testing window. Story B's legal logic is muddled and leaves the acacia ban and the abandoned vials poorly explained.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 32,
+    "judge": "A\n\nStory A accounts for every detail, including the unannounced visit, continuous observation, the two-hour post-exercise wait, and how breaking the ten-minute seated rule adds exactly five minutes; Story B gives essentially the same explanation with slightly less detail.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 34,
+    "judge": "B\nStory B states outright that Daichi beat Ren in the playoff, which fits the riddle's \"I was his eighth\" (his eighth victim), while Story A leaves the playoff winner unspecified.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 35,
+    "judge": "A\nStory A coherently covers every clue, including the bonus for saving the crew and rig, while Story B's reasoning contradicts itself: it says he skipped the brake to avoid sticking the pipe, yet the pipe is lost anyway, and it never explains the bonus.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 36,
+    "judge": "A\nStory A explicitly accounts for every riddle detail (the homemade board, the tin of peaches, one hole vs. two holes from home, and four fives making twenty pips), while Story B leaves several of these unaddressed.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 37,
+    "judge": "B\nStory B ties each riddle detail directly to the VS-catch rule: the total passing twenty times the haddock's weight, avoiding a fine, and accepting the fifth without complaint.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 39,
+    "judge": "B\n\nStory B explains every detail most completely: it gives Alistair a motive (protecting the distillery's name) and shows why he passed over the rival 25-year-old, since a three-year-old drop from across the valley destroys both the single-malt status and the 25-year age claim at once.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 40,
+    "judge": "A\n\nStory A explains why hiring the neighbor matters: it ends Henri's sole-employee protection, so the shop never needs to open and he can be fired. Story B contradicts itself, because if a lone employee could strike only by joining a national call, Henri was unprotected before the hire and the neighbor would be pointless.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 41,
+    "judge": "A\n\nStory A fits best: the falling needle is the air-flask gauge, so with a steady depth gauge and a dry hull, the escaping air must be hissing into the boat. Story B is weaker because a falling cabin-pressure needle mistaken for a depth gauge would suggest rising, not sinking.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 42,
+    "judge": "B\n\nStory B explains the exact thirty-foot error, since nearly one atmosphere of extra cabin pressure equals about 33 feet of seawater on a differential Bourdon-tube gauge, and it accounts for the hiss, ears, overhead valve and level boat as fully as Story A does.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 43,
+    "judge": "B\nStory B fits every line naturally: the iron braces explain the \"iron fate,\" the food moved into his bunk keeps the trim balanced, the sawing removes the braces (not needed for size, since \"the tube was wide\"), and keeping him aboard explains \"never touched the sea\"; Story A contradicts that last line by firing him out of the tube and relies on invented torpedo mechanics.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 44,
+    "judge": "B\n\nStory B gives a real acoustic reason why the shoal blazes red on the main screen but shows as faint mist that glows brighter on the second display: swim-bladdered herring echo strongly at 38 kHz, while bladderless mackerel echo more strongly at 200 kHz. Story A asserts the frequency difference without that physical logic, and its version is backwards, since herring would echo strongly rather than faintly.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 46,
+    "judge": "B\nStory B explains why only one coin leaned (it was padded with ferromagnetic nickel-steel), whereas Story A relies on tungsten's paramagnetism, which is far too weak to make a coin visibly lean and would affect every coin, not just one.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   }
+  ]
+ }
+}
