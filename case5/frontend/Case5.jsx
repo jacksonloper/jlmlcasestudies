@@ -7,8 +7,9 @@ const THEMES_BLURB =
   'trawler. Each riddle was fact-checked by Claude Sonnet 5.5 (is the real-world mechanism actually real?) and checked for ' +
   'theme fit by Claude Haiku 5.5.';
 
-// Re-judging cost, from the rejudge.py run logs (not stored per round).
-const REJUDGE_COST = 1.48;
+// Re-judging cost, from the rejudge.py run logs (not stored per round): $1.48 for the main
+// tournament plus $0.27 for the Qwen4 Max rounds.
+const REJUDGE_COST = 1.75;
 // Total cost of the facts_sweep.py run (1, 2 and 3 hidden facts), from its run log.
 const FACTS_RUN_COST = 2.99;
 
@@ -246,6 +247,13 @@ export default function Case5() {
               the fact check), so per winning, real riddle it costs about the same as the two-fact recipe. In the
               same run, a one-fact recipe won 0.41 per round and two facts 0.47; the 1- and 2-fact riddles are in
               the raw data file only.
+            </li>
+            <li>
+              <strong>Qwen4 Max improves with effort.</strong> Its riddles that won and passed the fact check rose
+              from 3.5 of 8 at low effort to 4.75 of 8 at high, mostly because more of its mechanisms were real (4,
+              then 5, then 6 of 8). At high effort it matches Claude Opus 5.5 (medium) for about $0.064 per winning,
+              real riddle, the best of the open-weight writers. It is slow: about 3.5 minutes per riddle, and one
+              medium-effort attempt used its whole 20,000-token allowance without producing a riddle.
             </li>
             <li>
               <strong>Most real wins:</strong> Gemini 4 Hydrogen (4.5 of 8, every one of them fact-checked as real),

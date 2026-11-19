@@ -1,0 +1,147 @@
+{
+ "judge_model": "openai/gpt-6.2-sol",
+ "effort": "low",
+ "swapped": true,
+ "rounds": {
+  "sweep_qwen4.json": [
+   {
+    "i": 0,
+    "judge": "A\nBoth explain thaw rigor, but A also explains why Grimsby\u2019s premium for \u201cthe freshest\u201d favors yesterday\u2019s fillets: on a frozen-only trip, quality after thawing matters more than time since catch.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 1,
+    "judge": "B\nIt explains the countdown to the 40% ABV threshold and why adding younger whisky would cost the cask its age statement, without treating the forty-seventh birthday itself as a legal cutoff.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 2,
+    "judge": "B\nBoth stories explain how the notice reached Kottayam, but B better explains why the photographer went back to his camera: the father took the witness slot the photographer was about to fill.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 3,
+    "judge": "B\nThe legally required posting in her home district explains how her father could recite the notice verbatim without an online upload or a clerk\u2019s tip-off, while the same law accounts for the long stay and three witnesses.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 4,
+    "judge": "A\nThe September quota reset explains the timing and why keeping the heads earned more per kilo of quota in August despite the dockside premium for headless cod and the spare hold space.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 5,
+    "judge": "A\nIt explains the 3\u20131 withdrawal, the one-rung demotion after two losing tournaments, the July-only ten-win reprieve, and why the absent yokozuna kept his rope.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 6,
+    "judge": "A\nIt explains the contrasting changes in strength, the lower duty, and the father\u2019s lament over the angels\u2019 share without inventing exact strengths, losses, or a sales motive.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 7,
+    "judge": "A\nIt ties the untouched cask\u2019s weight loss and the missing \u201cwhisky\u201d label to evaporation, explains why Tarrant\u2019s terms ruled out blending to restore legal strength, and accounts for both the tenth-price sale and the pricier Kentucky barrel.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 8,
+    "judge": "A\nIt explains why all forty runners share a gate and time slot, why two prior misses matter, and why the officer waited 54 minutes and thanked the runner for arriving before seven.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 9,
+    "judge": "A\nIt ties the cartons, idle mixer, and identical warm loaves to frozen dough baked on site, and explains why the workers filmed the sign rather than blocking sales: even baking on site couldn\u2019t preserve the right to call the shop a boulangerie.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 10,
+    "judge": "B\nThe picket\u2019s tip explains why the owner took down the sign on day two despite unchanged sales, and the need to bake on-site to restore it explains why he gave in on day nine and rehung it immediately.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 11,
+    "judge": "A\nBoth stories explain the occupied roster slot, but A better connects the lavish payout and one-way ticket to the wrestler\u2019s visa and the urgency to the upcoming rookie physicals.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 12,
+    "judge": "A\nBoth stories explain why the runner begged for a third test, but only A explains why the whole camp waited at the gate even though just four runners were called.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 13,
+    "judge": "B\nIt explicitly explains why the time Sigr\u00fan weighed and registered the catch, rather than when the trawl came up, determined which year\u2019s quota covered the forty tonnes.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 14,
+    "judge": "A\nIt explains both thirty-day periods, the civil ceremony, and how the neighbour learned of the wedding from a notice posted in Thrissur, without adding an unnecessary interfaith backstory.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 15,
+    "judge": "A\nA explains why the union welcomed the van and oven as visible evidence of a violation and why a signed no-freezer clause made the return at unchanged wages a total victory.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 16,
+    "judge": "B\nIt explains what made Amos sprint despite the lack of a smell or alarm\u2014the diesels suddenly racing\u2014and accounts for the steel plates, the untouched fuel shutoffs, and Roy\u2019s relief.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 17,
+    "judge": "A\nIt explains why the operator refused even free takeaway and mailed a shut-in royalty check just before the anniversary to preserve the lease, without assuming the check had to arrive the next day.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 18,
+    "judge": "A\nIt explains why he waits outside the padlocked gate rather than inside the compound, and why he takes his post just before six and stays past seven: a third whereabouts strike could cost him two years.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 19,
+    "judge": "A\n\nIt ties the three same-patrol duds, the deliberately spoiled shot, and the fleet-wide recommendation together by explaining why a square hit jammed the contact exploder.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 21,
+    "judge": "A\nIt accounts for both hits, Pike\u2019s odd request, and Pearl\u2019s lighter replacement without relying on B\u2019s extra, unsupported biographical details.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 22,
+    "judge": "A\nA better explains the March clue and the closer aircraft through Metox\u2019s inability to detect centimetric radar, without B\u2019s unsupported assumption that planes could find the boat only by sight.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 23,
+    "judge": "A\nIt explains the forty-minute delay as travel time to the surface and the silent alarm as smaller gas slugs falling below the detection threshold, without assuming that two-minute connections stopped gas entry entirely.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   }
+  ]
+ }
+}

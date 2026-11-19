@@ -29,7 +29,7 @@ def rejudge(r, model, effort, swap):
     mine = f"Characters: {r['chars']}. {r['story']}"
     a, b = (mine, r["solver"]) if pos == "A" else (r["solver"], mine)
     jd, _ = sweep.chat(model, sweep.JUDGE_PROMPT.format(riddle=r["riddle"], a=a, b=b), 4000, effort=effort)
-    pick = jd.strip()[:1].upper()
+    pick = sweep.judge_pick(jd)
     result = "WIN" if pick == pos else ("LOSS" if pick in ("A", "B") else "FAILED")
     return jd, result, pos
 

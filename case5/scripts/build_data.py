@@ -18,8 +18,11 @@ recipe, two per theme, scored the same way; they get variant "3 hidden facts".
 """
 import json
 import os
+import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+from sweep import judge_pick  # noqa: E402
 RAW = os.path.join(HERE, "..", "data", "raw")
 OUT = os.path.join(HERE, "..", "data", "riddles.json")
 FILES = ["sweep.json", "sweep_open.json", "sweep_frontier.json", "sweep_qwen4.json"]
@@ -43,6 +46,28 @@ def load_rejudges():
     return out
 
 
+def rederive(v, pos):
+    """Recompute a verdict's result from its text, so a pick wrapped in markdown (**A**) counts.
+
+    The original scripts read only the first character; two of 880 stored verdicts began with
+    '**' and were misread (one as a riddler loss, one as a failure). pos is where the riddler's
+    story was shown in this pass; the earliest rejudge file does not store it per record.
+    """
+    if not v:
+        return v
+    pos = v.get("riddler_pos") or pos
+    pick = judge_pick(v.get("judge"))
+    result = "WIN" if pick == pos else ("LOSS" if pick else "FAILED")
+    return {**v, "riddler_pos": pos, "result": result}
+
+
+def scores(out, verdicts):
+    out["verdicts"] = verdicts
+    for jk, vs in verdicts.items():
+        if all(v and v["result"] in ("WIN", "LOSS") for v in vs):
+            out[f"score_{jk}"] = sum(v["result"] == "WIN" for v in vs) / 2
+
+
 def main():
     rej = load_rejudges()
     rounds = []
@@ -53,19 +78,19 @@ def main():
             continue
         for i, r in enumerate(json.load(open(path))):
             out = {k: r[k] for k in KEEP if r.get(k) is not None}
-            if out.get("result") not in ("WIN", "LOSS"):
+            if "judge" not in r:  # no riddle was produced (PARSE_FAIL) or the round errored
                 out["result"] = "FAILED"
                 rounds.append(out)
                 continue
-            verdicts = {
-                "opus": [{"judge": r["judge"], "result": r["result"], "riddler_pos": r["riddler_pos"]},
-                         rej.get(("opus", True, name, i))],
-                "sol": [rej.get(("sol", False, name, i)), rej.get(("sol", True, name, i))],
-            }
-            out["verdicts"] = verdicts
-            for jk, vs in verdicts.items():
-                if all(v and v["result"] in ("WIN", "LOSS") for v in vs):
-                    out[f"score_{jk}"] = sum(v["result"] == "WIN" for v in vs) / 2
+            pos = r["riddler_pos"]
+            flipped = "B" if pos == "A" else "A"
+            first = rederive({"judge": r["judge"]}, pos)
+            out["result"] = first["result"]
+            scores(out, {
+                "opus": [first, rederive(rej.get(("opus", True, name, i)), flipped)],
+                "sol": [rederive(rej.get(("sol", False, name, i)), pos),
+                        rederive(rej.get(("sol", True, name, i)), flipped)],
+            })
             rounds.append(out)
     # Three-hidden-fact riddles from facts_sweep.py (same themes, 2 per theme, already judged by both
     # judges in both orders). The 1- and 2-fact levels of that run stay in the raw file only.
@@ -78,12 +103,12 @@ def main():
             out = {k: r[k] for k in KEEP if r.get(k) is not None}
             out["model"] = r["writer"]
             out["variant"] = "3 hidden facts"
-            if r.get("result") != "OK" or "score_opus" not in r or "score_sol" not in r:
+            if r.get("result") != "OK" or "verdicts" not in r:
                 out["result"] = "FAILED"
             else:
-                out["result"] = "WIN" if (r["score_opus"] + r["score_sol"]) / 2 >= 0.5 else "LOSS"
-                out["verdicts"] = r["verdicts"]
-                out["score_opus"], out["score_sol"] = r["score_opus"], r["score_sol"]
+                scores(out, {k: [rederive(v, v["riddler_pos"]) for v in vs] for k, vs in r["verdicts"].items()})
+                both = [out.get("score_opus"), out.get("score_sol")]
+                out["result"] = ("WIN" if sum(both) / 2 >= 0.5 else "LOSS") if None not in both else "FAILED"
             rounds.append(out)
     json.dump({"rounds": rounds}, open(OUT, "w"), indent=1, ensure_ascii=False)
     print(f"wrote {len(rounds)} rounds to {OUT}")

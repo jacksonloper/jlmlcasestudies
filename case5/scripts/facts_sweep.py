@@ -53,8 +53,8 @@ def judge(model, r, pos):
     mine = f"Characters: {r['chars']}. {r['story']}"
     a, b = (mine, r["solver"]) if pos == "A" else (r["solver"], mine)
     jd, _ = sweep.chat(model, sweep.JUDGE_PROMPT.format(riddle=r["riddle"], a=a, b=b), 4000, effort="low")
-    pick = jd.strip()[:1].upper()
-    return {"judge": jd, "riddler_pos": pos, "result": "WIN" if pick == pos else ("LOSS" if pick in "AB" else "FAILED")}
+    pick = sweep.judge_pick(jd)
+    return {"judge": jd, "riddler_pos": pos, "result": "WIN" if pick == pos else ("LOSS" if pick else "FAILED")}
 
 
 def run(writer, effort, level, theme, rep, seed):

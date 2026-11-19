@@ -1,0 +1,147 @@
+{
+ "judge_model": "openai/gpt-6.2-sol",
+ "effort": "low",
+ "swapped": false,
+ "rounds": {
+  "sweep_qwen4.json": [
+   {
+    "i": 0,
+    "judge": "A\nBoth stories explain the freezing order through thaw rigor, but A also explains the cable\u2019s \u201cTuesday\u2019s, never today\u2019s\u201d: the best fillets for Grimsby are the ones that have already passed through rigor, not the ones just caught.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 1,
+    "judge": "A\nIt explains the three-year minimum, the countdown toward 40% ABV, and why adding younger whisky would sacrifice the age statement, without making the forty-seventh birthday a legal cutoff.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 2,
+    "judge": "A\nIt explains both how the notice reached Kottayam and why the photographer went back to his camera: the father took his place as the third witness.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 3,
+    "judge": "B\nIt separates the eleventh-morning discovery from the later signing and explains both how the father found the notice and why his objection didn\u2019t stop the wedding.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 4,
+    "judge": "A\nThe survey makes the heads indispensable for aging the fish and explains the half-empty hold through its sample cap, while its end explains the September knife sharpening and October bonus.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 5,
+    "judge": "B\nIt accounts for the 3\u20131 start and the useless doctor\u2019s letter, and makes clear why July is his only shot at the ten-win shortcut while the yokozuna keeps his rank despite fourteen absences.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 6,
+    "judge": "A\nBy specifying comparable volume losses and duty assessed on the pure alcohol remaining at release from bond, A makes clear why the finer, weaker cask cost less to release.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 7,
+    "judge": "B\nIt explains the weight loss and opposite changes in strength through evaporation, then shows why the 40% minimum and Tarrant\u2019s single-cask condition led to a cheaper sale without \u201cwhisky\u201d on the label.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 8,
+    "judge": "B\nIt better explains the shared gate and hour, why two earlier misses mattered, and why the officer thanked the runner after waiting 54 minutes, from 6:04 to 6:58.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 9,
+    "judge": "B\nIt connects the dormant mixer, identical warm loaves, and cameras trained on the sign through a precise legal point: baking frozen dough on-site still did not entitle the shop to call itself a boulangerie.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 10,
+    "judge": "A\nThe picketers\u2019 tip explains why the owner took down the sign on day two, and the on-site baking requirement explains why he gave in despite unchanged sales.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 11,
+    "judge": "B\nIt better explains why the injured wrestler still occupied the foreign slot, why the sister stable couldn\u2019t take him, and why cash and a flight home secured his retirement in time for the boy to sign.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 12,
+    "judge": "B\nIt explains why the whole camp waited at the gate at six, why only four runners were taken, and why the April breakout star urgently wanted a third test even though he\u2019d broken no rule.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 13,
+    "judge": "A\nA explicitly explains why the time of weighing and registration, rather than the time of the haul, let Sigr\u00fan book all forty tonnes against the new year\u2019s quota without a fine.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 14,
+    "judge": "A\nIt identifies the statutory rule that put the notice on a public board in Thrissur, explaining how the neighbour found out without a leak, a trip to Kochi, or a formal objection.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 15,
+    "judge": "B\nIt explains why the union welcomed the van and the showpiece oven, why the cold-room log mattered, and why a signed no-freezer clause made returning at the old wage a victory.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 16,
+    "judge": "A\n\nBoth stories explain why Amos ignored the fuel shutoffs and why Roy grinned, but A accounts for the steel plates instead of replacing them with intake shutoff valves.",
+    "result": "LOSS",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 17,
+    "judge": "A\nA explains why even free takeaway would fail the paying-quantities test and why the shut-in royalty was tied to the lease anniversary rather than the capping date.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 18,
+    "judge": "B\nBoth stories explain the testing window and the two warnings, but B makes the padlocked gate matter: sitting roadside keeps him accessible to the tester and helps him avoid a third strike.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 19,
+    "judge": "B\nIt accounts for the three earlier duds on the same patrol and ties them directly to the captain\u2019s decision to sacrifice the textbook angle and recommend the same workaround fleetwide.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 21,
+    "judge": "A\nIt identifies the crew as U.S. submariners firing Mark 14 torpedoes and more fully connects the disabled magnetic feature, the dud square hit, Pike\u2019s request, and Pearl Harbor\u2019s lightweight replacement.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 22,
+    "judge": "A\nIt better explains why surfacing at noon seemed safer, why August orders kept a working receiver off even after dark, and why planes could still come dangerously close without the suspected beacon.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 23,
+    "judge": "B\nIt matches the Houston man and explains the forty-minute lag and why two-minute connections silenced the alarm without requiring gas entry to stop entirely.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   }
+  ]
+ }
+}
