@@ -1,0 +1,147 @@
+{
+ "judge_model": "anthropic/claude-opus-5.5",
+ "effort": "low",
+ "swapped": true,
+ "rounds": {
+  "sweep_qwen4.json": [
+   {
+    "i": 0,
+    "judge": "A\n\nBoth stories rely on thaw rigor, but A more fully explains why \"freshest\" is meaningless for a factory trawler landing frozen blocks five weeks later, and why yesterday's older fillets freeze first.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 1,
+    "judge": "A\nStory A explains more of the odd details: why the strength falls (cold, damp dunnage), the steady yearly rate that brings it just under 40% around the forty-seventh birthday, and why topping up with water or young spirit won't work, whereas Story B leaves the birthday timing unexplained.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 2,
+    "judge": "A\nStory A explains every detail more completely: the interfaith marriage accounts for \"no fire, no priest\" and the need for secrecy, Section 6(3) explains the Kottayam posting, the father's revenue-office background explains how he knew to read it, and the photographer as one of only two witnesses explains why a third was needed.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 3,
+    "judge": "B\n\nStory B explains the father's verbatim recitation through the Act's own rule that the notice be posted in the bride's home district. Story A adds an unnecessary tip-off from a clerk and an objection the riddle never mentions.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 4,
+    "judge": "**A**\n\nStory A ties every detail to Iceland's quota rules: scarce allowance in August makes head-on landing pay best per quota-kilo despite the price, ice and hold space, and the real 1 September start of the fishing year explains the knife-sharpening, whereas Story B's survey ending on that date is arbitrary.",
+    "result": "FAILED",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 5,
+    "judge": "A\n\nStory A accounts for every detail more precisely: the doctor's letter being worthless, the one-rung drop on the June banzuke, and the \"or\" in the old man's line as a real fork (ten wins in July only, otherwise thirty-three over three basho). Story B instead treats thirty-three as merely the usual alternative path.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 6,
+    "judge": "B\nStory B more fully explains why the Crown charged less: duty is levied on pure alcohol measured at removal from bond, not at filling. It also accounts for the deliberate damp-floor storage and the \"better whisky\" detail with fewer gaps.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 7,
+    "judge": "A\n\nStory A explains every detail more completely: the evaporation, why the strength fell, the Kentucky contrast, and why neither adding water nor blending could rescue the cask under Tarrant's condition, which leads naturally to the cheap non-whisky sale.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 8,
+    "judge": "A\nStory A accounts for every odd detail: the camp manager's block filing explains the forty runners at one gate and hour, the full-hour rule explains why Kipruto could finish his loop calmly, and the officer's procedural stake in avoiding a missed-test report explains why he thanked the athlete, whereas Story B leaves the shared slot unexplained and rests the thanks on sentiment alone.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 9,
+    "judge": "A\n\nStory A explains every detail more precisely: frozen dough pucks baked in his own oven account for the idle mixer, the pre-dawn cartons and the identical warm loaves, while the 1998 law's ban on freezing at any stage explains why baking on site still couldn't keep him the \"boulangerie\" sign.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 10,
+    "judge": "B\n\nStory B explains every detail more fully, including why the sign came down on day two (the picket tipped off the fraud inspectors), why only his own crew's ovens could restore the word, and the same-hour rehanging.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 11,
+    "judge": "A\n\nStory A explains more of the odd details, including why the money was needed (his visa depended on staying registered), why the deadline was so firm (the physical is held only once per tournament), and why the sister stable could not take him, whereas Story B only sketches these points.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 12,
+    "judge": "A\nStory A explains every detail, including why the forty pairs of shoes waited at the gate (the 6\u20137 a.m. whereabouts slot meant leaving would count as a missed test), while Story B leaves the shoes unexplained and covers the rest more loosely.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 13,
+    "judge": "B\nBoth stories share the same core idea, but B states the key fact that catch counts against the fishing year in which it is weighed ashore, not when it was hauled, which explains why fish caught on 31 August could lawfully go against the new quota.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 14,
+    "judge": "B\nBoth stories use the same mechanism, the notice forwarded to the Thrissur board under the Special Marriage Act, but B explains more of the riddle: the interfaith match accounts for the secrecy, the Karkidakam date, the thirty-day residence and the three witnesses, and B ties the leak to the specific Section 6(3) forwarding rule.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 15,
+    "judge": "A\nStory A explains why the strikers returned at the old wage and still called it total victory: the lost sign could only be regained through on-site kneading by real bakers, and they won a signed no-freezer clause as their sole demand, whereas Story B leaves the return to work and the \"victory\" vague.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 16,
+    "judge": "B\n\nStory B matches the riddle's steel plates and explains the sprint with a clear trigger (Amos hearing the diesels race), while Story A swaps the plates for shutoff valves and never says what set Amos running.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 17,
+    "judge": "B\n\nStory B better explains why even the pipeline's free haul-away was refused: zero revenue against operating costs fails the \"paying quantities\" test, while the shut-in royalty clause treats a capped, capable well as producing if paid by the anniversary.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 18,
+    "judge": "A\nStory A explains the odd details B leaves unexplained: why he must sit outside the padlocked gate (a tester locked out would log a missed test), why he stays until 7:01 (the full sixty-minute window), and why the coach calls it the week's key session.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 19,
+    "judge": "A\nStory A covers every odd detail, including the three clanging duds this patrol and the mechanism (a square hit jams the firing pin, an oblique one lets it fire), while Story B is thinner and leaves the \"three\" duds and the logged \"perfect setup deliberately ruined\" unexplained.",
+    "result": "WIN",
+    "riddler_pos": "A"
+   },
+   {
+    "i": 21,
+    "judge": "B\nStory B explains the same jamming firing-pin mechanism and also covers why only the contact exploder mattered by 1943: the Mark 14 torpedo's magnetic feature had been deactivated. It then ties the one-third-weight aluminum pins to Momsen's Pearl Harbor fix, which makes it more complete.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 22,
+    "judge": "B\nStory B accounts for more of the riddle's odd details: why surfacing at noon was \"safer\" (the Leigh Light threat at night and the need to charge batteries), why even one hour after dark was refused (the BdU order over the leaking oscillator), and why the planes came nearer yet failed (they could find the boat only by eye), whereas Story A simply asserts these points without explaining them.",
+    "result": "WIN",
+    "riddler_pos": "B"
+   },
+   {
+    "i": 23,
+    "judge": "B\n\nStory B explains every detail, including why the Houston engineer forbade thicker mud (it could fracture the fragile formation), while Story A leaves that prohibition unexplained.",
+    "result": "LOSS",
+    "riddler_pos": "A"
+   }
+  ]
+ }
+}

@@ -69,6 +69,12 @@ def chat(model, prompt, max_tokens, effort=None, retries=3):
     raise err
 
 
+def judge_pick(text):
+    """The judge's pick, "A" or "B", tolerating leading markdown such as **A**; None if absent."""
+    m = re.match(r"[\s*_#>`]*([AB])\b", text or "")
+    return m.group(1) if m else None
+
+
 def parse(gen):
     gen = gen.replace("**", "")
     m = re.search(r"RIDDLE:\s*(.*?)\s*CHARACTERS:\s*(.*?)\s*STORY:\s*(.*)", gen, re.S)
@@ -99,7 +105,8 @@ def run(model, effort, theme, seed):
         rec["riddler_pos"] = "A" if flip else "B"
         jd, c = chat(OPUS, JUDGE_PROMPT.format(riddle=p["riddle"], a=a, b=b), 1500, effort="low")
         rec["cost"] += c; rec["judge"] = jd
-        rec["result"] = "WIN" if jd.strip()[:1].upper() == rec["riddler_pos"] else "LOSS"
+        pick = judge_pick(jd)
+        rec["result"] = "WIN" if pick == rec["riddler_pos"] else ("LOSS" if pick else "FAILED")
     except Exception as e:
         rec["result"] = f"ERROR {e}"
     return rec
