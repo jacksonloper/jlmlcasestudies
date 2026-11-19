@@ -1,30 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const EXPERIMENTS = {
-  exp3: {
-    label: 'User themes + fact check',
-    blurb:
-      'Each writer got the same 8 user-style themes ("a wedding in Kerala", "a Tokyo sumo stable", ...). ' +
-      'Every riddle was also fact-checked by Claude Sonnet 5.5 (is the real-world mechanism actually real?) and checked for ' +
-      'theme fit by Claude Haiku 5.5. Anthropic and Gemini writers ran at the efforts shown; open-weight writers ran at high effort.',
-    factCheck: true,
-    costLogged: true,
-  },
-  exp1: {
-    label: 'Setting seeds, no user theme',
-    blurb:
-      'Writers chose their own story within a loose setting seed ("a pharmacy", "an airport", ...). ' +
-      'This was the first cheap-model tournament; there was no fact check yet.',
-    factCheck: false,
-  },
-  exp2: {
-    label: 'User-theme pilot',
-    blurb:
-      'Six user-style themes ("football champions in Madras", ...) for two writers, to see whether a fixed theme hurts. ' +
-      'No fact check.',
-    factCheck: false,
-  },
+const EX = {
+  blurb:
+    'Every writer got the same 8 user-style themes: a wedding in Kerala, a submarine crew in 1943, a Tokyo sumo stable, ' +
+    'a Scottish whisky distillery, a Kenyan marathon camp, a Paris bakery strike, a Texas oil rig and an Icelandic fishing trawler. ' +
+    'Each riddle was fact-checked by Claude Sonnet 5.5 (is the real-world mechanism actually real?) and checked for theme fit ' +
+    'by Claude Haiku 5.5.',
+  factCheck: true,
+  costLogged: true,
 };
 
 const shortModel = (m) => m.split('/')[1];
@@ -149,7 +133,6 @@ function RiddleCard({ r, factCheck }) {
 export default function Case5() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-  const [exp, setExp] = useState('exp3');
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
@@ -159,10 +142,9 @@ export default function Case5() {
       .catch((e) => setError(e.message));
   }, []);
 
-  const rounds = useMemo(() => (data ? data.rounds.filter((r) => r.experiment === exp) : []), [data, exp]);
-  const rows = useMemo(() => summarize(rounds), [rounds]);
+  const rows = useMemo(() => (data ? summarize(data.rounds) : []), [data]);
   const sel = rows.find((r) => r.key === selected);
-  const ex = EXPERIMENTS[exp];
+  const ex = EX;
   const total = useMemo(() => (data ? data.rounds.reduce((a, r) => a + (r.cost || 0), 0) : 0), [data]);
 
   return (
@@ -257,22 +239,6 @@ export default function Case5() {
           {!data && !error && <p className="text-gray-500">Loading…</p>}
           {data && (
             <>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {Object.entries(EXPERIMENTS).map(([k, v]) => (
-                  <button
-                    key={k}
-                    onClick={() => {
-                      setExp(k);
-                      setSelected(null);
-                    }}
-                    className={`px-4 py-2 rounded-lg text-sm border transition-colors ${
-                      exp === k ? 'bg-blue-600 text-white border-blue-600' : 'border-gray-300 text-gray-700 hover:border-gray-500'
-                    }`}
-                  >
-                    {v.label}
-                  </button>
-                ))}
-              </div>
               <p className="text-gray-600 text-sm mb-4">{ex.blurb}</p>
 
               <div className="overflow-x-auto">
@@ -366,12 +332,12 @@ export default function Case5() {
           <h2 className="text-2xl font-medium text-gray-900 mb-4">Caveats</h2>
           <ul className="list-disc pl-6 space-y-2 text-gray-700">
             <li>
-              Samples are small: 4 to 12 rounds per writer. A 6/12 win rate is consistent with anything from about
-              25% to 75%.
+              Samples are small: 8 rounds per writer, one per theme. A 6/8 win rate is consistent with anything from
+              about 40% to 95%, and cost-per-win figures resting on one or two wins are very noisy.
             </li>
             <li>
-              The judge does not check facts. Some winning riddles rest on invented regulations, which is why the
-              later experiment adds a separate fact check and reports &quot;won and real&quot;.
+              The judge does not check facts. Some winning riddles rest on invented regulations, which is why a
+              separate fact check runs on every riddle and the table reports &quot;won and real&quot;.
             </li>
             <li>
               The fact checker is itself a model at low effort and can be wrong in either direction; expand a riddle

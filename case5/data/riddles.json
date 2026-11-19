@@ -1,1326 +1,6 @@
 {
  "rounds": [
   {
-   "model": "anthropic/claude-haiku-5.5",
-   "seed": "a ferry or harbour",
-   "riddle": "The gangway rose at 6:10, twenty minutes before the timetable allowed.\nThe manifest was stamped \"all clear\" while a woman still stood on the pier, waving at the rail.\nWho was she, and why did the boat leave without her?",
-   "chars": "Ines the shipper; Tomas, a ferry purser (occupation)",
-   "story": "Tomas rushed the sailing because the cool box Ines carried was declared as frozen fish but actually held a damaged lithium battery pack, which the carrier must refuse under the IMDG dangerous-goods code and which he had to isolate before the vessel could legally depart. Once he logged the box as a Class 9 hazard, the manifest could no longer list it as passenger baggage, so Ines had no lawful way to board and was left on the quay while the ferry sailed early.",
-   "solver": "**Character 1:** Marguerite Doyle, the harbor's port inspector, who stamped the manifest.\n\n**Character 2:** Captain Tom Doyle, a ferry captain and her son, on his first day in command.\n\n**Story:** Marguerite finished her inspection early and stamped the manifest \"all clear\" herself, so Tom raised the gangway at 6:10 to get ahead of an incoming squall. She was never a passenger: her wave from the pier was both the official signal to depart and a proud mother seeing her son off on his first voyage as captain.",
-   "judge": "B\nStory B explains every detail naturally: the woman was the inspector who stamped the manifest and never meant to board, her wave was both a departure signal and a mother's farewell, and the squall accounts for the early sailing, whereas Story A relies on a strained hazmat chain that doesn't explain her waving or how the manifest was stamped clear.",
-   "riddler_pos": "A",
-   "result": "LOSS",
-   "cost": 0.014166500000000002,
-   "experiment": "exp1",
-   "effort": "default",
-   "prompt": "a ferry or harbour"
-  },
-  {
-   "model": "anthropic/claude-haiku-5.5",
-   "seed": "a dental surgery",
-   "riddle": "She asked for the mask, then laughed at the drill's whine. She swore she'd fasted since midnight, yet bread crumbs clung to her collar. When the gas started, her left ear popped, and the woman at her side stepped back. Who was she, and why did the gas make her flinch?",
-   "chars": "Lena, a scuba instructor; Priya (dental assistant)",
-   "story": "Lena had dived that morning, so nitrogen was still trapped in her tissues and the air pocket behind her eardrum, and her breakfast explains the bread that betrayed her fasting claim. Nitrous oxide spreads into closed air spaces far faster than nitrogen can escape, so the gas swelled her middle-ear pocket and bulged the eardrum, which is why Priya stepped back and stopped the procedure.",
-   "solver": "**Character 1:** Maggie, a nervous dental patient with a head cold.\n\n**Character 2:** Dr. Ruiz, a dental anesthetist.\n\n**Story:** Maggie begged for the nitrous mask, giggled giddily at the drill's whine, and swore she'd fasted since midnight, though crumbs from her secret breakfast toast still clung to her collar. When the gas flowed, it swelled the trapped air behind her cold-blocked left eardrum until it popped and made her flinch, and Dr. Ruiz, spotting the crumbs, stepped back and shut off the gas, fearing her full stomach might make her vomit and choke.",
-   "judge": "A\nStory A accounts for every detail (her asking for the mask, the giggling, the toast crumbs, the cold-blocked left ear popping and the anesthetist stepping back), while Story B ignores the laughter and mask request and leans on a far-fetched scuba backstory.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.0181378,
-   "experiment": "exp1",
-   "effort": "default",
-   "prompt": "a dental surgery"
-  },
-  {
-   "model": "anthropic/claude-haiku-5.5",
-   "seed": "a wedding venue",
-   "riddle": "The shrimp tower arrived at noon and was carted out before the toasts, untouched. The tent thermometer read ninety-six, yet the uncle who signed for the delivery swore it was fine. Who threw it away, and why did the bin go out so early?",
-   "chars": "Uncle Tobias; Nadia (caterer)",
-   "story": "Nadia, the caterer, binned the shrimp tower because the FDA Food Code gives perishable food only two hours out of temperature control, and that limit drops to one hour once the ambient air passes 90°F, so the tower set out at noon had to go by one o'clock, well before the toasts. Uncle Tobias had signed for the delivery and trusted the ice still visible on the tray, but ice reads as cold while the shrimp inside had already crossed the danger zone.",
-   "solver": "**Character 1:** Uncle Ray, the bride's frugal uncle who signed for the shrimp.\n\n**Character 2:** Dana, the wedding's catering manager (food-safety certified).\n\n**Story:** Uncle Ray had ordered the shrimp tower cheap from a buddy, who dropped it off unrefrigerated at noon, and Ray swore it was fine. Dana saw the tent thermometer at 96°F and knew seafood can't sit out more than an hour in that heat, so she carted it out untouched before the toasts and rolled the bin to the curb early so neither Ray nor any guest could fish it back out and get food poisoning.",
-   "judge": "B\n\nStory B explains every detail, including why the bin itself went to the curb early (so no one could retrieve the shrimp), while Story A only explains why the tower was discarded before the toasts and leaves the early bin unexplained.",
-   "riddler_pos": "A",
-   "result": "LOSS",
-   "cost": 0.0184808,
-   "experiment": "exp1",
-   "effort": "default",
-   "prompt": "a wedding venue"
-  },
-  {
-   "model": "anthropic/claude-haiku-5.5",
-   "seed": "a cemetery or crematorium",
-   "riddle": "The coffin left the chapel light and the urn came back heavy.\nNobody paid for a second firing, yet the ledger records one.\nThe keeper sealed a brass tag inside, then swore the name was wrong.\nWho was burned, and who was carried home?",
-   "chars": "Ellen Marsh (widow); Tom Reyes (crematorium operator)",
-   "story": "Ellen's husband Dan went into the retort with a titanium hip, and crematorium licence rules require operators to remove metal implants and return them to the family, so Tom, who had been selling those implants as scrap, logged a second firing to explain the unrecovered metal. The brass tag he sealed inside carried Dan's name, but the ash it sat beside belonged to a stranger Tom had cremated under the wrong paperwork, and the extra weight was the implant he had never removed.",
-   "solver": "**Character 1:** Silas Hale, a debt-ridden man who faked his own death.\n\n**Character 2:** Edgar Voss, crematorium keeper (his accomplice).\n\n**Story:** Hale's coffin was carried out of the chapel empty while he fled town, so Edgar logged an unpaid \"second firing\" to burn the body of the blackmailer he had strangled that morning, and the extra bone made the urn heavy. By habit he sealed the dead man's own brass tag inside, then swore it was a clerical mistake as Hale's weeping widow carried the blackmailer home on her mantel.",
-   "judge": "B\nStory B explains every detail coherently: the empty coffin is light, the unpaid second firing disposes of the blackmailer, and the wrong tag lets the widow carry him home. Story A leaves the light coffin unexplained and contradicts itself by having Tom sell the implants yet leave the hip in the urn.",
-   "riddler_pos": "A",
-   "result": "LOSS",
-   "cost": 0.0230912,
-   "experiment": "exp1",
-   "effort": "default",
-   "prompt": "a cemetery or crematorium"
-  },
-  {
-   "model": "openai/gpt-6-luna",
-   "seed": "a ferry or harbour",
-   "riddle": "At a fogbound ferry, a passenger takes three pipefuls while the engine-silent vessel makes no way through the water; its horn gives two long blasts, then repeats them exactly two minutes later.\nA voice aboard calls the ferry “underway,” though it appears motionless—why both the signal and that word?",
-   "chars": "Sherlock Holmes; harbour pilot",
-   "story": "Holmes’s three-pipe habit identifies the passenger, and the two prolonged blasts repeated at intervals of no more than two minutes are the COLREG Rule 35 fog signal for a power-driven vessel underway but not making way. The harbour pilot explains the rule’s less-obvious consequence: “underway” means not anchored, made fast, or aground, even when a vessel is making no way through the water.",
-   "solver": "**Character 1:** Old Tom, a retired lighthouse keeper riding as a passenger.\n**Character 2:** Captain Mara Quill, the ferry's master (occupation: ship's captain).\n\n**Story:** With fog too thick to see the channel, Captain Quill stopped her engines and drifted, neither anchored nor tied up, so by the rules of the road the ferry was still legally \"underway.\" She therefore sounded the required signal for a power-driven vessel underway but making no way, two long blasts at intervals of no more than two minutes, while Old Tom, who knew the regulations by heart, smoked through three pipefuls and nodded at every pair of blasts until the fog lifted.",
-   "judge": "A\n\nStory A explains every odd detail, including the three pipefuls (Holmes's famous \"three-pipe problem\"), and correctly ties the two prolonged blasts at two-minute intervals and the word \"underway\" to COLREG Rule 35, whereas Story B leaves the pipefuls as unexplained colour.",
-   "riddler_pos": "A",
-   "result": "WIN",
-   "cost": 0.0178415,
-   "experiment": "exp1",
-   "effort": "default",
-   "prompt": "a ferry or harbour"
-  },
-  {
-   "model": "openai/gpt-6-luna",
-   "seed": "a dental surgery",
-   "riddle": "At the dental surgery, he laid a brass mouthpiece beside the chair and pressed it to the pale groove on his upper lip.  \nThough a front tooth throbbed, he asked to wait until 6:15—after the 5:00 start printed on his card—before injecting anything. Why?",
-   "chars": "Rafi; Dr. Sen (dentist)",
-   "story": "Rafi was a trumpet player, as the mouthpiece and lip groove suggested. Dr. Sen agreed to wait because anesthetic for an upper tooth can numb the lip, dulling the tactile control needed to form a trumpet embouchure, so Rafi couldn’t reliably play his 5:00 performance.",
-   "solver": "**Character 1:** Leo, a professional trumpeter.\n**Character 2:** Dr. Patel, an emergency dentist.\n\n**Story:** Leo arrived with a throbbing front tooth, but his gig card showed he had to play a 5:00 concert. He pressed his mouthpiece to the pale embouchure groove on his lip to show Dr. Patel why a numbing injection would ruin his playing, and asked her to wait until 6:15, after the set ended.",
-   "judge": "B\n\nStory B ties every detail together, from the mouthpiece and lip groove to the 5:00 gig card and the 6:15 wait until after his set ends, while Story A never explains why 6:15 specifically and muddles the logic of the delay.",
-   "riddler_pos": "A",
-   "result": "LOSS",
-   "cost": 0.0173109,
-   "experiment": "exp1",
-   "effort": "default",
-   "prompt": "a dental surgery"
-  },
-  {
-   "model": "openai/gpt-6-luna",
-   "seed": "a wedding venue",
-   "riddle": "She circled him seven times; at the final beat, he crushed a glass inside velvet.\nThe room’s alarm stayed silent.\nWho were they?",
-   "chars": "Leah (the bride); Rabbi Cohen (rabbi)",
-   "story": "Leah was the bride at a Jewish wedding, and Rabbi Cohen officiated it. Because the venue’s acoustic glass-break detector listens for the sharp, high-frequency sound of breaking glass, Cohen used a thick velvet pouch to muffle the ceremonial smash and keep the alarm from triggering.",
-   "solver": "**Character 1:** Miriam, a bride.\n\n**Character 2:** David, the groom, who works as a security-systems technician.\n\n**Story:** At their Jewish wedding, Miriam circled David seven times under the chuppah, and at the ceremony's close he stomped on the traditional glass wrapped in a velvet pouch as everyone shouted \"Mazel tov!\" The hall's glass-break alarm stayed silent because David had installed that very system and switched off its sensor that morning, knowing exactly what sound was coming.",
-   "judge": "A\nStory A correctly names the bride and groom as the \"she\" who circles and the \"he\" who breaks the glass, while Story B leaves out the groom and has the rabbi handling the glass, so its characters don't match the riddle.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.0145204,
-   "experiment": "exp1",
-   "effort": "default",
-   "prompt": "a wedding venue"
-  },
-  {
-   "model": "openai/gpt-6-luna",
-   "seed": "a cemetery or crematorium",
-   "riddle": "At a Paris grave, a bronze man lies beside his hat.  \nOne small patch shines gold; the rest has gone dark.  \nWhat keeps that bright mark from aging like the rest?",
-   "chars": "Victor Noir; a cemetery conservator",
-   "story": "Victor Noir’s effigy became a fertility charm, so visitors rubbed it for luck. The conservator knows that repeated rubbing abrades the bronze’s dark patina and exposes brighter metal, explaining the gleaming patch.",
-   "solver": "**Character 1:** Victor Noir, a 19th-century journalist shot dead in 1870 by Prince Pierre Bonaparte, whose life-size bronze effigy lies with its top hat beside it at Père Lachaise Cemetery.\n\n**Character 2:** Claire, a young schoolteacher who hopes to have a baby.\n\n**Story:** Legend says that rubbing the conspicuous bulge in the trousers of Victor Noir's statue brings fertility and love, so Claire, like countless women before her, slips into the cemetery and rubs it. Those endless hands keep polishing away the dark patina, so that one spot stays shining gold while the rest of the bronze has gone dark.",
-   "judge": "A\nStory A explains the gleaming patch through a concrete, vivid mechanism: the legend draws countless visitors like Claire to rub the statue's trouser bulge, and their hands continually polish away the dark patina. Story B gives the same explanation, but more abstractly and without naming the specific spot.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.013356600000000001,
-   "experiment": "exp1",
-   "effort": "default",
-   "prompt": "a cemetery or crematorium"
-  },
-  {
-   "model": "google/gemini-3.8-flash",
-   "seed": "a ferry or harbour",
-   "riddle": "Two hundred ticket holders waited on the pier, but the gangway was pulled.\nOnly a single silver tanker rolled aboard, parking dead center on the empty deck.\nThe tally clicker stopped at exactly twenty-five strangers before the gate clicked shut.\nWith vast open space remaining, the whistle blew and she sailed on time.",
-   "chars": "Roy; Elena (ferry captain)",
-   "story": "Roy’s delivery of liquefied petroleum gas was classified as high-risk hazardous cargo, which maritime safety rules bar from standard passenger sailings. To keep the island supplied, Elena invoked the International Maritime Dangerous Goods (IMDG) Code exemption that allows ferries carrying restricted hazmat to sail as cargo vessels provided the civilian passenger count does not exceed twenty-five.",
-   "solver": "**Character 1:** Dale, a fuel-tanker driver hauling a full load of gasoline to the island.\n\n**Character 2:** Captain Marisol Reyes, the ferry captain.\n\n**Story:** Because Dale's silver tanker was carrying hazardous fuel, maritime rules made this a \"dangerous goods sailing,\" which capped passengers at twenty-five. Captain Reyes had the tanker parked dead center for safety and let exactly twenty-five walk-ons through the gate, then sailed on schedule with the deck nearly empty while the other ticket holders waited for the next regular ferry.",
-   "judge": "B\n\nStory B accounts for every detail (the dangerous-goods cap of twenty-five, the tanker parked dead center for safety, the remaining ticket holders waiting, and the on-time sailing with an empty deck), while Story A explains only the passenger limit.",
-   "riddler_pos": "A",
-   "result": "LOSS",
-   "cost": 0.03470575,
-   "experiment": "exp1",
-   "effort": "default",
-   "prompt": "a ferry or harbour"
-  },
-  {
-   "model": "google/gemini-3.8-flash",
-   "seed": "a dental surgery",
-   "riddle": "He begged for the drill on a tooth free of pain,\nYet refused the white paste when she opened the drain.\nThough the root canal failed, she smiled at his greed:\nOne breath through his nose was the proof she would need.",
-   "chars": "Arthur Pendelton; Dr. Evelyn Vance (dentist)",
-   "story": "Arthur sought an immediate molar extraction to claim insurance for a staged assault, faking endodontic agony on a healthy upper tooth. Dr. Vance suspected insurance fraud and drilled into the maxillary sinus, using the Valsalva maneuver—where pinched-nose exhalation bubbles air through an open oroantral communication—to clinically confirm his sinus floor was intact and his claimed fracture nonexistent.",
-   "solver": "**Character 1:** Gary, a man hooked on laughing gas.\n**Character 2:** Dr. Lena Ortiz, a dentist.\n\n**Story:** Gary demanded a \"root canal\" on a perfectly healthy tooth and waved away the numbing paste, because all he really wanted was the nitrous mask. Suspicious, Dr. Ortiz opened the valve on pure oxygen instead, and when Gary went instantly giggly after one breath through his nose, she smiled, knowing she had proof he was a gas-seeking faker to report.",
-   "judge": "B\n\nStory B coherently covers every line: the painless tooth, the refused numbing paste, the opened valve, and one nasal breath of pure oxygen exposing his craving for gas. Story A leaves the white paste unexplained, and its Valsalva logic is muddled.",
-   "riddler_pos": "A",
-   "result": "LOSS",
-   "cost": 0.040058750000000004,
-   "experiment": "exp1",
-   "effort": "default",
-   "prompt": "a dental surgery"
-  },
-  {
-   "model": "google/gemini-3.8-flash",
-   "seed": "a wedding venue",
-   "riddle": "The sun still blazed above the garden arbor when the wicker latches snapped shut.\nThe bride offered double his fee, but the man checked his watch and shook his head.\nA twenty-minute delay at the altar had cost her the grand spectacle.\nAnd sixty pure-white fliers stayed locked in their cages under the cloudless sky.",
-   "chars": "Clara; Arthur (dove release coordinator)",
-   "story": "The ceremonial \"doves\" were actually trained white homing pigeons that relied on visual solar navigation to return to their home loft forty miles away. Because the breed possesses zero night vision and faces fatal raptor predation if grounded after dark, standard animal welfare release contracts enforce an unbendable curfew exactly two hours before local sunset—a deadline the tardy ceremony had just breached despite the visible daylight.",
-   "solver": "**Character 1:** The bride, whose ceremony started twenty minutes late.\n\n**Character 2:** The dove handler (white homing-pigeon release specialist).\n\n**Story:** The handler's \"doves\" were trained homing pigeons that had to fly many miles back to their loft, and they cannot navigate after dusk, so his strict cutoff for releasing them had passed even though the sun was still shining. When the late ceremony finally ended, he refused the bride's offer of double pay, because releasing them then would leave all sixty birds stranded in the dark, prey for hawks and owls, so he latched the wicker baskets and drove them home instead.",
-   "judge": "A\nStory A accounts for every riddle detail, including the refused double fee and the latched wicker baskets, while Story B leaves out the bride's offer and the cages being locked.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.028803,
-   "experiment": "exp1",
-   "effort": "default",
-   "prompt": "a wedding venue"
-  },
-  {
-   "model": "google/gemini-3.8-flash",
-   "seed": "a cemetery or crematorium",
-   "riddle": "Arthur offered triple cash for his mother’s coffin to take the midnight furnace’s final, hottest slot.\nSeeing the ramp’s scale tip past four hundred pounds, Elena took the fee but immediately shut the burners off.\nIgnoring his frantic pleas to ignite the fire, she vented the chamber and locked the intake until dawn.\nMorning light brought the sheriff's warrant, hours before the cold hearth was permitted to spark.",
-   "chars": "Arthur; Elena (crematory operator)",
-   "story": "Arthur had hidden his murdered business partner inside his frail mother's casket to incinerate the evidence during the late-night run. However, crematory safety regulations strictly mandate that cases exceeding three hundred pounds must be processed in a completely cold retort at dawn, because high volumes of adipose tissue loaded into a preheated chamber cause catastrophic, uncontainable grease fires.",
-   "solver": "**Character 1:** Arthur, a man desperate to destroy evidence.\n**Character 2:** Elena, the night-shift crematory operator.\n\n**Story:** Arthur paid triple for an immediate midnight cremation because his mother's coffin also held the body of the business partner he had murdered, and he needed both burned before anyone came looking. Elena knew no frail old woman's coffin should weigh over four hundred pounds, so she pocketed the fee, shut down and locked the cold furnace to preserve the bodies, and stalled him until the sheriff arrived at dawn with a warrant to seize the coffin.",
-   "judge": "B\n\nStory B's safety rule (heavy cases must go into a fully cold retort at dawn to avoid grease fires) explains why Elena took the fee but shut the burners off, vented the hot chamber, and locked it until the hearth was \"permitted\" to spark, which leaves time for the warrant to arrive.",
-   "riddler_pos": "B",
-   "result": "WIN",
-   "cost": 0.033738,
-   "experiment": "exp1",
-   "effort": "default",
-   "prompt": "a cemetery or crematorium"
-  },
-  {
-   "model": "deepseek/deepseek-v4.1-flash-1017",
-   "seed": "a ferry or harbour",
-   "riddle": "All cars were aboard by 05:58, but the 06:00 ferry held its ramp down.\nAt 06:15 a man with a silver case crossed without a ticket.\nAt 06:16 the ferry left, and the mate wrote \"two\" beside the boarding card.\nNo one had been refused passage.",
-   "chars": "Elin (ferry master); Ravi (harbour pilot)",
-   "story": "The ticketless man with the silver case was Ravi, a harbour pilot, and the harbour’s compulsory pilotage by-law meant Elin’s ferry could not cross the harbour limit without him. That same by-law allows pilot boarding only in the 20-minute window before high water—high water was 06:35—so Elin held the ramp until 06:15, sailed at 06:16 once Ravi was aboard, and the “two” were the pilot and master signatures required on the boarding card; no one was refused because Ravi was never a passenger.",
-   "solver": "**Character 1:** Daniel, a hospital organ-transport courier carrying a donor heart in a silver cooler case.\n\n**Character 2:** Maggie, the ferry's first mate (occupation: ship's mate).\n\n**Story:** The island hospital radioed that a donor heart for a dying child was on its way, so Maggie kept the ramp down past 06:00 and waved Daniel aboard at 06:15 without a ticket, since medical couriers travel free. As the ferry pulled out at 06:16, she wrote \"two\" beside his boarding card in the souls-aboard log: one for the courier and one for the life he carried.",
-   "judge": "A\n\nStory A accounts for every detail with concrete mechanics: the pilotage by-law explains the held ramp, the timing window explains 06:15, the pilot's role explains the missing ticket, and the required signatures explain \"two\". Story B relies on a sentimental, non-procedural reading of \"two\" and gives no specific reason for the 06:15 timing.",
-   "riddler_pos": "A",
-   "result": "WIN",
-   "cost": 0.023997940000000002,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a ferry or harbour"
-  },
-  {
-   "model": "deepseek/deepseek-v4.1-flash-1017",
-   "seed": "a dental surgery",
-   "riddle": "At 9:17 the patient is in the dental surgery, but the chair is still empty.\nA porcelain cap sits on the tray while the forceps remain wrapped.\nShe asks the masked figure to finish the cap first and take the tooth next month.",
-   "chars": "Mara; Dr Pell (dentist)",
-   "story": "Mara has a cracked lower molar and a failed porcelain crown on a different tooth; Dr Pell is a dentist. Her dental plan’s annual maximum resets on the first of next month and its same-treatment-plan clause treats an extraction done with the crown as included in the crown fee, so Dr Pell cements the crown now and books the extraction for next month; the 9:17 chair is empty because the cap is still being polished, and the forceps stay wrapped until the extraction is booked.",
-   "solver": "**Character 1:** Mara, a wheelchair user and the patient.\n**Character 2:** Dr. Okafor, her dentist (the masked figure).\n\n**Story:** At 9:17 Mara rolled into the surgery and stayed in her own wheelchair, so the dental chair sat empty while Dr. Okafor worked on her from there. Because her wedding photos were that Saturday, she asked him to fit the porcelain cap on her chipped front tooth today and put off extracting her painful back molar until next month, so she wouldn't be swollen in the pictures.",
-   "judge": "A\nStory A naturally explains why the chair is empty while the patient is present (she stays in her wheelchair) and gives a simple, believable reason for wanting the cap now and the extraction later, whereas Story B leans on a convoluted insurance clause and never explains why the chair is empty if the patient is there.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.022732330000000002,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a dental surgery"
-  },
-  {
-   "model": "deepseek/deepseek-v4.1-flash-1017",
-   "seed": "a wedding venue",
-   "riddle": "At the vineyard wedding venue, the cake arrived at 3:58 with “keep refrigerated” on its box, but the bride ordered it displayed under cloth. The program said cutting at 9:00; at 7:58 a woman in a black apron began slicing. The bride had specified no refrigeration after delivery.",
-   "chars": "Bride; caterer",
-   "story": "The cake’s icing was cream-cheese-based, making it a TCS food, and the local health code’s time-as-a-public-health-control rule allowed it to stay unrefrigerated only four hours from the 3:58 delivery. Because the bride had forbidden refrigeration after delivery, the caterer had to cut and serve it at 7:58—before the 9:00 program—or discard it at 8:00.",
-   "solver": "**Character 1:** The bride, a devoted cheese lover.\n\n**Character 2:** Marta, a cheesemonger in a black apron.\n\n**Story:** The bride's \"cake\" was really a tower of stacked cheese wheels, so it came labeled \"keep refrigerated,\" but she insisted it sit unrefrigerated under a cloth all evening so the cheese would warm to room temperature without drying out. At 7:58, Marta quietly began pre-slicing the back of the wheels so that when the bride made the ceremonial cut at 9:00, guests could be served at once.",
-   "judge": "B\nStory B explains the exact 7:58 slicing time as the four-hour limit on unrefrigerated food after the 3:58 delivery, while Story A leaves that oddly precise timing arbitrary.",
-   "riddler_pos": "B",
-   "result": "WIN",
-   "cost": 0.023151579999999998,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a wedding venue"
-  },
-  {
-   "model": "deepseek/deepseek-v4.1-flash-1017",
-   "seed": "a cemetery or crematorium",
-   "riddle": "The chest looked smooth, yet the metal detector chirped once.\nThe hearse waited and the retort stayed cold.\nAt 4:10 the office fax hummed; only then did Quill sign the sheet.\nThe family was told it was “paperwork,” not a problem with the body.",
-   "chars": "Ada; Mr. Quill (crematorium operator)",
-   "story": "Ada had a pacemaker, and the chest metal-detector chirp was the only outward sign. Quill, the crematorium operator, kept the retort cold until the funeral home faxed the implant-removal certificate that the crematorium’s written policy requires before accepting any battery-powered implant, because such batteries can rupture in the cremator.",
-   "solver": "**Character 1:** Arthur Venn, the deceased, whose pacemaker had been implanted deep beneath the chest muscle, leaving no visible bump.\n\n**Character 2:** Quill, a crematory operator.\n\n**Story:** Quill's routine metal-detector sweep chirped over Arthur's smooth chest, revealing a hidden pacemaker whose battery could explode in the retort, so the cremation was halted with the hearse waiting. Only when the medical examiner's 4:10 fax confirmed the device had been removed did Quill sign the cremation authorization, while the family was gently told the delay was just \"paperwork.\"",
-   "judge": "A\n\nStory A accounts for every detail: the smooth chest (a pacemaker implanted deep under the muscle), the waiting hearse, the 4:10 fax, Quill's signature, and the \"paperwork\" explanation given to the family, whereas Story B leaves the smooth chest, the hearse and the family's explanation unaddressed.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.01899082,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a cemetery or crematorium"
-  },
-  {
-   "model": "qwen/qwen3.8-flash",
-   "seed": "a ferry or harbour",
-   "riddle": "The red snake drank while the passenger deck stayed bare; a passenger waited at the plank, not climbing, for five minutes; a voice cleared the air; the ferry opened its mouth.",
-   "chars": "a passenger; the harbourmaster",
-   "story": "The fuel hose was bunkering the ferry, and under the harbourmaster's bunkering order no passenger could board until the hose was secured and a five-minute ventilation/gas-free check was complete. The passenger watched the five-minute countdown, and when the voice pronounced the deck gas-free, the ramp opened.",
-   "solver": "**Character 1:** Mara, a commuter waiting to board.\n**Character 2:** Joe, the ferry's deckhand and fueling attendant.\n\n**Story:** Mara waited at the gangplank for five minutes while Joe pumped diesel through the red fuel hose (the \"red snake\"), because safety rules keep the passenger deck empty and boarding closed during refueling. When the tank was full, Joe disconnected the hose and called \"All clear!\" over the loudspeaker, and the ferry's bow ramp dropped open to let Mara and the cars aboard.",
-   "judge": "A\nStory A explains both the precise five-minute wait (a mandated ventilation countdown) and \"a voice cleared the air\" (declaring the deck gas-free), while Story B treats the five minutes as incidental and reads \"cleared the air\" only loosely as \"All clear.\"",
-   "riddler_pos": "A",
-   "result": "WIN",
-   "cost": 0.02096306,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a ferry or harbour"
-  },
-  {
-   "model": "qwen/qwen3.8-flash",
-   "seed": "a dental surgery",
-   "riddle": "The frost-spray numbed her; her lips went brown, not blue; the finger clip stuck at eighty-five while her breathing stayed easy; the drill waited for the blue vial.",
-   "chars": "patient; dental assistant",
-   "story": "The dental assistant sprayed benzocaine as local anesthesia, and the drug oxidized the patient’s hemoglobin into methemoglobin, causing methemoglobinemia and brown lips, which forced a pause for methylene blue. Because methemoglobin absorbs the pulse oximeter’s red and infrared beams almost equally, the screen falsely clamps near eighty-five despite normal breathing.",
-   "solver": "**Character 1:** Maya, a dental patient.\n**Character 2:** Dr. Patel, a dentist.\n\n**Story:** Before drilling, Dr. Patel numbed Maya's gums with a heavy dose of benzocaine spray, which triggered methemoglobinemia: her blood turned chocolate-brown, and the pulse oximeter froze at its signature 85% even though she was breathing easily. Recognizing the reaction, he set down the drill until the paramedics arrived with the antidote, a blue vial of methylene blue.",
-   "judge": "A\nStory A explicitly ties together every clue: the numbing spray, the chocolate-brown blood, the oximeter stuck at its signature 85% despite easy breathing, the drill set down, and the blue vial of methylene blue. Story B explains the 85% reading well but never clearly accounts for the waiting drill or the blue vial.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.01875196,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a dental surgery"
-  },
-  {
-   "model": "qwen/qwen3.8-flash",
-   "seed": "a wedding venue",
-   "riddle": "The bride's candles die before her first vow, though no wind blew; a man moves one chair and shifts the cake table exactly a foot; the aisle opens wide, and the cake is cut in its new place; who stopped the flames, and why was the table moved?",
-   "chars": "the bride; the fire marshal",
-   "story": "The fire marshal extinguished the bride's candles because the venue's contract barred free-standing open flames within reach of combustible drapery. He moved one chair and shifted the cake table exactly one foot because the exit-code aisle must be measured as thirty-six clear inches from the nearest protruding object, not from the wall marking, so that one-foot shift opened the required path without stopping the vows or cake cutting.",
-   "solver": "**Character 1:** The bride's grandfather, who uses a wheelchair and an oxygen tank.\n\n**Character 2:** Dale, the venue's fire-safety coordinator.\n\n**Story:** When Dale saw the grandfather roll in late with his oxygen tank, he quietly snuffed the bride's candles before the first vow, because an open flame beside pure oxygen is a fire hazard. He then removed one chair and nudged the cake table exactly a foot so the aisle was wide enough for the wheelchair, and the grandfather watched the cake being cut in its new spot.",
-   "judge": "A\nStory A ties every detail to one cause: the grandfather's oxygen tank explains why the flames had to go, and his wheelchair explains why one chair and the table moved to widen the aisle, while Story B depends on separate, contrived code technicalities that don't link the details together.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.02094188,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a wedding venue"
-  },
-  {
-   "model": "qwen/qwen3.8-flash",
-   "seed": "a cemetery or crematorium",
-   "riddle": "Daffodils leaned on a sunken turf square; no rain had fallen, yet the man asked for earth money; the pine box lay flat three hundred nights back; now the lawn bowed around her heel.",
-   "chars": "The widow; the sexton",
-   "story": "The sexton recognized the sunken square as a pine-casket grave, and the cemetery's plot rules required a concrete vault liner so that casket roofs would not collapse and settle the turf. Because this burial had no liner, the pine roof failed over three hundred days in dry weather, so the man charged for earth regrading, not stone or headstone work.",
-   "solver": "**Character 1:** A widow\n**Character 2:** The cemetery's gravedigger (sexton)\n\n**Story:** Nearly a year after her husband was buried in a cheap pine coffin, the widow brought daffodils to his grave. The gravedigger asked her to pay for fill dirt, explaining that without rain the sinking could only mean the rotting lid was giving way, and just then the turf collapsed beneath her heel.",
-   "judge": "B\nStory B accounts for every detail, including the daffodils, the dry weather, the fill-dirt fee, the pine coffin buried nearly a year ago, and the turf giving way under her heel, while Story A leaves out the daffodils and the heel entirely.",
-   "riddler_pos": "A",
-   "result": "LOSS",
-   "cost": 0.017720020000000003,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a cemetery or crematorium"
-  },
-  {
-   "model": "moonshotai/kimi-k2.6",
-   "seed": "a ferry or harbour",
-   "result": "FAILED",
-   "cost": 0.06839435,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a ferry or harbour"
-  },
-  {
-   "model": "moonshotai/kimi-k2.6",
-   "seed": "a dental surgery",
-   "result": "FAILED",
-   "cost": 0.0328506432,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a dental surgery"
-  },
-  {
-   "model": "moonshotai/kimi-k2.6",
-   "seed": "a wedding venue",
-   "result": "FAILED",
-   "cost": 0.0656929984,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a wedding venue"
-  },
-  {
-   "model": "moonshotai/kimi-k2.6",
-   "seed": "a cemetery or crematorium",
-   "riddle": "Forty-nine passed through her arch in March,\nBut the fiftieth hearse she sent to the highway;\nNo ash touched the tray for thirteen cold mornings,\nAnd the carbon bed stayed locked though its gauge burned red.",
-   "chars": "Vernon; Rhea, crematorium operator",
-   "story": "Vernon arrived as the funeral director bearing the fiftieth decedent of the month; because the facility's mercury-abatement carbon filter had reached its legal loading limit after the forty-ninth cremation, Rhea directed his hearse to the county's alternate crematorium. Under Environment Agency PG5/2 guidance and hazardous waste transfer regulations, a saturated carbon bed cannot be stripped without a pre-booked licensed carrier, so she had to leave the retort offline for thirteen days with the filter chamber padlocked despite the red saturation gauge, which is why no ash lined the tray.",
-   "solver": "**Character 1:** Marta Vey, crematorium operator.\n**Character 2:** Mr. Halloran, a deceased retired dentist whose own mouth was full of old mercury amalgam fillings.\n\n**Story:** After forty-nine cremations in March, Marta's mercury-capturing carbon filter bed showed saturation (its gauge glowing red), and regulators sealed it pending inspection, so she couldn't regenerate or replace it. Knowing that burning Halloran's mercury-laden body without filtration would be illegal and toxic, she redirected his hearse down the highway to the next county's crematorium and left her cremator cold for thirteen days until the inspector arrived.",
-   "judge": "A\nStory A explains every detail (the forty-nine cremations, the redirected fiftieth hearse, the thirteen cold days, and the locked carbon bed with its red gauge) through one regulatory constraint, while Story B adds an unnecessary dentist-with-fillings detail that the riddle never calls for.",
-   "riddler_pos": "A",
-   "result": "WIN",
-   "cost": 0.07945152,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a cemetery or crematorium"
-  },
-  {
-   "model": "anthropic/claude-fable-5.2",
-   "seed": "a ferry or harbour",
-   "riddle": "Three identical vans, each worth 40,000, boarded a ferry worth 80,000; in a gale the crew deliberately pushed one van into the sea.\nIn harbour, a woman with a ledger refused to let the two dry vans drive off until each owner had paid her 8,000.\nThe owner of the drowned van received only 32,000, and called it exactly fair.\nNobody was fined, insured, or at fault.",
-   "chars": "Tomas, owner of the jettisoned van; Ingrid (average adjuster)",
-   "story": "The captain ordered Tomas's van jettisoned to stop the ferry capsizing, a deliberate sacrifice for the common safety, so he declared \"general average\" and adjuster Ingrid held the surviving vans under the shipowner's lien until their owners paid their contributions. Under the York-Antwerp Rules the 40,000 loss is spread over everything that was at risk, including the sacrificed van itself (80,000 + 3 × 40,000 = 200,000, so 20% each), meaning the ferry bears 16,000, each dry van 8,000, and Tomas bears his own 8,000 share, which is why he gets precisely 32,000 and finds it fair.",
-   "solver": "**Character 1:** Marta, owner of the drowned van.\n\n**Character 2 (with occupation):** Mrs. Grey, a maritime average adjuster applying the ancient law of \"general average.\"\n\n**Story:** Because Marta's van was sacrificed to save the whole ship, Mrs. Grey shared the 40,000 loss across everything saved: ferry and three vans, worth 200,000 in total, so each party paid 20% of its own value. She held the two dry vans until their owners paid 8,000 each and collected 16,000 from the ferry owner, then handed Marta 32,000, since Marta's own 8,000 share of the sacrifice was hers to bear, just like everyone else's.",
-   "judge": "A\n\nStory A explains every detail more precisely: the lien accounts for holding the vans, and the loss is correctly spread over all property at risk, including the sacrificed van, rather than B's slightly contradictory claim that the drowned van was among the property \"saved.\"",
-   "riddler_pos": "A",
-   "result": "WIN",
-   "cost": 0.09847600000000001,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a ferry or harbour"
-  },
-  {
-   "model": "anthropic/claude-fable-5.2",
-   "seed": "a dental surgery",
-   "riddle": "On the first day of a month's holiday, she gladly took the needle for her upper tooth.\nA week later, for the lower one, she refused it and gripped the chair through the drilling.\nShe has no fear of needles, and nothing to do for weeks.\nHer dentist said that, in her place, he would have chosen the same.",
-   "chars": "Dr. Okafor, her dentist; Mara (professional tea taster and blender)",
-   "story": "Mara earns her living with her tongue as a professional tea taster, so the only thing she guards more than her comfort is her sense of taste. An upper tooth is numbed by a simple infiltration beside the root, but a lower molar needs an inferior alveolar nerve block, placed right next to the lingual nerve that carries taste from the front two-thirds of the tongue, and that injection has a small, recognised risk of permanent taste loss on that side. This is why being on holiday made no difference, and why she took the pain for the lower tooth only.",
-   "solver": "**Character 1:** Maya, a woman on a month's holiday.\n**Character 2:** Dr. Patel, her dentist.\n\n**Story:** Midway through the week after her upper filling, Maya's pregnancy test came back positive, so when the lower tooth was due she refused the anaesthetic to avoid any risk to her baby in its earliest weeks. Dr. Patel, who knows the lower jaw needs a much larger nerve-block dose than an upper tooth, smiled that in her place he'd have chosen the same, even though he himself could never be in her place.",
-   "judge": "B\nStory B ties every detail together: the upper tooth needs only a local injection, while the lower one needs a nerve block near the taste nerve, which threatens her livelihood however long her holiday lasts, and the dentist's agreement follows naturally. Story A depends on a newly discovered pregnancy and on a dentist who could never be \"in her place.\"",
-   "riddler_pos": "B",
-   "result": "WIN",
-   "cost": 0.11712399999999999,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a dental surgery"
-  },
-  {
-   "model": "anthropic/claude-fable-5.2",
-   "seed": "a wedding venue",
-   "riddle": "The band had played softly all evening, one eye on a little green light on the wall.\nIn the hush between two songs, Uncle Leo slipped out the garden door for a smoke,\nand every amp on stage went dead, though the chandeliers burned on.\nMarta touched no fuse: she fetched Leo back in, shut the door, and waited for the green light.",
-   "chars": "Uncle Leo; Marta (the venue's duty manager)",
-   "story": "The venue's premises licence obliges it to run an automatic noise limiter, a wall-mounted unit with a traffic-light display that feeds only the stage sockets and cuts them if the music gets too loud, which is why the band played softly and the chandeliers stayed on. Because the licence condition concerns sound escaping to the neighbours, the limiter is also wired to a magnetic contact on the garden door, so when Leo opened it the stage circuit dropped instantly even in near-silence, and Marta knew the only cure was to shut the door and wait out the unit's automatic reset delay until the light went green.",
-   "solver": "**Character 1:** Uncle Leo, a wedding guest.\n\n**Character 2:** Marta, the venue manager.\n\n**Story:** The hall's noise limiter, whose green light the band had been watching all night, was wired to the garden door so that it cut power to the stage sockets whenever the door opened and music might spill out to the neighbours. When Leo stepped out for his smoke, the amps died while the separately wired chandeliers stayed lit, so Marta simply brought him back inside, closed the door, and waited for the limiter to reset and restore power.",
-   "judge": "B\nStory B accounts for every detail, including why the band played softly (the limiter cuts power if music gets too loud), why the cut came during the hush between songs (a door contact, not volume), and why the chandeliers stayed lit (the limiter feeds only the stage sockets), while Story A leaves the soft playing unexplained.",
-   "riddler_pos": "B",
-   "result": "WIN",
-   "cost": 0.14628,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a wedding venue"
-  },
-  {
-   "model": "anthropic/claude-fable-5.2",
-   "seed": "a cemetery or crematorium",
-   "riddle": "Before the fire, a man in gloves taped a ring-shaped magnet to the dead man's chest.\nOnly then did he pick up his scalpel.\n\"He's dead, he can't hurt you,\" said the widow.\n\"This one still can,\" he said, and he would not let the magnet be moved until he had finished.",
-   "chars": "Margaret, the dead man's widow; Owen (mortician preparing the body for cremation)",
-   "story": "Margaret's husband had a battery-powered heart implant, which Owen had to cut out before cremation because such devices explode in the cremator. It was not a plain pacemaker but an implantable defibrillator, which stays armed after death and can read a blade cutting its leads as a fibrillating heart and fire a high-voltage shock into whoever holds the scalpel, and since a magnet suspends its shock function only while it sits over the device, Owen taped it down before cutting and kept it there until the implant was out.",
-   "solver": "**Character 1:** The widow of the deceased man.\n\n**Character 2:** The funeral director (embalmer), preparing the body for cremation.\n\n**Story:** Before the cremation, the funeral director had to remove the dead man's implanted defibrillator, because its battery can explode in the furnace. He taped a ring magnet over the device to switch off its shocks, since the still-live ICD could deliver a painful jolt when his scalpel cut its leads. He would not let the magnet be moved until the device was safely out.",
-   "judge": "A\nStory A explains every detail more completely: it says why the device is an armed defibrillator rather than a plain pacemaker, how cutting its leads can trigger a shock, and why the magnet must stay in place throughout, since it suppresses shocks only while it sits over the device.",
-   "riddler_pos": "A",
-   "result": "WIN",
-   "cost": 0.07420399999999999,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a cemetery or crematorium"
-  },
-  {
-   "model": "deepseek/deepseek-v4.1-flash-1017",
-   "seed": "a pharmacy",
-   "riddle": "At the pharmacy counter on Monday at noon the slip said thirty; he counted ten.\n\"Come back Thursday at noon,\" he said, and she did.\nAt 12:01 he refused the rest of the same slip.\nShe had the bottle and receipt; he had only the clock.",
-   "chars": "Mira; Owen (pharmacist)",
-   "story": "Mira’s prescription was for a Schedule II controlled substance, and because Owen had only ten of the thirty tablets in stock he made a DEA-permitted partial fill instead of turning her away. Under 21 C.F.R. § 1306.13, Owen had to supply the remaining twenty within 72 hours or the unfilled remainder became void and the prescriber had to be notified; his replacement stock arrived at 12:01 on Thursday, one minute after the Monday-noon deadline, so he refused the rest.",
-   "solver": "**Character 1:** Maria, a patient with a prescription for thirty opioid painkillers.\n\n**Character 2:** Mr. Dunn, a pharmacist.\n\n**Story:** On Monday at noon Mr. Dunn had only ten tablets of Maria's Schedule II painkiller, so he partially filled her prescription and told her to return Thursday at noon. That was exactly the 72-hour legal limit for completing a Schedule II partial fill. She reached the counter one minute late, so the remaining twenty tablets were legally void, and her bottle and receipt couldn't outweigh the clock.",
-   "judge": "B\nStory B keeps her on time at noon as the riddle states, and has the stock arriving at 12:01 just past the 72-hour limit, whereas Story A contradicts \"she did\" by making her a minute late.",
-   "riddler_pos": "B",
-   "result": "WIN",
-   "cost": 0.016040679999999998,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a pharmacy"
-  },
-  {
-   "model": "deepseek/deepseek-v4.1-flash-1017",
-   "seed": "an airport",
-   "riddle": "At pad four, a woman in a yellow vest sprayed the same wing three times before the jet left. She ignored the captain’s wave and watched the clock, not the fuel truck. The board flipped from “boarding” to “hold” and back.",
-   "chars": "Captain Reyes; Nina (deicing technician)",
-   "story": "Nina, a deicing technician, was applying the third Type IV coat because the jet was in freezing drizzle and the first two applications’ holdover times had expired before pushback; under the FAA/TC holdover-time table, a fresh application is mandatory when the calculated protection window runs out before takeoff. Captain Reyes’s wave went unanswered because Nina had to log the new application time, which is why the gate board flipped back to “hold” and then to “boarding.”",
-   "solver": "**Character 1:** Captain Reyes, the pilot eager to depart.\n**Character 2:** Dana, an airport de-icing technician.\n\n**Story:** Freezing snow kept falling at pad four, and every time the departure board flipped from \"boarding\" to \"hold,\" the jet's delay ran past the holdover time of the anti-ice fluid, so Dana re-sprayed the same wing again and again. She ignored Captain Reyes's impatient wave and watched the clock rather than the fuel truck, because fluid that has expired can let ice form on the wing, and only a freshly sprayed wing could legally and safely take off.",
-   "judge": "B\nStory B ties every detail together (the repeated holds pushing past holdover time, the triple spraying, the clock-watching instead of the fuel truck, the ignored wave), while Story A rests on a strained claim that logging an application time flipped the board and never addresses the clock or the fuel truck.",
-   "riddler_pos": "A",
-   "result": "LOSS",
-   "cost": 0.016570520000000002,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "an airport"
-  },
-  {
-   "model": "deepseek/deepseek-v4.1-flash-1017",
-   "seed": "a bank branch",
-   "riddle": "His $6,000 check released only $5,525,\nand the slip said the rest would wait NINE BUSINESS DAYS.",
-   "chars": "Mr. Reed; Tessa (bank teller)",
-   "story": "Mr. Reed was opening a new account, so Tessa the teller applied Regulation CC’s new-account exception: the first $5,525 of his $6,000 check deposit had to be available by the next business day, while the remaining $475 could be held for up to nine business days. That is why the slip released exactly $5,525 and stamped the rest for nine business days.",
-   "solver": "**Character 1:** Marcus, a man who opened his checking account just two weeks ago.\n\n**Character 2:** Linda, a **bank teller**.\n\n**Story:** Marcus deposited his $6,000 signing-bonus check into his brand-new account. Linda explained that under federal Regulation CC's \"new account\" exception, the bank must release the first $5,525 the next business day but may hold the remaining $475 for up to nine business days, because accounts less than 30 days old are treated as higher-risk.",
-   "judge": "A\nStory A explains the same Regulation CC new-account rule as B, but it also explicitly ties the two-week-old account to the under-30-days threshold and the higher-risk rationale, which accounts for the $5,525 and nine-day hold more completely.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.01881135,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a bank branch"
-  },
-  {
-   "model": "deepseek/deepseek-v4.1-flash-1017",
-   "seed": "a ski resort",
-   "riddle": "At 2 a.m. the board read +2°C, yet she started the guns and walked to the stream gauge, not the thermometer. At 2:20 only the lower fan gun was running; the upper trail stayed bare. The pump-house log had read 2.9 cfs, then 3.1.",
-   "chars": "Elin; Cal (snowmaking supervisor)",
-   "story": "Elin started the guns because the wet-bulb temperature was −3°C despite the +2°C air, so snow could still form; Cal’s water-right permit for the resort set a 3 cfs minimum streamflow at the intake, and the pump-house log’s 2.9 cfs blocked pumping. When the gauge reached 3.1 cfs at 2:20, the permit allowed only the lower fan gun’s low-flow restart, leaving the higher-volume upper-trail gun off and that trail bare.",
-   "solver": "**Character 1:** Ellis, a state fisheries warden who enforces the creek's minimum-flow rule for spawning trout.\n\n**Character 2:** Mara, the night snowmaking operator at a small ski hill.\n\n**Story:** Mara knew the air was dry enough that the wet-bulb temperature was below freezing despite the +2°C reading, so her real limit was Ellis's permit, which banned pumping from the creek until the stream gauge passed 3.0 cfs. When the flow ticked from 2.9 to 3.1 cfs, she could legally draw only the small surplus, which was enough for the low-water lower fan gun but not enough to push water up the line to the upper trail.",
-   "judge": "B\nStory B ties every clue to the timeline: the specific −3°C wet-bulb reading justifies starting at +2°C, 2.9 cfs blocks pumping, and reaching 3.1 cfs at 2:20 permits only the low-flow lower gun. Story A leaves the timing looser.",
-   "riddler_pos": "B",
-   "result": "WIN",
-   "cost": 0.025456659450000002,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a ski resort"
-  },
-  {
-   "model": "deepseek/deepseek-v4.1-flash-1017",
-   "seed": "a zoo",
-   "riddle": "At the zoo, the newborn’s ear tag began with a city code no local stamp had ever made.\nHer birth card read “received,” though the dam never left the stall.\nThe naming board met at noon, read the file, and adjourned without a name.\nHer first weighing went under an accession number from that other city.",
-   "chars": "Dagmar; Ines (zoo registrar)",
-   "story": "Dagmar is a calf born at the zoo to a dam held under a breeding-loan agreement from a zoo in another city, so the calf is loan progeny rather than local-bred stock. The loan’s offspring-ownership clause assigns any calf to the lending zoo, so Ines marked “received” in the collection records rather than as a local birth, used the lender’s city code and accession number on the ear tag and scale sheet, and left naming to the lender’s studbook committee.",
-   "solver": "**Character 1:** Juniper, a newborn rhino calf.\n**Character 2:** Dr. Mara Velez, the zoo's registrar.\n\n**Story:** Juniper grew from a frozen embryo that another city's zoo shipped over under a breeding-loan contract, so on paper she was \"received\" from that zoo and legally belongs to it, even though her surrogate mother never left the stall. Dr. Velez therefore tagged and weighed her under the owning zoo's code and accession number, and the local naming board adjourned without a name because the contract reserves naming rights to the zoo that owns her.",
-   "judge": "A\n\nStory A makes \"received\" literally true, since the frozen embryo really was shipped in from the other city, while Story B must treat it as a paperwork convention for a calf conceived and born locally.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.020562999999999998,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a zoo"
-  },
-  {
-   "model": "deepseek/deepseek-v4.1-flash-1017",
-   "seed": "a recording studio",
-   "riddle": "At 0:29 the voice clipped the tag and stopped.\nThirteen squares on the wall were crossed out.\nThe client asked for a loop; the voice asked for a second check.\nThe take sheet said \"commercial,\" not \"demo.\"",
-   "chars": "Lena; Marco (session singer)",
-   "story": "Marco was a union session singer cutting a 30-second radio commercial for Lena, so he clipped the tag to land at 0:29 and the sheet was marked \"commercial\" rather than \"demo.\" Because the SAG-AFTRA Commercials Contract pays reuse in 13-week cycles, when Lena asked to loop the spot after the thirteenth week, Marco refused until a second reuse check was issued.",
-   "solver": "**Character 1:** Mara, a voice actor.\n**Character 2:** Dev, an ad-agency producer.\n\n**Story:** Mara recorded a 30-second radio commercial that ran exactly to 0:29, clipping the tagline right at the time limit. Dev had crossed off all thirteen weekly squares on the studio calendar (a full 13-week usage cycle), so when he asked to keep looping the spot, Mara asked for a second check, because the take sheet said \"commercial,\" not \"demo,\" and every new cycle means a new usage fee.",
-   "judge": "A\nStory A covers every clue directly: the wall calendar's thirteen crossed-off weekly squares mark a full usage cycle, and the \"commercial\" take sheet is why looping triggers a new fee. Story B never explains the wall squares.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.021377,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a recording studio"
-  },
-  {
-   "model": "deepseek/deepseek-v4.1-flash-1017",
-   "seed": "a fishing village",
-   "riddle": "Nell's first crate held the morning's largest lobster: legal, eggless, and marked by a V-shaped scar on its tail fan; the man at the scale set it apart and would not weigh it for sale; no fine was posted, yet the morning bell rang with that lobster still out of the crate.",
-   "chars": "Nell; Owen, the lobster buyer",
-   "story": "Nell brought in a legal-size lobster with a V-shaped notch in its tail fan—the conservation mark cut into an egg-bearing female—so Owen, the lobster buyer, set it aside rather than weigh it for sale, even though it was the largest. The V-notch rule requires a notched female to be returned even after her eggs are gone because the mark persists through at least two molts, so Owen could not legally sell it and no fine applied to him for setting it aside.",
-   "solver": "**Character 1:** Nell, a young lobsterwoman on her first season.\n**Character 2:** Gus, the wharf buyer and weighmaster.\n\n**Story:** Gus spotted the V-notch cut into the big lobster's tail fan. That notch marks a proven breeding female, protected by law even when she isn't carrying eggs, so he set her aside rather than weigh her for sale and quietly showed Nell the mark instead of reporting her. Before the morning bell rang to open the market, Nell lowered the lobster off the wharf back into the sea, so no fine was ever posted and the crate stayed one lobster short.",
-   "judge": "A\nStory A explains every detail: the V-notch protects the eggless female, the quiet warning means no fine was posted, and releasing her before the bell leaves her out of the crate, while Story B never accounts for the bell or where the lobster ended up.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.017076818,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a fishing village"
-  },
-  {
-   "model": "deepseek/deepseek-v4.1-flash-1017",
-   "seed": "a removals company",
-   "riddle": "Two names were chalked on the job sheet, but only one climbed the stairs.\nThe load was signed off at three despite eighty-eight keys and three pedals.\nThe second name returned on the fourteenth day with a fork and no blanket.\nThe removal firm’s sheet still read “complete.”",
-   "chars": "Nadia; Owen (piano tuner)",
-   "story": "Nadia’s load was an upright piano, and Owen was the piano tuner whose name appeared beside hers on the job sheet but who was not needed for the stairs or the three-o’clock sign-off. Piano makers recommend letting a piano acclimatize in its new room for two to four weeks before tuning, so Owen returned on day fourteen with a tuning fork rather than moving blankets.",
-   "solver": "**Character 1:** Dave, a removal-firm piano mover.\n**Character 2:** Mrs. Hale, a piano tuner.\n\n**Story:** Dave hauled the upright piano up the stairs alone and signed the delivery off at three o'clock, even though the job sheet also listed Mrs. Hale, since the firm always books a tuning with every piano move. She stayed away until the fourteenth day, when the piano had settled into its new room, and arrived with her tuning fork but no moving blanket because she had come to tune it, not carry it, so the sheet's \"complete\" was right all along.",
-   "judge": "B\nStory B accounts for every detail explicitly: why both names were on the sheet, who climbed the stairs, the three-o'clock sign-off, the fourteen-day settling period, the fork without a blanket, and why \"complete\" was accurate, whereas Story A leaves who climbed the stairs and the \"complete\" status vague.",
-   "riddler_pos": "A",
-   "result": "LOSS",
-   "cost": 0.016069439999999997,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a removals company"
-  },
-  {
-   "model": "openai/gpt-6-luna",
-   "seed": "a pharmacy",
-   "riddle": "At the pharmacy, she showed ID for a cold remedy kept behind the counter.  \nAn earlier sale still glowed on the screen, and she was turned away on the first day of a new month.  \nWhy hadn’t the calendar cleared her tally?",
-   "chars": "Mara (a shopper with a cold); Eli (pharmacist)",
-   "story": "Mara wanted pseudoephedrine, a decongestant subject to the U.S. Combat Methamphetamine Epidemic Act’s identification and sales-record requirements. The Act’s 9-gram limit applies over a rolling 30-day period, not a calendar month, so Eli counted her recent purchase and refused the sale.",
-   "solver": "**Character 1:** Maya, a customer with a bad head cold.\n\n**Character 2:** Mr. Okafor, a pharmacist.\n\n**Story:** Maya had bought a large box of pseudoephedrine just a few days earlier, at the end of last month, and assumed her purchase limit would reset on the 1st. Mr. Okafor scanned her ID and showed her the earlier sale still on the screen. He explained that the legal limit is tracked over a rolling 30-day window, not by calendar month, so that recent purchase still counted and she was over the limit.",
-   "judge": "A\n\nStory A covers every riddle detail: the end-of-month purchase, the sale still showing on the screen, and her expectation of a reset on the 1st. Story B gives the same rolling-window explanation but leaves out the timing and the screen.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.0136858,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a pharmacy"
-  },
-  {
-   "model": "openai/gpt-6-luna",
-   "seed": "an airport",
-   "riddle": "After a New York takeoff, both engines fell silent.  \nThe controller offered two airports; the captain chose the river.  \nHe reached it with the wheels still inside.  \nWhy?",
-   "chars": "Chesley Sullenberger; Patrick Harten (air traffic controller)",
-   "story": "Chesley Sullenberger ditched US Airways Flight 1549 in the Hudson after bird strikes disabled both engines, while air traffic controller Patrick Harten offered LaGuardia and Teterboro. Ditching procedures call for landing gear up because extended wheels can snag the water and damage the aircraft, explaining why the wheels stayed tucked away.",
-   "solver": "**Character 1:** Captain Chesley \"Sully\" Sullenberger\n**Character 2:** Patrick Harten, an air traffic controller\n\n**Story:** Minutes after US Airways Flight 1549 left LaGuardia, a flock of Canada geese destroyed both engines, and Harten offered a return to LaGuardia or a diversion to Teterboro. Sully judged that the gliding Airbus was too low and slow to reach either runway, so he ditched on the wide, flat Hudson River, deliberately keeping the landing gear retracted because wheels would catch the water and flip the plane, while a smooth belly landing let all 155 people survive.",
-   "judge": "B\nStory B explains why the captain turned down both airports (too low and slow to reach either runway), which Story A leaves out, and it also accounts for the retracted gear.",
-   "riddler_pos": "A",
-   "result": "LOSS",
-   "cost": 0.0117073,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "an airport"
-  },
-  {
-   "model": "openai/gpt-6-luna",
-   "seed": "a bank branch",
-   "riddle": "At a bank branch, one customer made a cash deposit of $3,400 at each of three teller windows in the same afternoon.  \nThe first two tellers completed the deposits; the third called the manager, though the amount was unchanged. Why?",
-   "chars": "Omar; Nia (bank teller)",
-   "story": "Omar was deliberately structuring cash deposits to evade the $10,000 Currency Transaction Report threshold, and Nia recognized the pattern. Federal CTR rules require banks to aggregate same-business-day cash transactions by or for one person across tellers, and the branch’s procedure routed the resulting over-$10,000 alert to a manager, so Nia escalated Omar’s third deposit when his total reached $10,200.",
-   "solver": "**Character 1:** Dale, a nervous customer\n**Character 2:** Priya, a bank teller trained in anti-money-laundering rules\n\n**Story:** Dale split $10,200 into three $3,400 cash deposits at different windows, hoping that keeping each one small would keep him under the bank's $10,000 cash-reporting threshold. Priya was the third teller, and she saw the two earlier same-day deposits on his account; because the running total now exceeded $10,000 and looked like deliberate \"structuring,\" she called the manager to file the required reports.",
-   "judge": "B\nStory B explains the key mechanism: federal rules require same-day cash deposits across tellers to be aggregated, and branch procedure routes the over-$10,000 alert to a manager, so only the third deposit (bringing the total to $10,200) triggered escalation.",
-   "riddler_pos": "B",
-   "result": "WIN",
-   "cost": 0.0135739,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a bank branch"
-  },
-  {
-   "model": "openai/gpt-6-luna",
-   "seed": "a ski resort",
-   "riddle": "At the resort, the expert’s bindings were set one row lower than his skiing style seemed to warrant.\nHis boots and skis passed inspection; nothing had broken, and he still called himself an expert.\nWhy had the number dropped?",
-   "chars": "Martin; Lena (ski-binding technician)",
-   "story": "Martin was 51 and still a Type III skier; under ISO 11088, skiers aged 50 or older are moved down one skier-code row when their binding release setting is calculated, so Lena lowered his setting despite his unchanged gear. A binding setting is not a pure rating of ability: the standardized calculation also uses skier code, height and weight, and boot-sole length, so his expert style and lower prescribed number can coexist.",
-   "solver": "**Character 1:** Walt, a lifelong expert skier\n\n**Character 2:** Rosa, a ski-shop binding technician\n\n**Story:** When Walt came in for his annual binding check, Rosa noticed from his paperwork that he had turned 50 since last season. She explained that the standard DIN chart drops skiers aged 50 and over by one row, so she lowered his release setting even though his skill, boots and skis hadn't changed at all.",
-   "judge": "A\n\nStory A explains why the setting *dropped* this season (Walt turned 50 since his last check), while Story B says Martin is 51 without explaining what changed to lower the number now.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.013755900000000001,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a ski resort"
-  },
-  {
-   "model": "openai/gpt-6-luna",
-   "seed": "a zoo",
-   "riddle": "At the zoo, a white bear’s coat turned green during the damp season.  \nThe keeper scrubbed it twice; the green returned, but its black nose never changed. Why?",
-   "chars": "polar bear; zoo keeper",
-   "story": "The polar bear’s skin is black beneath translucent, hollow hairs that make its coat appear white. In warm, damp conditions, algae can colonize those hollow shafts, so the zoo keeper’s scrubbing the surface cannot keep the coat from turning green again.",
-   "solver": "**Character 1:** Nanuq, a polar bear\n**Character 2:** Rosa, a zookeeper\n\n**Story:** During the warm, damp season, microscopic algae from Nanuq's pool crept inside the hollow, transparent shafts of his fur, so Rosa's scrubbing only cleaned the outside while the green kept glowing from within each hair. His black nose stayed black because it is bare skin with no hollow hairs, leaving the algae nowhere to hide.",
-   "judge": "A\nStory A explains every detail, including why the black nose never changed: it is bare skin with no hollow hairs for algae to live in. Story B mentions the black skin but never says why the nose stayed unaffected.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.0108063,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a zoo"
-  },
-  {
-   "model": "openai/gpt-6-luna",
-   "seed": "a recording studio",
-   "riddle": "Metal coins and a drawer kept circling a recording room.  \nThe clatter returned after seven beats, though no hand reset it.  \nWhy did the noise give the song its crooked gait?",
-   "chars": "Roger Waters; Alan Parsons (recording engineer)",
-   "story": "Roger Waters made the cash-register tape loop for Pink Floyd’s “Money,” and recording engineer Alan Parsons recorded it. A closed tape loop repeats after one circuit, and the edited loop’s length at playback speed made its clatter recur every seven beats, supplying the song’s 7/4 pulse.",
-   "solver": "**Character 1:** Roger Waters\n**Character 2:** Alan Parsons (recording engineer at Abbey Road)\n\n**Story:** Waters recorded coins rattling in a bowl and a cash-register drawer slamming, and Parsons helped splice the sounds into a tape loop that circled the machine endlessly, repeating every seven beats with no one touching it. Because the loop came back on a 7/4 cycle, Pink Floyd built \"Money\" around that limping, lopsided rhythm, giving the song its famous crooked gait.",
-   "judge": "B\n\nStory B explicitly covers every riddle detail (the coins, the drawer, the loop circling the machine, its repetition with no one touching it, and the lopsided 7/4 rhythm), while Story A leaves the coins, the drawer, and the \"crooked gait\" largely unaddressed.",
-   "riddler_pos": "A",
-   "result": "LOSS",
-   "cost": 0.017419900000000002,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a recording studio"
-  },
-  {
-   "model": "openai/gpt-6-luna",
-   "seed": "a fishing village",
-   "riddle": "Above a fishing village, a kite raised a wire over the sea.\nA listener caught three faint dots sent from another continent, but some distant shortwave stations vanished by day.\nWhy could one letter cross the ocean while daylight silenced the rest?",
-   "chars": "Guglielmo Marconi; George Kemp (telegraphist)",
-   "story": "In 1901 at Signal Hill, Guglielmo Marconi and his telegraphist assistant George Kemp reported receiving the Morse letter S, sent from Poldhu, Cornwall, on a kite-supported antenna. A lesser-known consequence of ionospheric propagation explains the daytime silence: sunlight creates a lower D layer that absorbs many shortwave signals, while that absorption weakens after dark.",
-   "solver": "**Character 1:** George Kemp, Marconi's loyal assistant, who held the kite line on Signal Hill above St. John's.\n\n**Character 2:** Guglielmo Marconi, a wireless telegraph inventor.\n\n**Story:** In December 1901, Kemp's kite lifted a long wire above the Newfoundland harbor, and Marconi pressed an earphone to his ear and heard the three faint dots of the letter \"S\" sent from Poldhu, Cornwall. The single letter got through because Poldhu sent it with enormous power at very long wavelengths, which bend around the Earth's curve and bounce under the ionosphere. Daylight, however, energizes the ionosphere's low D-layer, and that layer swallows the shorter shortwave signals, so distant stations fade by day and only return after dark.",
-   "judge": "B\nStory B explains both halves of the riddle: the single letter crossed the ocean because of Poldhu's high power and long wavelengths, and daylight silenced shortwave because of D-layer absorption, whereas Story A explains only the daytime silence and never says why the one letter got through.",
-   "riddler_pos": "A",
-   "result": "LOSS",
-   "cost": 0.0167449,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a fishing village"
-  },
-  {
-   "model": "openai/gpt-6-luna",
-   "seed": "a removals company",
-   "riddle": "The crew’s written price was exceeded by exactly a tenth; at the door, they took that amount and released every box.  \nTheir office waited until thirty days after delivery to ask for the rest.  \nWhat sort of estimate made that sequence lawful?",
-   "chars": "Nell (customer); Rafi (interstate household-goods mover)",
-   "story": "Nell’s move crossed state lines, and she hired Rafi under a nonbinding estimate. Federal rules for interstate household-goods moves cap what he can collect at delivery at 110% of that estimate and require him to wait at least 30 days after delivery before billing the excess, so he released the boxes before collecting the balance.",
-   "solver": "**Character 1:** Dana, a homeowner relocating across state lines.\n\n**Character 2:** Rick, an interstate moving company dispatcher.\n\n**Story:** Rick gave Dana a written *non-binding estimate*, and when the final weight pushed the bill higher, federal rules let his crew collect only 110% of the estimate (the original price plus exactly a tenth) at the door before they had to release all her boxes. The law also barred Rick's office from demanding the remaining balance until 30 days after delivery, so he waited the full month before mailing Dana the invoice for the rest.",
-   "judge": "B\nStory B explicitly ties every riddle detail together: the weight-driven overage, collecting exactly 110% at the door, releasing all boxes, and waiting the full 30 days to bill the rest. Story A covers the same rule more thinly and doesn't explain why the price was exceeded.",
-   "riddler_pos": "A",
-   "result": "LOSS",
-   "cost": 0.014377500000000001,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a removals company"
-  },
-  {
-   "model": "openai/gpt-6-luna-pro",
-   "seed": "a pharmacy",
-   "riddle": "At the pharmacy, Eli tipped old tablets through a slot into a box.  \nThe box was bolted down, and Mara’s shop key opened nothing inside it.  \nWhy couldn’t Mara simply hand the tablets back?",
-   "chars": "Eli; Mara (pharmacist)",
-   "story": "Eli was using a pharmacy take-back receptacle to surrender unwanted controlled tablets instead of putting them back into circulation. DEA rules require these receptacles to be fastened to a permanent structure and their inner liners removable only by authorized employees, so Mara, though the pharmacist, could not retrieve the tablets because she was not a designated collector.",
-   "solver": "**Character 1:** Eli, a customer clearing out his late father's medicine cabinet.\n\n**Character 2:** Mara, the pharmacist on duty.\n\n**Story:** Eli tipped his father's leftover opioid tablets into the pharmacy's bolted-down drug take-back kiosk, then realized he'd also dropped in his own heart pills by mistake. Mara couldn't hand them back because the law makes that disposal box a one-way, tamper-proof vault: her shop key only opens the store, and the sealed inner liner can only be removed by two authorized staff and shipped, unopened, to a licensed destruction company. So Eli's pills, mixed in with everyone else's, had to be destroyed.",
-   "judge": "A\nStory A explains why Eli would want the tablets back (he dropped his own heart pills by mistake) and why Mara's key and authority can't retrieve them, whereas Story B gives no motive and relies on the shakier claim that the pharmacist isn't an authorized collector.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.0171618,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a pharmacy"
-  },
-  {
-   "model": "openai/gpt-6-luna-pro",
-   "seed": "an airport",
-   "riddle": "One runway stayed exactly where it was, yet both end-numbers rose by one.  \nNo new pavement appeared; only its compass-referenced direction had changed.  \nWhy did the pair change together?",
-   "chars": "Mara; Ivo (runway surveyor)",
-   "story": "At Melbourne, Mara watched Ivo document how the slow drift of magnetic north made the stationary 16/34 runway become 17/35 in 2022. ICAO Annex 14 rounds each end’s magnetic bearing to the nearest ten degrees and assigns the opposite end a bearing 180 degrees away, so crossing one rounding boundary made both numbers rise together.",
-   "solver": "**Character 1:** Earth's wandering magnetic north pole\n\n**Character 2:** Maria, an airport surveyor (occupation: aeronautical surveyor)\n\n**Story:** Over the decades, magnetic north slowly drifted, so the runway's *magnetic* heading shifted by about 10° even though the pavement never moved. Maria re-measured it and repainted Runway 09/27 as 10/28; both ends changed together because they are always exactly 180° apart on the same compass.",
-   "judge": "A\nStory A explains the key mechanism more completely: magnetic drift only needs to push the bearing across a ten-degree rounding boundary, and the reciprocal end sits 180° away, so both numbers rise together. Story B vaguely assumes a full ~10° shift.",
-   "riddler_pos": "A",
-   "result": "WIN",
-   "cost": 0.0178288,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "an airport"
-  },
-  {
-   "model": "openai/gpt-6-luna-pro",
-   "seed": "a bank branch",
-   "riddle": "In 2024, Len handed Ivo a signed paper for $1,000 at a bank branch on Monday.  \nOn Tuesday morning, Ivo released exactly $225 and held the other $775 until Wednesday.  \nWhy that peculiar split?",
-   "chars": "Len; Ivo (bank teller)",
-   "story": "Len’s signed paper was an ordinary personal check for $1,000, deposited Monday. As the bank teller, Ivo applied Regulation CC’s 2024 funds-availability schedule, which required the first $225 of a check deposit to be available by the next business day and allowed the balance to wait until the second, explaining Tuesday’s exact release and Wednesday’s hold.",
-   "solver": "**Character 1:** Len, a customer depositing a check.\n**Character 2:** Ivo, a bank teller.\n\n**Story:** On Monday in 2024, Len handed Ivo a signed $1,000 check to deposit, and Ivo applied the bank's standard hold under the federal Regulation CC funds-availability rules. Those rules required the first $225 of a check deposit to be available the next business day, so Ivo released $225 on Tuesday morning and held the remaining $775 until Wednesday, when the check had time to clear.",
-   "judge": "B\nBoth stories rely on the same Regulation CC rule, but B ties the $225 figure to the 2024 schedule and states that the $775 balance could legally wait until the second business day, so it accounts for the year and the exact Wednesday release more fully.",
-   "riddler_pos": "B",
-   "result": "WIN",
-   "cost": 0.0186405,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a bank branch"
-  },
-  {
-   "model": "openai/gpt-6-luna-pro",
-   "seed": "a ski resort",
-   "riddle": "At the ski resort, chairs crossed the open cable thirty metres apart.  \nUnder the glass roof, they were only three metres apart, yet still passed six seconds apart.  \nA man rode one; a woman walked beside it, matching its pace.",
-   "chars": "Rafi; Sol (lift mechanic)",
-   "story": "Rafi and Sol, the lift mechanic, were watching the resort’s detachable chairlift, whose grips release from the haul rope and whose station tires slow each chair for loading. The terminal conveyor keeps a six-second loading cadence as the chairs slow to one-tenth line speed, so their spacing contracts from thirty metres to three and Sol can walk beside Rafi’s chair.",
-   "solver": "**Character 1:** Tom, a nervous first-time skier.\n**Character 2:** Greta, a lift attendant at the station.\n\n**Story:** The resort's detachable chairlift unclamps each chair from the fast cable inside the glass-roofed station and rolls it slowly on a tyre conveyor. The chairs bunch up from 30 m to 3 m apart while still arriving every 6 seconds, so Greta could stroll beside Tom's crawling chair and calm him before it clamped back onto the speeding cable.",
-   "judge": "B\nStory B explains the same detachable-lift mechanism, but it also places the slowdown under the glass-roofed station and casts a clear man (Tom) riding and a woman (Greta) walking, while Story A leaves the glass roof and the characters' genders unaddressed.",
-   "riddler_pos": "A",
-   "result": "LOSS",
-   "cost": 0.0202489,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a ski resort"
-  },
-  {
-   "model": "openai/gpt-6-luna-pro",
-   "seed": "a zoo",
-   "riddle": "At the zoo, a pink bird ate orange mash.  \nA visitor rubbed some onto a loose gray feather, but it stayed gray; months later, a fresh feather on the bird was pink.  \nWhy did the mash seem to work only on the new feather?",
-   "chars": "Eli (visitor); Sana (zookeeper)",
-   "story": "Eli recognized the bird as a flamingo: its pink color comes from carotenoid pigments in its food. Sana, the zookeeper, explained that those pigments are incorporated as feathers grow and mature feathers are dead keratin, so mash cannot recolor a loose feather, while the next molt can produce pink ones.",
-   "solver": "**Character 1:** Rosie, a flamingo\n**Character 2:** Dr. Hale, a zookeeper and avian nutritionist\n\n**Story:** Dr. Hale explained to the puzzled visitor that the orange mash is packed with carotenoid pigments, which Rosie digests and her body deposits into each feather only while it is growing. A loose feather is dead keratin that can't absorb anything from the outside, so only the feathers Rosie grew after eating the mash came in pink.",
-   "judge": "A\n\nStory A states outright that the pigments must be eaten and digested, then deposited into feathers only while they grow, so rubbing mash on the outside of dead keratin can't work; this contrast between eating and rubbing is slightly more explicit than in Story B.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.017447200000000003,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a zoo"
-  },
-  {
-   "model": "openai/gpt-6-luna-pro",
-   "seed": "a recording studio",
-   "riddle": "One man taught tape to bury its hiss.  \nYet the pauses rasped brighter than the voice.  \nNo fader moved; what pair was in the room?",
-   "chars": "Ray Dolby; a mastering engineer",
-   "story": "Ray Dolby developed Dolby noise reduction, and a mastering engineer accidentally played a Dolby A-encoded reel without its matching decoder. Dolby A boosts low-level signals in frequency bands during encoding and relies on complementary decoding; without it, low-level tape hiss stays boosted, making the pauses rasp brighter than the louder voice.",
-   "solver": "**Character 1:** Ray Dolby, inventor of Dolby noise reduction.\n\n**Character 2:** Margaret, a radio announcer.\n\n**Story:** Margaret recorded her broadcast on Ray's Dolby-encoded tape, but the studio deck played it back with the decoder switched off. In every quiet pause the boosted treble hiss rose up and \"breathed\" brighter than her voice, even though no fader moved; it was the untamed encoding pumping the noise on its own.",
-   "judge": "A\nStory A accounts for every line of the riddle, including \"no fader moved,\" by attributing the breathing hiss to the encoding pumping on its own, while Story B explains the mechanism but leaves the fader clue unaddressed.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.023135,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a recording studio"
-  },
-  {
-   "model": "openai/gpt-6-luna-pro",
-   "seed": "a fishing village",
-   "riddle": "At the wharf, she returned the heaviest lobster, though it carried no eggs.  \nIts shell was newly shed, yet one small V-shaped bite still marked a tail flap.  \nThe man beside the pound-scale kept his coins ready; she did not name a price.",
-   "chars": "Nessa (lobster fisher); Eli",
-   "story": "At a Maine wharf, Nessa had V-notched the egg-bearing female to mark it for conservation. Maine’s V-notch rule forbids landing a marked lobster even after it stops carrying eggs, and the cut can remain visible through molts, so Eli’s waiting scale got no heaviest catch.",
-   "solver": "**Character 1:** Maggie, a lobsterwoman hauling her traps.\n**Character 2:** Earl, a lobster buyer (dealer) waiting at the wharf's pound-scale with cash.\n\n**Story:** Maggie's biggest catch was a female that had just molted and carried no eggs, but it still bore the V-notch she herself had cut into its tail flap years ago to mark it as a proven breeder, and that notch makes it illegal to keep or sell. So while Earl stood ready to pay top dollar by the pound, Maggie named no price and slipped the lobster back into the harbor to keep breeding.",
-   "judge": "B\nStory B accounts for every detail more fully: the buyer waiting with cash at the scale, her naming no price, the fresh molt that kept the notch, and her releasing the lobster to keep breeding, while Story A only sketches these elements tersely.",
-   "riddler_pos": "A",
-   "result": "LOSS",
-   "cost": 0.0207169,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a fishing village"
-  },
-  {
-   "model": "openai/gpt-6-luna-pro",
-   "seed": "a removals company",
-   "riddle": "At 221B, a violin and a pipe waited by the door.  \nThe crew took exactly 110% of the estimate at delivery, with the balance due 30 days later.  \nWhy did the client call this a fair move?",
-   "chars": "Sherlock Holmes; an interstate household-goods mover",
-   "story": "Holmes, who lived at 221B Baker Street and played the violin, had hired an interstate household-goods mover. Under U.S. federal rules for nonbinding interstate moving estimates, the mover could collect no more than 110% at delivery and had to give Holmes 30 days to pay the balance.",
-   "solver": "**Character 1:** Mrs. Hudson, the client moving out of flat 221B.\n**Character 2:** Gus, a moving-crew foreman.\n\n**Story:** Mrs. Hudson's move ran over its non-binding estimate, but Gus followed the federal \"110% rule\": he collected only 110% of the estimate at delivery and billed the rest for payment within 30 days. She called it a fair move because Gus didn't hold her belongings, Holmes's violin and pipe included, hostage for the full overage, which is exactly what the rule protects against.",
-   "judge": "A\nStory A directly explains why the client called it \"fair\": the 110% rule kept the movers from holding her belongings hostage, while Story B describes the rule but never says why the client considered the move fair.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.0200981,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a removals company"
-  },
-  {
-   "model": "google/gemini-3.8-flash",
-   "seed": "a pharmacy",
-   "riddle": "She offered double the cash for the boxed capsules already bearing her name.\nHe checked the wall clock as it struck midnight, shook his head, and locked the medicine away.\nThough she had no illness or addiction, he crossed out the next nineteen days on her calendar.\nA single minute’s delay had cost her nearly three weeks.",
-   "chars": "Claire; Julian (pharmacist)",
-   "story": "Julian was legally barred from dispensing Claire’s isotretinoin because the FDA-mandated iPLEDGE system automatically revokes a pharmacy's dispensing authorization at midnight on the seventh day post-exam. Under federal iPLEDGE regulations, missing that strict window triggers an unavoidable 19-day system lockout to align with the menstrual cycle before a patient is permitted to submit another mandatory negative pregnancy test.",
-   "solver": "**Character 1:** Maya, a woman in the middle of a carefully timed fertility treatment cycle.\n**Character 2:** Mr. Greene, a pharmacist.\n\n**Story:** Maya burst into the pharmacy one minute after midnight, offering double the price for her labeled fertility capsules, but Mr. Greene watched the clock strike twelve, knew her time-limited prescription had just expired, and legally had to lock them away. With the precise dosing window missed, the cycle was ruined, so he gently crossed out the next nineteen days on her treatment calendar, the wait until her next cycle could begin.",
-   "judge": "A\nStory A's real iPLEDGE rules explain the exact midnight cutoff and the precise 19-day lockout that applies even without illness or addiction, while Story B's prescription that expires at midnight and its 19-day wait are vaguer and less convincing.",
-   "riddler_pos": "A",
-   "result": "WIN",
-   "cost": 0.0339395,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a pharmacy"
-  },
-  {
-   "model": "google/gemini-3.8-flash",
-   "seed": "an airport",
-   "riddle": "Leo stood in the torrential downpour, brandishing a red banner pinned to a steel spike.\nThrough the high windshield, Julian watched him through the sweep of wipers.\nJulian refused to touch the throttle until Leo raised that metal spike high above his head.\nOnly after returning Leo's crisp salute did Julian finally roll forward into the dark.",
-   "chars": "Leo; Julian (airline pilot)",
-   "story": "Leo had just completed pushing Julian’s commercial airliner back from the airport gate and disconnected the towbar. Under standard aviation ground-handling procedures, Julian could not initiate taxi until Leo visually brandished the removed nose-gear steering bypass pin, which hydraulically disables cockpit nosewheel steering during towing and would otherwise leave the aircraft unable to turn.",
-   "solver": "**Character 1:** Leo, a railway track flagman\n**Character 2:** Julian, a locomotive engineer\n\n**Story:** The storm had flooded the line ahead, so Leo planted himself on the tracks with his red flag on its steel staff, the signal to stop, while he waited for word that the bridge had been checked. When the all-clear finally came, Leo lifted the staff high overhead (the agreed signal that the line was safe) and saluted, and only then did Julian return the salute and ease his train forward into the dark.",
-   "judge": "A\nStory A explains every odd detail with real pushback procedure: the \"red banner pinned to a steel spike\" is the steering bypass pin's red streamer, Julian waits until it is held up, and the salute exchange is standard. Story B's flag-on-a-staff and agreed signals are invented to fit.",
-   "riddler_pos": "A",
-   "result": "WIN",
-   "cost": 0.0433235,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "an airport"
-  },
-  {
-   "model": "google/gemini-3.8-flash",
-   "seed": "a bank branch",
-   "riddle": "He slid one hundred $100 bills across the counter, paused, then pulled a single note back.\nHis childhood friend on the other side cheerfully accepted the ninety-nine without handing him any forms.\nThough she knew his money was clean, she offered no warning as she finalized the transaction.\nThe moment he walked out, she typed the mandatory filing that triggered his arrest.",
-   "chars": "Marcus; Elena (bank teller)",
-   "story": "Marcus reduced his cash deposit from $10,000 to $9,900 to avoid triggering a Currency Transaction Report, unwittingly committing the federal crime of structuring. Under the Bank Secrecy Act's anti-tipping provision (31 U.S.C. § 5318(g)(2)), Elena faced up to five years in federal prison if she alerted him or disclosed that she was filing a Suspicious Activity Report, legally compelling her absolute silence.",
-   "solver": "**Character 1:** Marcus, a man depositing his legitimately earned cash savings.\n\n**Character 2:** Dana, his childhood friend, a bank teller.\n\n**Story:** Marcus counted out $10,000 in clean cash, then pulled back one $100 bill so the $9,900 deposit would fall under the threshold for a Currency Transaction Report, not realizing that deliberately dodging the report is itself the federal crime of \"structuring.\" Dana knew the money was honest, but she was legally barred from tipping him off. As soon as he left, she filed the mandatory Suspicious Activity Report, which led to his arrest for structuring.",
-   "judge": "A\n\nStory A covers every detail: the childhood friendship, her knowing the money was clean, her silence, and the post-departure filing that led to his arrest; Story B drops the friendship and never shows the report being filed or the arrest.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.0478095,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a bank branch"
-  },
-  {
-   "model": "google/gemini-3.8-flash",
-   "seed": "a ski resort",
-   "riddle": "Jesse lay trapped beneath a shallow slide, his head exposed and screaming for help.\nMaya arrived within seconds clutching a rescue shovel, yet refused to take a step forward.\nIgnoring his pleas, she set a stopwatch and held her distance for twenty-eight minutes.\nOnly when the display struck thirty did she finally cross the boundary to dig him out.",
-   "chars": "Jesse; Maya (ski patroller)",
-   "story": "Maya had thrown a fused explosive booster to clear an unstable cornice, but the unexploded charge was swept down by the slide and came to rest right beside the trespassing Jesse. Federal blasting regulations (OSHA 1910.109) mandate a strict thirty-minute exclusion period following an explosive misfire to guard against a delayed hangfire detonation, legally prohibiting Maya from entering the debris zone until the timer expired.",
-   "solver": "**Character 1:** Jesse, a fellow ski patroller.\n**Character 2:** Maya, an avalanche-control ski patroller and blaster.\n\n**Story:** During avalanche-control work, one of Maya's explosive charges appeared to misfire, and the small slide it loosened pinned Jesse with only his head exposed, right beside the live, unexploded charge. Strict misfire protocol forbids anyone from approaching a dud charge for 30 minutes in case of a delayed detonation, so Maya started her stopwatch from the moment of the misfire and held back from the blast boundary despite his screams, knowing he could breathe. She dug him out the instant the timer hit thirty.",
-   "judge": "B\nStory B explains the 28-versus-30-minute gap by having the timer count from the misfire itself, and it notes that Jesse's exposed head let him breathe; Story A addresses neither and relies on the charge conveniently being swept to Jesse.",
-   "riddler_pos": "A",
-   "result": "LOSS",
-   "cost": 0.05595475,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a ski resort"
-  },
-  {
-   "model": "google/gemini-3.8-flash",
-   "seed": "a zoo",
-   "riddle": "He sank the needle into the sleeping giant's eyelid, ignoring the massive arm beside him.\nTwo days later, she stood across the moat with binoculars, searching for a single fold of swelling.\nA red puff would ground the morning flight and seal the entire compound in quarantine.\nFinding the skin smooth, she lowered her lenses and signed the outbound shipping manifest.",
-   "chars": "Marcus; Dr. Alvarez (zoo veterinarian)",
-   "story": "To clear a silverback gorilla for an international breeding loan, Dr. Alvarez was conducting a mandatory pre-export tuberculosis screening. Federal and zoological import regulations require the intrapalpebral tuberculin test to be injected directly into a primate's upper eyelid, allowing staff to visually evaluate delayed hypersensitivity at forty-eight hours through binoculars without subjecting the animal to the lethal risks of repeated general anesthesia.",
-   "solver": "**Character 1:** Kumbu, a sedated silverback gorilla being transferred to another zoo.\n\n**Character 2:** Dr. Elena Reyes, a zoo veterinarian.\n\n**Story:** While Kumbu lay anesthetized beside his own massive arm, the vet injected tuberculin into his eyelid, the standard tuberculosis skin test for great apes. Two days later she watched him through binoculars from across the enclosure moat, since any red swelling would mean TB, cancel his flight and quarantine the zoo. His eyelid was smooth, so she signed his transfer papers.",
-   "judge": "A\nStory A matches the riddle's pronouns, with a man (Marcus) giving the injection and a woman (Dr. Alvarez) reading the result, whereas Story B has the female vet do both, contradicting \"He sank the needle.\"",
-   "riddler_pos": "A",
-   "result": "WIN",
-   "cost": 0.029595749999999997,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a zoo"
-  },
-  {
-   "model": "google/gemini-3.8-flash",
-   "seed": "a recording studio",
-   "riddle": "Marcus frantically signaled for an early cutoff, but Leo let the final chord sustain into the silence.\nThe console’s master counter ticked from 15:00 to 15:01, prompting Marcus to slam his clipboard in fury.\nNot another note was tracked that morning, yet the ensemble’s wages instantly doubled.\nSmiling at the control booth glass, Leo packed his instrument case and walked out early.",
-   "chars": "Marcus; Leo (session bassist)",
-   "story": "Leo intentionally dragged out the final chord so the cumulative recorded music across their takes would exceed fifteen minutes. Under the American Federation of Musicians Sound Recording Labor Agreement, a standard three-hour session strictly caps finished recorded material at fifteen minutes, meaning crossing that threshold by even a single second legally obligated Marcus to pay every player for a second full session.",
-   "solver": "**Character 1:** Marcus, a cost-cutting record producer.\n**Character 2:** Leo, a session musician who is also the ensemble's union contractor.\n\n**Story:** Leo knew the union contract said that if a recording session ran even one second past its booked limit, every musician had to be paid for a whole extra session. So he held the final chord until the session clock crossed 15:01, doubling everyone's pay for no more work, and then he strolled out early since there was nothing left to record.",
-   "judge": "B\nStory B reads the 15:00 to 15:01 counter as cumulative recorded music crossing the real union fifteen-minute cap, which fits a morning session, whereas Story A's session-clock reading clashes with \"that morning\" and rests on a vaguer contract rule.",
-   "riddler_pos": "B",
-   "result": "WIN",
-   "cost": 0.03687075,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a recording studio"
-  },
-  {
-   "model": "google/gemini-3.8-flash",
-   "seed": "a fishing village",
-   "riddle": "The net broke surface heavy with silver, enough to clear his family's debt.\nYet when he spotted a single barred tail thrashing in the pile, he cut the engine and wept.\nHe sailed straight past the shouting buyers at the quay to surrender the harvest for zero coin.\nBy sundown, Higgins chained his vessel to the pier until the winter frost.",
-   "chars": "Sean; Higgins (fisheries inspector)",
-   "story": "Sean’s bumper catch of haddock accidentally included a single Atlantic cod, an off-target bycatch for which his vessel held zero remaining quota. Under the European Union's Landing Obligation discard ban, dumping the fish at sea was illegal, but landing an unallocated \"choke species\" legally prohibited commercial sale and forced Higgins to enact a mandatory operational shutdown of the trawler for the rest of the season.",
-   "solver": "**Character 1:** Tom Higgins, a debt-ridden fisherman.\n**Character 2:** Officer Mara Reyes, a fisheries inspector.\n\n**Story:** Tom recognized the barred tail as a juvenile of the critically endangered fish his late father had fought to protect, and the law (which his father helped write) says any catch containing one must be surrendered unsold and the fishing ground closed for the season. He wept at losing the debt-clearing haul, but he refused to sell it on the black market and handed it all to Officer Reyes for nothing, then chained his boat to the pier until the season reopened after winter.",
-   "judge": "A\n\nStory A explains every detail with a real mechanism: the choke-species rule forces the catch to be surrendered unsold and lets Higgins, the inspector, impound the boat. Story B relies on an invented law tied to the father's backstory and makes Higgins chain his own boat, which reads awkwardly against the riddle.",
-   "riddler_pos": "A",
-   "result": "WIN",
-   "cost": 0.04892099999999999,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a fishing village"
-  },
-  {
-   "model": "google/gemini-3.8-flash",
-   "seed": "a removals company",
-   "riddle": "Vance bypassed Julian’s heirloom mahogany desks, obsessing instead over a weathered plastic patio chair.\nSpotting velvety brown clusters beneath the rim, he knocked Julian’s stomping boot away.\nHe scraped the fuzz into a bowl of soapy water, refusing to load the plastic until it sank.\nOnly then did he sign the federal transit checklist and seal the truck.",
-   "chars": "Julian; Vance (household goods mover)",
-   "story": "Julian was moving interstate out of a federal spongy moth quarantine zone, legally requiring Vance to inspect and clear all Outdoor Household Articles under USDA regulation 7 CFR § 301.45. Vance prevented Julian from stomping the egg masses because official USDA eradication protocol strictly prohibits crushing, which leaves the microscopic eggs intact on footwear and spreads the infestation, mandating detergent immersion to ensure an ovicidal kill.",
-   "solver": "**Character 1:** Julian, a homeowner moving out of state.\n\n**Character 2:** Vance, a professional interstate mover certified in USDA spongy moth (gypsy moth) quarantine inspections.\n\n**Story:** Julian was leaving a federally quarantined spongy moth zone, so Vance ignored the indoor antiques and checked the outdoor patio chair, where he found velvety brown spongy moth egg masses under the rim. Because stomping wouldn't reliably kill the hundreds of eggs and could scatter them, Vance scraped the masses into soapy water to drown them, then signed the required Outdoor Household Articles inspection checklist so the truck could legally cross state lines.",
-   "judge": "B\nStory B accounts for every detail (ignoring the indoor antiques, the egg masses under the rim, why stomping fails, the soapy water and the checklist) without the overstated claims Story A makes about official protocols and microscopic eggs on footwear.",
-   "riddler_pos": "A",
-   "result": "LOSS",
-   "cost": 0.043309,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a removals company"
-  },
-  {
-   "model": "anthropic/claude-haiku-5.5",
-   "seed": "a pharmacy",
-   "riddle": "She came in at closing with a prescription for thirty tablets and asked for only twelve. The man behind the counter stamped the back, wrote today's date, and locked the other eighteen in the safe. Three days later he phoned the clinic, and the receptionist said the doctor had quit in March. Who was she, and why couldn't he just hand the rest back?",
-   "chars": "Mara Voss, a woman using her dead sister's name; Dan Hale (pharmacist)",
-   "story": "Mara was presenting an old Schedule II slip from a doctor whose DEA registration had lapsed in March, which made the prescription invalid, though Dan could only confirm that by calling the clinic. Under federal partial-fill rules he had to record the quantity and date on the back and keep the unreleased balance secured, so the eighteen tablets stayed locked up as the law required.",
-   "solver": "**Character 1:** Dana, a former nurse at the clinic who kept a pad of blank prescriptions when her old boss left.\n\n**Character 2:** Mr. Okafor, a night-shift pharmacist.\n\n**Story:** Dana forged her departed doctor's signature on an opioid script for thirty tablets, then asked for only twelve, a legal \"partial fill,\" hoping a modest, rushed closing-time request wouldn't trigger a call to the prescriber. Mr. Okafor recorded the partial fill on the back as the law requires and locked the other eighteen in the controlled-substance safe, because they were never hers to take back. The balance can only be dispensed against a valid prescription, and his call to the clinic proved this one was written by a doctor who had quit in March.",
-   "judge": "A\n\nStory A explains every detail cleanly: who she was (a former nurse with leftover blank pads), why she asked for only twelve (to avoid scrutiny), and why the balance stayed locked (the script was forged under a doctor who had quit). Story B adds an unexplained dead sister's identity, swaps \"quit\" for a lapsed registration, and never says why she wanted just twelve.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.019920800000000002,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a pharmacy"
-  },
-  {
-   "model": "anthropic/claude-haiku-5.5",
-   "seed": "an airport",
-   "riddle": "A woman in a grey coat sprints to gate 9 clutching a sealed envelope and misses the door by one second.\nThe agent scans her ticket, sighs, and hands the envelope back without opening it.\nForty minutes later the plane still sits at the gate, its doors open, while the captain waves at the agent.\nWhy did the plane wait, and what did the envelope never reveal?",
-   "chars": "Woman in a grey coat (courier); Gate agent (airline ground staff)",
-   "story": "The courier was carrying a donor kidney's chain-of-custody form, and the agent returned the envelope unopened because breaking its tamper seal would void the form and the organ with it. The plane waited because airlines hold departures for certified organ transport, and the agent had to confirm the courier's manifest and sealed-cooler paperwork before the captain could legally close the doors.",
-   "solver": "**Character 1:** Mara, a woman in a grey coat.\n**Character 2:** Captain Elias Reed, airline pilot and Mara's estranged husband.\n\nMara raced to gate 9 with a sealed envelope holding her answer to Elias's letter asking whether their marriage was worth saving. The agent, Elias's sister, recognized her and refused to open it, so Elias held the plane at the gate with its doors open, waving for her to be let aboard. He wanted to hear the answer from Mara herself, so the envelope never revealed what she had decided.",
-   "judge": "A\n\nStory A answers both questions: the captain is the husband holding the plane and waving her aboard, and the envelope never reveals her decision on their marriage. Story B never says what the envelope concealed and leaves the captain's wave unexplained.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.022056000000000003,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "an airport"
-  },
-  {
-   "model": "anthropic/claude-haiku-5.5",
-   "seed": "a bank branch",
-   "riddle": "I walk into the branch on the thirtieth of June with a check dated the last day of December.\nThe lobby is quiet, and the teller smiles as if she has been expecting me.\nShe pays me in full, but first she slides the check into a drawer and holds it there for one full day.\nWhy does a bank wait a day before paying an old check?",
-   "chars": "Marisol, a customer; Dana, a bank teller (teller)",
-   "story": "The check is 181 days old, and under UCC 4-404 a bank has no duty to pay a check presented more than six months after its date, though it may pay in good faith, so Dana checks the drawer's account for a stop-payment order and finds none. Because the bank's own policy requires a one-business-day verification hold on any stale item before release, the check sits overnight, and the June 30 date itself falls on a Sunday, pushing the hold into Monday.",
-   "solver": "**Character 1:** Me, the payee holding a check written by my late-traveling grandfather.\n**Character 2:** The teller (bank teller), who had already been phoned by my grandfather to expect me.\n\n**Story:** Because a check dated December 31 is exactly six months old on June 30, it counts as \"stale-dated,\" and the bank isn't obliged to honor it without confirming the writer still wants it paid. So the teller, already told by my grandfather that I'd come, cashed it in full but held the check in her drawer for one day to verify the funds and get his written confirmation before releasing it for clearing.",
-   "judge": "A\n\nStory A accounts for every odd detail: the teller expects me because my grandfather phoned ahead, and the six-month stale date explains the one-day hold. Story B ignores the teller's knowing smile and adds a contradictory Sunday banking detail.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.020238700000000002,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a bank branch"
-  },
-  {
-   "model": "anthropic/claude-haiku-5.5",
-   "seed": "a ski resort",
-   "riddle": "The chairlift stopped at nine, yet a red glove still swung from the tower.\nMara's beacon blinked \"transmit\" all morning, though nobody had buried her.\nWhy did the patrol radio say \"no shot fired\" just before the slope boomed?",
-   "chars": "Mara (skier); Tomas (avalanche technician)",
-   "story": "Mara ducked under the closed-run rope to ski the locked gully, keeping her beacon on transmit so patrol could find her, and her glove snagged on the tower when she was seen on the lift's exit line. Tomas had set the fixed Gazex exploder on its timer, and since the rules require a radio call only for hand-placed charges, \"no shot fired\" was technically true when the timed charge detonated.",
-   "solver": "**Character 1:** Mara, a ski patroller doing avalanche control.\n**Character 2:** Dev, the patrol dispatcher.\n\n**Story:** The lift was shut at nine so Mara could do control work from the tower, her beacon on \"transmit\" as protocol requires for anyone on avalanche duty, buried or not. Her lit hand charge snagged in the red glove she'd tossed with it and hung swinging on the tower, out of sight, so Dev radioed \"no shot fired\" seconds before the delayed fuse went off and the slope boomed loose.",
-   "judge": "A\n\nStory A ties every detail into one chain: the lift stopped for control work, the beacon was on transmit by protocol, and the snagged charge in the swinging glove explains both the \"no shot fired\" call and the delayed boom. Story B leaves the glove and the lift stop loosely explained and relies on a rules technicality.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.0203217,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a ski resort"
-  },
-  {
-   "model": "anthropic/claude-haiku-5.5",
-   "seed": "a zoo",
-   "riddle": "The flamingo's pink was gone by Monday, though none of her feathers had moulted.\nThe keeper swore her shrimp ration never changed, and the vet found nothing wrong.\nA visitor had bought a bag of \"treats\" at the gift stall that same weekend.\nWho did this, and how did the colour leave without a moult?",
-   "chars": "The visitor (a teenager with a gift-stall bag); the zoo vet (occupation: veterinarian)",
-   "story": "The teenager dusted the gift-stall shrimp with a peroxide-based bleach, and the flamingo's gut absorbed the oxidiser, which destroyed the carotenoid pigment (canthaxanthin) circulating in her blood before it could reach the feather follicles. The vet's blood panel looked normal because the pigment is oxidised in the bloodstream, not the feathers, so the pink fades only as the existing plumage is lightened from within at the next follicle cycle, a delay no one would expect.",
-   "solver": "**Character 1:** Rosa, the flamingo.\n**Character 2:** Mr. Hale, a schoolteacher visiting for the weekend.\n\n**Story:** Mr. Hale fed Rosa the whole bag of gift-stall \"treats,\" which were cheap bread pellets with no carotenoids, and she filled up on them instead of her pigment-rich shrimp ration. Much of a flamingo's pink is \"makeup\" she preens on from carotenoid-tinted oil from her preen gland, so once that oil ran colourless, the old cosmetic layer faded and rubbed off by Monday without a single feather moulting.",
-   "judge": "B\nStory B explains every clue: the shrimp ration stayed the same but went uneaten, the vet found nothing wrong, the treats from the gift stall were the cause, and the colour faded without a moult because the pigmented preen oil wore off, whereas Story A contradicts itself by needing a follicle cycle and still cannot explain a fade by Monday.",
-   "riddler_pos": "A",
-   "result": "LOSS",
-   "cost": 0.0201696,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a zoo"
-  },
-  {
-   "model": "anthropic/claude-haiku-5.5",
-   "seed": "a recording studio",
-   "riddle": "A ghost sings one breath ahead of the voice it belongs to, though no one in the booth had sung yet. The reel sat sealed in a van all July. Its box bears the vocalist's name, and the tape operator swears the session was clean.",
-   "chars": "the vocalist; the tape operator (occupation)",
-   "story": "The tape operator wound the master reel tail-out and left it sealed in a van through July, and the heat drove print-through, where magnetism from each loud passage leaks onto the neighbouring wrap of tape. Because the reel was wound tail-out, the leaked signal lands on the layer that plays before its source, so the ghost vocal is a pre-echo of the vocalist's own take.",
-   "solver": "**Character 1:** Mara, the vocalist whose name is on the tape box.\n\n**Character 2:** Dev, a studio tape operator.\n\n**Story:** Dev recorded Mara's vocal cleanly, but the finished reel was stored \"heads out\" and left in a sweltering van all July, where the heat caused print-through: each loud passage magnetically copied itself onto the neighboring layer of tape wound against it. When the reel was finally played, a faint ghost of every line sounded one tape-wrap (about a breath) before Mara actually sang it, a pre-echo baked in by the summer rather than by anyone in the booth.",
-   "judge": "A\nStory A correctly ties heads-out storage to pre-echo and covers every detail (the clean session, the box bearing the vocalist's name, the one-breath lead), whereas Story B wrongly claims tail-out winding produces pre-echo, when tail-out storage is the standard practice precisely because it turns print-through into less noticeable post-echo.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.0166822,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a recording studio"
-  },
-  {
-   "model": "anthropic/claude-haiku-5.5",
-   "seed": "a fishing village",
-   "riddle": "The quay bell rang twice though no hull had come through the gap.\nThe lamp on the pier was warm, yet the tide had been out since noon.\nSalt crusted the net-rope, and the mending knot was a sheet bend, not a hitch.\nWho sent the boat home without a crew, and why did the log say it was safe?",
-   "chars": "Ada the widow; Tomas the harbour master (harbour master)",
-   "story": "Ada rang the bell and kept the pier lamp lit so Tomas would log her husband's boat as safely moored, because the port's insurance terms pay out only on a vessel recorded inside the harbour wall, and the boat was left drifting on the ebb with a sheet-bend tie that marks a mooring cast off on purpose. Tomas, who signs the harbour log, accepted the entry since a lamp that is still warm after the tide has turned is treated by the insurers' surveyors as proof the vessel was secured by a crew, a rule he had never been asked to check.",
-   "solver": "**Character 1:** Old Tom, the skipper of the *Marigold*.\n\n**Character 2:** Agnes Pell, the harbormaster.\n\n**Story:** When the *Marigold* grounded on the sandbar at noon's ebb, Tom and his crew walked home across the dry flats. Agnes then joined her thick shore-line to their thin salt-dried net-rope with a sheet bend, the knot for tying two ropes of different sizes, and winched the empty boat over the mud. She lit the pier lamp and rang the bell twice, the harbor's signal for \"crew ashore, vessel secured,\" and she wrote \"safe\" in the log because every man was already home before the boat arrived.",
-   "judge": "B\nStory B explains every clue naturally: the sheet bend joining ropes of different thickness, the warm lamp and the two bell rings as a \"crew ashore\" signal, and the crew walking home across the flats at low tide, while Story A relies on invented insurance rules and a questionable claim about what the knot means.",
-   "riddler_pos": "A",
-   "result": "LOSS",
-   "cost": 0.0173272,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a fishing village"
-  },
-  {
-   "model": "anthropic/claude-haiku-5.5",
-   "seed": "a removals company",
-   "riddle": "A grand piano left a damp cellar and reached a dry flat in one afternoon, then sat wrapped and untouched for two days. On the third morning the widow said it sounded wrong, though the crew swore nothing had been struck. Why did it sound worst after the crew had finished, and why not on the day it arrived?",
-   "chars": "Mrs. Hale, the piano's owner; Tom Reyes (piano tuner)",
-   "story": "The crew sealed the piano for 48 hours because a sudden humidity change makes the soundboard and pinblock shrink unevenly, and opening it early can crack the board, so the move's real damage was hidden in the wood. Over those two days the pinblock kept drying after the crew left, so the tuning pins loosened gradually, and when Tom arrived on the third morning he found the strings had already drifted sour, a delayed effect that a same-day tuning would have missed.",
-   "solver": "**Character 1:** The widow, owner of her late husband's grand piano.\n\n**Character 2:** Mr. Hale, the head piano mover (occupation: piano mover).\n\n**Story:** For years the piano had lived in the damp cellar, its soundboard and pinblock swollen with moisture and its strings tuned to that swollen state. Mr. Hale's crew moved it gently in one afternoon, but over two days wrapped in the dry flat the wood slowly shrank, the tuning pins loosened and the strings went slack and flat. So it sounded fine on arrival, when the wood was still damp, and worst on the third morning, when the widow first unwrapped and played it.",
-   "judge": "A\nStory A directly explains both questions: the cellar-swollen wood still held its tuning on arrival, then shrank in the dry flat over two days so the strings went flat by the time the widow unwrapped and played it. Story B swaps in a tuner as the one who notices the problem and adds an unsupported claim about cracking risk.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.017192100000000002,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a removals company"
-  },
-  {
-   "model": "qwen/qwen3.8-flash",
-   "seed": "a pharmacy",
-   "riddle": "An IV bag is born at midnight; at four it dies; no needle touches it; its label shows only a start time.",
-   "chars": "Leo; Mara (pharmacist)",
-   "story": "Leo watched Mara, a pharmacist, destroy an unused IV bag when its 00:00 label hit four hours. USP 797 requires immediate-use compounded sterile preparations to be discarded four hours after the start of compounding—not after delivery—so Mara had no choice but to bin it before any patient could receive it.",
-   "solver": "**Character 1:** Mr. Alvarez, a post-op patient.\n**Character 2:** Nurse Priya, a night-shift ICU nurse.\n\n**Story:** At midnight Nurse Priya took a unit of blood out of the blood bank for Mr. Alvarez and wrote only the start time on its label, but before she could connect it, he woke and firmly refused the transfusion. The bag sat untouched, never hooked to any needle, and at 4 a.m. she threw it out, because blood must be given within four hours of leaving cold storage.",
-   "judge": "A\n\nStory A naturally covers every detail: the refused transfusion explains why no needle touched it, the start-time-only label fits, and the four-hour limit explains the discard; Story B never explains the sparse label, involves a bag that compounding would normally pierce with needles, and adds a pointless onlooker.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.02226394,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a pharmacy"
-  },
-  {
-   "model": "qwen/qwen3.8-flash",
-   "seed": "an airport",
-   "riddle": "His pass scanned, his seat stayed empty; the boarding door stayed closed ten minutes after the case with his name was loaded; the case came back, and no storm touched the runway.",
-   "chars": "Passenger; Gate agent",
-   "story": "The passenger had validly scanned his boarding pass and checked a case under his name, but he never boarded, so the gate agent was bound by the no-bag security rule to offload the already loaded suitcase and send it back to the terminal before departure. That offload forced a revised weight-and-balance sheet, so the agent kept the boarding door closed ten minutes until the load numbers were recalculated; the late start and returned case were procedure, not weather.",
-   "solver": "**Character 1:** Daniel Reyes, a passenger flying home.\n**Character 2:** Priya, a gate agent (occupation: airline gate agent).\n\n**Story:** Daniel scanned his boarding pass, but halfway down the jet bridge he got a call that his wife had gone into early labor, so he turned and ran back through the terminal without telling anyone. Under bag-matching security rules his checked suitcase couldn't fly without him, so Priya held the door for ten minutes while the crew searched for him, then had ground staff pull his case back off the plane before it left under clear skies.",
-   "judge": "B\n\nStory B fits the riddle's wording that the door *stayed closed* for ten minutes, explaining it with the offload and weight recalculation, whereas Story A has the door being held *open* while staff searched for Daniel.",
-   "riddler_pos": "B",
-   "result": "WIN",
-   "cost": 0.02447761,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "an airport"
-  },
-  {
-   "model": "qwen/qwen3.8-flash",
-   "seed": "a bank branch",
-   "riddle": "Three $3,300 cash-ins crossed the counter and drew no form; a $101 cash-in woke the government sheet; the same account name appeared on all four.",
-   "chars": "Mara; Dev (compliance officer)",
-   "story": "Mara logged the three $3,300 cash-ins and the $101 to the same account on one business day, so the tiny fourth deposit made the daily currency total $10,001 instead of being harmless. FinCEN’s Currency Transaction Report rule forced Dev, the compliance officer, to open the government sheet because one deposit exceeded $3,000 and the aggregated same-day currency passed $10,000.",
-   "solver": "**Character 1:** Marla, a cautious small-business owner depositing her shop's cash\n**Character 2:** Dev, a bank teller\n\n**Story:** Marla made three $3,300 cash deposits to her business account throughout the day, and Dev processed each one without a form, since the running total of $9,900 was still under the $10,000 federal reporting threshold. When she came back near closing with $101 more, the same-day aggregate hit $10,001, so Dev had to file a Currency Transaction Report on the account.",
-   "judge": "B\nStory B correctly explains that the three $3,300 deposits stayed under the $10,000 aggregate threshold until the $101 pushed the same-day total to $10,001, while Story A adds a confused, inaccurate rule about a single deposit exceeding $3,000.",
-   "riddler_pos": "A",
-   "result": "LOSS",
-   "cost": 0.01773827,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a bank branch"
-  },
-  {
-   "model": "qwen/qwen3.8-flash",
-   "seed": "a ski resort",
-   "riddle": "Snow blew sideways; twelve loaded seats stopped on the cable.\nWhen the wind quit, cries rose, but the motor refused.\nA woman checked every tower for ninety minutes.\nTheo descended only after ink was signed.",
-   "chars": "Theo; Elena (lift mechanic)",
-   "story": "The gust tripped the lift's automatic wind-stop, leaving Theo and eleven loaded seats stranded. After the wind died, the resort's lift-safety procedure barred Elena from restarting until she had completed the ninety-minute tower inspection and signed the shutdown log.",
-   "solver": "**Character 1:** Theo, a skier stranded on the chairlift.\n**Character 2:** Marta, a state ski-lift safety inspector.\n\n**Story:** A sideways blizzard tripped the lift's automatic wind lockout, freezing twelve loaded chairs, Theo's among them. Even after the wind died and the riders began shouting, the motor stayed locked until Marta had inspected all the towers over ninety minutes and signed the restart log, and only then did Theo's chair carry him down.",
-   "judge": "B\nStory B accounts for every clue, including the riders' cries, the motor staying locked, the signed restart log, and Theo's chair finally carrying him down, while Story A leaves out the cries and the descent and oddly has a \"shutdown\" log signed before a restart.",
-   "riddler_pos": "A",
-   "result": "LOSS",
-   "cost": 0.02108536,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a ski resort"
-  },
-  {
-   "model": "qwen/qwen3.8-flash",
-   "seed": "a zoo",
-   "riddle": "The noon bowl is empty, yet the crowd still cheers.\nThe bare-handed guest bows twice, then offers one palm.\nThe red sign says no food, but a grape vanishes.\nThree days sleep the gate after a blue mark.",
-   "chars": "a capuchin monkey; a zoo veterinarian",
-   "story": "The veterinarian had withheld the capuchin's noon food and trained it to bow twice and bare a palm for a tuberculin injection, rewarding the trick with a hidden grape so the crowd still applauded. The injection site was marked blue, and USDA APHIS tuberculin protocols require a 72-hour reaction read, with exhibit quarantine if swelling appears.",
-   "solver": "**Character 1:** Momo, a clever chimpanzee.\n\n**Character 2:** Mrs. Tanaka, a zookeeper.\n\n**Story:** At noon Mrs. Tanaka sets out Momo's empty bowl as a training cue, and the crowd cheers as Momo, with nothing in her hands, bows twice and holds out one palm. When a visitor tosses her a grape in defiance of the red \"No Feeding\" sign, it vanishes into her cheek, but it leaves a blue stain from the dye the zoo uses to flag outside food, so the enclosure gate stays shut for a three-day health quarantine.",
-   "judge": "B\nStory B ties every clue to one real procedure: the withheld noon meal is pre-procedure fasting, the bow and palm are trained cooperation for a tuberculin injection, the grape is the hidden reward despite the no-food rule, and the blue mark and three-day closure match the 72-hour TB reaction read, whereas Story A relies on an invented blue dye for outside food.",
-   "riddler_pos": "B",
-   "result": "WIN",
-   "cost": 0.02830247,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a zoo"
-  },
-  {
-   "model": "qwen/qwen3.8-flash",
-   "seed": "a recording studio",
-   "riddle": "The hard \"t\" was heard in playback a breath before the take's true \"t.\" After rewinding the old reel, the phantom consonant followed it instead. The original \"t\" never moved from its tape turn. What slept wound tight and spoke first?",
-   "chars": "June; Felix (tape engineer)",
-   "story": "June recorded the sharp consonant on magnetic tape, then the reel sat tightly wound for decades, letting the transient print through to the adjacent loop. Felix rewound it, swapping which adjacent loop reached the playback head first, so the print-through ghost changed from pre-echo to post-echo while the original \"t\" stayed on its turn.",
-   "solver": "**Character 1:** Mara, an archivist who stored the reel for decades without rewinding it.\n\n**Character 2:** Dev, a recording engineer (occupation) restoring the old session.\n\n**Story:** Mara's reel had slept tightly wound for years, so the strong magnetic \"t\" printed through onto the neighboring tape layer and played back a breath early as a ghostly pre-echo. When Dev rewound the reel and stored it the other way, the print-through copy landed on the opposite layer and trailed the real \"t\" as a post-echo, while the original consonant never moved from its turn of tape.",
-   "judge": "A\nStory A explains more plausibly that re-storing the rewound reel the other way printed a new ghost onto the opposite neighboring layer, turning the pre-echo into a post-echo, whereas B's vague claim that rewinding \"swapped which loop reaches the head first\" is physically muddled.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "cost": 0.019280969999999998,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a recording studio"
-  },
-  {
-   "model": "qwen/qwen3.8-flash",
-   "seed": "a fishing village",
-   "result": "FAILED",
-   "cost": 0.00945385,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a fishing village"
-  },
-  {
-   "model": "qwen/qwen3.8-flash",
-   "seed": "a removals company",
-   "riddle": "The mattress slept in the bed; crates waited on the street; seven minutes of tea made the clock laugh; he left only when the split answered sleep.",
-   "chars": "Nora; Iain (removals operative)",
-   "story": "The mattress was not a customer’s bed but the sleeper-berth padding inside the removal van, while the crates stayed outside. Under EU tachograph rules, a 45-minute break after 4.5 hours may be split only into an initial 15-minute pause followed by a 30-minute rest, so the seven-minute tea did not count and only the later cab sleep completed the split.",
-   "solver": "**Character 1:** Clara, a wife quietly leaving her marriage.\n**Character 2:** Joe, a moving-van driver paid by the hour.\n\n**Story:** Clara had Joe pack everything into crates on the street before dawn, leaving only the mattress, because her husband was still asleep on it, and she paid Joe's hourly rate for a seven-minute tea break so ridiculous that even the ticking clock seemed to laugh. Joe refused to drive off until the husband woke, read Clara's goodbye note, and said \"fine, go.\" The split had finally answered the sleeper, so no one could claim the van had stolen anything.",
-   "judge": "B\nStory B ties every clue to one mechanism: the mattress is the van's sleeper berth, the seven-minute tea is too short to count toward the tachograph break (so the clock \"laughs\"), and the driver can only leave once sleep completes the split break, whereas Story A depends on loose metaphors.",
-   "riddler_pos": "B",
-   "result": "WIN",
-   "cost": 0.02307514,
-   "experiment": "exp1",
-   "effort": "medium",
-   "prompt": "a removals company"
-  },
-  {
-   "model": "google/gemini-3.8-flash",
-   "theme": "football champions in Madras",
-   "riddle": "At Madras's Corporation Stadium, a scoreless final replay crowned both clubs champions.\nA coin was tossed between the captains, but the loser danced in wild celebration.\nThe winner cursed under his breath, reluctantly hoisting the hundred-sovereign silver shield.\nAn hour later, the loser vanished with heavy pockets, while the victor left with empty hands.",
-   "chars": "Shanmugam; David (referee)",
-   "story": "In the Madras Vittal Trophy final, a tied replay declared both teams joint champions, leaving referee David to conduct a coin toss solely to decide which club held the heirloom rolling shield for the first six months. Under tournament regulations, taking custody of the uninsured silver required lodging an immediate cash security bond equal to the winner's purse, meaning Shanmugam's toss-winning club had their prize money impounded as collateral while the toss-loser walked away with the cash.",
-   "solver": "**Character 1:** Ravi, the captain who lost the coin toss.\n\n**Character 2:** Mr. Pillai, the football association treasurer (occupation: treasurer).\n\n**Story:** After the scoreless replay made both clubs joint champions, Mr. Pillai ruled that the toss winner would take the hundred-sovereign silver shield as an honour, while the toss loser would take the matching purse of one hundred gold sovereigns in prize money. Ravi gleefully pocketed the heavy gold and slipped away. Meanwhile, the toss winner had to hand the shield straight back to Pillai so it could be engraved and kept in the association's vault, leaving him with nothing.",
-   "judge": "B\nStory B explains why a coin toss was needed between joint champions and why the toss winner would curse: custody of the shared rolling shield forced his club to post its prize money as a bond, leaving the loser free to leave with the cash.",
-   "riddler_pos": "B",
-   "result": "WIN",
-   "fit": false,
-   "fit_reason": "NO\nThe riddle hints at a football final, a replay, and a coin toss, but nothing in it points to the names \"Shanmugam\" or \"David\" or to the specific Madras Vittal Trophy. The answer also relies on rules and details the riddle never mentions, and its outcome doesn't clearly match the riddle's description of who celebrated and who left with money.",
-   "cost": 0.056696,
-   "experiment": "exp2",
-   "effort": "medium",
-   "prompt": "football champions in Madras"
-  },
-  {
-   "model": "google/gemini-3.8-flash",
-   "theme": "a beekeeper in Provence",
-   "riddle": "Amid parched lavender and scrub, a man plunged his glowing bellows into a stone trough.\nHe seized a garden mister to quiet the humming air before the green truck arrived.\nThe uniformed driver smelled no ash, found no embers, and drove away without issuing a fine.\nYet beneath unbroken canvas, only the man’s ankles and calves were pierced a hundred times.",
-   "chars": "Luc; Henri (beekeeper)",
-   "story": "Henri hastily extinguished his smoker because Provence’s summer prefectural fire decree (DFCI) strictly bans all open embers within 200 meters of garrigue woodland, carrying severe fines enforced by Luc, a forest ranger. Henri switched to spraying water to subdue the hive, but water merely weighed down the bees' wings without triggering the smoke-induced honey-gorging reflex that mechanically prevents them from bending their abdomens, sending thousands of flightless, fully weaponized bees crawling up his boots.",
-   "solver": "**Character 1:** A Provençal beekeeper.\n**Character 2:** A forest fire-patrol warden (occupation: wildfire-ban enforcement officer driving the green patrol truck).\n\n**Story:** During a summer burn ban, the beekeeper saw the fire warden's truck coming, so he doused his lit bee smoker in the water trough and switched to misting his buzzing hives with water to calm them. The warden found no smoke or embers and left without a fine, but the unsmoked bees crawled up under the hem of the beekeeper's intact canvas suit and stung his bare ankles and calves a hundred times.",
-   "judge": "A\nStory A explains why the stings landed only on the ankles and calves: the misted bees were too wet to fly, so they crawled up his boots. It also explains why water failed where smoke would have worked, since smoke triggers the honey-gorging that pacifies bees.",
-   "riddler_pos": "A",
-   "result": "WIN",
-   "fit": true,
-   "fit_reason": "YES\n\nThe riddle centers on a man tending bees in a lavender-and-scrub landscape: he uses a smoker-like bellows and a mister on a humming swarm, and ends up stung on his ankles and calves. The beekeeper subject is clear, though the clues are indirect. The answer's claim about a smoke-induced \"honey-gorging reflex\" is invented, but that doesn't change the riddle's subject.",
-   "cost": 0.03390315,
-   "experiment": "exp2",
-   "effort": "medium",
-   "prompt": "a beekeeper in Provence"
-  },
-  {
-   "model": "google/gemini-3.8-flash",
-   "theme": "a 1920s Chicago jazz club",
-   "riddle": "The brass quintet shook the floorboards, yet the spotlighted woman only mimed the words.\nBetween the tables bolted inches apart, Walter tripped any guest who dared rise on two feet.\nPints of illicit gin flowed openly, yet the federal inspector at the back desk smiled at the ledger.\nEverything was permitted to roar that night—except a human voice and a moving shoe.",
-   "chars": "Vera; Walter (headwaiter)",
-   "story": "To evade the federal entertainment tax, Walter ran the speakeasy under an ordinary restaurant permit where full instrumental jazz was legally classified as non-taxable incidental dinner music. Under U.S. Treasury Regulation 43, the presence of even a single vocalized lyric or dancing couple instantly redefined the room as a cabaret, slapping a retroactive twenty-percent tax on every customer's check, so Walter jammed the tables together to prevent dancing and forced Vera to silently lip-sync the band's tune.",
-   "solver": "**Character 1:** Mae, the nightclub's owner.\n\n**Character 2:** Walter, her bouncer.\n\n**Story:** Under the 1944 federal \"cabaret tax,\" any club that allowed singing or dancing owed a crushing 30% surcharge, so Mae had her singer mime over the brass quintet, bolted the tables too close for dancing, and posted Walter to trip anyone who stood up. The visiting federal tax inspector cared only about cabaret tax, not about her bootleg gin, so he smiled at a ledger that showed no voices and no dancing, and therefore nothing owed.",
-   "judge": "A\nStory A accounts for every detail, including Walter tripping standing guests and the inspector ignoring the gin because he cared only about the cabaret tax, while Story B never explains the inspector's indifference to the gin or the tripping.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "fit": false,
-   "fit_reason": "NO\nThe riddle hints at a 1920s Chicago jazz club with a brass quintet, a spotlighted performer, gin, and a federal inspector, so the setting fits. However, the answer relies on an invented \"Treasury Regulation 43\" and a made-up retroactive tax rule, and the clues about the tables and the lip-syncing don't clearly point to that specific logic. A solver would have trouble reaching the answer from the riddle text alone, so it isn't clearly a riddle about the requested subject in a solvable way.",
-   "cost": 0.059597899999999995,
-   "experiment": "exp2",
-   "effort": "medium",
-   "prompt": "a 1920s Chicago jazz club"
-  },
-  {
-   "model": "google/gemini-3.8-flash",
-   "theme": "an Antarctic research station",
-   "riddle": "Clara had a healthy organ surgically excised to satisfy the deployment contract for her journey south.\nDavid was cleared for the exact same isolated outpost with all of his organs completely intact.\nMonths into the flightless freeze, David doubled over in agony, and Clara rushed him under the knife.\nClara knew that had she developed that identical pain, the base would never have lifted a blade.",
-   "chars": "David; Clara (station doctor)",
-   "story": "At an Australian Antarctic research station, extreme winter temperatures ground all evacuation aircraft for nine months, requiring any emergency operations to be performed on site. Under polar expedition medical regulations, prophylactic appendectomies are mandatory exclusively for the station's sole wintering doctor, because while she is qualified to surgically treat an expeditioner's appendicitis, nobody else on the frozen base is licensed or trained to operate on her.",
-   "solver": "**Character 1:** Clara, the expedition's only doctor at a remote Antarctic station.\n**Character 2:** David, the station's radio technician.\n\n**Story:** Because Clara was the sole surgeon at a base cut off from evacuation flights all winter, her contract required her to have her healthy appendix removed beforehand, since nobody could operate on the only doctor. When David came down with appendicitis mid-winter, Clara removed his appendix herself, knowing that if she had kept hers and it had burst, there would have been no one at the base able to cut her open.",
-   "judge": "B\nStory B explicitly covers every element of the riddle: the mandatory removal of Clara's healthy appendix, David's mid-winter appendicitis, the surgery Clara performed, and why no one could have operated on her, whereas Story A explains only the rule and leaves David's emergency implied.",
-   "riddler_pos": "A",
-   "result": "LOSS",
-   "fit": true,
-   "fit_reason": "YES\nThe riddle never names Antarctica, but \"journey south,\" \"flightless freeze,\" and \"isolated outpost\" point clearly to a remote polar station, and the answer ties the clues to one. Its reasoning about the station doctor is fictional, though, not documented practice.",
-   "cost": 0.0453461,
-   "experiment": "exp2",
-   "effort": "medium",
-   "prompt": "an Antarctic research station"
-  },
-  {
-   "model": "google/gemini-3.8-flash",
-   "theme": "a Bollywood film shoot",
-   "riddle": "A hundred furious rounds shattered the midnight air, yet not a drop of blood was shed.\nWhen the call came to pack up, a man with a holstered gun barred the studio gate.\nThe famous lead dropped to his knees in the sawdust,\nScouring the shadows not for gold or jewels, but for one hollow scrap of brass.",
-   "chars": "Kabir Anand; Sub-Inspector Gokhale (police armorer)",
-   "story": "On a Bollywood set in Mumbai, the superstar had just fired dummy rounds from real firearms for a choreographed climax sequence. Under Mumbai Police regulations enforcing the Arms Act on film sets, an inspecting officer must retrieve and log every single spent brass casing against the permitted ammunition ledger before anyone is legally cleared to leave.",
-   "solver": "**Character 1:** Jack Calloway, the famous lead actor of a Western shoot.\n\n**Character 2:** Ruth Navarro, the film's armorer, who carries a holstered prop gun and keeps the weapons log.\n\n**Story:** During a midnight gunfight scene, Jack fired a hundred blank rounds, harmless noise and flash with no bullets. When wrap was called, Ruth locked the studio gate because her count came up one spent brass casing short, and safety rules mean nobody leaves until every round is accounted for, so the star crawled through the sawdust hunting for that single empty shell.",
-   "judge": "B\nStory B accounts for every detail (midnight, a hundred harmless blanks, the armorer at the gate, the one missing casing, the star crawling through sawdust), while Story A wrongly says dummy rounds were \"fired\" and never explains the single missing scrap or the star's search.",
-   "riddler_pos": "A",
-   "result": "LOSS",
-   "fit": true,
-   "fit_reason": "YES\nThe riddle clearly evokes a film shoot: a \"studio gate,\" a \"famous lead,\" staged gunfire that causes no blood (\"dummy\" or blank rounds), and a choreographed-scene setting in the sawdust. The Bollywood and Mumbai details appear only in the answer, not in the riddle's text, but the film-set clues are unmistakable.",
-   "cost": 0.027374799999999998,
-   "experiment": "exp2",
-   "effort": "medium",
-   "prompt": "a Bollywood film shoot"
-  },
-  {
-   "model": "google/gemini-3.8-flash",
-   "theme": "a chess tournament in Reykjavik",
-   "riddle": "Two imported leather thrones were wheeled from the stage under armed guard at midnight.\nTechnicians in lead aprons bombarded the cushions with X-rays while chemists tested the air for toxins.\nThe defending titleholder insisted an unseen electronic beam was clouding his thoughts between moves.\nYet the official forensic dossier recorded only two dead flies retrieved from an overhead lamp.",
-   "chars": "Boris Spassky; Lothar Schmid (arbiter)",
-   "story": "During the 1972 World Chess Championship in Reykjavik, Boris Spassky’s seconds submitted a formal grievance alleging American operatives were using chemical sprays and high-frequency radiation to induce lethargy in the champion. Bound by FIDE Match Regulations mandating a full criminal forensic sweep for any filed equipment-tampering complaint, chief arbiter Lothar Schmid ordered Icelandic police to impound the playing apparatus and inventory every foreign object found, forcing investigators to log the two heat-trapped flies as chain-of-custody evidence to disprove the presence of hidden transmitters.",
-   "solver": "**Character 1:** Boris Spassky, the defending world chess champion.\n\n**Character 2:** Bobby Fischer, American chess grandmaster and challenger.\n\n**Story:** At the 1972 World Championship in Reykjavik, the losing Spassky's Soviet team claimed Fischer's specially imported chair and the stage lighting held electronic or chemical devices that clouded the champion's thinking. Icelandic police guarded the chairs while technicians X-rayed them and chemists sampled the air, but the only findings were two dead flies in a light fixture.",
-   "judge": "A\n\nStory A covers every detail (the chairs, the guard, the X-rays, the air tests, the champion's claim and the two flies) without inventing a dubious FIDE regulation or a chain-of-custody rationale, as Story B does.",
-   "riddler_pos": "B",
-   "result": "LOSS",
-   "fit": false,
-   "fit_reason": "NO\n\nThe riddle never names chess or Reykjavik. Its clues (\"between moves,\" \"defending titleholder\") point toward chess only loosely, and the solution is only clear once you read the answer, which describes a 1972 championship match rather than a tournament.",
-   "cost": 0.03786555,
-   "experiment": "exp2",
-   "effort": "medium",
-   "prompt": "a chess tournament in Reykjavik"
-  },
-  {
-   "model": "anthropic/claude-fable-5.2",
-   "theme": "football champions in Madras",
-   "riddle": "Madras, 1960s: Wimco led ICF 1–0 in the league decider at Corporation Stadium when Kannan put his watch in his pocket, then let one more ball be kicked.\nSeconds later the ball lay in the net behind Wimco's keeper Mani, who never turned to look because he was already dancing.\nThe crowd roared for an equaliser, the scoreboard never changed, and Wimco were champions of Madras.",
-   "chars": "Mani, Wimco's goalkeeper; Kannan (football referee)",
-   "story": "Kannan, the referee, had awarded ICF a penalty just as the ninety minutes ran out, so he pocketed his watch because time was already up, and Mani parried the kick before the taker tapped the rebound into the net. Under Law 14, time is extended only for the penalty kick itself to be completed, so the match ended the instant Mani's save finished the kick; the rebound \"goal\" was a dead ball, which is why Mani was already dancing and Wimco were champions at 1–0.",
-   "solver": "**Character 1:** Mani, Wimco's goalkeeper.\n**Character 2:** Kannan, the match **referee**.\n\n**Story:** With time up, Kannan pocketed his watch and blew the final whistle just as an ICF forward struck a last desperate shot, so the ball crossed the line only after the match had legally ended. Mani, who had heard the whistle, was already dancing in celebration and never turned to look, while the crowd cheered a goal that never counted and Wimco were crowned champions of Madras.",
-   "judge": "B\n\nStory B explains why Kannan deliberately \"let one more ball be kicked\" after pocketing his watch: time is extended only for the penalty. It also explains why Mani was already dancing after his save while the rebound went in uncounted, whereas Story A's whistle-during-the-shot doesn't account for Kannan allowing the kick.",
-   "riddler_pos": "B",
-   "result": "WIN",
-   "fit": true,
-   "fit_reason": "YES\nThe riddle is about a 1960s league decider in Madras between Wimco and ICF, and it ends with Wimco as champions of Madras, which matches the requested topic. The answer's explanation of the penalty and rebound rules is questionable, but the riddle itself is clearly about Madras football champions.",
-   "cost": 0.08533809999999999,
-   "experiment": "exp2",
-   "effort": "medium",
-   "prompt": "football champions in Madras"
-  },
-  {
-   "model": "anthropic/claude-fable-5.2",
-   "theme": "a beekeeper in Provence",
-   "riddle": "In late June, old Marcel stumbled across his enemy's lavender field near Valensole, beating a saucepan, eyes fixed on the sky.\nThe neighbour, who had not spoken to him in ten years, smiled warmly and offered him a chair in the shade and a cold pastis.\nGasping, Marcel refused to pause even for a second, and when his legs gave out he thrust the pan at his granddaughter and shouted \"Run!\"\nAn hour later the neighbour, scowling, unlocked his orchard gate and let them carry a ladder in.",
-   "chars": "Lucien, the neighbouring lavender grower; Marcel (beekeeper)",
-   "story": "Marcel, a beekeeper, was chasing his best colony, which had swarmed and drifted over Lucien's land, and he beat the pan in the old custom of loudly announcing that he was following it. Under Article L211-9 of the French Code rural, a swarm's owner may reclaim it only as long as he has not ceased to follow it, after which it belongs to the owner of the land where it settles; so Lucien's sudden hospitality was a trap to make him stop, the relay with his granddaughter kept the pursuit unbroken, and Lucien had to let them into the orchard where the swarm had clustered.",
-   "solver": "**Character 1:** Marcel, an old beekeeper.\n**Character 2:** His estranged neighbour, a lavender farmer.\n\n**Story:** Marcel's bees swarmed, and by old custom a beekeeper keeps ownership of a swarm only while he follows it without pause, beating a pan (\"tanging\") to claim it. So the neighbour's friendly pastis was a trap to make him stop and forfeit the bees, but Marcel's granddaughter kept up the chase until the swarm settled in the orchard, forcing the scowling neighbour to let them in with a ladder to collect it.",
-   "judge": "B\nStory B grounds the pursuit rule in the actual French Code rural, which fits the Provence setting, and makes explicit that a forfeited swarm would go to the owner of the land where it settles, giving Lucien a clear motive for his trap.",
-   "riddler_pos": "B",
-   "result": "WIN",
-   "fit": true,
-   "fit_reason": "YES\nThe riddle is set in Provence (near Valensole, among lavender fields), and its pan-beating chase, with the sky-gazing and the granddaughter's relay, describes a beekeeper pursuing a swarm. The answer identifies Marcel as that beekeeper.",
-   "cost": 0.0878225,
-   "experiment": "exp2",
-   "effort": "medium",
-   "prompt": "a beekeeper in Provence"
-  },
-  {
-   "model": "anthropic/claude-fable-5.2",
-   "theme": "a 1920s Chicago jazz club",
-   "riddle": "Chicago, 1928: the South Side cabaret had never sold a drop of liquor, and tonight was no exception.\nA stranger at the front table ordered only cracked ice and ginger ale, and insisted on a written receipt for it.\nWhen he folded that receipt into his wallet, the owner went white and stopped the band mid-chorus.\nA year later, the doors still hadn't reopened.",
-   "chars": "Joe, owner of the cabaret; Mr. Hale (federal Prohibition agent)",
-   "story": "The stranger was Hale, an undercover Prohibition agent, who never needed to buy a drink because the tables around him were openly spiking the club's ice and ginger ale from their own hip flasks. Under the Volstead Act's nuisance \"padlock\" provision, as applied by the Chicago federal court's 1928 \"hip-flask\" ruling, a club that knowingly sold set-ups for patrons' own liquor could be closed by injunction for one year without having sold any alcohol, so the ginger-ale receipt was the only evidence he needed, and Joe knew it the moment it went into the wallet.",
-   "solver": "**Character 1:** Jimmy, the cabaret owner, who never sold liquor but quietly profited from selling \"setups\" (ice and ginger ale) to patrons who spiked them from their own hip flasks.\n\n**Character 2:** The stranger, an undercover federal Prohibition agent.\n\n**Story:** The agent ordered a setup, poured whiskey into it from his own flask in plain view, and pocketed the written receipt as proof that the club knowingly served mixers for illegal drinking. Jimmy recognized the receipt for the evidence it was and stopped the band in a panic, but a federal judge soon issued a one-year padlock order under the Volstead Act, so the doors stayed chained shut a year later.",
-   "judge": "B\nStory B explains why the stranger needed nothing but the receipt (the surrounding tables were already openly spiking their set-ups, and the padlock law reached clubs that sold no liquor), while Story A adds the stretch of the agent spiking his own drink in plain view.",
-   "riddler_pos": "B",
-   "result": "WIN",
-   "fit": false,
-   "fit_reason": "NO\nIt's a narrative mystery rather than a riddle with a compact answer to guess. The answer also cites a specific \"1928 hip-flask ruling\" by the Chicago federal court that I can't verify and that may be invented.",
-   "cost": 0.08110559999999999,
-   "experiment": "exp2",
-   "effort": "medium",
-   "prompt": "a 1920s Chicago jazz club"
-  },
-  {
-   "model": "anthropic/claude-fable-5.2",
-   "theme": "an Antarctic research station",
-   "riddle": "Before wintering at Davis Station, only one of the crew was ordered to have a healthy organ cut out.\nIn July a mechanic doubled over, and no plane came.\nThe plumber minded the anaesthetic, the chef passed the instruments,\nand the only one with a scar held the knife.",
-   "chars": "Tom Reilly, the diesel mechanic with the belly pain; Dr. Hannah Voss (the station's sole wintering medical officer)",
-   "story": "Hannah was the station's only doctor, and the Australian Antarctic Division requires its wintering doctors, and nobody else, to have their appendix removed beforehand, because once winter darkness and cold stop all flights the lone doctor is the one person no one else could operate on. So when Tom's appendix flared in July she operated on him herself, helped by the plumber and the chef, because the same programme gives a few ordinary expeditioners two weeks of hospital training in Hobart as lay surgical assistants, so that tradespeople can monitor the anaesthetic and act as scrub nurse.",
-   "solver": "**Character 1:** The mechanic, a member of the winter crew at Davis Station.\n\n**Character 2:** The expedition doctor (occupation: physician), the station's only medic.\n\n**Story:** Because the doctor would be the only person in Antarctica able to operate, he alone had to have his healthy appendix removed before wintering, so he could never become a patient no one could treat. In mid-winter, with no flights able to reach the station, the mechanic came down with acute appendicitis, and the doctor, bearing the only appendectomy scar on base, removed it while the plumber ran the anaesthetic and the chef handed him the instruments.",
-   "judge": "B\n\nStory B explains every odd detail: why only the doctor had the appendix removed and why no plane came, and it also justifies how a plumber and a chef could competently run the anaesthetic and instruments, a point Story A simply asserts.",
-   "riddler_pos": "B",
-   "result": "WIN",
-   "fit": true,
-   "fit_reason": "YES\n\nThe riddle is set at Davis Station, an Antarctic research station, and its clues depend on Antarctic conditions: a wintering crew, winter darkness and cold halting flights, and a lone medical officer. However, the answer's specific claims about Australian Antarctic Division policy (mandatory appendectomies for wintering doctors and hospital training for tradespeople) appear to be invented and aren't verified.",
-   "cost": 0.0848189,
-   "experiment": "exp2",
-   "effort": "medium",
-   "prompt": "an Antarctic research station"
-  },
-  {
-   "model": "anthropic/claude-fable-5.2",
-   "theme": "a Bollywood film shoot",
-   "riddle": "Film City, Mumbai, 1995: the love ballad squealed from the playback speakers at twice its speed, and Meera mouthed it like a frantic chipmunk.\nNobody laughed; the director sighed, \"So dreamy.\"\nJust before the take, though the noon sun hadn't changed, Ravi opened his lens by exactly one stop.\nThe verse that fills forty seconds on screen was in the can in twenty.",
-   "chars": "Meera, the film's heroine; Ravi (cinematographer)",
-   "story": "Ravi was overcranking his film camera at 48 frames per second for a slow-motion song picturisation, so the playback tape was run at double speed: projected at the normal 24 fps, Meera's frantic mouthing stretches from twenty seconds to forty and syncs perfectly with the normal-speed ballad while her hair and dupatta float dreamily. Because a film camera's rotary shutter has a fixed angle, doubling the frame rate halves each frame's exposure time (about 1/96 s instead of 1/48 s), which costs exactly one stop of light, so Ravi opened the aperture one stop even though the sunlight was unchanged.",
-   "solver": "**Character 1:** Meera, the heroine lip-syncing the love song.\n\n**Character 2:** Ravi, the cinematographer (director of photography).\n\n**Story:** To get a dreamy slow-motion song shot, Ravi cranked the camera at 48 frames per second while the playback crew ran the ballad at double speed, so Meera's chipmunk-fast lip-sync would match the song at normal pitch and tempo once projected at 24 fps. Doubling the frame rate halved each frame's exposure time, so he opened the lens exactly one stop to compensate. The twenty seconds they filmed stretched into forty seconds of graceful, perfectly synced slow motion on screen.",
-   "judge": "A\nBoth stories give the same correct explanation, but A covers more of the riddle's odd details: it explains why the fixed shutter angle forces the one-stop change despite the unchanged sun, and it shows why the result looks \"dreamy.\"",
-   "riddler_pos": "A",
-   "result": "WIN",
-   "fit": true,
-   "fit_reason": "YES\n\nThe riddle is set at Film City in Mumbai and involves a playback track, a heroine lip-syncing a love ballad, a director, and a cinematographer adjusting his camera for a song sequence. These are all recognizable parts of a Bollywood shoot.",
-   "cost": 0.09834739999999999,
-   "experiment": "exp2",
-   "effort": "medium",
-   "prompt": "a Bollywood film shoot"
-  },
-  {
-   "model": "anthropic/claude-fable-5.2",
-   "theme": "a chess tournament in Reykjavik",
-   "riddle": "At a no-increment blitz tournament in Reykjavik, Sigrún, a queen up, had mate in two on the board.\nInstead she spent her final second snatching a harmless knight from the far corner.\nHer clock hit zero and her opponent raised his fist, but Halldór studied the board and shook his head.\nSigrún went home with the trophy.",
-   "chars": "Sigrún, a tournament leader needing only a draw; Halldór (chess arbiter)",
-   "story": "With one second left and no increment, Sigrún knew she had time for only one move, not the two that mate required, so her flag was certain to fall and she needed only half a point to win the event. Under FIDE Article 6.9 a fallen flag loses unless the opponent cannot checkmate by any possible series of legal moves, and even a lone knight counts because a helpmate against her own pieces is theoretically possible, so she captured it to leave a bare king and arbiter Halldór had to rule the game a draw.",
-   "solver": "**Character 1:** Sigrún, a blitz player who needed only a draw in the final round to clinch first place.\n\n**Character 2:** Halldór, the tournament arbiter.\n\n**Story:** With one second left, Sigrún knew she couldn't play both moves of the mate in two before her flag fell, so she captured her opponent's last piece, the knight in the corner, leaving him with a bare king. When her clock hit zero, Halldór ruled that a lone king can never deliver checkmate, so the timeout counted as a draw rather than a loss, and that half-point gave Sigrún the tournament.",
-   "judge": "B\n\nStory B better explains why capturing a \"harmless\" knight mattered: under FIDE Article 6.9 even a lone knight could theoretically mate, so a flag fall would lose. Leaving a bare king was required to turn the timeout into the draw she needed.",
-   "riddler_pos": "B",
-   "result": "WIN",
-   "fit": true,
-   "fit_reason": "YES\nThe riddle is set at a blitz tournament in Reykjavik and centers on a chess game and its clock, so it matches the requested topic.",
-   "cost": 0.0842489,
-   "experiment": "exp2",
-   "effort": "medium",
-   "prompt": "a chess tournament in Reykjavik"
-  },
-  {
    "model": "anthropic/claude-opus-5.5",
    "effort": "medium",
    "theme": "a submarine crew in 1943",
@@ -1336,9 +16,7 @@
    "fit": true,
    "cost": 0.0475752,
    "gen_cost": 0.023688,
-   "gen_secs": 15,
-   "experiment": "exp3",
-   "prompt": "a submarine crew in 1943"
+   "gen_secs": 15
   },
   {
    "model": "google/gemini-3.8-flash",
@@ -1356,9 +34,7 @@
    "fit": true,
    "cost": 0.0514236,
    "gen_cost": 0.035634,
-   "gen_secs": 83,
-   "experiment": "exp3",
-   "prompt": "an Icelandic fishing trawler"
+   "gen_secs": 83
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -1376,9 +52,7 @@
    "fit": true,
    "cost": 0.0367848,
    "gen_cost": 0.01972,
-   "gen_secs": 11,
-   "experiment": "exp3",
-   "prompt": "a Texas oil rig"
+   "gen_secs": 11
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -1396,9 +70,7 @@
    "fit": true,
    "cost": 0.0800722,
    "gen_cost": 0.058856,
-   "gen_secs": 18,
-   "experiment": "exp3",
-   "prompt": "a submarine crew in 1943"
+   "gen_secs": 18
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -1416,9 +88,7 @@
    "fit": true,
    "cost": 0.0953837,
    "gen_cost": 0.075904,
-   "gen_secs": 23,
-   "experiment": "exp3",
-   "prompt": "a Tokyo sumo stable"
+   "gen_secs": 23
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -1436,9 +106,7 @@
    "fit": true,
    "cost": 0.0765165,
    "gen_cost": 0.059768,
-   "gen_secs": 18,
-   "experiment": "exp3",
-   "prompt": "a Paris bakery strike"
+   "gen_secs": 18
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -1456,9 +124,7 @@
    "fit": true,
    "cost": 0.0242364,
    "gen_cost": 0.00627,
-   "gen_secs": 7,
-   "experiment": "exp3",
-   "prompt": "a Texas oil rig"
+   "gen_secs": 7
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -1476,9 +142,7 @@
    "fit": true,
    "cost": 0.025466799999999998,
    "gen_cost": 0.005102,
-   "gen_secs": 6,
-   "experiment": "exp3",
-   "prompt": "a Paris bakery strike"
+   "gen_secs": 6
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -1496,9 +160,7 @@
    "fit": true,
    "cost": 0.0398698,
    "gen_cost": 0.019396,
-   "gen_secs": 12,
-   "experiment": "exp3",
-   "prompt": "an Icelandic fishing trawler"
+   "gen_secs": 12
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -1516,9 +178,7 @@
    "fit": true,
    "cost": 0.0244237,
    "gen_cost": 0.004518,
-   "gen_secs": 5,
-   "experiment": "exp3",
-   "prompt": "an Icelandic fishing trawler"
+   "gen_secs": 5
   },
   {
    "model": "google/gemini-3.8-flash",
@@ -1536,9 +196,7 @@
    "fit": true,
    "cost": 0.0603184,
    "gen_cost": 0.0414945,
-   "gen_secs": 76,
-   "experiment": "exp3",
-   "prompt": "a Paris bakery strike"
+   "gen_secs": 76
   },
   {
    "model": "google/gemini-3.8-flash",
@@ -1556,9 +214,7 @@
    "fit": true,
    "cost": 0.05002455,
    "gen_cost": 0.03521325,
-   "gen_secs": 83,
-   "experiment": "exp3",
-   "prompt": "a Texas oil rig"
+   "gen_secs": 83
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -1576,9 +232,7 @@
    "fit": true,
    "cost": 0.0393601,
    "gen_cost": 0.020992,
-   "gen_secs": 12,
-   "experiment": "exp3",
-   "prompt": "a Tokyo sumo stable"
+   "gen_secs": 12
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -1596,9 +250,7 @@
    "fit": true,
    "cost": 0.1267922,
    "gen_cost": 0.106504,
-   "gen_secs": 32,
-   "experiment": "exp3",
-   "prompt": "a Tokyo sumo stable"
+   "gen_secs": 32
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -1616,9 +268,7 @@
    "fit": true,
    "cost": 0.0584586,
    "gen_cost": 0.041024,
-   "gen_secs": 13,
-   "experiment": "exp3",
-   "prompt": "a Scottish whisky distillery"
+   "gen_secs": 13
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -1636,9 +286,7 @@
    "fit": true,
    "cost": 0.0863729,
    "gen_cost": 0.067304,
-   "gen_secs": 21,
-   "experiment": "exp3",
-   "prompt": "a Scottish whisky distillery"
+   "gen_secs": 21
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -1656,9 +304,7 @@
    "fit": true,
    "cost": 0.0438129,
    "gen_cost": 0.025892,
-   "gen_secs": 15,
-   "experiment": "exp3",
-   "prompt": "a Scottish whisky distillery"
+   "gen_secs": 15
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -1676,9 +322,7 @@
    "fit": true,
    "cost": 0.08271049999999999,
    "gen_cost": 0.063752,
-   "gen_secs": 20,
-   "experiment": "exp3",
-   "prompt": "an Icelandic fishing trawler"
+   "gen_secs": 20
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -1696,9 +340,7 @@
    "fit": true,
    "cost": 0.0360747,
    "gen_cost": 0.006166,
-   "gen_secs": 6,
-   "experiment": "exp3",
-   "prompt": "a Tokyo sumo stable"
+   "gen_secs": 6
   },
   {
    "model": "google/gemini-3.8-flash",
@@ -1716,9 +358,7 @@
    "fit": true,
    "cost": 0.06829635,
    "gen_cost": 0.05067075,
-   "gen_secs": 126,
-   "experiment": "exp3",
-   "prompt": "a submarine crew in 1943"
+   "gen_secs": 126
   },
   {
    "model": "google/gemini-3.8-flash",
@@ -1736,9 +376,7 @@
    "fit": true,
    "cost": 0.09366034999999999,
    "gen_cost": 0.07293075,
-   "gen_secs": 144,
-   "experiment": "exp3",
-   "prompt": "a Tokyo sumo stable"
+   "gen_secs": 144
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -1756,9 +394,7 @@
    "fit": true,
    "cost": 0.0477215,
    "gen_cost": 0.028492,
-   "gen_secs": 15,
-   "experiment": "exp3",
-   "prompt": "a Tokyo sumo stable"
+   "gen_secs": 15
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -1776,9 +412,7 @@
    "fit": true,
    "cost": 0.0292192,
    "gen_cost": 0.005426,
-   "gen_secs": 6,
-   "experiment": "exp3",
-   "prompt": "a Scottish whisky distillery"
+   "gen_secs": 6
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -1796,9 +430,7 @@
    "fit": true,
    "cost": 0.0214414,
    "gen_cost": 0.005354,
-   "gen_secs": 5,
-   "experiment": "exp3",
-   "prompt": "a submarine crew in 1943"
+   "gen_secs": 5
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -1816,9 +448,7 @@
    "fit": true,
    "cost": 0.031207,
    "gen_cost": 0.017664,
-   "gen_secs": 11,
-   "experiment": "exp3",
-   "prompt": "a Paris bakery strike"
+   "gen_secs": 11
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -1836,9 +466,7 @@
    "fit": true,
    "cost": 0.0724735,
    "gen_cost": 0.055584,
-   "gen_secs": 17,
-   "experiment": "exp3",
-   "prompt": "a Kenyan marathon camp"
+   "gen_secs": 17
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -1856,9 +484,7 @@
    "fit": true,
    "cost": 0.0456251,
    "gen_cost": 0.024124,
-   "gen_secs": 14,
-   "experiment": "exp3",
-   "prompt": "a Paris bakery strike"
+   "gen_secs": 14
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -1876,9 +502,7 @@
    "fit": true,
    "cost": 0.0245581,
    "gen_cost": 0.005216,
-   "gen_secs": 5,
-   "experiment": "exp3",
-   "prompt": "a Scottish whisky distillery"
+   "gen_secs": 5
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -1896,9 +520,7 @@
    "fit": true,
    "cost": 0.026967900000000003,
    "gen_cost": 0.005862,
-   "gen_secs": 6,
-   "experiment": "exp3",
-   "prompt": "a wedding in Kerala"
+   "gen_secs": 6
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -1916,9 +538,7 @@
    "fit": true,
    "cost": 0.0250152,
    "gen_cost": 0.00595,
-   "gen_secs": 6,
-   "experiment": "exp3",
-   "prompt": "a Texas oil rig"
+   "gen_secs": 6
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -1936,9 +556,7 @@
    "fit": true,
    "cost": 0.0281874,
    "gen_cost": 0.005062,
-   "gen_secs": 5,
-   "experiment": "exp3",
-   "prompt": "a Paris bakery strike"
+   "gen_secs": 5
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -1956,9 +574,7 @@
    "fit": true,
    "cost": 0.0290953,
    "gen_cost": 0.005452,
-   "gen_secs": 5,
-   "experiment": "exp3",
-   "prompt": "a wedding in Kerala"
+   "gen_secs": 5
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -1976,9 +592,7 @@
    "fit": true,
    "cost": 0.0384938,
    "gen_cost": 0.021072,
-   "gen_secs": 12,
-   "experiment": "exp3",
-   "prompt": "a Kenyan marathon camp"
+   "gen_secs": 12
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -1996,9 +610,7 @@
    "fit": true,
    "cost": 0.0462207,
    "gen_cost": 0.024136,
-   "gen_secs": 24,
-   "experiment": "exp3",
-   "prompt": "a Tokyo sumo stable"
+   "gen_secs": 24
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -2016,9 +628,7 @@
    "fit": true,
    "cost": 0.0871653,
    "gen_cost": 0.07192,
-   "gen_secs": 21,
-   "experiment": "exp3",
-   "prompt": "a Texas oil rig"
+   "gen_secs": 21
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -2036,9 +646,7 @@
    "fit": true,
    "cost": 0.041785199999999995,
    "gen_cost": 0.021008,
-   "gen_secs": 12,
-   "experiment": "exp3",
-   "prompt": "a submarine crew in 1943"
+   "gen_secs": 12
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -2056,9 +664,7 @@
    "fit": true,
    "cost": 0.0272944,
    "gen_cost": 0.005328,
-   "gen_secs": 5,
-   "experiment": "exp3",
-   "prompt": "an Icelandic fishing trawler"
+   "gen_secs": 5
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -2076,9 +682,7 @@
    "fit": true,
    "cost": 0.09501209999999999,
    "gen_cost": 0.074088,
-   "gen_secs": 23,
-   "experiment": "exp3",
-   "prompt": "a wedding in Kerala"
+   "gen_secs": 23
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -2096,9 +700,7 @@
    "fit": true,
    "cost": 0.048595000000000006,
    "gen_cost": 0.029712,
-   "gen_secs": 15,
-   "experiment": "exp3",
-   "prompt": "a Scottish whisky distillery"
+   "gen_secs": 15
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -2116,9 +718,7 @@
    "fit": true,
    "cost": 0.026246900000000004,
    "gen_cost": 0.005696,
-   "gen_secs": 5,
-   "experiment": "exp3",
-   "prompt": "a Kenyan marathon camp"
+   "gen_secs": 5
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -2136,9 +736,7 @@
    "fit": true,
    "cost": 0.0793993,
    "gen_cost": 0.055416,
-   "gen_secs": 18,
-   "experiment": "exp3",
-   "prompt": "a submarine crew in 1943"
+   "gen_secs": 18
   },
   {
    "model": "google/gemini-3.8-flash",
@@ -2156,9 +754,7 @@
    "fit": true,
    "cost": 0.05883435,
    "gen_cost": 0.04444575,
-   "gen_secs": 92,
-   "experiment": "exp3",
-   "prompt": "a Kenyan marathon camp"
+   "gen_secs": 92
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -2176,9 +772,7 @@
    "fit": true,
    "cost": 0.0707628,
    "gen_cost": 0.05376,
-   "gen_secs": 17,
-   "experiment": "exp3",
-   "prompt": "a Texas oil rig"
+   "gen_secs": 17
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -2196,9 +790,7 @@
    "fit": true,
    "cost": 0.08465550000000002,
    "gen_cost": 0.065528,
-   "gen_secs": 19,
-   "experiment": "exp3",
-   "prompt": "a Paris bakery strike"
+   "gen_secs": 19
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -2216,9 +808,7 @@
    "fit": true,
    "cost": 0.09187270000000002,
    "gen_cost": 0.074384,
-   "gen_secs": 44,
-   "experiment": "exp3",
-   "prompt": "a wedding in Kerala"
+   "gen_secs": 44
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -2236,9 +826,7 @@
    "fit": true,
    "cost": 0.028700800000000002,
    "gen_cost": 0.005544,
-   "gen_secs": 5,
-   "experiment": "exp3",
-   "prompt": "a submarine crew in 1943"
+   "gen_secs": 5
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -2256,9 +844,7 @@
    "fit": true,
    "cost": 0.0352253,
    "gen_cost": 0.02064,
-   "gen_secs": 11,
-   "experiment": "exp3",
-   "prompt": "a Texas oil rig"
+   "gen_secs": 11
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -2276,9 +862,7 @@
    "fit": true,
    "cost": 0.0454788,
    "gen_cost": 0.030432,
-   "gen_secs": 17,
-   "experiment": "exp3",
-   "prompt": "a Kenyan marathon camp"
+   "gen_secs": 17
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -2296,9 +880,7 @@
    "fit": true,
    "cost": 0.0540508,
    "gen_cost": 0.036636,
-   "gen_secs": 20,
-   "experiment": "exp3",
-   "prompt": "an Icelandic fishing trawler"
+   "gen_secs": 20
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -2316,9 +898,7 @@
    "fit": true,
    "cost": 0.0890749,
    "gen_cost": 0.063152,
-   "gen_secs": 20,
-   "experiment": "exp3",
-   "prompt": "an Icelandic fishing trawler"
+   "gen_secs": 20
   },
   {
    "model": "anthropic/claude-opus-5.5",
@@ -2336,9 +916,7 @@
    "fit": true,
    "cost": 0.0488623,
    "gen_cost": 0.030324,
-   "gen_secs": 19,
-   "experiment": "exp3",
-   "prompt": "a wedding in Kerala"
+   "gen_secs": 19
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -2356,9 +934,7 @@
    "fit": false,
    "cost": 0.08024659999999999,
    "gen_cost": 0.063064,
-   "gen_secs": 19,
-   "experiment": "exp3",
-   "prompt": "a Kenyan marathon camp"
+   "gen_secs": 19
   },
   {
    "model": "google/gemini-3.8-flash",
@@ -2376,9 +952,7 @@
    "fit": true,
    "cost": 0.0817441,
    "gen_cost": 0.063627,
-   "gen_secs": 157,
-   "experiment": "exp3",
-   "prompt": "a wedding in Kerala"
+   "gen_secs": 157
   },
   {
    "model": "google/gemini-3.8-flash",
@@ -2396,9 +970,7 @@
    "fit": true,
    "cost": 0.05903635,
    "gen_cost": 0.04065075,
-   "gen_secs": 84,
-   "experiment": "exp3",
-   "prompt": "a Scottish whisky distillery"
+   "gen_secs": 84
   },
   {
    "model": "anthropic/claude-sonnet-5.5",
@@ -2416,9 +988,7 @@
    "fit": true,
    "cost": 0.0270984,
    "gen_cost": 0.005396,
-   "gen_secs": 6,
-   "experiment": "exp3",
-   "prompt": "a Kenyan marathon camp"
+   "gen_secs": 6
   },
   {
    "model": "anthropic/claude-fable-5.2",
@@ -2436,9 +1006,7 @@
    "fit": true,
    "cost": 0.1042083,
    "gen_cost": 0.085728,
-   "gen_secs": 26,
-   "experiment": "exp3",
-   "prompt": "a wedding in Kerala"
+   "gen_secs": 26
   },
   {
    "model": "qwen/qwen3.7-plus",
@@ -2456,9 +1024,7 @@
    "fit": false,
    "cost": 0.03272308,
    "gen_cost": 0.01017088,
-   "gen_secs": 127,
-   "experiment": "exp3",
-   "prompt": "a Texas oil rig"
+   "gen_secs": 127
   },
   {
    "model": "z-ai/glm-5.3",
@@ -2476,9 +1042,7 @@
    "fit": true,
    "cost": 0.036637591,
    "gen_cost": 0.014936691,
-   "gen_secs": 342,
-   "experiment": "exp3",
-   "prompt": "a Kenyan marathon camp"
+   "gen_secs": 342
   },
   {
    "model": "nvidia/nemotron-3-ultra-550b-a55b",
@@ -2496,9 +1060,7 @@
    "fit": true,
    "cost": 0.03196,
    "gen_cost": 0.008344,
-   "gen_secs": 50,
-   "experiment": "exp3",
-   "prompt": "a Kenyan marathon camp"
+   "gen_secs": 50
   },
   {
    "model": "deepseek/deepseek-v4-pro",
@@ -2516,9 +1078,7 @@
    "fit": false,
    "cost": 0.0301910864,
    "gen_cost": 0.0146802864,
-   "gen_secs": 149,
-   "experiment": "exp3",
-   "prompt": "a Scottish whisky distillery"
+   "gen_secs": 149
   },
   {
    "model": "qwen/qwen3.7-plus",
@@ -2536,9 +1096,7 @@
    "fit": true,
    "cost": 0.028342720000000002,
    "gen_cost": 0.00494752,
-   "gen_secs": 62,
-   "experiment": "exp3",
-   "prompt": "a Scottish whisky distillery"
+   "gen_secs": 62
   },
   {
    "model": "deepseek/deepseek-v4-pro",
@@ -2556,9 +1114,7 @@
    "fit": true,
    "cost": 0.025718300000000003,
    "gen_cost": 0.0082209,
-   "gen_secs": 54,
-   "experiment": "exp3",
-   "prompt": "a Paris bakery strike"
+   "gen_secs": 54
   },
   {
    "model": "openai/gpt-oss-120b",
@@ -2576,9 +1132,7 @@
    "fit": true,
    "cost": 0.01601666,
    "gen_cost": 0.00070526,
-   "gen_secs": 32,
-   "experiment": "exp3",
-   "prompt": "a Kenyan marathon camp"
+   "gen_secs": 32
   },
   {
    "model": "openai/gpt-oss-120b",
@@ -2596,9 +1150,7 @@
    "fit": true,
    "cost": 0.017639000000000002,
    "gen_cost": 0.0022642,
-   "gen_secs": 43,
-   "experiment": "exp3",
-   "prompt": "a Tokyo sumo stable"
+   "gen_secs": 43
   },
   {
    "model": "deepseek/deepseek-v4-pro",
@@ -2616,9 +1168,7 @@
    "fit": true,
    "cost": 0.0388853792,
    "gen_cost": 0.0191655792,
-   "gen_secs": 190,
-   "experiment": "exp3",
-   "prompt": "a Tokyo sumo stable"
+   "gen_secs": 190
   },
   {
    "model": "minimax/minimax-m3",
@@ -2627,9 +1177,7 @@
    "result": "FAILED",
    "cost": 0.0,
    "gen_cost": 0,
-   "gen_secs": 134,
-   "experiment": "exp3",
-   "prompt": "a submarine crew in 1943"
+   "gen_secs": 134
   },
   {
    "model": "z-ai/glm-5.3",
@@ -2647,9 +1195,7 @@
    "fit": true,
    "cost": 0.0265088,
    "gen_cost": 0.0038324,
-   "gen_secs": 9,
-   "experiment": "exp3",
-   "prompt": "a Tokyo sumo stable"
+   "gen_secs": 9
   },
   {
    "model": "z-ai/glm-5.3",
@@ -2667,9 +1213,7 @@
    "fit": true,
    "cost": 0.031611,
    "gen_cost": 0.0151047,
-   "gen_secs": 57,
-   "experiment": "exp3",
-   "prompt": "a wedding in Kerala"
+   "gen_secs": 57
   },
   {
    "model": "moonshotai/kimi-k2.6",
@@ -2687,9 +1231,7 @@
    "fit": false,
    "cost": 0.08681110000000002,
    "gen_cost": 0.0672742,
-   "gen_secs": 257,
-   "experiment": "exp3",
-   "prompt": "a Paris bakery strike"
+   "gen_secs": 257
   },
   {
    "model": "moonshotai/kimi-k2.6",
@@ -2698,9 +1240,7 @@
    "result": "FAILED",
    "cost": 0.032854489,
    "gen_cost": 0.032854489,
-   "gen_secs": 210,
-   "experiment": "exp3",
-   "prompt": "a Tokyo sumo stable"
+   "gen_secs": 210
   },
   {
    "model": "moonshotai/kimi-k2.6",
@@ -2709,9 +1249,7 @@
    "result": "FAILED",
    "cost": 0.0328591548,
    "gen_cost": 0.0328591548,
-   "gen_secs": 189,
-   "experiment": "exp3",
-   "prompt": "a submarine crew in 1943"
+   "gen_secs": 189
   },
   {
    "model": "z-ai/glm-5.3",
@@ -2729,9 +1267,7 @@
    "fit": true,
    "cost": 0.037596288000000005,
    "gen_cost": 0.020573088,
-   "gen_secs": 50,
-   "experiment": "exp3",
-   "prompt": "a submarine crew in 1943"
+   "gen_secs": 50
   },
   {
    "model": "mistralai/mistral-large-4-0",
@@ -2749,9 +1285,7 @@
    "fit": true,
    "cost": 0.04139944,
    "gen_cost": 0.02113034,
-   "gen_secs": 232,
-   "experiment": "exp3",
-   "prompt": "a Kenyan marathon camp"
+   "gen_secs": 232
   },
   {
    "model": "qwen/qwen3.7-plus",
@@ -2769,9 +1303,7 @@
    "fit": false,
    "cost": 0.02932556,
    "gen_cost": 0.00747936,
-   "gen_secs": 94,
-   "experiment": "exp3",
-   "prompt": "a Tokyo sumo stable"
+   "gen_secs": 94
   },
   {
    "model": "openai/gpt-oss-120b",
@@ -2789,9 +1321,7 @@
    "fit": true,
    "cost": 0.0176724,
    "gen_cost": 0.0011854,
-   "gen_secs": 24,
-   "experiment": "exp3",
-   "prompt": "a Texas oil rig"
+   "gen_secs": 24
   },
   {
    "model": "z-ai/glm-5.3",
@@ -2809,9 +1339,7 @@
    "fit": true,
    "cost": 0.02753835,
    "gen_cost": 0.01062975,
-   "gen_secs": 21,
-   "experiment": "exp3",
-   "prompt": "a Scottish whisky distillery"
+   "gen_secs": 21
   },
   {
    "model": "mistralai/mistral-large-4-0",
@@ -2820,9 +1348,7 @@
    "result": "FAILED",
    "cost": 0.046285932,
    "gen_cost": 0.046285932,
-   "gen_secs": 614,
-   "experiment": "exp3",
-   "prompt": "an Icelandic fishing trawler"
+   "gen_secs": 614
   },
   {
    "model": "mistralai/mistral-large-4-0",
@@ -2840,9 +1366,7 @@
    "fit": true,
    "cost": 0.053685171999999996,
    "gen_cost": 0.031557372,
-   "gen_secs": 488,
-   "experiment": "exp3",
-   "prompt": "a wedding in Kerala"
+   "gen_secs": 488
   },
   {
    "model": "z-ai/glm-5.3",
@@ -2860,9 +1384,7 @@
    "fit": true,
    "cost": 0.0297552,
    "gen_cost": 0.011799,
-   "gen_secs": 34,
-   "experiment": "exp3",
-   "prompt": "an Icelandic fishing trawler"
+   "gen_secs": 34
   },
   {
    "model": "minimax/minimax-m3",
@@ -2871,9 +1393,7 @@
    "result": "FAILED",
    "cost": 0.0,
    "gen_cost": 0,
-   "gen_secs": 28,
-   "experiment": "exp3",
-   "prompt": "an Icelandic fishing trawler"
+   "gen_secs": 28
   },
   {
    "model": "openai/gpt-oss-120b",
@@ -2891,9 +1411,7 @@
    "fit": false,
    "cost": 0.01984265,
    "gen_cost": 0.00173265,
-   "gen_secs": 29,
-   "experiment": "exp3",
-   "prompt": "a wedding in Kerala"
+   "gen_secs": 29
   },
   {
    "model": "openai/gpt-oss-120b",
@@ -2911,9 +1429,7 @@
    "fit": true,
    "cost": 0.0203748,
    "gen_cost": 0.0025443,
-   "gen_secs": 44,
-   "experiment": "exp3",
-   "prompt": "a submarine crew in 1943"
+   "gen_secs": 44
   },
   {
    "model": "minimax/minimax-m3",
@@ -2922,9 +1438,7 @@
    "result": "FAILED",
    "cost": 0.019300704,
    "gen_cost": 0.019300704,
-   "gen_secs": 535,
-   "experiment": "exp3",
-   "prompt": "a wedding in Kerala"
+   "gen_secs": 535
   },
   {
    "model": "qwen/qwen3.7-plus",
@@ -2942,9 +1456,7 @@
    "fit": false,
    "cost": 0.02567158,
    "gen_cost": 0.00854848,
-   "gen_secs": 106,
-   "experiment": "exp3",
-   "prompt": "an Icelandic fishing trawler"
+   "gen_secs": 106
   },
   {
    "model": "nvidia/nemotron-3-ultra-550b-a55b",
@@ -2962,9 +1474,7 @@
    "fit": false,
    "cost": 0.0507402,
    "gen_cost": 0.030945,
-   "gen_secs": 123,
-   "experiment": "exp3",
-   "prompt": "a submarine crew in 1943"
+   "gen_secs": 123
   },
   {
    "model": "mistralai/mistral-large-4-0",
@@ -2982,9 +1492,7 @@
    "fit": true,
    "cost": 0.07304392,
    "gen_cost": 0.04626622,
-   "gen_secs": 455,
-   "experiment": "exp3",
-   "prompt": "a Scottish whisky distillery"
+   "gen_secs": 455
   },
   {
    "model": "qwen/qwen3.7-plus",
@@ -3002,9 +1510,7 @@
    "fit": true,
    "cost": 0.026304720000000004,
    "gen_cost": 0.00743552,
-   "gen_secs": 93,
-   "experiment": "exp3",
-   "prompt": "a Paris bakery strike"
+   "gen_secs": 93
   },
   {
    "model": "mistralai/mistral-large-4-0",
@@ -3022,9 +1528,7 @@
    "fit": true,
    "cost": 0.055437719999999996,
    "gen_cost": 0.03597202,
-   "gen_secs": 343,
-   "experiment": "exp3",
-   "prompt": "a Paris bakery strike"
+   "gen_secs": 343
   },
   {
    "model": "mistralai/mistral-large-4-0",
@@ -3033,9 +1537,7 @@
    "result": "FAILED",
    "cost": 0.046284392,
    "gen_cost": 0.046284392,
-   "gen_secs": 358,
-   "experiment": "exp3",
-   "prompt": "a Tokyo sumo stable"
+   "gen_secs": 358
   },
   {
    "model": "minimax/minimax-m3",
@@ -3053,9 +1555,7 @@
    "fit": true,
    "cost": 0.042899980000000004,
    "gen_cost": 0.02384298,
-   "gen_secs": 91,
-   "experiment": "exp3",
-   "prompt": "a Tokyo sumo stable"
+   "gen_secs": 91
   },
   {
    "model": "minimax/minimax-m3",
@@ -3073,9 +1573,7 @@
    "fit": true,
    "cost": 0.049151299999999995,
    "gen_cost": 0.0256086,
-   "gen_secs": 116,
-   "experiment": "exp3",
-   "prompt": "a Scottish whisky distillery"
+   "gen_secs": 116
   },
   {
    "model": "mistralai/mistral-large-4-0",
@@ -3093,9 +1591,7 @@
    "fit": true,
    "cost": 0.05228511999999999,
    "gen_cost": 0.03424092,
-   "gen_secs": 314,
-   "experiment": "exp3",
-   "prompt": "a Texas oil rig"
+   "gen_secs": 314
   },
   {
    "model": "qwen/qwen3.7-plus",
@@ -3113,9 +1609,7 @@
    "fit": false,
    "cost": 0.020357280000000005,
    "gen_cost": 0.00786848,
-   "gen_secs": 102,
-   "experiment": "exp3",
-   "prompt": "a Kenyan marathon camp"
+   "gen_secs": 102
   },
   {
    "model": "openai/gpt-oss-120b",
@@ -3133,9 +1627,7 @@
    "fit": true,
    "cost": 0.01733805,
    "gen_cost": 0.00297065,
-   "gen_secs": 53,
-   "experiment": "exp3",
-   "prompt": "a Paris bakery strike"
+   "gen_secs": 53
   },
   {
    "model": "minimax/minimax-m3",
@@ -3153,9 +1645,7 @@
    "fit": true,
    "cost": 0.03229266,
    "gen_cost": 0.01675986,
-   "gen_secs": 57,
-   "experiment": "exp3",
-   "prompt": "a Paris bakery strike"
+   "gen_secs": 57
   },
   {
    "model": "z-ai/glm-5.3",
@@ -3173,9 +1663,7 @@
    "fit": true,
    "cost": 0.0290415,
    "gen_cost": 0.0079343,
-   "gen_secs": 14,
-   "experiment": "exp3",
-   "prompt": "a Texas oil rig"
+   "gen_secs": 14
   },
   {
    "model": "openai/gpt-oss-120b",
@@ -3193,9 +1681,7 @@
    "fit": true,
    "cost": 0.0235876,
    "gen_cost": 0.0055515,
-   "gen_secs": 20,
-   "experiment": "exp3",
-   "prompt": "an Icelandic fishing trawler"
+   "gen_secs": 20
   },
   {
    "model": "nvidia/nemotron-3-ultra-550b-a55b",
@@ -3213,9 +1699,7 @@
    "fit": false,
    "cost": 0.028682000000000003,
    "gen_cost": 0.0072594,
-   "gen_secs": 54,
-   "experiment": "exp3",
-   "prompt": "a Paris bakery strike"
+   "gen_secs": 54
   },
   {
    "model": "deepseek/deepseek-v4-pro",
@@ -3233,9 +1717,7 @@
    "fit": true,
    "cost": 0.0270204,
    "gen_cost": 0.00991,
-   "gen_secs": 70,
-   "experiment": "exp3",
-   "prompt": "a wedding in Kerala"
+   "gen_secs": 70
   },
   {
    "model": "minimax/minimax-m3",
@@ -3244,9 +1726,7 @@
    "result": "FAILED",
    "cost": 0.02403906,
    "gen_cost": 0.02403906,
-   "gen_secs": 92,
-   "experiment": "exp3",
-   "prompt": "a Texas oil rig"
+   "gen_secs": 92
   },
   {
    "model": "moonshotai/kimi-k2.6",
@@ -3264,9 +1744,7 @@
    "fit": true,
    "cost": 0.08480330000000001,
    "gen_cost": 0.0667935,
-   "gen_secs": 232,
-   "experiment": "exp3",
-   "prompt": "a Scottish whisky distillery"
+   "gen_secs": 232
   },
   {
    "model": "nvidia/nemotron-3-ultra-550b-a55b",
@@ -3284,9 +1762,7 @@
    "fit": false,
    "cost": 0.0391865,
    "gen_cost": 0.0133534,
-   "gen_secs": 87,
-   "experiment": "exp3",
-   "prompt": "a Tokyo sumo stable"
+   "gen_secs": 87
   },
   {
    "model": "deepseek/deepseek-v4-pro",
@@ -3304,9 +1780,7 @@
    "fit": false,
    "cost": 0.031183600000000002,
    "gen_cost": 0.0088657,
-   "gen_secs": 60,
-   "experiment": "exp3",
-   "prompt": "a submarine crew in 1943"
+   "gen_secs": 60
   },
   {
    "model": "nvidia/nemotron-3-ultra-550b-a55b",
@@ -3324,9 +1798,7 @@
    "fit": false,
    "cost": 0.029645200000000003,
    "gen_cost": 0.0063918,
-   "gen_secs": 46,
-   "experiment": "exp3",
-   "prompt": "an Icelandic fishing trawler"
+   "gen_secs": 46
   },
   {
    "model": "deepseek/deepseek-v4-pro",
@@ -3344,9 +1816,7 @@
    "fit": false,
    "cost": 0.0338398776,
    "gen_cost": 0.0145879776,
-   "gen_secs": 156,
-   "experiment": "exp3",
-   "prompt": "a Texas oil rig"
+   "gen_secs": 156
   },
   {
    "model": "z-ai/glm-5.3",
@@ -3364,9 +1834,7 @@
    "fit": true,
    "cost": 0.055966699999999994,
    "gen_cost": 0.0322266,
-   "gen_secs": 138,
-   "experiment": "exp3",
-   "prompt": "a Paris bakery strike"
+   "gen_secs": 138
   },
   {
    "model": "moonshotai/kimi-k2.6",
@@ -3375,9 +1843,7 @@
    "result": "FAILED",
    "cost": 0.0328531278,
    "gen_cost": 0.0328531278,
-   "gen_secs": 224,
-   "experiment": "exp3",
-   "prompt": "a wedding in Kerala"
+   "gen_secs": 224
   },
   {
    "model": "mistralai/mistral-large-4-0",
@@ -3386,9 +1852,7 @@
    "result": "FAILED",
    "cost": 0.04207882,
    "gen_cost": 0.04207882,
-   "gen_secs": 465,
-   "experiment": "exp3",
-   "prompt": "a submarine crew in 1943"
+   "gen_secs": 465
   },
   {
    "model": "moonshotai/kimi-k2.6",
@@ -3397,9 +1861,7 @@
    "result": "FAILED",
    "cost": 0.0328615492,
    "gen_cost": 0.0328615492,
-   "gen_secs": 224,
-   "experiment": "exp3",
-   "prompt": "a Texas oil rig"
+   "gen_secs": 224
   },
   {
    "model": "moonshotai/kimi-k2.6",
@@ -3417,9 +1879,7 @@
    "fit": true,
    "cost": 0.07346629999999998,
    "gen_cost": 0.0551642,
-   "gen_secs": 172,
-   "experiment": "exp3",
-   "prompt": "a Kenyan marathon camp"
+   "gen_secs": 172
   },
   {
    "model": "openai/gpt-oss-120b",
@@ -3437,9 +1897,7 @@
    "fit": true,
    "cost": 0.0197057,
    "gen_cost": 0.0021812,
-   "gen_secs": 37,
-   "experiment": "exp3",
-   "prompt": "a Scottish whisky distillery"
+   "gen_secs": 37
   },
   {
    "model": "moonshotai/kimi-k2.6",
@@ -3448,9 +1906,7 @@
    "result": "FAILED",
    "cost": 0.0328577936,
    "gen_cost": 0.0328577936,
-   "gen_secs": 202,
-   "experiment": "exp3",
-   "prompt": "an Icelandic fishing trawler"
+   "gen_secs": 202
   },
   {
    "model": "deepseek/deepseek-v4-pro",
@@ -3468,9 +1924,7 @@
    "fit": false,
    "cost": 0.0380129,
    "gen_cost": 0.0202138,
-   "gen_secs": 176,
-   "experiment": "exp3",
-   "prompt": "an Icelandic fishing trawler"
+   "gen_secs": 176
   },
   {
    "model": "qwen/qwen3.7-plus",
@@ -3488,9 +1942,7 @@
    "fit": true,
    "cost": 0.03085302,
    "gen_cost": 0.00762752,
-   "gen_secs": 103,
-   "experiment": "exp3",
-   "prompt": "a wedding in Kerala"
+   "gen_secs": 103
   },
   {
    "model": "deepseek/deepseek-v4-pro",
@@ -3508,9 +1960,7 @@
    "fit": false,
    "cost": 0.028601700000000004,
    "gen_cost": 0.0074815,
-   "gen_secs": 56,
-   "experiment": "exp3",
-   "prompt": "a Kenyan marathon camp"
+   "gen_secs": 56
   },
   {
    "model": "nvidia/nemotron-3-ultra-550b-a55b",
@@ -3528,9 +1978,7 @@
    "fit": true,
    "cost": 0.0402985,
    "gen_cost": 0.0207141,
-   "gen_secs": 74,
-   "experiment": "exp3",
-   "prompt": "a wedding in Kerala"
+   "gen_secs": 74
   },
   {
    "model": "nvidia/nemotron-3-ultra-550b-a55b",
@@ -3548,9 +1996,7 @@
    "fit": true,
    "cost": 0.0228129,
    "gen_cost": 0.0057882,
-   "gen_secs": 30,
-   "experiment": "exp3",
-   "prompt": "a Scottish whisky distillery"
+   "gen_secs": 30
   },
   {
    "model": "nvidia/nemotron-3-ultra-550b-a55b",
@@ -3568,9 +2014,7 @@
    "fit": true,
    "cost": 0.023662000000000002,
    "gen_cost": 0.0041371,
-   "gen_secs": 17,
-   "experiment": "exp3",
-   "prompt": "a Texas oil rig"
+   "gen_secs": 17
   },
   {
    "model": "minimax/minimax-m3",
@@ -3588,9 +2032,7 @@
    "fit": true,
    "cost": 0.034716944,
    "gen_cost": 0.012847344,
-   "gen_secs": 188,
-   "experiment": "exp3",
-   "prompt": "a Kenyan marathon camp"
+   "gen_secs": 188
   },
   {
    "model": "qwen/qwen3.7-plus",
@@ -3608,9 +2050,7 @@
    "fit": false,
    "cost": 0.0300776,
    "gen_cost": 0.0110864,
-   "gen_secs": 140,
-   "experiment": "exp3",
-   "prompt": "a submarine crew in 1943"
+   "gen_secs": 140
   }
  ]
 }
