@@ -5,7 +5,7 @@ Uses the riddle and both stories from the sweep and the exact sweep.JUDGE_PROMPT
 With "swap", the order is reversed. Judging each round in both orders cancels the judges'
 preference for whichever story is shown first.
 
-Usage: python rejudge.py BUDGET_USD JUDGE_MODEL EFFORT [swap]
+Usage: python rejudge.py BUDGET_USD JUDGE_MODEL EFFORT [swap|noswap] [raw1.json,raw2.json]
 Writes case5/data/raw/rejudge_<model-slug>[_swapped].json:
   {"judge_model", "effort", "swapped", "rounds": {raw file name: [{"i", "judge", "result", "riddler_pos"}]}}
 """
@@ -18,7 +18,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import sweep  # noqa: E402
 RAW = os.path.join(HERE, "..", "data", "raw")
-FILES = ["sweep.json", "sweep_open.json", "sweep_frontier.json"]
+FILES = ["sweep.json", "sweep_open.json", "sweep_frontier.json", "sweep_qwen4.json"]
 
 
 def rejudge(r, model, effort, swap):
@@ -38,8 +38,11 @@ def main():
     sweep.budget = float(sys.argv[1])
     model, effort = sys.argv[2], sys.argv[3]
     swap = len(sys.argv) > 4 and sys.argv[4] == "swap"
+    # Optional 5th argument: comma-separated raw files to judge (default: all of FILES). The output
+    # file name then carries those names, so earlier verdict files are never overwritten.
+    only = sys.argv[5].split(",") if len(sys.argv) > 5 else None
     jobs = []
-    for name in FILES:
+    for name in only or FILES:
         path = os.path.join(RAW, name)
         if os.path.exists(path):
             for i, r in enumerate(json.load(open(path))):
@@ -59,6 +62,8 @@ def main():
         for name, rec in ex.map(work, jobs):
             out.setdefault(name, []).append(rec)
     slug = model.replace("/", "_") + ("_swapped" if swap else "")
+    if only:
+        slug += "__" + "+".join(os.path.splitext(n)[0] for n in only)
     json.dump({"judge_model": model, "effort": effort, "swapped": swap, "rounds": out},
               open(os.path.join(RAW, f"rejudge_{slug}.json"), "w"), indent=1)
     n = sum(len(v) for v in out.values())

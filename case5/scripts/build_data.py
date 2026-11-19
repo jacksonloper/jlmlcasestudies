@@ -5,6 +5,7 @@ Every record comes from a real OpenRouter run of case5/scripts/sweep.py on the s
   raw/sweep.json           Anthropic writers at low/medium effort, Gemini 3.8 Flash at high
   raw/sweep_open.json      open-weight writers at high effort
   raw/sweep_frontier.json  GPT-6.2 Astra/Sol and Gemini 4 writers at medium effort
+  raw/sweep_qwen4.json     Qwen4 Max at low, medium and high effort
 
 Each completed round is judged by two judges, each in both story orders (rejudge.py):
   Claude Opus 5.5: original order is the sweep's own verdict; raw/rejudge_anthropic_claude-opus-5.5_swapped.json
@@ -21,7 +22,7 @@ import os
 HERE = os.path.dirname(os.path.abspath(__file__))
 RAW = os.path.join(HERE, "..", "data", "raw")
 OUT = os.path.join(HERE, "..", "data", "riddles.json")
-FILES = ["sweep.json", "sweep_open.json", "sweep_frontier.json"]
+FILES = ["sweep.json", "sweep_open.json", "sweep_frontier.json", "sweep_qwen4.json"]
 KEEP = ["model", "effort", "theme", "riddle", "chars", "story", "solver",
         "result", "real", "fact", "fit", "fit_reason", "cost", "gen_cost", "gen_secs"]
 OPUS = "anthropic/claude-opus-5.5"
