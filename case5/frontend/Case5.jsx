@@ -183,6 +183,18 @@ export default function Case5() {
 
         <h1 className="text-4xl font-light text-gray-900 mb-8">Case Study 5: Riddles That Beat Opus</h1>
 
+        <p className="mb-10 p-4 rounded-lg bg-blue-50 text-gray-700">
+          Have a riddle of your own?{' '}
+          <Link to="/case5/lab" className="text-blue-600 hover:text-blue-800 font-medium">
+            Try it in the Riddle Lab
+          </Link>
+          : Opus tries to solve it blind, and judges grade how badly your riddle stumped it. See the{' '}
+          <Link to="/case5/leaderboard" className="text-blue-600 hover:text-blue-800 font-medium">
+            leaderboard
+          </Link>
+          .
+        </p>
+
         <section className="mb-10">
           <h2 className="text-2xl font-medium text-gray-900 mb-4">The Game</h2>
           <div className="text-gray-700 space-y-3">
