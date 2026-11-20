@@ -287,7 +287,7 @@ export default function RiddleLab() {
       const res = await fetch(`${API}/${jobId}/retry`, { method: 'POST' });
       const j = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(j.error || `Server answered ${res.status}`);
-      document.title = 'Riddle Lab';
+      document.title = 'Riddle Lab · ML Case Studies';
       setRunKey((k) => k + 1);
     } catch (e) {
       setRetryError(e.message);
