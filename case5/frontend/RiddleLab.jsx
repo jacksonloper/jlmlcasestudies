@@ -9,6 +9,25 @@ const MAX_SOLUTION = 3000;
 const MAX_HANDLE = 40;
 const HANDLE_KEY = 'case5-lab-handle';
 
+const BROWSER_KEY = 'case5-lab-browser';
+
+// A random ID for this browser, used only for the server's per-browser rate limit. If storage is
+// blocked it lasts until the page is reloaded.
+let browserId;
+function getBrowserId() {
+  if (browserId) return browserId;
+  try {
+    browserId = localStorage.getItem(BROWSER_KEY);
+    if (!browserId) {
+      browserId = crypto.randomUUID();
+      localStorage.setItem(BROWSER_KEY, browserId);
+    }
+  } catch {
+    browserId ||= crypto.randomUUID();
+  }
+  return browserId;
+}
+
 const money = (x) => `$${Number(x || 0).toFixed(3)}`;
 
 // localStorage can be missing or throw (private windows, blocked storage); the page works without it.
@@ -284,7 +303,10 @@ export default function RiddleLab() {
     setRetrying(true);
     setRetryError(null);
     try {
-      const res = await fetch(`${API}/${jobId}/retry`, { method: 'POST' });
+      const res = await fetch(`${API}/${jobId}/retry`, {
+        method: 'POST',
+        headers: { 'X-Browser-Id': getBrowserId() },
+      });
       const j = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(j.error || `Server answered ${res.status}`);
       document.title = 'Riddle Lab · ML Case Studies';
@@ -311,7 +333,7 @@ export default function RiddleLab() {
     try {
       const res = await fetch(API, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-Browser-Id': getBrowserId() },
         body: JSON.stringify({ riddle, solution, handle: handle.trim() || undefined }),
       });
       const j = await res.json().catch(() => ({}));
@@ -421,16 +443,21 @@ export default function RiddleLab() {
                 className="mt-1 w-full sm:w-80 block border border-gray-300 rounded-lg p-2"
               />
             </label>
+            <div className="text-sm border border-amber-300 bg-amber-50 text-amber-900 rounded-lg p-3">
+              <strong>Everything you submit is public.</strong> Your riddle, your solution and your handle, along with
+              Opus’s answers and the judges’ reasons, can be read by anyone and are listed on the leaderboard. Don’t
+              include anything you wouldn’t want published.
+            </div>
             {formError && <p className="text-sm text-red-700">{formError}</p>}
             <button
               type="submit"
               disabled={submitting}
               className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
             >
-              {submitting ? 'Submitting…' : 'Submit riddle'}
+              {submitting ? 'Submitting…' : 'Submit and publish riddle'}
             </button>
             <p className="text-xs text-gray-500">
-              Submissions are stored, with every model answer, in this site’s database. Limit: 5 per hour.
+              Limit: 5 runs per hour per browser (retries count). No IP address is stored.
             </p>
           </form>
         )}
