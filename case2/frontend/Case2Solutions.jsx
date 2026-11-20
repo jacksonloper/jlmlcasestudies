@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { BlockMath, InlineMath } from 'react-katex';
-import Plot from 'react-plotly.js';
+import Plot from '../../src/components/Plot';
 import npyjs from 'npyjs';
 
 export default function Case2Solutions() {

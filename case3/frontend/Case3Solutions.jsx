@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { BlockMath, InlineMath } from 'react-katex';
-import Plot from 'react-plotly.js';
+import Plot from '../../src/components/Plot';
 
 export default function Case3Solutions() {
   const [trainingHistory, setTrainingHistory] = useState(null);
