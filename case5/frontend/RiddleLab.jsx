@@ -6,6 +6,8 @@ const POLL_MS = 4000;
 const RECENT_KEY = 'case5-lab-recent';
 const MAX_RIDDLE = 2000;
 const MAX_SOLUTION = 3000;
+const MAX_HANDLE = 40;
+const HANDLE_KEY = 'case5-lab-handle';
 
 const money = (x) => `$${Number(x || 0).toFixed(3)}`;
 
@@ -81,38 +83,105 @@ function FactCheck({ r }) {
   );
 }
 
-function Scores({ r, rubric }) {
+const signed = (x) => (x > 0 ? `+${x}` : `${x}`);
+
+function GradeRow({ label, grade, reason }) {
   return (
-    <div className="text-sm text-gray-700 space-y-2">
-      <p className="text-lg font-medium text-gray-900">
-        {r.total} / {r.max_total}
-      </p>
-      <table className="w-full text-left">
+    <tr className="border-t border-gray-100 align-top">
+      <td className="py-1 pr-3 font-medium whitespace-nowrap">{label}</td>
+      <td className="py-1 pr-3 whitespace-nowrap">{grade ?? '–'} / 4</td>
+      <td className="py-1 text-gray-600">{reason}</td>
+    </tr>
+  );
+}
+
+function StumperJudge({ j }) {
+  const title = j.order === 'riddler_first' ? 'Judge 1 (saw solution I as A)' : 'Judge 2 (saw solution II as A)';
+  if (j.error) {
+    return (
+      <div>
+        <h4 className="font-medium text-gray-900 mb-1">{title}</h4>
+        <p className="text-sm text-red-700">{j.error}</p>
+      </div>
+    );
+  }
+  return (
+    <div>
+      <h4 className="font-medium text-gray-900 mb-1">{title}</h4>
+      <table className="w-full text-left text-sm text-gray-700">
         <tbody>
-          {rubric.map((c) => (
-            <tr key={c.key} className="border-t border-gray-100 align-top">
-              <td className="py-1 pr-3 font-medium whitespace-nowrap" title={c.help}>
-                {c.label}
-              </td>
-              <td className="py-1 pr-3 whitespace-nowrap">{r.scores?.[c.key]?.score ?? '–'} / 5</td>
-              <td className="py-1 text-gray-600">{r.scores?.[c.key]?.reason}</td>
-            </tr>
+          <GradeRow label="Solution I" grade={j.grade_riddler} reason={j.reason_riddler} />
+          <GradeRow label="Solution II" grade={j.grade_solver} reason={j.reason_solver} />
+        </tbody>
+      </table>
+      <p className="text-xs text-gray-400 mt-1">Cost: {money(j.cost)}</p>
+    </div>
+  );
+}
+
+function Stumper({ job, running }) {
+  const judges = [...(job.stumper_judges || [])].sort((a, b) => (a.order < b.order ? -1 : 1));
+  const done = job.stumper != null;
+  const failed = judges.some((j) => j.error) || job.solver?.error;
+  return (
+    <div className="border border-gray-200 rounded-lg p-4">
+      <div className="flex flex-wrap justify-between items-center gap-2 mb-2">
+        <h3 className="font-medium text-gray-900">3. Stumper: both solutions graded 1–4, two judges</h3>
+        <span className="flex items-center gap-2">
+          <span className="text-xs text-gray-500">Claude Opus 5.5, low effort, ×2</span>
+          <StageBadge result={done ? {} : failed ? { error: true } : null} running={running} />
+        </span>
+      </div>
+      <p className="text-xs text-gray-500 mb-3">
+        {(job.explain_scale || []).map((s) => `${s.grade} = ${s.text}`).join(' ')} The judges see the two solutions
+        in opposite orders to cancel position bias, and are not told which is yours.
+      </p>
+      {done && (
+        <p className="text-lg font-medium text-gray-900 mb-3">
+          Stumper score: {signed(Number(job.stumper))}{' '}
+          <span className="text-sm font-normal text-gray-600">
+            (your grade minus Opus’s, averaged over the two judges; range −3 to +3)
+          </span>
+        </p>
+      )}
+      <div className="grid md:grid-cols-2 gap-4">
+        {judges.map((j) => (
+          <StumperJudge key={j.order} j={j} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Quality({ job, running }) {
+  const q = job.quality;
+  return (
+    <Stage title="4. Quality of solution I: narrative, elegance, accuracy" model="Claude Opus 5.5, low effort" result={q} running={running}>
+      <table className="w-full text-left text-sm text-gray-700">
+        <tbody>
+          {(job.quality_criteria || []).map((c) => (
+            <GradeRow key={c.key} label={c.label} grade={q?.scores?.[c.key]?.grade} reason={q?.scores?.[c.key]?.reason} />
           ))}
         </tbody>
       </table>
-      {r.verdict && <p className="text-gray-600 italic">{r.verdict}</p>}
-    </div>
+      <p className="text-xs text-gray-500 mt-2">
+        This judge sees only the riddle and your solution.{' '}
+        {(job.quality_criteria || []).map((c) => `${c.label}: ${c.help}`).join(' ')}
+      </p>
+    </Stage>
   );
 }
 
 function Job({ job }) {
   const running = job.status === 'running' || job.status === 'queued';
-  const rubric = job.rubric || [];
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500">
         <span>
           Status: <strong className="text-gray-900">{job.status}</strong>
+        </span>
+        <span>
+          By <strong className="text-gray-900">{job.handle || 'anonymous'}</strong>
         </span>
         <span>Submitted {new Date(job.created_at).toLocaleString()}</span>
         <span>Spent so far: {money(job.total_cost)}</span>
@@ -132,23 +201,8 @@ function Job({ job }) {
       <Stage title="2. Blind solve → solution II" model="Claude Opus 5.5, low effort" result={job.solver} running={running}>
         <p className="text-sm text-gray-700 whitespace-pre-line">{(job.solution_2 || '').replaceAll('**', '')}</p>
       </Stage>
-      <div className="grid md:grid-cols-2 gap-4">
-        <Stage title="3. Judge scores solution I" model="Claude Opus 5.5, low effort" result={job.judge_1} running={running}>
-          <Scores r={job.judge_1 || {}} rubric={rubric} />
-        </Stage>
-        <Stage title="4. Judge scores solution II" model="Claude Opus 5.5, low effort" result={job.judge_2} running={running}>
-          <Scores r={job.judge_2 || {}} rubric={rubric} />
-        </Stage>
-      </div>
-      {job.judge_1?.total != null && job.judge_2?.total != null && (
-        <p className="text-gray-900 font-medium">
-          {job.judge_1.total > job.judge_2.total
-            ? 'Your solution scored higher than Opus’s blind answer.'
-            : job.judge_1.total < job.judge_2.total
-              ? 'Opus’s blind answer scored higher than your solution.'
-              : 'Both solutions got the same total score.'}
-        </p>
-      )}
+      <Stumper job={job} running={running} />
+      <Quality job={job} running={running} />
     </div>
   );
 }
@@ -158,6 +212,13 @@ export default function RiddleLab() {
   const jobId = params.get('job');
   const [riddle, setRiddle] = useState('');
   const [solution, setSolution] = useState('');
+  const [handle, setHandle] = useState(() => {
+    try {
+      return localStorage.getItem(HANDLE_KEY) || '';
+    } catch {
+      return '';
+    }
+  });
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState(null);
   const [job, setJob] = useState(null);
@@ -228,10 +289,15 @@ export default function RiddleLab() {
       const res = await fetch(API, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ riddle, solution }),
+        body: JSON.stringify({ riddle, solution, handle: handle.trim() || undefined }),
       });
       const j = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(j.error || `Server answered ${res.status}`);
+      try {
+        localStorage.setItem(HANDLE_KEY, handle.trim());
+      } catch {
+        // ignore
+      }
       const entry = { id: j.id, riddle: riddle.slice(0, 80), status: 'queued', at: Date.now() };
       const next = [entry, ...recent.filter((x) => x.id !== j.id)];
       setRecent(next);
@@ -259,11 +325,12 @@ export default function RiddleLab() {
         <h1 className="text-4xl font-light text-gray-900 mb-4">Riddle Lab: Test Your Own Riddle</h1>
         <div className="text-gray-700 space-y-3 mb-8">
           <p>
-            Submit a riddle and your intended answer (solution I). Claude Sonnet 5.5 fact-checks the real-world
-            facts your answer relies on. Claude Opus 5.5 solves the riddle without seeing your answer (solution II).
-            Then Claude Opus 5.5 scores each solution separately from 1 to 5 on how satisfying it is as a riddle
-            answer, how far it avoids being convoluted, and how tight its explanation is, without being told which
-            one is yours.
+            Submit a riddle and your intended answer (solution I). Claude Sonnet 5.5 fact-checks your answer, and
+            Claude Opus 5.5 solves the riddle without seeing it (solution II). Two Opus judges then grade both
+            solutions from 1 to 4 on how well they explain the riddle, seeing them in opposite orders and without
+            being told which is yours. Your <strong>stumper score</strong> is how much higher your solution was
+            graded, averaged over the two judges. A third Opus judge reads only your solution and grades its
+            narrative interest, elegance and accuracy.
           </p>
           <p className="text-sm text-gray-500">
             A job usually takes one to three minutes. You can leave this page: the link to your job keeps working,
@@ -312,6 +379,17 @@ export default function RiddleLab() {
                 rows={5}
                 required
                 className="mt-1 w-full border border-gray-300 rounded-lg p-3"
+              />
+            </label>
+            <label className="block">
+              <span className="font-medium text-gray-900">Leaderboard handle</span>{' '}
+              <span className="text-sm text-gray-500">(optional; leave blank to stay anonymous)</span>
+              <input
+                type="text"
+                value={handle}
+                onChange={(e) => setHandle(e.target.value)}
+                maxLength={MAX_HANDLE}
+                className="mt-1 w-full sm:w-80 block border border-gray-300 rounded-lg p-2"
               />
             </label>
             {formError && <p className="text-sm text-red-700">{formError}</p>}

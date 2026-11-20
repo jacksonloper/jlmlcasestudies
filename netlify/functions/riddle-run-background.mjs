@@ -3,7 +3,9 @@
 // It only acts on a row it can move from 'queued' to 'running', so calling it again, or
 // with someone else's id, never re-runs or re-bills a job.
 import { getDatabase } from '@netlify/database';
-import { factCheck, judge, solve } from '../lib/riddle-pipeline.mjs';
+import { factCheck, qualityJudge, solve, stumperJudge } from '../lib/riddle-pipeline.mjs';
+
+const ORDERS = ['riddler_first', 'solver_first'];
 
 export default async (req) => {
   const { sql } = getDatabase();
@@ -20,46 +22,55 @@ export default async (req) => {
     WHERE id = ${id}::uuid AND status = 'queued'
     RETURNING riddle, solution_1`;
   if (!rows.length) return;
-  const { riddle, solution_1: solution1 } = rows[0];
-
+  const { riddle, solution_1: riddler } = rows[0];
   const apiKey = process.env.OPENROUTER_KEY;
 
-  const save = async (column, result) => {
-    const json = JSON.stringify(result);
-    const cost = result.cost || 0;
-    // Column names cannot be parameters, so each stage has its own statement.
-    if (column === 'fact_check') {
-      await sql`UPDATE riddle_jobs SET fact_check = ${json}::jsonb, total_cost = total_cost + ${cost}, updated_at = now() WHERE id = ${id}::uuid`;
-    } else if (column === 'solver') {
-      await sql`UPDATE riddle_jobs SET solver = ${json}::jsonb, solution_2 = ${result.raw}, total_cost = total_cost + ${cost}, updated_at = now() WHERE id = ${id}::uuid`;
-    } else if (column === 'judge_1') {
-      await sql`UPDATE riddle_jobs SET judge_1 = ${json}::jsonb, total_cost = total_cost + ${cost}, updated_at = now() WHERE id = ${id}::uuid`;
-    } else if (column === 'judge_2') {
-      await sql`UPDATE riddle_jobs SET judge_2 = ${json}::jsonb, total_cost = total_cost + ${cost}, updated_at = now() WHERE id = ${id}::uuid`;
-    }
+  // Column names cannot be parameters, so each stage has its own statement.
+  const save = {
+    fact_check: (r) =>
+      sql`UPDATE riddle_jobs SET fact_check = ${JSON.stringify(r)}::jsonb, total_cost = total_cost + ${r.cost || 0}, updated_at = now() WHERE id = ${id}::uuid`,
+    solver: (r) =>
+      sql`UPDATE riddle_jobs SET solver = ${JSON.stringify(r)}::jsonb, solution_2 = ${r.raw ?? null}, total_cost = total_cost + ${r.cost || 0}, updated_at = now() WHERE id = ${id}::uuid`,
+    // Appending in one statement keeps the two parallel judges from overwriting each other.
+    stumper: (r) =>
+      sql`UPDATE riddle_jobs SET stumper_judges = stumper_judges || ${JSON.stringify([r])}::jsonb, total_cost = total_cost + ${r.cost || 0}, updated_at = now() WHERE id = ${id}::uuid`,
+    quality: (r) =>
+      sql`UPDATE riddle_jobs SET quality = ${JSON.stringify(r)}::jsonb,
+            narrative = ${r.scores?.narrative?.grade ?? null}, elegance = ${r.scores?.elegance?.grade ?? null},
+            accuracy = ${r.scores?.accuracy?.grade ?? null},
+            total_cost = total_cost + ${r.cost || 0}, updated_at = now() WHERE id = ${id}::uuid`,
   };
 
   // A failed stage is recorded in its own column, so the other stages still finish.
-  const stage = (column, run) =>
+  const stage = (name, run, extra = {}) =>
     run().then(
-      (result) => save(column, result),
+      async (result) => {
+        await save[name](result);
+        return result;
+      },
       async (e) => {
-        await save(column, { error: String(e?.message || e) });
+        await save[name]({ ...extra, error: String(e?.message || e) });
         throw e;
       },
     );
 
   try {
     if (!apiKey) throw new Error('OPENROUTER_KEY is not set for this deploy context');
-    // Fact check, blind solve and judging solution I are independent; judging solution II
-    // waits for the solver.
+    // The fact check, the blind solve and the quality judge are independent. The two stumper
+    // judges need solution II, so they start when the solver finishes, in parallel.
+    const stumper = stage('solver', () => solve({ riddle, apiKey })).then(async (sol) => {
+      const judged = await Promise.all(
+        ORDERS.map((order) =>
+          stage('stumper', () => stumperJudge({ riddle, riddler, solver: sol.raw, order, apiKey }), { order }),
+        ),
+      );
+      const score = judged.reduce((a, j) => a + (j.grade_riddler - j.grade_solver), 0) / judged.length;
+      await sql`UPDATE riddle_jobs SET stumper = ${score}, updated_at = now() WHERE id = ${id}::uuid`;
+    });
     const results = await Promise.allSettled([
-      stage('fact_check', () => factCheck({ riddle, solution: solution1, apiKey })),
-      stage('judge_1', () => judge({ riddle, solution: solution1, apiKey })),
-      stage('solver', () => solve({ riddle, apiKey })).then(async () => {
-        const [{ solution_2: solution2 }] = await sql`SELECT solution_2 FROM riddle_jobs WHERE id = ${id}::uuid`;
-        return stage('judge_2', () => judge({ riddle, solution: solution2, apiKey }));
-      }),
+      stage('fact_check', () => factCheck({ riddle, solution: riddler, apiKey })),
+      stage('quality', () => qualityJudge({ riddle, solution: riddler, apiKey })),
+      stumper,
     ]);
     const failed = results.filter((r) => r.status === 'rejected').map((r) => String(r.reason?.message || r.reason));
     if (failed.length) throw new Error(failed.join('; '));

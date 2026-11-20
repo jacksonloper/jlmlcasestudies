@@ -1,11 +1,13 @@
-// POST /api/riddle-jobs        {riddle, solution} -> {id}; queues a job and starts the background run.
+// POST /api/riddle-jobs        {riddle, solution, handle?} -> {id}; queues a job and starts the background run.
+//                              handle is how the submitter appears on the leaderboard; omit it to stay anonymous.
 // GET  /api/riddle-jobs/:id    -> the job's row (without the submitter hash), for polling.
 import { createHash } from 'node:crypto';
 import { getDatabase } from '@netlify/database';
-import { RUBRIC } from '../lib/riddle-pipeline.mjs';
+import { EXPLAIN_SCALE, QUALITY } from '../lib/riddle-pipeline.mjs';
 
 const MAX_RIDDLE = 2000;
 const MAX_SOLUTION = 3000;
+const MAX_HANDLE = 40;
 // Every job spends real OpenRouter credit, so cap how many can start.
 const PER_CLIENT_PER_HOUR = 5;
 const GLOBAL_PER_DAY = 60;
@@ -26,6 +28,10 @@ async function create(req, context, sql) {
   if (!riddle || !solution) return error(400, 'Both a riddle and your solution are required.');
   if (riddle.length > MAX_RIDDLE) return error(400, `Keep the riddle under ${MAX_RIDDLE} characters.`);
   if (solution.length > MAX_SOLUTION) return error(400, `Keep the solution under ${MAX_SOLUTION} characters.`);
+  if (body.handle != null && typeof body.handle !== 'string') return error(400, 'The handle must be text.');
+  // Collapse whitespace and drop control characters; an empty handle means anonymous.
+  const handle = (body.handle || '').replace(/\s+/g, ' ').replace(/\p{C}/gu, '').trim() || null;
+  if (handle && handle.length > MAX_HANDLE) return error(400, `Keep the handle under ${MAX_HANDLE} characters.`);
 
   const clientHash = createHash('sha256').update(String(context.ip || 'unknown')).digest('hex');
   const [{ mine, all }] = await sql`
@@ -37,8 +43,8 @@ async function create(req, context, sql) {
   if (Number(all) >= GLOBAL_PER_DAY) return error(429, 'The lab has reached its daily limit. Try again tomorrow.');
 
   const [{ id }] = await sql`
-    INSERT INTO riddle_jobs (riddle, solution_1, client_hash)
-    VALUES (${riddle}, ${solution}, ${clientHash})
+    INSERT INTO riddle_jobs (riddle, solution_1, handle, client_hash)
+    VALUES (${riddle}, ${solution}, ${handle}, ${clientHash})
     RETURNING id`;
 
   // Background functions answer 202 at once and keep running for up to 15 minutes.
@@ -59,11 +65,12 @@ async function create(req, context, sql) {
 async function read(id, sql) {
   if (!UUID.test(id)) return error(404, 'No such job.');
   const rows = await sql`
-    SELECT id, created_at, updated_at, finished_at, status, error, riddle, solution_1,
-           fact_check, solver, solution_2, judge_1, judge_2, total_cost
+    SELECT id, created_at, updated_at, finished_at, status, error, handle, riddle, solution_1,
+           fact_check, solver, solution_2, stumper_judges, stumper, quality, narrative, elegance, accuracy,
+           total_cost
     FROM riddle_jobs WHERE id = ${id}::uuid`;
   if (!rows.length) return error(404, 'No such job.');
-  return Response.json({ ...rows[0], rubric: RUBRIC }, { headers: { 'Cache-Control': 'no-store' } });
+  return Response.json({ ...rows[0], explain_scale: EXPLAIN_SCALE, quality_criteria: QUALITY }, { headers: { 'Cache-Control': 'no-store' } });
 }
 
 export default async (req, context) => {
