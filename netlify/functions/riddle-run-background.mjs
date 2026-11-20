@@ -3,7 +3,7 @@
 // It only acts on a row it can move from 'queued' to 'running', so calling it again, or
 // with someone else's id, never re-runs or re-bills a job.
 import { getDatabase } from '@netlify/database';
-import { factCheck, qualityJudge, solve, stumperJudge } from '../lib/riddle-pipeline.mjs';
+import { qualityJudge, solve, stumperJudge } from '../lib/riddle-pipeline.mjs';
 
 const ORDERS = ['riddler_first', 'solver_first'];
 
@@ -27,8 +27,6 @@ export default async (req) => {
 
   // Column names cannot be parameters, so each stage has its own statement.
   const save = {
-    fact_check: (r) =>
-      sql`UPDATE riddle_jobs SET fact_check = ${JSON.stringify(r)}::jsonb, total_cost = total_cost + ${r.cost || 0}, updated_at = now() WHERE id = ${id}::uuid`,
     solver: (r) =>
       sql`UPDATE riddle_jobs SET solver = ${JSON.stringify(r)}::jsonb, solution_2 = ${r.raw ?? null}, total_cost = total_cost + ${r.cost || 0}, updated_at = now() WHERE id = ${id}::uuid`,
     // Appending in one statement keeps the two parallel judges from overwriting each other.
@@ -56,7 +54,7 @@ export default async (req) => {
 
   try {
     if (!apiKey) throw new Error('OPENROUTER_KEY is not set for this deploy context');
-    // The fact check, the blind solve and the quality judge are independent. The two stumper
+    // The blind solve and the quality judge are independent. The two stumper
     // judges need solution II, so they start when the solver finishes, in parallel.
     const stumper = stage('solver', () => solve({ riddle, apiKey })).then(async (sol) => {
       const judged = await Promise.all(
@@ -68,7 +66,6 @@ export default async (req) => {
       await sql`UPDATE riddle_jobs SET stumper = ${score}, updated_at = now() WHERE id = ${id}::uuid`;
     });
     const results = await Promise.allSettled([
-      stage('fact_check', () => factCheck({ riddle, solution: riddler, apiKey })),
       stage('quality', () => qualityJudge({ riddle, solution: riddler, apiKey })),
       stumper,
     ]);

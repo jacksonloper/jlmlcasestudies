@@ -10,6 +10,7 @@ import Case4 from '@case4/Case4';
 import Case4Solutions from '@case4/Case4Solutions';
 import Case5 from '@case5/Case5';
 import RiddleLab from '@case5/RiddleLab';
+import RiddleLeaderboard from '@case5/RiddleLeaderboard';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/case4/solutions" element={<Case4Solutions />} />
         <Route path="/case5" element={<Case5 />} />
         <Route path="/case5/lab" element={<RiddleLab />} />
+        <Route path="/case5/leaderboard" element={<RiddleLeaderboard />} />
       </Routes>
     </Router>
   );

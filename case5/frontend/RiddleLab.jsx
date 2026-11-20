@@ -58,31 +58,6 @@ function Stage({ title, model, result, running, children }) {
   );
 }
 
-const VERDICT_STYLE = {
-  ACCURATE: 'bg-green-100 text-green-800',
-  MINOR_ISSUES: 'bg-yellow-100 text-yellow-800',
-  WRONG: 'bg-red-100 text-red-800',
-  NO_FACTUAL_CLAIMS: 'bg-gray-100 text-gray-600',
-};
-
-function FactCheck({ r }) {
-  return (
-    <div className="text-sm text-gray-700 space-y-2">
-      <span className={`text-xs font-medium px-2 py-1 rounded ${VERDICT_STYLE[r.verdict] || 'bg-gray-100'}`}>
-        {String(r.verdict || '').replace('_', ' ').toLowerCase()}
-      </span>
-      <p>{r.summary}</p>
-      {r.issues?.length > 0 && (
-        <ul className="list-disc pl-6 space-y-1">
-          {r.issues.map((x, i) => (
-            <li key={i}>{x}</li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
-}
-
 const signed = (x) => (x > 0 ? `+${x}` : `${x}`);
 
 function GradeRow({ label, grade, reason }) {
@@ -126,7 +101,7 @@ function Stumper({ job, running }) {
   return (
     <div className="border border-gray-200 rounded-lg p-4">
       <div className="flex flex-wrap justify-between items-center gap-2 mb-2">
-        <h3 className="font-medium text-gray-900">3. Stumper: both solutions graded 1–4, two judges</h3>
+        <h3 className="font-medium text-gray-900">2. Stumper: both solutions graded 1–4, two judges</h3>
         <span className="flex items-center gap-2">
           <span className="text-xs text-gray-500">Claude Opus 5.5, low effort, ×2</span>
           <StageBadge result={done ? {} : failed ? { error: true } : null} running={running} />
@@ -156,7 +131,7 @@ function Stumper({ job, running }) {
 function Quality({ job, running }) {
   const q = job.quality;
   return (
-    <Stage title="4. Quality of solution I: narrative, elegance, accuracy" model="Claude Opus 5.5, low effort" result={q} running={running}>
+    <Stage title="3. Quality of solution I: narrative, elegance, accuracy" model="Claude Opus 5.5, low effort" result={q} running={running}>
       <table className="w-full text-left text-sm text-gray-700">
         <tbody>
           {(job.quality_criteria || []).map((c) => (
@@ -195,10 +170,7 @@ function Job({ job }) {
         <p className="text-sm text-gray-700 whitespace-pre-line">{job.solution_1}</p>
       </div>
 
-      <Stage title="1. Fact check of solution I" model="Claude Sonnet 5.5, low effort" result={job.fact_check} running={running}>
-        <FactCheck r={job.fact_check || {}} />
-      </Stage>
-      <Stage title="2. Blind solve → solution II" model="Claude Opus 5.5, low effort" result={job.solver} running={running}>
+      <Stage title="1. Blind solve → solution II" model="Claude Opus 5.5, low effort" result={job.solver} running={running}>
         <p className="text-sm text-gray-700 whitespace-pre-line">{(job.solution_2 || '').replaceAll('**', '')}</p>
       </Stage>
       <Stumper job={job} running={running} />
@@ -322,11 +294,16 @@ export default function RiddleLab() {
         <Link to="/case5" className="text-blue-600 hover:text-blue-800 mb-8 inline-block">
           ← Back to Case Study 5
         </Link>
-        <h1 className="text-4xl font-light text-gray-900 mb-4">Riddle Lab: Test Your Own Riddle</h1>
+        <div className="flex flex-wrap items-baseline justify-between gap-2 mb-4">
+          <h1 className="text-4xl font-light text-gray-900">Riddle Lab: Test Your Own Riddle</h1>
+          <Link to="/case5/leaderboard" className="text-blue-600 hover:text-blue-800 font-medium">
+            Leaderboard →
+          </Link>
+        </div>
         <div className="text-gray-700 space-y-3 mb-8">
           <p>
-            Submit a riddle and your intended answer (solution I). Claude Sonnet 5.5 fact-checks your answer, and
-            Claude Opus 5.5 solves the riddle without seeing it (solution II). Two Opus judges then grade both
+            Submit a riddle and your intended answer (solution I). Claude Opus 5.5 solves the riddle without seeing
+            your answer (solution II). Two Opus judges then grade both
             solutions from 1 to 4 on how well they explain the riddle, seeing them in opposite orders and without
             being told which is yours. Your <strong>stumper score</strong> is how much higher your solution was
             graded, averaged over the two judges. A third Opus judge reads only your solution and grades its

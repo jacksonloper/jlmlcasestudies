@@ -1,19 +1,17 @@
 // Case Study 5 riddle lab: prompts and OpenRouter calls for one submitted riddle.
 //
 // Pipeline for a (riddle, solution I) pair:
-//   1. Claude Sonnet 5.5 fact-checks solution I.
-//   2. Claude Opus 5.5 solves the riddle without seeing solution I; its answer is solution II.
-//   3. Stumper: two Claude Opus 5.5 judges each see both solutions, in opposite A/B orders to
+//   1. Claude Opus 5.5 solves the riddle without seeing solution I; its answer is solution II.
+//   2. Stumper: two Claude Opus 5.5 judges each see both solutions, in opposite A/B orders to
 //      cancel position bias, and grade each one 1-4 on how well it explains the riddle.
 //      Stumper = mean over the two judges of (grade for solution I - grade for solution II).
-//   4. Quality: one Claude Opus 5.5 judge sees only solution I and grades its narrative interest,
+//   3. Quality: one Claude Opus 5.5 judge sees only solution I and grades its narrative interest,
 //      elegance and accuracy 1-4.
 // Unlike the case study's sweep.py, which asks for a single A/B pick, judges here give grades,
 // and no judge is told which solution came from the riddle's author.
 
 const URL = 'https://openrouter.ai/api/v1/chat/completions';
 export const OPUS = 'anthropic/claude-opus-5.5';
-export const SONNET = 'anthropic/claude-sonnet-5.5';
 
 export const EXPLAIN_SCALE = [
   { grade: 1, text: "Contains fabricated details or doesn't explain the riddle at all." },
@@ -39,16 +37,6 @@ export const QUALITY = [
     help: '1 = rests on false or invented real-world facts; 4 = every claim about the real world is correct.',
   },
 ];
-
-export const FACT_PROMPT = `Below is a riddle and a proposed solution. The solution may rely on real-world facts or mechanisms (laws, regulations, rules, technical properties, procedures, history).
-
-RIDDLE:
-{riddle}
-
-PROPOSED SOLUTION:
-{solution}
-
-Check only whether the real-world facts the solution relies on are true. Do not judge how well it solves the riddle. Invented story details about fictional people are fine; claims about how the real world works are what you are checking.`;
 
 export const SOLVE_PROMPT = `Solve this riddle. The intended answer may rely on hidden facts not stated in the riddle that explain every odd detail; you may supply such facts too. A judge will grade your answer on how completely and naturally it explains the riddle. Reply with your answer and a short explanation (at most four sentences).
 
@@ -80,17 +68,6 @@ RIDDLE:
 
 ANSWER:
 {solution}`;
-
-const FACT_SCHEMA = {
-  type: 'object',
-  properties: {
-    verdict: { type: 'string', enum: ['ACCURATE', 'MINOR_ISSUES', 'WRONG', 'NO_FACTUAL_CLAIMS'] },
-    issues: { type: 'array', items: { type: 'string' } },
-    summary: { type: 'string' },
-  },
-  required: ['verdict', 'issues', 'summary'],
-  additionalProperties: false,
-};
 
 const GRADE = { type: 'integer', enum: [1, 2, 3, 4] };
 
@@ -175,18 +152,6 @@ const grade = (x) => {
   if (![1, 2, 3, 4].includes(g)) throw new Error(`Judge gave an invalid grade: ${x}`);
   return g;
 };
-
-export async function factCheck({ riddle, solution, apiKey }) {
-  const r = await chat({
-    model: SONNET,
-    prompt: fill(FACT_PROMPT, { riddle, solution }),
-    maxTokens: 4000,
-    effort: 'low',
-    schema: FACT_SCHEMA,
-    apiKey,
-  });
-  return { ...r, ...parseJson(r.raw) };
-}
 
 export async function solve({ riddle, apiKey }) {
   return chat({ model: OPUS, prompt: fill(SOLVE_PROMPT, { riddle }), maxTokens: 4000, effort: 'low', apiKey });

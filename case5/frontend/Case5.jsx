@@ -188,7 +188,11 @@ export default function Case5() {
           <Link to="/case5/lab" className="text-blue-600 hover:text-blue-800 font-medium">
             Try it in the Riddle Lab
           </Link>
-          : Claude fact-checks your answer, Opus tries to solve it blind, and a judge scores both answers.
+          : Opus tries to solve it blind, and judges grade how badly your riddle stumped it. See the{' '}
+          <Link to="/case5/leaderboard" className="text-blue-600 hover:text-blue-800 font-medium">
+            leaderboard
+          </Link>
+          .
         </p>
 
         <section className="mb-10">

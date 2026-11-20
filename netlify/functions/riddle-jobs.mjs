@@ -66,7 +66,7 @@ async function read(id, sql) {
   if (!UUID.test(id)) return error(404, 'No such job.');
   const rows = await sql`
     SELECT id, created_at, updated_at, finished_at, status, error, handle, riddle, solution_1,
-           fact_check, solver, solution_2, stumper_judges, stumper, quality, narrative, elegance, accuracy,
+           solver, solution_2, stumper_judges, stumper, quality, narrative, elegance, accuracy,
            total_cost
     FROM riddle_jobs WHERE id = ${id}::uuid`;
   if (!rows.length) return error(404, 'No such job.');
