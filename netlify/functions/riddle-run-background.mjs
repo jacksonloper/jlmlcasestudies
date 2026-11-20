@@ -6,6 +6,8 @@ import { getDatabase } from '@netlify/database';
 import { qualityJudge, solve, stumperJudge } from '../lib/riddle-pipeline.mjs';
 
 const ORDERS = ['riddler_first', 'solver_first'];
+// Grades run 1-4, so solution I minus solution II is at least 1 - 4.
+const WORST_STUMPER = -3;
 
 export default async (req) => {
   const { sql } = getDatabase();
@@ -56,15 +58,23 @@ export default async (req) => {
     if (!apiKey) throw new Error('OPENROUTER_KEY is not set for this deploy context');
     // The blind solve and the quality judge are independent. The two stumper
     // judges need solution II, so they start when the solver finishes, in parallel.
-    const stumper = stage('solver', () => solve({ riddle, apiKey })).then(async (sol) => {
-      const judged = await Promise.all(
-        ORDERS.map((order) =>
-          stage('stumper', () => stumperJudge({ riddle, riddler, solver: sol.raw, order, apiKey }), { order }),
-        ),
-      );
-      const score = judged.reduce((a, j) => a + (j.grade_riddler - j.grade_solver), 0) / judged.length;
-      await sql`UPDATE riddle_jobs SET stumper = ${score}, updated_at = now() WHERE id = ${id}::uuid`;
-    });
+    const stumper = stage('solver', () => solve({ riddle, apiKey })).then(
+      async (sol) => {
+        const judged = await Promise.all(
+          ORDERS.map((order) =>
+            stage('stumper', () => stumperJudge({ riddle, riddler, solver: sol.raw, order, apiKey }), { order }),
+          ),
+        );
+        const score = judged.reduce((a, j) => a + (j.grade_riddler - j.grade_solver), 0) / judged.length;
+        await sql`UPDATE riddle_jobs SET stumper = ${score}, updated_at = now() WHERE id = ${id}::uuid`;
+      },
+      // A solver failure is not the riddle's achievement: it goes on the leaderboard with the
+      // worst possible stumper score, -3. (A failing stumper judge leaves the score empty.)
+      async (e) => {
+        await sql`UPDATE riddle_jobs SET stumper = ${WORST_STUMPER}, updated_at = now() WHERE id = ${id}::uuid`;
+        throw e;
+      },
+    );
     const results = await Promise.allSettled([
       stage('quality', () => qualityJudge({ riddle, solution: riddler, apiKey })),
       stumper,

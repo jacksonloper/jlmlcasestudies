@@ -104,7 +104,7 @@ function Stumper({ job, running }) {
         <h3 className="font-medium text-gray-900">2. Stumper: both solutions graded 1–4, two judges</h3>
         <span className="flex items-center gap-2">
           <span className="text-xs text-gray-500">Claude Opus 5.5, low effort, ×2</span>
-          <StageBadge result={done ? {} : failed ? { error: true } : null} running={running} />
+          <StageBadge result={failed ? { error: true } : done ? {} : null} running={running} />
         </span>
       </div>
       <p className="text-xs text-gray-500 mb-3">
@@ -115,7 +115,9 @@ function Stumper({ job, running }) {
         <p className="text-lg font-medium text-gray-900 mb-3">
           Stumper score: {signed(Number(job.stumper))}{' '}
           <span className="text-sm font-normal text-gray-600">
-            (your grade minus Opus’s, averaged over the two judges; range −3 to +3)
+            {job.solver?.error
+              ? '(Opus failed to produce an answer, so this counts as the worst possible score)'
+              : '(your grade minus Opus’s, averaged over the two judges; range −3 to +3)'}
           </span>
         </p>
       )}

@@ -126,7 +126,17 @@ async function chat({ model, prompt, maxTokens, effort, schema, apiKey }) {
         signal: AbortSignal.timeout(240_000),
       });
       const text = await res.text();
-      if (!res.ok) throw new Error(`OpenRouter ${res.status}: ${text.slice(0, 300)}`);
+      if (!res.ok) {
+        // Keep only the error message: the full body names the OpenRouter account, and job
+        // rows (errors included) are public.
+        let message = 'request failed';
+        try {
+          message = String(JSON.parse(text).error?.message || message);
+        } catch {
+          // not JSON
+        }
+        throw new Error(`OpenRouter ${res.status}: ${message.slice(0, 300)}`);
+      }
       const j = JSON.parse(text);
       const raw = (j.choices?.[0]?.message?.content || '').trim();
       if (!raw) throw new Error('OpenRouter returned an empty answer');

@@ -17,8 +17,18 @@ function Entry({ e, rank }) {
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <span className="font-medium text-gray-900 break-words">{e.handle || 'anonymous'}</span>
-            <span className={`text-sm font-medium px-2 py-1 rounded ${stumperStyle(e.stumper)}`} title="Stumper score">
-              Stumper {signed(e.stumper)}
+            <span className="flex items-center gap-2">
+              {e.solver_failed && (
+                <span
+                  className="text-xs px-2 py-1 rounded bg-gray-100 text-gray-600"
+                  title="Opus failed to produce an answer, so the riddle gets the worst possible stumper score."
+                >
+                  solver failed
+                </span>
+              )}
+              <span className={`text-sm font-medium px-2 py-1 rounded ${stumperStyle(e.stumper)}`} title="Stumper score">
+                Stumper {signed(e.stumper)}
+              </span>
             </span>
           </div>
           <p className="mt-2 text-gray-800 font-serif whitespace-pre-line line-clamp-3">{e.riddle}</p>
@@ -63,7 +73,8 @@ export default function RiddleLeaderboard() {
           <p>
             Riddles are ranked by <strong>stumper score</strong>: how much higher two Claude Opus 5.5 judges graded
             the author’s answer than Opus’s own blind attempt, on a 1–4 scale, averaged over the two judges (−3 to
-            +3). Ties are broken by the narrative, elegance and accuracy grades, then by who submitted first.
+            +3). If Opus fails to produce an answer at all, the riddle is listed with the worst score, −3. Ties are
+            broken by the narrative, elegance and accuracy grades, then by who submitted first.
           </p>
           <p className="text-sm text-gray-500">
             Scores come from single model runs and are noisy: the same riddle can score differently if submitted
