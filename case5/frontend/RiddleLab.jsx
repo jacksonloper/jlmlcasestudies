@@ -191,9 +191,16 @@ function Job({ job, onRetry, retrying, retryError }) {
       <Stage title="1. Blind solve → solution II" model="Claude Opus 5.5, low effort" result={job.solver} running={running}>
         {job.solver?.out_of_budget && (
           <p className="text-xs text-amber-800 bg-amber-50 rounded p-2 mb-2">
-            Opus used up its whole thinking budget without answering, so it was asked once more, with minimal thinking
-            and its notes so far, for its best guess. That guess is solution II.
+            Opus used up its whole thinking budget without answering, so it was handed back all of its thinking and
+            asked for its best guess. That guess is solution II.
           </p>
+        )}
+        {job.solver?.first_attempt?.thinking_summary && (
+          <details className="text-xs text-gray-600 mb-2">
+            <summary className="cursor-pointer">Summary of the thinking it ran out on</summary>
+            <p className="whitespace-pre-line mt-1">{job.solver.first_attempt.thinking_summary}</p>
+            <p className="mt-1 text-gray-500">Anthropic does not return the thinking itself, only this summary.</p>
+          </details>
         )}
         <p className="text-sm text-gray-700 whitespace-pre-line">{(job.solution_2 || '').replaceAll('**', '')}</p>
       </Stage>

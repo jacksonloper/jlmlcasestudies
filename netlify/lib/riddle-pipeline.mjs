@@ -2,8 +2,8 @@
 //
 // Pipeline for a (riddle, solution I) pair:
 //   1. Claude Opus 5.5 solves the riddle without seeing solution I; its answer is solution II.
-//      If it uses up its token budget thinking and never answers, it is asked once more, with
-//      minimal thinking and its notes so far, for a best guess, which is judged like any answer.
+//      If it uses up its token budget thinking and never answers, its full (encrypted) thinking
+//      is passed back to it and it is asked for a best guess, which is judged like any answer.
 //   2. Stumper: two Claude Opus 5.5 judges each see both solutions, in opposite A/B orders to
 //      cancel position bias, and grade each one 1-4 on how well it explains the riddle.
 //      Stumper = mean over the two judges of (grade for solution I - grade for solution II).
@@ -44,14 +44,9 @@ export const SOLVE_PROMPT = `Solve this riddle. The intended answer may rely on 
 
 {riddle}`;
 
-// Used only when the solve call spent its whole budget thinking and wrote no answer.
-export const BEST_GUESS_PROMPT = `You were asked to solve the riddle below and ran out of time before answering. Your working notes so far are below; they are cut off. You cannot work on it any further. Give your best answer now, in at most four sentences. The intended answer may rely on hidden facts not stated in the riddle that explain every odd detail; you may supply such facts too. If you did not solve it, give your best guess and say briefly that it is a guess.
-
-RIDDLE:
-{riddle}
-
-YOUR WORKING NOTES (cut off):
-{notes}`;
+// Sent as a follow-up turn only when the solve call spent its whole budget thinking and wrote no
+// answer. The model sees all of its earlier thinking, passed back in the conversation.
+export const BEST_GUESS_PROMPT = `You ran out of time before answering. You cannot work on it any further. Give your best answer now, in at most four sentences. If you did not finish, give your best guess, say briefly that it is a guess, and say how far you got.`;
 
 export const STUMPER_PROMPT = `Below is a riddle and two proposed answers, A and B. An answer may add hidden facts that the riddle does not state; that is allowed. Grade EACH answer on this scale:
 
@@ -121,13 +116,15 @@ class CallError extends Error {
   }
 }
 
-// One call to OpenRouter. Returns the answer text (possibly empty), why the model stopped, its
-// (summarized) reasoning and the cost. Throws CallError only when the request itself failed.
+// One call to OpenRouter. Returns the answer text (possibly empty), why the model stopped, the
+// readable summary of its thinking, its reasoning_details (which carry the full thinking,
+// encrypted, so it can be passed back to the model) and the cost. Throws CallError only when
+// the request itself failed. `messages` overrides the single user turn built from `prompt`.
 // Opus 5.5 on OpenRouter cannot have thinking turned off; 'minimal' is the least it allows.
-async function chat({ model, prompt, maxTokens, effort, schema, apiKey }) {
+async function chat({ model, prompt, messages, maxTokens, effort, schema, apiKey }) {
   const body = {
     model,
-    messages: [{ role: 'user', content: prompt }],
+    messages: messages || [{ role: 'user', content: prompt }],
     max_tokens: maxTokens,
     reasoning: { effort },
   };
@@ -168,13 +165,14 @@ async function chat({ model, prompt, maxTokens, effort, schema, apiKey }) {
     raw: (choice?.message?.content || '').trim(),
     finish_reason: choice?.finish_reason ?? null,
     reasoning: choice?.message?.reasoning || '',
+    reasoning_details: choice?.message?.reasoning_details || [],
     cost,
   };
 }
 
-// For the judges: an answer is required, and the reasoning text is not kept.
+// For the judges: an answer is required, and the reasoning is not kept.
 async function judgeCall(args, parse) {
-  const { reasoning, ...r } = await chat(args);
+  const { reasoning, reasoning_details, ...r } = await chat(args);
   try {
     if (!r.raw) throw new Error(`OpenRouter returned an empty answer (stopped: ${r.finish_reason})`);
     return { ...r, ...parse(r.raw) };
@@ -198,22 +196,24 @@ const grade = (x) => {
 };
 
 export async function solve({ riddle, apiKey }) {
-  const { reasoning, ...first } = await chat({
-    model: OPUS,
-    prompt: fill(SOLVE_PROMPT, { riddle }),
-    maxTokens: 4000,
-    effort: 'low',
-    apiKey,
-  });
+  const prompt = fill(SOLVE_PROMPT, { riddle });
+  const { reasoning, reasoning_details, ...first } = await chat({ model: OPUS, prompt, maxTokens: 4000, effort: 'low', apiKey });
   if (first.raw) return first;
 
-  // It spent the whole budget thinking and wrote nothing. Ask once more, with minimal thinking
-  // and plenty of room left for the answer, for a best guess built on its notes so far.
-  // (Tested on a riddle that exhausts the budget: about 150 thinking tokens, then an answer.)
-  const notes = reasoning.trim() ? reasoning.slice(-8000) : '(none)';
-  const { reasoning: _, ...guess } = await chat({
+  // It spent the whole budget thinking and wrote nothing. Continue the conversation: pass its
+  // thinking back unchanged (reasoning_details holds the full thinking, encrypted; Anthropic
+  // decrypts it, so the model rereads all of it, not just the summary we can see), then ask for
+  // a best guess, with minimal further thinking and room to answer. Tested on a riddle that
+  // exhausts the budget: the follow-up read all ~4,000 thinking tokens as input and said
+  // exactly where its working had stopped.
+  const { reasoning: _, reasoning_details: __, ...guess } = await chat({
     model: OPUS,
-    prompt: fill(BEST_GUESS_PROMPT, { riddle, notes }),
+    prompt: BEST_GUESS_PROMPT,
+    messages: [
+      { role: 'user', content: prompt },
+      { role: 'assistant', content: '', reasoning_details },
+      { role: 'user', content: BEST_GUESS_PROMPT },
+    ],
     maxTokens: 2000,
     effort: 'minimal',
     apiKey,
@@ -226,7 +226,14 @@ export async function solve({ riddle, apiKey }) {
     ...guess,
     cost,
     out_of_budget: true,
-    first_attempt: { prompt: first.prompt, effort: first.effort, finish_reason: first.finish_reason, cost: first.cost },
+    // The full thinking is never readable by us; this is Anthropic's summary of it.
+    first_attempt: {
+      prompt: first.prompt,
+      effort: first.effort,
+      finish_reason: first.finish_reason,
+      cost: first.cost,
+      thinking_summary: reasoning,
+    },
   };
 }
 
