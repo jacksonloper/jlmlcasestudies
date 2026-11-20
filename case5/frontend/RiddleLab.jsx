@@ -149,7 +149,7 @@ function Quality({ job, running }) {
   );
 }
 
-function Job({ job }) {
+function Job({ job, onRetry, retrying, retryError }) {
   const running = job.status === 'running' || job.status === 'queued';
   return (
     <div className="space-y-4">
@@ -163,7 +163,22 @@ function Job({ job }) {
         <span>Submitted {new Date(job.created_at).toLocaleString()}</span>
         <span>Spent so far: {money(job.total_cost)}</span>
       </div>
-      {job.error && <p className="text-sm text-red-700">{job.error}</p>}
+      {job.status === 'error' && (
+        <div className="border border-red-200 bg-red-50 rounded-lg p-4 text-sm">
+          <p className="text-red-800">{job.error || 'The job failed.'}</p>
+          <p className="text-gray-600 mt-1">
+            Retrying keeps the stages that finished and runs only the ones that failed.
+          </p>
+          <button
+            onClick={onRetry}
+            disabled={retrying}
+            className="mt-3 px-3 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
+          >
+            {retrying ? 'Retrying…' : 'Retry'}
+          </button>
+          {retryError && <p className="text-red-700 mt-2">{retryError}</p>}
+        </div>
+      )}
 
       <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
         <h3 className="font-medium text-gray-900 mb-2">Riddle</h3>
@@ -200,6 +215,10 @@ export default function RiddleLab() {
   const [recent, setRecent] = useState(loadRecent);
   const [notifyState, setNotifyState] = useState(() => ('Notification' in window ? Notification.permission : 'unsupported'));
   const lastStatus = useRef(null);
+  // Bumped by a retry to restart polling for the same job.
+  const [runKey, setRunKey] = useState(0);
+  const [retrying, setRetrying] = useState(false);
+  const [retryError, setRetryError] = useState(null);
 
   const poll = useCallback(async (id) => {
     const res = await fetch(`${API}/${id}`);
@@ -245,7 +264,23 @@ export default function RiddleLab() {
       stopped = true;
       clearTimeout(timer);
     };
-  }, [jobId, poll]);
+  }, [jobId, poll, runKey]);
+
+  const retry = async () => {
+    setRetrying(true);
+    setRetryError(null);
+    try {
+      const res = await fetch(`${API}/${jobId}/retry`, { method: 'POST' });
+      const j = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(j.error || `Server answered ${res.status}`);
+      document.title = 'Riddle Lab';
+      setRunKey((k) => k + 1);
+    } catch (e) {
+      setRetryError(e.message);
+    } finally {
+      setRetrying(false);
+    }
+  };
 
   const askNotify = async () => {
     try {
@@ -334,7 +369,7 @@ export default function RiddleLab() {
               </p>
             )}
             {loadError && !job && <p className="text-sm text-red-700">{loadError}</p>}
-            {job ? <Job job={job} /> : !loadError && <p className="text-gray-500">Loading…</p>}
+            {job ? <Job job={job} onRetry={retry} retrying={retrying} retryError={retryError} /> : !loadError && <p className="text-gray-500">Loading…</p>}
           </section>
         ) : (
           <form onSubmit={submit} className="space-y-4 mb-10">

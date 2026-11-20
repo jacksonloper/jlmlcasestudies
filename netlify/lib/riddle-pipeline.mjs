@@ -112,41 +112,33 @@ async function chat({ model, prompt, maxTokens, effort, schema, apiKey }) {
   if (schema) {
     body.response_format = { type: 'json_schema', json_schema: { name: 'result', strict: true, schema } };
   }
-  let lastError;
-  for (let attempt = 0; attempt < 3; attempt++) {
+  // One attempt only: a failed stage is shown to the user, who can retry the job by hand.
+  const res = await fetch(URL, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+      'X-Title': 'jlmlcasestudies riddle lab',
+    },
+    body: JSON.stringify(body),
+    signal: AbortSignal.timeout(240_000),
+  });
+  const text = await res.text();
+  if (!res.ok) {
+    // Keep only the error message: the full body names the OpenRouter account, and job
+    // rows (errors included) are public.
+    let message = 'request failed';
     try {
-      const res = await fetch(URL, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-          'X-Title': 'jlmlcasestudies riddle lab',
-        },
-        body: JSON.stringify(body),
-        signal: AbortSignal.timeout(240_000),
-      });
-      const text = await res.text();
-      if (!res.ok) {
-        // Keep only the error message: the full body names the OpenRouter account, and job
-        // rows (errors included) are public.
-        let message = 'request failed';
-        try {
-          message = String(JSON.parse(text).error?.message || message);
-        } catch {
-          // not JSON
-        }
-        throw new Error(`OpenRouter ${res.status}: ${message.slice(0, 300)}`);
-      }
-      const j = JSON.parse(text);
-      const raw = (j.choices?.[0]?.message?.content || '').trim();
-      if (!raw) throw new Error('OpenRouter returned an empty answer');
-      return { model, effort, prompt, raw, cost: Number(j.usage?.cost) || 0 };
-    } catch (e) {
-      lastError = e;
-      await new Promise((r) => setTimeout(r, 3000 * (attempt + 1)));
+      message = String(JSON.parse(text).error?.message || message);
+    } catch {
+      // not JSON
     }
+    throw new Error(`OpenRouter ${res.status}: ${message.slice(0, 300)}`);
   }
-  throw lastError;
+  const j = JSON.parse(text);
+  const raw = (j.choices?.[0]?.message?.content || '').trim();
+  if (!raw) throw new Error('OpenRouter returned an empty answer');
+  return { model, effort, prompt, raw, cost: Number(j.usage?.cost) || 0 };
 }
 
 // Structured outputs should give clean JSON; tolerate a fenced or prefixed answer anyway.

@@ -1,6 +1,7 @@
 // POST /api/riddle-jobs        {riddle, solution, handle?} -> {id}; queues a job and starts the background run.
 //                              handle is how the submitter appears on the leaderboard; omit it to stay anonymous.
 // GET  /api/riddle-jobs/:id    -> the job's row (without the submitter hash), for polling.
+// POST /api/riddle-jobs/:id/retry -> re-queues a job that ended in 'error'; only failed stages run again.
 import { createHash } from 'node:crypto';
 import { getDatabase } from '@netlify/database';
 import { EXPLAIN_SCALE, QUALITY } from '../lib/riddle-pipeline.mjs';
@@ -11,6 +12,10 @@ const MAX_HANDLE = 40;
 // Every job spends real OpenRouter credit, so cap how many can start.
 const PER_CLIENT_PER_HOUR = 5;
 const GLOBAL_PER_DAY = 60;
+
+// Background functions are killed after 15 minutes, and every stage refreshes updated_at, so a
+// job that has not moved for longer than this has died without recording why.
+const STALE_MINUTES = 16;
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -47,7 +52,12 @@ async function create(req, context, sql) {
     VALUES (${riddle}, ${solution}, ${handle}, ${clientHash})
     RETURNING id`;
 
-  // Background functions answer 202 at once and keep running for up to 15 minutes.
+  if (!(await start(id, req, sql))) return error(502, 'The job was saved but could not be started.');
+  return Response.json({ id }, { status: 201 });
+}
+
+// Background functions answer 202 at once and keep running for up to 15 minutes.
+async function start(id, req, sql) {
   try {
     const res = await fetch(new URL('/.netlify/functions/riddle-run-background', req.url), {
       method: 'POST',
@@ -55,15 +65,32 @@ async function create(req, context, sql) {
       body: JSON.stringify({ id }),
     });
     if (!res.ok) throw new Error(`background function answered ${res.status}`);
+    return true;
   } catch (e) {
-    await sql`UPDATE riddle_jobs SET status = 'error', error = ${`Could not start: ${e.message}`}, finished_at = now() WHERE id = ${id}::uuid`;
-    return error(502, 'The job was saved but could not be started.');
+    await sql`UPDATE riddle_jobs SET status = 'error', error = ${`Could not start: ${e.message}`}, finished_at = now(), updated_at = now() WHERE id = ${id}::uuid`;
+    return false;
   }
-  return Response.json({ id }, { status: 201 });
+}
+
+async function retry(id, req, sql) {
+  if (!UUID.test(id)) return error(404, 'No such job.');
+  const rows = await sql`
+    UPDATE riddle_jobs SET status = 'queued', error = NULL, finished_at = NULL, updated_at = now()
+    WHERE id = ${id}::uuid AND status = 'error'
+    RETURNING id`;
+  if (!rows.length) return error(409, 'Only a job that ended in an error can be retried.');
+  if (!(await start(id, req, sql))) return error(502, 'The job could not be restarted.');
+  return Response.json({ id }, { status: 202 });
 }
 
 async function read(id, sql) {
   if (!UUID.test(id)) return error(404, 'No such job.');
+  await sql`
+    UPDATE riddle_jobs
+    SET status = 'error', error = 'The job stopped responding and timed out. You can retry it.',
+        finished_at = now(), updated_at = now()
+    WHERE id = ${id}::uuid AND status IN ('queued', 'running')
+      AND updated_at < now() - make_interval(mins => ${STALE_MINUTES})`;
   const rows = await sql`
     SELECT id, created_at, updated_at, finished_at, status, error, handle, riddle, solution_1,
            solver, solution_2, stumper_judges, stumper, quality, narrative, elegance, accuracy,
@@ -76,10 +103,11 @@ async function read(id, sql) {
 export default async (req, context) => {
   const { sql } = getDatabase();
   // Read the id from the path itself; context.params is not filled for every route shape.
-  const id = new URL(req.url).pathname.replace(/^\/api\/riddle-jobs\/?/, '').replace(/\/$/, '');
+  const [id, action] = new URL(req.url).pathname.replace(/^\/api\/riddle-jobs\/?/, '').replace(/\/$/, '').split('/');
   if (req.method === 'POST' && !id) return create(req, context, sql);
-  if (req.method === 'GET' && id) return read(id, sql);
+  if (req.method === 'GET' && id && !action) return read(id, sql);
+  if (req.method === 'POST' && id && action === 'retry') return retry(id, req, sql);
   return error(405, 'Method not allowed.');
 };
 
-export const config = { path: ['/api/riddle-jobs', '/api/riddle-jobs/:id'] };
+export const config = { path: ['/api/riddle-jobs', '/api/riddle-jobs/:id', '/api/riddle-jobs/:id/retry'] };
