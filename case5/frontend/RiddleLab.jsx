@@ -253,8 +253,10 @@ export default function RiddleLab() {
   const [retrying, setRetrying] = useState(false);
   const [retryError, setRetryError] = useState(null);
 
-  const poll = useCallback(async (id) => {
-    const res = await fetch(`${API}/${id}`);
+  // After a retry, poll a new URL: the CDN may still hold the failed job's cached copy for a
+  // few seconds while the purge spreads.
+  const poll = useCallback(async (id, run) => {
+    const res = await fetch(run ? `${API}/${id}?run=${run}` : `${API}/${id}`);
     if (!res.ok) throw new Error(res.status === 404 ? 'No job with that id.' : `Server answered ${res.status}`);
     return res.json();
   }, []);
@@ -270,7 +272,7 @@ export default function RiddleLab() {
     setLoadError(null);
     const tick = async () => {
       try {
-        const j = await poll(jobId);
+        const j = await poll(jobId, runKey);
         if (stopped) return;
         setJob(j);
         const finished = j.status === 'done' || j.status === 'error';
