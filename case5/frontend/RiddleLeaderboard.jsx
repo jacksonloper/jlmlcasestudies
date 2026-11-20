@@ -18,12 +18,12 @@ function Entry({ e, rank }) {
           <div className="flex flex-wrap items-center justify-between gap-2">
             <span className="font-medium text-gray-900 break-words">{e.handle || 'anonymous'}</span>
             <span className="flex items-center gap-2">
-              {e.solver_failed && (
+              {e.out_of_budget && (
                 <span
-                  className="text-xs px-2 py-1 rounded bg-gray-100 text-gray-600"
-                  title="Opus failed to produce an answer, so the riddle gets the worst possible stumper score."
+                  className="text-xs px-2 py-1 rounded bg-amber-50 text-amber-800"
+                  title="Opus used up its thinking budget without answering; solution II is its forced best guess."
                 >
-                  solver failed
+                  Opus ran out of budget
                 </span>
               )}
               <span className={`text-sm font-medium px-2 py-1 rounded ${stumperStyle(e.stumper)}`} title="Stumper score">
@@ -73,7 +73,8 @@ export default function RiddleLeaderboard() {
           <p>
             Riddles are ranked by <strong>stumper score</strong>: how much higher two Claude Opus 5.5 judges graded
             the author’s answer than Opus’s own blind attempt, on a 1–4 scale, averaged over the two judges (−3 to
-            +3). If Opus fails to produce an answer at all, the riddle is listed with the worst score, −3. Ties are
+            +3). If Opus runs out of thinking budget, its forced best guess is judged instead. Jobs that failed are
+            not listed until they are retried successfully. Ties are
             broken by the narrative, elegance and accuracy grades, then by who submitted first.
           </p>
           <p className="text-sm text-gray-500">

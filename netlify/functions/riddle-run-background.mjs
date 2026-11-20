@@ -6,12 +6,15 @@
 // Each model call is tried once. A job with a failed stage ends as 'error', and the user can
 // retry it by hand (POST /api/riddle-jobs/:id/retry), which re-queues it. On a re-run, stages
 // that already succeeded are kept and only the failed ones run again.
+//
+// Every call's cost, failed calls included, is added to total_cost, which is only ever
+// incremented, never reset. Retry only accepts a job in 'error', and this function sets
+// 'error' only after every call it started has finished and been saved, so a retry can never
+// overlap a run that is still writing to the row.
 import { getDatabase } from '@netlify/database';
 import { qualityJudge, solve, stumperJudge } from '../lib/riddle-pipeline.mjs';
 
 const ORDERS = ['riddler_first', 'solver_first'];
-// Grades run 1-4, so solution I minus solution II is at least 1 - 4.
-const WORST_STUMPER = -3;
 
 const ok = (stage) => stage && !stage.error;
 
@@ -63,7 +66,8 @@ export default async (req) => {
             total_cost = total_cost + ${r.cost || 0}, updated_at = now() WHERE id = ${id}::uuid`,
   };
 
-  // A failed stage is recorded in its own column, so the other stages still finish.
+  // A failed stage is recorded in its own column, with what its calls cost, so the other
+  // stages still finish.
   const stage = (name, run, extra = {}) =>
     run().then(
       async (result) => {
@@ -71,17 +75,21 @@ export default async (req) => {
         return result;
       },
       async (e) => {
-        await save[name]({ ...extra, error: String(e?.message || e) });
+        await save[name]({ ...extra, error: String(e?.message || e), cost: e?.cost || 0 });
         throw e;
       },
     );
 
   const judgeStumper = async (solution2) => {
-    const judged = await Promise.all(
+    // allSettled, not all: if one judge fails, still wait for the other to finish and be saved.
+    const settled = await Promise.allSettled(
       ORDERS.map((order) =>
         stage('stumper', () => stumperJudge({ riddle, riddler, solver: solution2, order, apiKey }), { order }),
       ),
     );
+    const failed = settled.find((r) => r.status === 'rejected');
+    if (failed) throw failed.reason;
+    const judged = settled.map((r) => r.value);
     const score = judged.reduce((a, j) => a + (j.grade_riddler - j.grade_solver), 0) / judged.length;
     await sql`UPDATE riddle_jobs SET stumper = ${score}, updated_at = now() WHERE id = ${id}::uuid`;
   };
@@ -96,15 +104,9 @@ export default async (req) => {
     } else if (solverOk) {
       stumper = judgeStumper(job.solution_2);
     } else {
-      stumper = stage('solver', () => solve({ riddle, apiKey })).then(
-        (sol) => judgeStumper(sol.raw),
-        // A solver failure is not the riddle's achievement: it goes on the leaderboard with the
-        // worst possible stumper score, -3. (A failing stumper judge leaves the score empty.)
-        async (e) => {
-          await sql`UPDATE riddle_jobs SET stumper = ${WORST_STUMPER}, updated_at = now() WHERE id = ${id}::uuid`;
-          throw e;
-        },
-      );
+      // If the solver call itself fails, there is no solution II to judge: the job ends as
+      // 'error' with no stumper score and stays off the leaderboard until a retry succeeds.
+      stumper = stage('solver', () => solve({ riddle, apiKey })).then((sol) => judgeStumper(sol.raw));
     }
     const quality = qualityOk ? Promise.resolve() : stage('quality', () => qualityJudge({ riddle, solution: riddler, apiKey }));
 

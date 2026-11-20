@@ -97,7 +97,7 @@ function StumperJudge({ j }) {
 function Stumper({ job, running }) {
   const judges = [...(job.stumper_judges || [])].sort((a, b) => (a.order < b.order ? -1 : 1));
   const done = job.stumper != null;
-  const failed = judges.some((j) => j.error) || job.solver?.error;
+  const failed = judges.some((j) => j.error);
   return (
     <div className="border border-gray-200 rounded-lg p-4">
       <div className="flex flex-wrap justify-between items-center gap-2 mb-2">
@@ -111,13 +111,14 @@ function Stumper({ job, running }) {
         {(job.explain_scale || []).map((s) => `${s.grade} = ${s.text}`).join(' ')} The judges see the two solutions
         in opposite orders to cancel position bias, and are not told which is yours.
       </p>
+      {job.solver?.error && (
+        <p className="text-sm text-gray-600 mb-3">Not judged: the blind solve failed, so there is no solution II yet.</p>
+      )}
       {done && (
         <p className="text-lg font-medium text-gray-900 mb-3">
           Stumper score: {signed(Number(job.stumper))}{' '}
           <span className="text-sm font-normal text-gray-600">
-            {job.solver?.error
-              ? '(Opus failed to produce an answer, so this counts as the worst possible score)'
-              : '(your grade minus Opus’s, averaged over the two judges; range −3 to +3)'}
+            (your grade minus Opus’s, averaged over the two judges; range −3 to +3)
           </span>
         </p>
       )}
@@ -188,6 +189,12 @@ function Job({ job, onRetry, retrying, retryError }) {
       </div>
 
       <Stage title="1. Blind solve → solution II" model="Claude Opus 5.5, low effort" result={job.solver} running={running}>
+        {job.solver?.out_of_budget && (
+          <p className="text-xs text-amber-800 bg-amber-50 rounded p-2 mb-2">
+            Opus used up its whole thinking budget without answering, so it was asked once more, with minimal thinking
+            and its notes so far, for its best guess. That guess is solution II.
+          </p>
+        )}
         <p className="text-sm text-gray-700 whitespace-pre-line">{(job.solution_2 || '').replaceAll('**', '')}</p>
       </Stage>
       <Stumper job={job} running={running} />
@@ -344,7 +351,8 @@ export default function RiddleLab() {
             solutions from 1 to 4 on how well they explain the riddle, seeing them in opposite orders and without
             being told which is yours. Your <strong>stumper score</strong> is how much higher your solution was
             graded, averaged over the two judges. A third Opus judge reads only your solution and grades its
-            narrative interest, elegance and accuracy.
+            narrative interest, elegance and accuracy. If Opus runs out of thinking budget before answering, it
+            gives its best guess instead, and that guess is judged like any answer.
           </p>
           <p className="text-sm text-gray-500">
             A job usually takes one to three minutes. You can leave this page: the link to your job keeps working,
