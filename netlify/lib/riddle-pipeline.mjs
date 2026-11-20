@@ -11,12 +11,24 @@ const URL = 'https://openrouter.ai/api/v1/chat/completions';
 export const OPUS = 'anthropic/claude-opus-5.5';
 export const SONNET = 'anthropic/claude-sonnet-5.5';
 
+// Unlike the case study's sweep.py, which asks a judge to pick the better of two stories,
+// the lab scores each solution on its own. Every criterion is scored so that 5 is best.
 export const RUBRIC = [
-  { key: 'coverage', label: 'Coverage', help: 'Accounts for every odd or specific detail in the riddle.' },
-  { key: 'consistency', label: 'Consistency', help: 'Contradicts no line of the riddle.' },
-  { key: 'economy', label: 'Economy', help: 'Needs few stretches or unstated assumptions.' },
-  { key: 'accuracy', label: 'Accuracy', help: 'Any real-world facts or mechanisms it relies on are true.' },
-  { key: 'elegance', label: 'Elegance', help: 'Gives a satisfying, surprising "aha" rather than a forced fit.' },
+  {
+    key: 'satisfying',
+    label: 'Satisfying',
+    help: 'Overall, how satisfying it is as the answer to this riddle: 5 = a clean "aha", 1 = leaves you cold.',
+  },
+  {
+    key: 'not_convoluted',
+    label: 'Not convoluted',
+    help: '5 = simple and direct; 1 = excessively convoluted, piling on contrivances or hidden facts.',
+  },
+  {
+    key: 'tight',
+    label: 'Tight explanation',
+    help: '5 = explains every detail of the riddle with nothing left over or unexplained; 1 = loose, leaves details unexplained or adds irrelevant ones.',
+  },
 ];
 
 export const FACT_PROMPT = `Below is a riddle and a proposed solution. The solution may rely on real-world facts or mechanisms (laws, regulations, rules, technical properties, procedures, history).

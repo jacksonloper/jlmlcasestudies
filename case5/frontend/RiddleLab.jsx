@@ -261,7 +261,8 @@ export default function RiddleLab() {
           <p>
             Submit a riddle and your intended answer (solution I). Claude Sonnet 5.5 fact-checks the real-world
             facts your answer relies on. Claude Opus 5.5 solves the riddle without seeing your answer (solution II).
-            Then Claude Opus 5.5 scores each solution separately on the same five criteria, without being told which
+            Then Claude Opus 5.5 scores each solution separately from 1 to 5 on how satisfying it is as a riddle
+            answer, how far it avoids being convoluted, and how tight its explanation is, without being told which
             one is yours.
           </p>
           <p className="text-sm text-gray-500">
