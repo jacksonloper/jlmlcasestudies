@@ -6,6 +6,7 @@
 // Both POSTs need an X-Browser-Id header: a random UUID the page keeps in localStorage. It is
 // the only thing rate limits are keyed on; no IP address or hash of one is stored.
 import { getDatabase } from '@netlify/database';
+import { cachedHeaders, jobTag, purge } from '../lib/cdn-cache.mjs';
 import { EXPLAIN_SCALE, QUALITY } from '../lib/riddle-pipeline.mjs';
 
 const MAX_RIDDLE = 2000;
@@ -102,12 +103,17 @@ async function retry(id, req, sql) {
     WHERE id = ${id}::uuid AND status = 'error'
     RETURNING id`;
   if (!rows.length) return error(409, 'Only a job that ended in an error can be retried.');
+  // Drop the CDN's cached copy of the failed job. The page polls a new URL after a retry,
+  // so it never sees the stale copy while this purge spreads.
+  await purge(jobTag(id));
   if (!(await start(id, req, sql))) return error(502, 'The job could not be restarted.');
   return Response.json({ id }, { status: 202 });
 }
 
 async function read(id, sql) {
   if (!UUID.test(id)) return error(404, 'No such job.');
+  // One line per database query, so the logs show how often the cache misses.
+  console.log('db-query riddle-job');
   await sql`
     UPDATE riddle_jobs
     SET status = 'error', error = 'The job stopped responding and timed out. You can retry it.',
@@ -120,7 +126,11 @@ async function read(id, sql) {
            total_cost
     FROM riddle_jobs WHERE id = ${id}::uuid`;
   if (!rows.length) return error(404, 'No such job.');
-  return Response.json({ ...rows[0], explain_scale: EXPLAIN_SCALE, quality_criteria: QUALITY }, { headers: { 'Cache-Control': 'no-store' } });
+  // A finished job only changes if it is retried (which purges it), so the CDN can keep it.
+  // A queued or running job is still changing and is never cached.
+  const finished = rows[0].status === 'done' || rows[0].status === 'error';
+  const headers = finished ? cachedHeaders(jobTag(id)) : { 'Cache-Control': 'no-store' };
+  return Response.json({ ...rows[0], explain_scale: EXPLAIN_SCALE, quality_criteria: QUALITY }, { headers });
 }
 
 export default async (req) => {

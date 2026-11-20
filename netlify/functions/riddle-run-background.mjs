@@ -12,6 +12,7 @@
 // 'error' only after every call it started has finished and been saved, so a retry can never
 // overlap a run that is still writing to the row.
 import { getDatabase } from '@netlify/database';
+import { LEADERBOARD_TAG, jobTag, purge } from '../lib/cdn-cache.mjs';
 import { qualityJudge, solve, stumperJudge } from '../lib/riddle-pipeline.mjs';
 
 const ORDERS = ['riddler_first', 'solver_first'];
@@ -118,4 +119,7 @@ export default async (req) => {
     const message = String(e?.message || e).slice(0, 2000);
     await sql`UPDATE riddle_jobs SET status = 'error', error = ${message}, finished_at = now(), updated_at = now() WHERE id = ${id}::uuid`;
   }
+  // The leaderboard may have changed. The job itself was never cached while running, but a
+  // stale-timeout read could have cached it as 'error'.
+  await purge(LEADERBOARD_TAG, jobTag(id));
 };

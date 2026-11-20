@@ -2,13 +2,18 @@
 // Only jobs that finished every stage are listed; a job that failed waits for a retry.
 // Ranked by stumper score, then by the quality grades (narrative + elegance + accuracy),
 // then by who submitted first.
+// Cached on the CDN until a job finishes (see ../lib/cdn-cache.mjs), so most views never reach
+// this function or the database.
 import { getDatabase } from '@netlify/database';
+import { LEADERBOARD_TAG, cachedHeaders } from '../lib/cdn-cache.mjs';
 
 const LIMIT = 50;
 
 export default async (req) => {
   if (req.method !== 'GET') return Response.json({ error: 'Method not allowed.' }, { status: 405 });
   const { sql } = getDatabase();
+  // One line per database query, so the logs show how often the cache misses.
+  console.log('db-query riddle-leaderboard');
   const rows = await sql`
     SELECT id, created_at, handle, riddle, stumper, narrative, elegance, accuracy,
            coalesce((solver->>'out_of_budget')::boolean, false) AS out_of_budget
@@ -21,7 +26,7 @@ export default async (req) => {
   const [{ total }] = await sql`SELECT count(*)::int AS total FROM riddle_jobs WHERE status = 'done' AND stumper IS NOT NULL`;
   return Response.json(
     { total, entries: rows.map((r) => ({ ...r, stumper: Number(r.stumper) })) },
-    { headers: { 'Cache-Control': 'no-store' } },
+    { headers: cachedHeaders(LEADERBOARD_TAG) },
   );
 };
 
